@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saas.Admin.Web", "Saas.Admin.Web\Saas.Admin.Web.csproj", "{2DD62574-4495-4F92-85A8-44CCAFDB3BCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2DD62574-4495-4F92-85A8-44CCAFDB3BCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DD62574-4495-4F92-85A8-44CCAFDB3BCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DD62574-4495-4F92-85A8-44CCAFDB3BCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DD62574-4495-4F92-85A8-44CCAFDB3BCD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F979A8AE-8E6F-4FDB-A37A-3CA824D1C3D4}
+	EndGlobalSection
+EndGlobal
