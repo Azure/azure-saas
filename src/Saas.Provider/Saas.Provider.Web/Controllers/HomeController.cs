@@ -18,6 +18,11 @@ namespace Saas.Provider.Web.Controllers
             _logger = logger;
         }
 
+        public IActionResult Help()
+        {
+            return View();
+        }
+
         public IActionResult Index()
         {
             return View();

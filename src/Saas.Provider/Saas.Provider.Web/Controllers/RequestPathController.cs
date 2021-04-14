@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace Saas.Provider.Web.Controllers
 {
+    [Route("/{tenant}")]
     public class RequestPathController : Controller
     {
-        public IActionResult Index()
+        [Route("/{tenant}")]
+        public IActionResult Index(string tenant)
         {
+            ViewBag.Tenant = tenant;
+
             return View();
         }
     }
