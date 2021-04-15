@@ -12,8 +12,12 @@ https://github.com/Microsoft/WingtipTicketsSaaS-StandaloneApp
 
 ## Subscribe for Updates
 Subscribe for notifications of updates and new features:
-https://www.onsubscriber.com/saasacademy
+https://www.onsubscriber.com/saasacademy  
 https://www.onsubscriber.com/iamnickpinheiro
+
+## Downloads
+How to Build a SaaS Service on Azure (Slide Deck)
+https://app-provider-dev-001.azurewebsites.net/resources
 
 ## License
 The Azure SaaS Development Kit is licensed under the MIT license. See the LICENSE file for more details.

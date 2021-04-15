@@ -3,9 +3,12 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+    <UserSecretsId>7b599cf5-3102-4740-ab34-69dd240f9ea3</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/357c83c2-bed7-4fe7-af6a-95835c6e2d91/resourceGroups/rg-saas-dev-001/providers/microsoft.insights/components/app-provider-dev-001</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.5" />
