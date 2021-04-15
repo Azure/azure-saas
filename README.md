@@ -12,6 +12,7 @@ https://github.com/Microsoft/WingtipTicketsSaaS-StandaloneApp
 
 ## Subscribe for Updates
 Subscribe for notifications of updates and new features:
+https://www.onsubscriber.com/saasacademy
 https://www.onsubscriber.com/iamnickpinheiro
 
 ## License
