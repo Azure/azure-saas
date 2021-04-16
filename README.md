@@ -8,16 +8,16 @@ The Azure SaaS Development Kit provides tools to help developers deliver their a
 
 ## Wingtip Tickets SaaS - Standalone Application (aka App-per-tenant)
 The Azure SaaS Development Kit builds on the Wingtip Tickets SaaS demo solution (Standalone Application (aka App-per-tenant)).  Additional tools and features include a SaaS Provider Web Application with pricing plans and automated tenant deployments via API App.
-<a href="https://github.com/Microsoft/WingtipTicketsSaaS-StandaloneApp" target="_blank">https://github.com/Microsoft/WingtipTicketsSaaS-StandaloneApp</a>
+https://github.com/Microsoft/WingtipTicketsSaaS-StandaloneApp
 
 ## Subscribe for Updates
 Subscribe for notifications of updates and new features:  
-<a href="https://www.onsubscriber.com/saasacademy" target="_blank">https://www.onsubscriber.com/saasacademy</a>
-<a href="https://www.onsubscriber.com/iamnickpinheiro" target="_blank">https://www.onsubscriber.com/iamnickpinheiro</a>
+https://www.onsubscriber.com/saasacademy  
+https://www.onsubscriber.com/iamnickpinheiro
 
 ## Downloads
 How to Build a SaaS Service on Azure (Slide Deck)  
-<a href="https://app-provider-dev-001.azurewebsites.net/resources/index" target="_blank">https://app-provider-dev-001.azurewebsites.net/resources/index</a>
+https://app-provider-dev-001.azurewebsites.net/resources
 
 ## License
 The Azure SaaS Development Kit is licensed under the MIT license. See the LICENSE file for more details.

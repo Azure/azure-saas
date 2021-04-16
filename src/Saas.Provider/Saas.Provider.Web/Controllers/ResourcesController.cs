@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Saas.Provider.Web.Controllers
 {
     [Authorize]
+    [Route("resources")]
     public class ResourcesController : Controller
     {
         public IActionResult Index()
