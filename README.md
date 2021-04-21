@@ -16,8 +16,10 @@ https://www.onsubscriber.com/saasacademy
 https://www.onsubscriber.com/iamnickpinheiro
 
 ## Downloads
-How to Build a SaaS Service on Azure (Slide Deck)  
 https://app-provider-dev-001.azurewebsites.net/resources
+- How to Build a SaaS Service on Azure (Webinar Slide Deck)  
+- Multitenant SaaS Micrososervice Architecture Diagram
+
 
 ## License
 The Azure SaaS Development Kit is licensed under the MIT license. See the LICENSE file for more details.
