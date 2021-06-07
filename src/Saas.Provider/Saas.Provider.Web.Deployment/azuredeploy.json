@@ -1,0 +1,93 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "SaasProvider": {
+      "type": "string"
+    },
+    "Environment": {
+      "type": "string",
+      "defaultValue": "dev"
+    },
+    "_artifactsLocation": {
+      "type": "string"
+    },
+    "_artifactsLocationSasToken": {
+      "type": "string"
+    },
+    "ProviderPackageFolder": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "WebDeploy package location. This path is relative to the _artifactsLocation parameter"
+      }
+    },
+    "ProviderPackageFileName": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "Name of the webdeploy package"
+      }
+    }
+  },
+  "variables": {
+    "appServicePlanName": "[concat(parameters('SaasProvider'), '-', parameters('Environment'), '-002')]",
+    "providerWebAppName": "[concat(parameters('SaasProvider'), '-', parameters('Environment'), '-002')]",
+    "tenantResourceGroupName": "[concat(parameters('SaasProvider'), '-', parameters('Environment'), '-tenants')]"
+  },
+  "resources": [
+    {
+      "name": "[variables('appServicePlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "sku": {
+        "name": "F1"
+      },
+      "dependsOn": [],
+      "tags": {
+        "displayName": "SaaS Provider App Service Plan"
+      },
+      "properties": {
+        "name": "[variables('appServicePlanName')]",
+        "numberOfWorkers": 1
+      },
+      "resources": [
+        {
+          "name": "[variables('providerWebAppName')]",
+          "type": "Microsoft.Web/sites",
+          "location": "eastus",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[concat('Microsoft.Web/serverFarms/', variables('appServicePlanName'))]"
+          ],
+          "tags": {
+            "displayName": "SaaS Provider Web App"
+          },
+          "properties": {
+            "name": "[variables('providerWebAppName')]",
+            "siteConfig": {
+              "netFrameworkVersion": "v5.0"
+              },
+            "serverFarmId": "[resourceId(resourceGroup().name, 'Microsoft.Web/serverFarms', variables('appServicePlanName'))]"
+          },
+          "resources": [
+            {
+              "name": "MSDeploy",
+              "type": "extensions",
+              "location": "[resourceGroup().location]",
+              "apiVersion": "2015-08-01",
+              "dependsOn": [ "[resourceId('Microsoft.Web/sites', variables('providerWebAppName'))]" ],
+              "tags": { "displayName": "Deploy" },
+              "properties": {
+                "packageUri": "[concat(parameters('_artifactsLocation'), '/', parameters('ProviderPackageFolder'), '/', parameters('ProviderPackageFileName'), parameters('_artifactsLocationSasToken'))]"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "outputs": {
+  }
+}

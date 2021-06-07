@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "SaasProvider": {
+      "value": "app-provider"
+    },
+    "_artifactsLocation": {
+      "value": "https://stsaasdev001.blob.core.windows.net/artifacts"
+    },
+    "_artifactsLocationSasToken": {
+      "value": "?sv=2020-04-08\u0026st=2021-06-07T06%3A33%3A26Z\u0026se=2021-06-08T06%3A33%3A26Z\u0026sr=c\u0026sp=racwl\u0026sig=cGgf516CwLQ8Wli8HiQ0hasdu7A35LxWdX8C792SUTU%3D"
+    },
+    "ProviderPackageFolder": {
+      "value": "saas-provider"
+    },
+    "ProviderPackageFileName": {
+      "value": "Saas.Provider.Web.zip"
+    }
+  }
+}
