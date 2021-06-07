@@ -2,38 +2,23 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "SaasProvider": {
+    "SaasProviderName": {
       "type": "string"
     },
     "Environment": {
       "type": "string",
-      "defaultValue": "dev"
-    },
-    "_artifactsLocation": {
-      "type": "string"
-    },
-    "_artifactsLocationSasToken": {
-      "type": "string"
-    },
-    "ProviderPackageFolder": {
-      "type": "string",
-      "minLength": 1,
-      "metadata": {
-        "description": "WebDeploy package location. This path is relative to the _artifactsLocation parameter"
-      }
-    },
-    "ProviderPackageFileName": {
-      "type": "string",
-      "minLength": 1,
-      "metadata": {
-        "description": "Name of the webdeploy package"
-      }
+      "defaultValue": "dev",
+      "allowedValues": [
+        "dev",
+        "staging",
+        "test",
+        "prod"
+      ]
     }
   },
   "variables": {
-    "appServicePlanName": "[concat(parameters('SaasProvider'), '-', parameters('Environment'), '-002')]",
-    "providerWebAppName": "[concat(parameters('SaasProvider'), '-', parameters('Environment'), '-002')]",
-    "tenantResourceGroupName": "[concat(parameters('SaasProvider'), '-', parameters('Environment'), '-tenants')]"
+    "appServicePlanName": "[concat(parameters('SaasProviderName'), '-', parameters('Environment'), '-001')]",
+    "providerWebAppName": "[concat(parameters('SaasProviderName'), '-', parameters('Environment'), '-001')]"
   },
   "resources": [
     {
@@ -80,7 +65,7 @@
               "dependsOn": [ "[resourceId('Microsoft.Web/sites', variables('providerWebAppName'))]" ],
               "tags": { "displayName": "Deploy" },
               "properties": {
-                "packageUri": "[concat(parameters('_artifactsLocation'), '/', parameters('ProviderPackageFolder'), '/', parameters('ProviderPackageFileName'), parameters('_artifactsLocationSasToken'))]"
+                "packageUri": "https://stsaasdev001.blob.core.windows.net/artifacts?sv=2020-04-08&st=2021-06-07T19%3A23%3A20Z&se=2022-06-08T19%3A23%3A00Z&sr=c&sp=rl&sig=kNf0qwTfaCJg02xYeUHlfmHOJvI1bGU1HftjUJ5hl5o%3D"
               }
             }
           ]
