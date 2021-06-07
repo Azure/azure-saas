@@ -3,7 +3,8 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "SaasProviderName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "contoso"
     },
     "Environment": {
       "type": "string",
@@ -69,7 +70,7 @@
               "dependsOn": [ "[resourceId('Microsoft.Web/sites', variables('providerWebAppName'))]" ],
               "tags": { "displayName": "Deploy" },
               "properties": {
-                "packageUri": "https://stsaasdev001.blob.core.windows.net/artifacts?sv=2020-04-08&st=2021-06-07T19%3A23%3A20Z&se=2022-06-08T19%3A23%3A00Z&sr=c&sp=rl&sig=kNf0qwTfaCJg02xYeUHlfmHOJvI1bGU1HftjUJ5hl5o%3D"
+                "packageUri": "https://stsaasdev001.blob.core.windows.net/artifacts/saas-provider/Saas.Provider.Web.zip?sv=2020-04-08&st=2021-06-07T19%3A23%3A20Z&se=2022-06-08T19%3A23%3A00Z&sr=c&sp=rl&sig=kNf0qwTfaCJg02xYeUHlfmHOJvI1bGU1HftjUJ5hl5o%3D"
               }
             }
           ]
