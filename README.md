@@ -2,15 +2,42 @@
 
 The Azure SaaS Development Kit provides tools to help developers deliver their applications as a service. The toolkit includes recommended patterns and practices around SaaS platform architecture, onboarding new tenants, automated deployments, operational architecture, security and everything else you need to know to begin building SaaS solutions on the Azure PaaS and Serverless platform. Technologies include: Azure App Service, Azure Web Apps, Azure API Apps, Azure Functions, ASP.NET, Azure REST API, Azure Resource Manager (ARM), Azure Role Based Access Control (RBAC), CI/CD with Azure DevOps, Azure SQL and Azure Storage.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fdev%2Fsrc%2FSaas.Provider%2FSaas.Provider.Web.Deployment%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Provider%2FSaas.Provider.Web.Deployment%2Fazuredeploy.json)
 
 ## Features
-- SaaS Microservice Architecture
-- SaaS Provider Web App
 
-## Wingtip Tickets SaaS - Standalone Application (aka App-per-tenant)
-The Azure SaaS Development Kit builds on the Wingtip Tickets SaaS demo solution (Standalone Application (aka App-per-tenant)).  Additional tools and features include a SaaS Provider Web Application with pricing plans and automated tenant deployments via API App.
-https://github.com/Microsoft/WingtipTicketsSaaS-StandaloneApp
+### Presentation
+* Architecture: SaaS Microservice Architecture
+* App Service Plan
+* Web App: Provider Web App
+	* Onboarding Flow
+	* Tenant Resolutions Options
+	* Tenant Administration for Tenant Roles (Owner, Administrator, etc.)
+* Web App: SaaS Service Administration
+
+### Logic
+- API App: Onboarding API
+- API App: Orders API
+- API App: Customers API
+- API App: Billing API
+	* Stripe integration
+- API App: Notifications API
+	* SendGrid integration
+	* Twilio integration
+	* Azure Push Notification Service integration
+
+### Data Access
+- Entity Framework Data Access solution
+
+### Data
+- Azure SQL: Tenant databases supporting both Single and Multitenant scenarios
+- Azure SQL: Elastic Pooling, Elastic Jobs and Elastic Queries
+- Azure SQL: Catalog Database for Tenant 
+- Azure Cosmos DB: Onboarding Flow datastore
+- Catalog Database
+
+### Deployment
+- Simplified deployment with 'Deploy to Azure' for each microservice
 
 ## Subscribe for Updates
 Subscribe for notifications of updates and new features:  
