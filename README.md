@@ -71,7 +71,10 @@ Subscriber from Modern Appz is a live production SaaS solution built entirely on
 https://www.onsubscriber.com
 
 ## Subscribe for Updates
-Subscribe for notifications of updates and new features:  
+Subscribe for notifications of updates and new features: 
+https://www.onsubscriber.com/azuresaas
+
+## Subscribe for additional SaaS content 
 https://www.onsubscriber.com/saasacademy  
 https://www.onsubscriber.com/iamnickpinheiro
 
