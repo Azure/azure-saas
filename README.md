@@ -1,8 +1,10 @@
 # Azure SaaS Development Kit
 
-The Azure SaaS Development Kit provides tools to help developers deliver their applications as a service. The toolkit includes recommended patterns and practices around SaaS platform architecture, onboarding new tenants, automated deployments, operational architecture, security and everything else you need to know to begin building SaaS solutions on the Azure PaaS and Serverless platform. Technologies include: Azure App Service, Azure Web Apps, Azure API Apps, Azure Functions, ASP.NET, Azure REST API, Azure Resource Manager (ARM), Azure Role Based Access Control (RBAC), CI/CD with Azure DevOps, Azure SQL and Azure Storage.
+The Azure SaaS Development Kit provides tools to help developers deliver their applications as a service. The toolkit includes recommended patterns and practices around cloud-native SaaS platform architecture, onboarding new tenants, automated deployments, operational architecture, billing, identity, security, monitoring and everything else you need to know to begin building SaaS solutions on the Azure PaaS and Serverless platform. Technologies include: Azure App Service, Azure Web Apps, Azure API Apps, Azure Functions, Azure Logic Apps, .NET, ASP.NET, Azure SQL, Azure Cosmos DB, Azure REST API, Azure Resource Manager (ARM), Azure Role Based Access Control (RBAC), and CI/CD with GitHub Actions.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Provider%2FSaas.Provider.Web.Deployment%2Fazuredeploy.json)
+[![Deploy to Azure](https://www.azuresaas.net/assets/images/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Provider%2FSaas.Provider.Web.Deployment%2Fazuredeploy.json)
+
+Demo SaaS Service:  https://www.azuresaas.net
 
 ## Features and Components
 
@@ -54,7 +56,7 @@ The Azure SaaS Development Kit provides tools to help developers deliver their a
 - Web Deployment Packages for all solutions components
 
 ### Monitoring
-- Azure Application Insights included for all Web and API Apps
+- Azure Application Insights included for all App Services
 
 ### Deployment
 - Simplified deployment with 'Deploy to Azure' for each microservice
@@ -66,12 +68,12 @@ The Azure SaaS Development Kit provides tools to help developers deliver their a
 - Azure Bicep for Azure resource deployments
 - Xamarin Cross Platform Mobile Apps - Multitenant
 
-## Production SaaS Solution
-Subscriber from Modern Appz is a live production SaaS solution built entirely on the Azure SaaS Development Kit:
+## Live Production SaaS Service
+Subscriber from ISV Modern Appz is a live production SaaS solution built entirely on the Azure SaaS Development Kit:
 https://www.onsubscriber.com
 
 ## Subscribe for Updates
-Subscribe for notifications of updates and new features: 
+Subscribe for email notifications of updates and new features:  
 https://www.onsubscriber.com/azuresaas
 
 ## Subscribe for additional SaaS content 
@@ -79,7 +81,7 @@ https://www.onsubscriber.com/saasacademy
 https://www.onsubscriber.com/iamnickpinheiro
 
 ## Downloads
-https://app-provider-dev-001.azurewebsites.net/resources
+https://www.azuresaas.net/resources
 - How to Build a SaaS Service on Azure (Webinar Slide Deck)  
 - Multitenant SaaS Micrososervice Architecture Diagram
 
