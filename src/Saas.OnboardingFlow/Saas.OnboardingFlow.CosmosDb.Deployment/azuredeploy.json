@@ -1,0 +1,91 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.3.255.40792",
+      "templateHash": "996194081545577943"
+    }
+  },
+  "parameters": {
+    "SaasProviderName": {
+      "type": "string",
+      "defaultValue": "contoso"
+    },
+    "Environment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": [
+        "dev",
+        "staging",
+        "test",
+        "prod"
+      ]
+    },
+    "AccountName": {
+      "type": "string",
+      "defaultValue": "[concat('cosmos-', parameters('SaaSProviderName'), '-', parameters('Environment'), '-', parameters('InstanceNumber'))]",
+      "metadata": {
+        "description": "Cosmos DB account name"
+      }
+    },
+    "Location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for the Cosmos DB account."
+      }
+    },
+    "DatabaseName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name for the Core (SQL) database"
+      }
+    },
+    "InstanceNumber": {
+      "type": "string",
+      "defaultValue": "001"
+    }
+  },
+  "functions": [],
+  "variables": {
+    "accountName_var": "[toLower(parameters('AccountName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts",
+      "apiVersion": "2021-04-15",
+      "name": "[variables('accountName_var')]",
+      "location": "[parameters('Location')]",
+      "properties": {
+        "enableFreeTier": false,
+        "databaseAccountOfferType": "Standard",
+        "consistencyPolicy": {
+          "defaultConsistencyLevel": "Session"
+        },
+        "locations": [
+          {
+            "locationName": "[parameters('location')]"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
+      "apiVersion": "2021-04-15",
+      "name": "[format('{0}/{1}', variables('accountName_var'), parameters('DatabaseName'))]",
+      "properties": {
+        "resource": {
+          "id": "[parameters('DatabaseName')]"
+        },
+        "options": {
+          "throughput": 400
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('accountName_var'))]"
+      ]
+    }
+  ]
+}
