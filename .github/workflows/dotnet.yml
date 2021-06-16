@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore ~/src
+      run: dotnet restore ~/src/**/**/*.csproj
     - name: Build
-      run: dotnet build ~/src --no-restore
+      run: dotnet build ~/src/**/**/*.csproj --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
