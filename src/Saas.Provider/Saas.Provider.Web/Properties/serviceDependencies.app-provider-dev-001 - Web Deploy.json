@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/sql-saas-dev/databases/aspnet-Saas.Provider.Web-69AEC245-86F2-426F-A6D0-B49BA7002A70",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DefaultConnection",
+      "secretStore": "AzureAppSettings"
+    },
+    "mssql2": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/sql-saas-dev/databases/sqldb-catalog-dev",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:CatalogDbConnection",
+      "secretStore": "AzureAppSettings"
+    },
+    "cosmosdb1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.DocumentDB/databaseAccounts/cosmos-contoso-dev-001",
+      "type": "cosmosdb.azure",
+      "connectionId": "ConnectionStrings:CosmosDb",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

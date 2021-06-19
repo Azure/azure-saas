@@ -1,179 +1,181 @@
 ﻿@{
-    ViewData["Title"] = "Azure SaaS | Your SaaS Service";
-    Layout = "~/Views/Shared/_LayoutMarketing.cshtml";
+	ViewData["Title"] = "Azure SaaS | Your SaaS Service";
+	Layout = "~/Views/Shared/_LayoutMarketing.cshtml";
 }
 
 <!-- ======= Jumbotron Section ======= -->
 <div class="container">
-    <div class="bg-white rounded-lg">
-        <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold">Welcome to Azure SaaS</h1>
-            <p class="col-md-12 fs-4" style="padding-left:0px;">The Azure SaaS Development Kit provides tools to help developers deliver their applications as a service on Microsoft Azure.  This is an open source SaaS provider web application template for a multitenant SaaS solution.</p>
-            <div>
-                <input type="text" class="form-control" style="width:100%; max-width:350px;" placeholder="Enter your Email Address" required />
-            </div>
-            <div style="margin-top:.75rem;">
-                <input type="submit" class="btn btn-cta btn-primary" value="GET STARTED FREE" style="width:100%; max-width:350px;" />
-            </div>
-        </div>
-    </div>
+ <div class="bg-white rounded-lg">
+  <div class="container-fluid py-5">
+   <h1 class="display-5 fw-bold">Welcome to Azure SaaS</h1>
+   <p class="col-md-12 fs-4" style="padding-left:0px;">The Azure SaaS Development Kit provides tools to help developers deliver their applications as a service on Microsoft Azure.  This is an open source SaaS provider web application template for a multitenant SaaS solution.</p>
+   <form method="post">
+	<div>
+	 <input type="email" name="emailAddress" class="form-control" style="width:100%; max-width:350px;" placeholder="Enter your Email Address" required />
+	</div>
+	<div style="margin-top:.75rem;">
+	 <input type="submit" class="btn btn-cta btn-primary" value="GET STARTED FREE" style="width:100%; max-width:350px;" />
+	</div>
+   </form>
+  </div>
+ </div>
 </div>
 
 <!-- End Jumbotron Section -->
 <!-- ======= Features Section ======= -->
 <section id="services" class="services section-bg">
-    <div class="container">
-        <div class="section-title">
-            <h2 style="color:#ffffff;">The Modern SaaS Platform</h2>
-            <p style="color:#ffffff;">Get your SaaS solution up and running on Microsoft Azure</p>
-        </div>
+ <div class="container">
+  <div class="section-title">
+   <h2 style="color:#ffffff;">The Modern SaaS Platform</h2>
+   <p style="color:#ffffff;">Get your SaaS solution up and running on Microsoft Azure</p>
+  </div>
 
-        <div class="row">
-            <div class="col-md-6 mt-4">
-                <div class="icon-box">
-                    <i class="fas fa-project-diagram"></i>
-                    <h4>Easy Onboarding</h4>
-                    <p>Multitenant architecture is a perfect choice for applications that need an easy onboarding experience</p>
-                </div>
-            </div>
-            <div class="col-md-6 mt-4">
-                <div class="icon-box">
-                    <i class="fas fa-bolt"></i>
-                    <h4>Maintenance</h4>
-                    <p>Improved ease of maintenance is a benefit of multitenant applications</p>
-                </div>
-            </div>
-            <div class="col-md-6 mt-4">
-                <div class="icon-box">
-                    <i class="fas fa-user-check"></i>
-                    <h4>Reduced Cost</h4>
-                    <p>Multitenant architecture is relatively inexpensive due to shared infrastructure and and lower maintenance costs</p>
-                </div>
-            </div>
-            <div class="col-md-6 mt-4">
-                <div class="icon-box">
-                    <i class="fas fa-globe"></i>
-                    <h4>Resource usage</h4>
-                    <p>Multitenant architecture ensures better use of the available resources compared to single-tenant architecture</p>
-                </div>
-            </div>
-            <div class="col-md-6 mt-4">
-                <div class="icon-box">
-                    <i class="fas fa-times-circle"></i>
-                    <h4>Easier Updates</h4>
-                    <p>In a multitenant application, upgrades are seamless and relatively simple</p>
-                </div>
-            </div>
-            <div class="col-md-6 mt-4">
-                <div class="icon-box">
-                    <i class="fab fa-connectdevelop"></i>
-                    <h4>Isolation of tenant data</h4>
-                    <p>Tenant data in a multitenant application is logically and physically isolated on a per-tenant basis</p>
-                </div>
-            </div>
-        </div>
+  <div class="row">
+   <div class="col-md-6 mt-4">
+	<div class="icon-box">
+	 <i class="fas fa-project-diagram"></i>
+	 <h4>Easy Onboarding</h4>
+	 <p>Multitenant architecture is a perfect choice for applications that need an easy onboarding experience</p>
+	</div>
+   </div>
+   <div class="col-md-6 mt-4">
+	<div class="icon-box">
+	 <i class="fas fa-bolt"></i>
+	 <h4>Maintenance</h4>
+	 <p>Improved ease of maintenance is a benefit of multitenant applications</p>
+	</div>
+   </div>
+   <div class="col-md-6 mt-4">
+	<div class="icon-box">
+	 <i class="fas fa-user-check"></i>
+	 <h4>Reduced Cost</h4>
+	 <p>Multitenant architecture is relatively inexpensive due to shared infrastructure and and lower maintenance costs</p>
+	</div>
+   </div>
+   <div class="col-md-6 mt-4">
+	<div class="icon-box">
+	 <i class="fas fa-globe"></i>
+	 <h4>Resource usage</h4>
+	 <p>Multitenant architecture ensures better use of the available resources compared to single-tenant architecture</p>
+	</div>
+   </div>
+   <div class="col-md-6 mt-4">
+	<div class="icon-box">
+	 <i class="fas fa-times-circle"></i>
+	 <h4>Easier Updates</h4>
+	 <p>In a multitenant application, upgrades are seamless and relatively simple</p>
+	</div>
+   </div>
+   <div class="col-md-6 mt-4">
+	<div class="icon-box">
+	 <i class="fab fa-connectdevelop"></i>
+	 <h4>Isolation of tenant data</h4>
+	 <p>Tenant data in a multitenant application is logically and physically isolated on a per-tenant basis</p>
+	</div>
+   </div>
+  </div>
 
-        <div class="row" style="margin-top:2rem;">
-            <div class="col-md-12" style="text-align:center;">
-                <a href="#" class="btn btn-cta btn-primary" style="width:100%; max-width:350px;">Get Started Free</a>
-            </div>
-        </div>
-    </div>
+  <div class="row" style="margin-top:2rem;">
+   <div class="col-md-12" style="text-align:center;">
+	<a href="#" class="btn btn-cta btn-primary" style="width:100%; max-width:350px;">Get Started Free</a>
+   </div>
+  </div>
+ </div>
 </section>
 <!-- End Features Section -->
 <!-- ======= Pricing Section ======= -->
 <section class="pricing py-5">
-    <div class="container">
-        <div class="section-title">
-            <h2>Subscription Pricing</h2>
-            <p>Startups, ISVs and Enterprises can provide multiple Service Tiers</p>
-        </div>
-        <div class="row">
-            <!-- Free Tier -->
-            <div class="col-md-3">
-                <div class="card mb-5 mb-lg-0">
-                    <div class="card-body">
-                        <h5 class="card-title text-muted text-uppercase text-center">Free</h5>
-                        <h6 class="card-price text-center">$0<span class="period">/month</span></h6>
-                        <hr>
-                        <ul class="fa-ul">
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Single User</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>5GB Storage</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Public Projects</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Community Access</li>
-                            <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Unlimited Private Projects</li>
-                            <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Dedicated Phone Support</li>
-                            <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Free Subdomain</li>
-                            <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Monthly Status Reports</li>
-                        </ul>
-                        <a href="#" class="btn btn-block btn-primary text-uppercase">Sign Up For Free</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Basic Tier -->
-            <div class="col-md-3">
-                <div class="card mb-5 mb-lg-0">
-                    <div class="card-body">
-                        <h5 class="card-title text-muted text-uppercase text-center">Basic</h5>
-                        <h6 class="card-price text-center">$4.99<span class="period">/month</span></h6>
-                        <hr>
-                        <ul class="fa-ul">
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>5 Users</strong></li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>50GB Storage</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Public Projects</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Community Access</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Private Projects</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Dedicated Phone Support</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Free Subdomain</li>
-                            <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Monthly Status Reports</li>
-                        </ul>
-                        <a href="#" class="btn btn-block btn-primary text-uppercase">Sign Up</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Standard Tier -->
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-muted text-uppercase text-center">Standard</h5>
-                        <h6 class="card-price text-center">$9.99<span class="period">/month</span></h6>
-                        <hr>
-                        <ul class="fa-ul">
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>Unlimited Users</strong></li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>150GB Storage</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Public Projects</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Community Access</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Private Projects</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Dedicated Phone Support</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>Unlimited</strong> Free Subdomains</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Monthly Status Reports</li>
-                        </ul>
-                        <a href="#" class="btn btn-block btn-primary text-uppercase">Sign Up</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Premium Tier -->
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-muted text-uppercase text-center">Premium</h5>
-                        <h6 class="card-price text-center">$19.99<span class="period">/month</span></h6>
-                        <hr>
-                        <ul class="fa-ul">
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>Unlimited Users</strong></li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>150GB Storage</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Public Projects</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Community Access</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Private Projects</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Dedicated Phone Support</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>Unlimited</strong> Free Subdomains</li>
-                            <li><span class="fa-li"><i class="fas fa-check"></i></span>Monthly Status Reports</li>
-                        </ul>
-                        <a href="#" class="btn btn-block btn-primary text-uppercase">Sign Up</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+ <div class="container">
+  <div class="section-title">
+   <h2>Subscription Pricing</h2>
+   <p>Startups, ISVs and Enterprises can provide multiple Service Tiers</p>
+  </div>
+  <div class="row">
+   <!-- Free Tier -->
+   <div class="col-md-3">
+	<div class="card mb-5 mb-lg-0">
+	 <div class="card-body">
+	  <h5 class="card-title text-muted text-uppercase text-center">Free</h5>
+	  <h6 class="card-price text-center">$0<span class="period">/month</span></h6>
+	  <hr>
+	  <ul class="fa-ul">
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Single User</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>5GB Storage</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Public Projects</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Community Access</li>
+	   <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Unlimited Private Projects</li>
+	   <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Dedicated Phone Support</li>
+	   <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Free Subdomain</li>
+	   <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Monthly Status Reports</li>
+	  </ul>
+	  <a href="#" class="btn btn-block btn-primary text-uppercase">Sign Up For Free</a>
+	 </div>
+	</div>
+   </div>
+   <!-- Basic Tier -->
+   <div class="col-md-3">
+	<div class="card mb-5 mb-lg-0">
+	 <div class="card-body">
+	  <h5 class="card-title text-muted text-uppercase text-center">Basic</h5>
+	  <h6 class="card-price text-center">$4.99<span class="period">/month</span></h6>
+	  <hr>
+	  <ul class="fa-ul">
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>5 Users</strong></li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>50GB Storage</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Public Projects</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Community Access</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Private Projects</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Dedicated Phone Support</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Free Subdomain</li>
+	   <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Monthly Status Reports</li>
+	  </ul>
+	  <a href="#" class="btn btn-block btn-primary text-uppercase">Sign Up</a>
+	 </div>
+	</div>
+   </div>
+   <!-- Standard Tier -->
+   <div class="col-md-3">
+	<div class="card">
+	 <div class="card-body">
+	  <h5 class="card-title text-muted text-uppercase text-center">Standard</h5>
+	  <h6 class="card-price text-center">$9.99<span class="period">/month</span></h6>
+	  <hr>
+	  <ul class="fa-ul">
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>Unlimited Users</strong></li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>150GB Storage</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Public Projects</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Community Access</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Private Projects</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Dedicated Phone Support</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>Unlimited</strong> Free Subdomains</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Monthly Status Reports</li>
+	  </ul>
+	  <a href="#" class="btn btn-block btn-primary text-uppercase">Sign Up</a>
+	 </div>
+	</div>
+   </div>
+   <!-- Premium Tier -->
+   <div class="col-md-3">
+	<div class="card">
+	 <div class="card-body">
+	  <h5 class="card-title text-muted text-uppercase text-center">Premium</h5>
+	  <h6 class="card-price text-center">$19.99<span class="period">/month</span></h6>
+	  <hr>
+	  <ul class="fa-ul">
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>Unlimited Users</strong></li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>150GB Storage</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Public Projects</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Community Access</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Private Projects</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Dedicated Phone Support</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span><strong>Unlimited</strong> Free Subdomains</li>
+	   <li><span class="fa-li"><i class="fas fa-check"></i></span>Monthly Status Reports</li>
+	  </ul>
+	  <a href="#" class="btn btn-block btn-primary text-uppercase">Sign Up</a>
+	 </div>
+	</div>
+   </div>
+  </div>
+ </div>
 </section>
 <!-- End Features Section -->

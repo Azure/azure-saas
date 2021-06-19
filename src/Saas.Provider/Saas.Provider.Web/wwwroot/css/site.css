@@ -220,3 +220,20 @@ section {
             opacity: 1;
         }
 }
+
+/* Onboarding Progress */
+.progress {
+    height: 30px;
+    border-radius: .25rem;
+    width: 100%;
+}
+
+progress[value]::-webkit-progress-bar {
+    background-color: #ededed;
+    border-radius: .25rem;
+}
+
+progress[value]::-webkit-progress-value {
+    border-radius: .25rem;
+    background-color: #51a852;
+}

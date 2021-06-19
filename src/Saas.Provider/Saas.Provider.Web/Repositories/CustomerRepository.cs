@@ -23,7 +23,7 @@ namespace Saas.Provider.Web.Repositories
             {
                 List<Customer> customers = new List<Customer>();
 
-                using (var connection = new SqlConnection(_configuration["ConnectionStrings:TenantDbConnection"]))
+                using (var connection = new SqlConnection(_configuration["ConnectionStrings:CatalogDbConnection"]))
                 {
                     await connection.OpenAsync();
                     using (var command = new SqlCommand("SELECT * FROM dbo.Customer Where TenantId = @TenantId", connection))
