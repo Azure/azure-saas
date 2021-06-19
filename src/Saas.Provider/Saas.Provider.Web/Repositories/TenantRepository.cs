@@ -20,7 +20,7 @@ namespace Saas.Provider.Web.Repositories
             string tenantId = null;
             try
             {
-                using (var connection = new SqlConnection(_configuration["ConnectionStrings:TenantDbConnection"]))
+                using (var connection = new SqlConnection(_configuration["ConnectionStrings:CatalogDbConnection"]))
                 {
                     await connection.OpenAsync();
                     using (var command = new SqlCommand("SELECT Id  FROM Tenant WHERE ApiKey = @apiKey", connection))
