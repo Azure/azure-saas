@@ -4,5 +4,6 @@
     ApiKey uniqueidentifier NOT NULL,
     TenantName nvarchar(200) NOT NULL,
     IsActive bit NOT NULL, 
+    [ProductId] INT NOT NULL, 
     CONSTRAINT [PK_Tenant] PRIMARY KEY ([Id])
 )

@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[Order]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(10000, 1), 
+    [Created] DATETIME NOT NULL DEFAULT getdate(),
+	[ProductId] INT NOT NULL, 
+    [UserId] NCHAR(37) NOT NULL
+)
