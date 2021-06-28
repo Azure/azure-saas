@@ -1,31 +1,29 @@
 # Azure SaaS Development Kit
 
-The Azure SaaS Development Kit provides tools to help developers deliver their applications as a service. The toolkit includes recommended patterns and practices around cloud-native SaaS platform architecture, onboarding new tenants, automated deployments, operational architecture, billing, identity, security, monitoring and everything else you need to know to begin building SaaS solutions on the Azure PaaS and Serverless platform. Technologies include: Azure App Service, Azure Web Apps, Azure API Apps, Azure Functions, Azure Logic Apps, .NET, ASP.NET, Azure SQL, Azure Cosmos DB, Azure REST API, Azure Resource Manager (ARM), Azure Role Based Access Control (RBAC), and CI/CD with GitHub Actions.
+A Platform for Platform Creators.  The Azure SaaS Development Kit provides tools to help developers deliver their applications as a service. The toolkit includes recommended patterns and practices around cloud-native SaaS platform architecture, onboarding new tenants, automated deployments, operational architecture, billing, identity, security, monitoring and everything else you need to know to begin building SaaS solutions on the Azure PaaS and Serverless platform. Technologies include: Azure App Service, Azure Web Apps, Azure API Apps, Azure Functions, Azure Logic Apps, .NET, ASP.NET, Azure SQL, Azure Cosmos DB, Azure REST API, Azure Resource Manager (ARM), Azure Role Based Access Control (RBAC), and CI/CD with GitHub Actions.
 
 [![Deploy to Azure](https://www.azuresaas.net/assets/images/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Provider%2FSaas.Provider.Web.Deployment%2Fazuredeploy.json)
 
 Demo SaaS Service:  https://www.azuresaas.net
 
-## Features and Components
+## Overview
+
+<img src="https://stsaasprod001.blob.core.windows.net/assets/images/azure-saas-technology-stack-diagram.png">
 
 ### Architecture
 - SaaS Microservice Architecture
 
-### Compute
-- App Service Plan
-
-### Presentation
+### UX
 - [Web App: Provider Web App](src/Saas.Provider/README.md)
 	- Onboarding Flow
-	- Tenant Resolutions Options
+	- Tenant Resolution Options
 	- Tenant Administration for Tenant Roles (Owner, Administrator, etc.)
 - Web App: SaaS Service Administration
 
-### Identity
-- ASP.NET Core Identity
-- Azure AD B2C
-- Azure AD B2B
-- Azure AD
+### Compute
+- App Service Plan
+- Applications Insights
+- Azure Kubernetes Services
 
 ### Logic
 - API App: Onboarding API
@@ -33,14 +31,6 @@ Demo SaaS Service:  https://www.azuresaas.net
 - API App: Customers API
 - API App: Billing API
 	- Stripe integration
-
-### Notifications
-- API App: Push Notifications API
-- Function App: Notifications API
-	- SendGrid integration for Email notifications
-	- Twilio integration for SMS notifications
-- Logic App: New User notifications
-	- SQL Connector
 
 ### Data Access
 - Entity Framework Core Data Access solution
@@ -51,6 +41,19 @@ Demo SaaS Service:  https://www.azuresaas.net
 - Azure SQL Database: Tenant databases supporting both Single and Multitenant scenarios
 - Azure SQL Database: Catalog Database
 - Azure Cosmos DB: Onboarding Flow datastore
+
+### Communications
+- API App: Push Notifications API
+- Function App: Notifications API
+	- SendGrid integration for Email notifications
+	- Azure Communication Services integration for SMS notifications
+- Logic App: New User notifications
+	- SQL Connector
+
+### Identity
+- ASP.NET Core Identity
+- Azure AD B2C
+- Azure AD
 
 ### Storage
 - Web Deployment Packages for all solutions components
