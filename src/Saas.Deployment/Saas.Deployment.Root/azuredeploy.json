@@ -3,13 +3,22 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "SaasProviderName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "contoso"
     },
     "Environment": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": [
+        "dev",
+        "staging",
+        "test",
+        "prod"
+      ]
     },
     "InstanceNumber": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "001"
     }
   },
   "variables": {
