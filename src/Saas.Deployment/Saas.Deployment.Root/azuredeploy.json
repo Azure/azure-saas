@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "SaasProviderName": {
+      "type": "string"
+    },
+    "Environment": {
+      "type": "string"
+    },
+    "InstanceNumber": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "parametersProviderWebApp": {
+      "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
+      "Environment": { "value": "[parameters('Environment')]" },
+      "InstanceNumber": { "value": "[parameters('InstanceNumber')]" }
+    }
+  },
+  "resources": [
+    {
+      "name": "deployProviderWebApp",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2021-04-01",
+      "properties": {
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.Provider/Saas.Provider.Web.Deployment/azuredeploy.json"
+        },
+        "parameters": "[variables('parametersProviderWebApp')]",
+        "mode": "Incremental"
+      },
+      "tags": {}
+    }
+  ],
+  "outputs": {}
+}
