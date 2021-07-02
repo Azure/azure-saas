@@ -2,7 +2,7 @@
 
 A Platform for Platform Creators.  The Azure SaaS Development Kit provides tools to help developers deliver their applications as a service. The toolkit includes recommended patterns and practices around cloud-native SaaS platform architecture, onboarding new tenants, automated deployments, operational architecture, billing, identity, security, monitoring and everything else you need to know to begin building SaaS solutions on the Azure PaaS and Serverless platform. Technologies include: Azure App Service, Azure Web Apps, Azure API Apps, Azure Functions, Azure Logic Apps, .NET, ASP.NET, Azure SQL, Azure Cosmos DB, Azure REST API, Azure Resource Manager (ARM), Azure Role Based Access Control (RBAC), and CI/CD with GitHub Actions.
 
-[![Deploy to Azure](https://www.azuresaas.net/assets/images/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fdev%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json)
+[![Deploy to Azure](https://www.azuresaas.net/assets/images/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json)
 
 Demo SaaS Service:  https://www.azuresaas.net
 
