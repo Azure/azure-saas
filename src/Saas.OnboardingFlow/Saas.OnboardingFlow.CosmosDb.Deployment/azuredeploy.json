@@ -23,13 +23,6 @@
         "prod"
       ]
     },
-    "AccountName": {
-      "type": "string",
-      "defaultValue": "[concat('cosmos-', parameters('SaaSProviderName'), '-', parameters('Environment'), '-', parameters('InstanceNumber'))]",
-      "metadata": {
-        "description": "Cosmos DB account name"
-      }
-    },
     "Location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
@@ -37,20 +30,27 @@
         "description": "Location for the Cosmos DB account."
       }
     },
-    "DatabaseName": {
+    "InstanceNumber": {
+      "type": "string",
+      "defaultValue": "001"
+    },
+    "CosmosDbAccountName": {
+      "type": "string",
+      "defaultValue": "[concat('cosmos-', parameters('SaaSProviderName'), '-', parameters('Environment'), '-', parameters('InstanceNumber'))]",
+      "metadata": {
+        "description": "Cosmos DB account name"
+      }
+    },
+    "CosmosDbDatabaseName": {
       "type": "string",
       "metadata": {
         "description": "The name for the Core (SQL) database"
       }
-    },
-    "InstanceNumber": {
-      "type": "string",
-      "defaultValue": "001"
     }
   },
   "functions": [],
   "variables": {
-    "accountName_var": "[toLower(parameters('AccountName'))]"
+    "accountName_var": "[toLower(parameters('CosmosDbAccountName'))]"
   },
   "resources": [
     {
@@ -74,10 +74,10 @@
     {
       "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
       "apiVersion": "2021-04-15",
-      "name": "[format('{0}/{1}', variables('accountName_var'), parameters('DatabaseName'))]",
+      "name": "[format('{0}/{1}', variables('accountName_var'), parameters('CosmosDbDatabaseName'))]",
       "properties": {
         "resource": {
-          "id": "[parameters('DatabaseName')]"
+          "id": "[parameters('CosmosDbDatabaseName')]"
         },
         "options": {
           "throughput": 400

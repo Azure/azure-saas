@@ -16,15 +16,43 @@
         "prod"
       ]
     },
+    "Location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for the Cosmos DB account."
+      }
+    },
     "InstanceNumber": {
       "type": "string",
       "defaultValue": "001"
+    },
+    "CosmosDbAccountName": {
+      "type": "string",
+      "defaultValue": "[concat('cosmos-', parameters('SaaSProviderName'), '-', parameters('Environment'), '-', parameters('InstanceNumber'))]",
+      "metadata": {
+        "description": "Cosmos DB account name"
+      }
+    },
+    "CosmosDbDatabaseName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name for the Core (SQL) database"
+      }
     }
   },
   "variables": {
     "parametersProviderWebApp": {
       "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
       "Environment": { "value": "[parameters('Environment')]" },
+      "InstanceNumber": { "value": "[parameters('InstanceNumber')]" }
+    },
+    "parametersCosmosDb": {
+      "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
+      "Environment": { "value": "[parameters('Environment')]" },
+      "AccountName": { "value": "[parameters('CosmosDbAccountName')]" },
+      "Location": { "value": "[parameters('Location')]" },
+      "DatabaseName": { "value": "[parameters('CosmosDbDatabaseName')]" },
       "InstanceNumber": { "value": "[parameters('InstanceNumber')]" }
     }
   },
@@ -41,7 +69,21 @@
         "mode": "Incremental"
       },
       "tags": {}
+    },
+    {
+      "name": "deployCosmosDb",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2021-04-01",
+      "properties": {
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.OnboardingFlow/Saas.OnboardingFlow.CosmosDb.Deployment/azuredeploy.json"
+        },
+        "parameters": "[variables('parametersCosmosDb')]",
+        "mode": "Incremental"
+      },
+      "tags": {}
     }
+
   ],
   "outputs": {}
 }
