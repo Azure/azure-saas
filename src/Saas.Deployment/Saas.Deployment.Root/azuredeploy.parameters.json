@@ -11,7 +11,13 @@
     "InstanceNumber": {
       "value": "001"
     },
-    "databaseName": {
+    "Location": {
+      "value": "eastus"
+    },
+    "CosmosDbDatabaseName": {
+      "value": "azuresaas"
+    },
+    "CosmosDbAccountName": {
       "value": "azuresaas"
     }
   }

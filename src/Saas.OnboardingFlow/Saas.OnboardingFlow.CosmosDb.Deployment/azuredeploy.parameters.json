@@ -2,7 +2,22 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "databaseName": {
+    "SaasProviderName": {
+      "value": "org1"
+    },
+    "Environment": {
+      "value": "dev"
+    },
+    "InstanceNumber": {
+      "value": "001"
+    },
+    "Location": {
+      "value": "eastus"
+    },
+    "CosmosDbDatabaseName": {
+      "value": "azuresaas"
+    },
+    "CosmosDbAccountName": {
       "value": "azuresaas"
     }
   }
