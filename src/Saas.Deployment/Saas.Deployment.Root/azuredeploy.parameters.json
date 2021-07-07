@@ -10,6 +10,9 @@
     },
     "InstanceNumber": {
       "value": "001"
+    },
+    "databaseName": {
+      "value": "azuresaas"
     }
   }
 }
