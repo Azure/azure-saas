@@ -50,10 +50,10 @@
     "parametersCosmosDb": {
       "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
       "Environment": { "value": "[parameters('Environment')]" },
-      "AccountName": { "value": "[parameters('CosmosDbAccountName')]" },
       "Location": { "value": "[parameters('Location')]" },
-      "DatabaseName": { "value": "[parameters('CosmosDbDatabaseName')]" },
-      "InstanceNumber": { "value": "[parameters('InstanceNumber')]" }
+      "InstanceNumber": { "value": "[parameters('InstanceNumber')]" },
+      "CosmosDbAccountName": { "value": "[parameters('CosmosDbAccountName')]" },
+      "CosmosDbDatabaseName": { "value": "[parameters('CosmosDbDatabaseName')]" }
     }
   },
   "resources": [
