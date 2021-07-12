@@ -44,14 +44,14 @@
   "variables": {
     "parametersProviderWebApp": {
       "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
-      "Environment": { "value": "[parameters('SaasEnvironment')]" },
-      "InstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" }
+      "SaasEnvironment": { "value": "[parameters('SaasEnvironment')]" },
+      "SaasInstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" }
     },
     "parametersCosmosDb": {
       "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
-      "Environment": { "value": "[parameters('SaasEnvironment')]" },
-      "Location": { "value": "[parameters('SaasLocation')]" },
-      "InstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" },
+      "SaasEnvironment": { "value": "[parameters('SaasEnvironment')]" },
+      "SaasLocation": { "value": "[parameters('SaasLocation')]" },
+      "SaasInstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" },
       "CosmosDbAccountName": { "value": "[parameters('CosmosDbAccountName')]" },
       "CosmosDbDatabaseName": { "value": "[parameters('CosmosDbDatabaseName')]" }
     }
