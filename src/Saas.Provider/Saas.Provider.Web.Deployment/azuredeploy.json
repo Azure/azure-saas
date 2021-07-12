@@ -6,7 +6,7 @@
       "type": "string",
       "defaultValue": "contoso"
     },
-    "Environment": {
+    "SaasEnvironment": {
       "type": "string",
       "defaultValue": "dev",
       "allowedValues": [
@@ -16,14 +16,14 @@
         "prod"
       ]
     },
-    "InstanceNumber": {
+    "SaasInstanceNumber": {
       "type": "string",
       "defaultValue": "001"
     }
   },
   "variables": {
-    "appServicePlanName": "[concat('app-', parameters('SaasProviderName'), '-', parameters('Environment'), '-', parameters('InstanceNumber'))]",
-    "providerWebAppName": "[concat('app-', parameters('SaasProviderName'), '-', parameters('Environment'), '-', parameters('InstanceNumber'))]"
+    "appServicePlanName": "[concat('app-', parameters('SaasProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]",
+    "providerWebAppName": "[concat('app-', parameters('SaasProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]"
   },
   "resources": [
     {

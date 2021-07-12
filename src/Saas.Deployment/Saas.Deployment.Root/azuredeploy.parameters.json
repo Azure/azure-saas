@@ -5,13 +5,13 @@
     "SaasProviderName": {
       "value": "org1"
     },
-    "Environment": {
+    "SaasEnvironment": {
       "value": "dev"
     },
-    "InstanceNumber": {
+    "SaasInstanceNumber": {
       "value": "001"
     },
-    "Location": {
+    "SaasLocation": {
       "value": "eastus"
     },
     "CosmosDbDatabaseName": {
