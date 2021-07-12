@@ -6,7 +6,7 @@
       "type": "string",
       "defaultValue": "contoso"
     },
-    "Environment": {
+    "SaasEnvironment": {
       "type": "string",
       "defaultValue": "dev",
       "allowedValues": [
@@ -16,20 +16,20 @@
         "prod"
       ]
     },
-    "Location": {
+    "SaasLocation": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
       "metadata": {
         "description": "Location for the Cosmos DB account."
       }
     },
-    "InstanceNumber": {
+    "SaasInstanceNumber": {
       "type": "string",
       "defaultValue": "001"
     },
     "CosmosDbAccountName": {
       "type": "string",
-      "defaultValue": "[concat('cosmos-', parameters('SaaSProviderName'), '-', parameters('Environment'), '-', parameters('InstanceNumber'))]",
+      "defaultValue": "[concat('cosmos-', parameters('SaaSProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]",
       "metadata": {
         "description": "Cosmos DB account name"
       }
@@ -44,14 +44,14 @@
   "variables": {
     "parametersProviderWebApp": {
       "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
-      "Environment": { "value": "[parameters('Environment')]" },
-      "InstanceNumber": { "value": "[parameters('InstanceNumber')]" }
+      "Environment": { "value": "[parameters('SaasEnvironment')]" },
+      "InstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" }
     },
     "parametersCosmosDb": {
       "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
-      "Environment": { "value": "[parameters('Environment')]" },
-      "Location": { "value": "[parameters('Location')]" },
-      "InstanceNumber": { "value": "[parameters('InstanceNumber')]" },
+      "Environment": { "value": "[parameters('SaasEnvironment')]" },
+      "Location": { "value": "[parameters('SaasLocation')]" },
+      "InstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" },
       "CosmosDbAccountName": { "value": "[parameters('CosmosDbAccountName')]" },
       "CosmosDbDatabaseName": { "value": "[parameters('CosmosDbDatabaseName')]" }
     }
