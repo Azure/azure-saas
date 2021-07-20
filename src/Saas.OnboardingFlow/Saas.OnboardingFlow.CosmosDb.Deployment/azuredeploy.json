@@ -47,6 +47,22 @@
       "metadata": {
         "description": "The name for the Core (SQL) database"
       }
+    },
+    "CosmosDbContainerName": {
+      "type": "string",
+      "defaultValue": "OnboardingFlow",
+      "metadata": {
+        "description": "The name for the container"
+      }
+    },
+    "cosmosDbThroughput": {
+      "type": "int",
+      "defaultValue": 400,
+      "metadata": {
+        "description": "The throughput for the container"
+      },
+      "maxValue": 1000000,
+      "minValue": 400
     }
   },
   "functions": [],
@@ -88,6 +104,74 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('accountName_var'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
+      "apiVersion": "2021-04-15",
+      "name": "[format('{0}/{1}', format('{0}/{1}', variables('accountName_var'), parameters('CosmosDbDatabaseName')), parameters('CosmosDbContainerName'))]",
+      "properties": {
+        "resource": {
+          "id": "[parameters('CosmosDbContainerName')]",
+          "partitionKey": {
+            "paths": [
+              "/myPartitionKey"
+            ],
+            "kind": "Hash"
+          },
+          "indexingPolicy": {
+            "indexingMode": "consistent",
+            "includedPaths": [
+              {
+                "path": "/*"
+              }
+            ],
+            "excludedPaths": [
+              {
+                "path": "/myPathToNotIndex/*"
+              }
+            ],
+            "compositeIndexes": [
+              [
+                {
+                  "path": "/name",
+                  "order": "ascending"
+                },
+                {
+                  "path": "/age",
+                  "order": "descending"
+                }
+              ]
+            ],
+            "spatialIndexes": [
+              {
+                "path": "/location/*",
+                "types": [
+                  "Point",
+                  "Polygon",
+                  "MultiPolygon",
+                  "LineString"
+                ]
+              }
+            ]
+          },
+          "defaultTtl": 86400,
+          "uniqueKeyPolicy": {
+            "uniqueKeys": [
+              {
+                "paths": [
+                  "/phoneNumber"
+                ]
+              }
+            ]
+          }
+        },
+        "options": {
+          "throughput": "[parameters('cosmosDbThroughput')]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', split(format('{0}/{1}', variables('accountName_var'), parameters('CosmosDbDatabaseName')), '/')[0], split(format('{0}/{1}', variables('accountName_var'), parameters('CosmosDbDatabaseName')), '/')[1])]"
       ]
     }
   ],
