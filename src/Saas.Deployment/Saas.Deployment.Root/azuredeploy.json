@@ -42,11 +42,6 @@
     }
   },
   "variables": {
-    "parametersProviderWebApp": {
-      "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
-      "SaasEnvironment": { "value": "[parameters('SaasEnvironment')]" },
-      "SaasInstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" }
-    },
     "parametersCosmosDb": {
       "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
       "SaasEnvironment": { "value": "[parameters('SaasEnvironment')]" },
@@ -57,19 +52,6 @@
     }
   },
   "resources": [
-    {
-      "name": "deployProviderWebApp",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2021-04-01",
-      "properties": {
-        "templateLink": {
-          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.Provider/Saas.Provider.Web.Deployment/azuredeploy.json"
-        },
-        "parameters": "[variables('parametersProviderWebApp')]",
-        "mode": "Incremental"
-      },
-      "tags": {}
-    },
     {
       "name": "deployCosmosDb",
       "type": "Microsoft.Resources/deployments",
@@ -82,8 +64,28 @@
         "mode": "Incremental"
       },
       "tags": {}
+    },
+    {
+      "name": "deployProviderWebApp",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'deployCosmosDb')]"
+      ],
+      "apiVersion": "2021-04-01",
+      "properties": {
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.Provider/Saas.Provider.Web.Deployment/azuredeploy.json"
+        },
+        "parameters": {
+          "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
+          "SaasEnvironment": { "value": "[parameters('SaasEnvironment')]" },
+          "SaasInstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" },
+          "CosmosDbConnectionString": { "value": "[reference('deployCosmosDb').outputs.connectionString.value]" }
+        },
+        "mode": "Incremental"
+      },
+      "tags": {}
     }
-
   ],
   "outputs": {}
 }

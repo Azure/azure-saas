@@ -43,6 +43,7 @@
     },
     "CosmosDbDatabaseName": {
       "type": "string",
+      "defaultValue": "azuresaas",
       "metadata": {
         "description": "The name for the Core (SQL) database"
       }
@@ -50,7 +51,9 @@
   },
   "functions": [],
   "variables": {
-    "accountName_var": "[toLower(parameters('CosmosDbAccountName'))]"
+    "accountName_var": "[toLower(parameters('CosmosDbAccountName'))]",
+    "resourceId": "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('accountName_var'))]",
+    "apiVersion": "[providers('Microsoft.DocumentDB', 'databaseAccounts').apiVersions[0]]"
   },
   "resources": [
     {
@@ -87,5 +90,19 @@
         "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('accountName_var'))]"
       ]
     }
-  ]
+  ],
+  "outputs": {
+    "documentEndpoint": {
+      "type": "string",
+      "value": "[reference(variables('resourceId'), variables('apiVersion')).documentEndpoint]"
+    },
+    "accountKey": {
+      "type": "string",
+      "value": "[listKeys(variables('resourceId'), variables('apiVersion')).primaryMasterKey]"
+    },
+    "connectionString": {
+      "type": "string",
+      "value": "[concat('AccountEndpoint=https://', variables('accountName_var'), '.documents.azure.com:443/;AccountKey=', listKeys(variables('resourceId'), variables('apiVersion')).primaryMasterKey, ';')]"
+    }
+  }
 }
