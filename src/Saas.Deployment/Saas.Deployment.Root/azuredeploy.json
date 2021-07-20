@@ -58,7 +58,7 @@
       "apiVersion": "2021-04-01",
       "properties": {
         "templateLink": {
-          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/dev/src/Saas.OnboardingFlow/Saas.OnboardingFlow.CosmosDb.Deployment/azuredeploy.json"
+          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.OnboardingFlow/Saas.OnboardingFlow.CosmosDb.Deployment/azuredeploy.json"
         },
         "parameters": "[variables('parametersCosmosDb')]",
         "mode": "Incremental"
@@ -74,7 +74,7 @@
       "apiVersion": "2021-04-01",
       "properties": {
         "templateLink": {
-          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/dev/src/Saas.Provider/Saas.Provider.Web.Deployment/azuredeploy.json"
+          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.Provider/Saas.Provider.Web.Deployment/azuredeploy.json"
         },
         "parameters": {
           "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
@@ -86,5 +86,6 @@
       },
       "tags": {}
     }
-  ]
+  ],
+  "outputs": {}
 }
