@@ -27,6 +27,33 @@
       "type": "string",
       "defaultValue": "001"
     },
+    "CosmosDbAccountName": {
+      "type": "string",
+      "defaultValue": "[concat('cosmos-', parameters('SaaSProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]",
+      "metadata": {
+        "description": "Cosmos DB account name"
+      }
+    },
+    "CosmosDbDatabaseName": {
+      "type": "string",
+      "defaultValue": "azuresaas",
+      "metadata": {
+        "description": "The name for the Core (SQL) database"
+      }
+    },
+    "CosmosDbContainerName": {
+      "type": "string",
+      "defaultValue": "OnboardingFlow",
+      "metadata": {
+        "description": "The name for the container"
+      }
+    },
+    "CosmosDbAccountKey": {
+      "type": "string",
+      "metadata": {
+        "description": "The account key output of CosmosDB"
+      }
+    },
     "CosmosDbConnectionString": {
       "type": "string"
     }
@@ -69,6 +96,17 @@
             "serverFarmId": "[resourceId(resourceGroup().name, 'Microsoft.Web/serverFarms', variables('appServicePlanName'))]",
             "siteConfig": {
               "netFrameworkVersion": "v5.0",
+              "appSettings": [
+                {
+                  "name": "CosmosDb",
+                  "value": {
+                    "Account": "[parameters('CosmosDbConnectionString')]",
+                    "Key": "[parameters('CosmosDbAccountKey')]",
+                    "DatabaseName": "[parameters('CosmosDbDatabaseName')]",
+                    "ContainerName": "[parameters('CosmosDbContainerName')]"
+                  }
+                }
+              ],
               "connectionStrings": [
                 {
                   "name": "CosmosDb",

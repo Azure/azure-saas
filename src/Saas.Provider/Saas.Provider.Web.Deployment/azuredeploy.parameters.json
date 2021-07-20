@@ -16,6 +16,9 @@
     },
     "CosmosDbConnectionString": {
       "value": "AccountEndpoint=https://cosmos-org1-dev-013.documents.azure.com:443/;AccountKey=yMXTm5pCH4KYvEX0LKAXnznnPdEhc5ZdZdhfyE82OsRgXmf2x5nlE5aoOR4mh4DcdAX0WoNBZDbUqjWhLqnhVA==;"
+    },
+    "CosmosDbAccountKey": {
+      "value": "asdf"
     }
   }
 }
