@@ -83,6 +83,12 @@
       "metadata": {
         "description": "The Elastic Pool DTU or nomber of vcore."
       }
+    },
+    "SqlDatabaseCapacityMax": {
+      "type": "int",
+      "metadata": {
+        "description": "The Elastic Pool database capacity max."
+      }
     }
   },
   "variables": {
@@ -100,7 +106,8 @@
       "SqlServerName": { "value": "[parameters('SqlServerName')]" },
       "SqlElasticPoolName": { "value": "[parameters('SqlElasticPoolName')]" },
       "SqlEdition": { "value": "[parameters('SqlEdition')]" },
-      "SqlElasticPoolCapacity": { "value": "[parameters('SqlElasticPoolCapacity')]" }
+      "SqlElasticPoolCapacity": { "value": "[parameters('SqlElasticPoolCapacity')]" },
+      "SqlDatabaseCapacityMax": { "value": "[parameters('SqlDatabaseCapacityMax')]" }
     }
   },
   "resources": [
@@ -123,7 +130,7 @@
       "apiVersion": "2021-04-01",
       "properties": {
         "templateLink": {
-          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.Data/Saas.Data.Sql.Deployment/azuredeploy.json"
+          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/dev/src/Saas.Data/Saas.Data.Sql.Deployment/azuredeploy.json"
         },
         "parameters": "[variables('parametersSql')]",
         "mode": "Incremental"

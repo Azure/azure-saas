@@ -46,17 +46,17 @@
         "description": "The Elastic Pool DTU or nomber of vcore."
       }
     },
+    "SqlDatabaseCapacityMax": {
+      "type": "int",
+      "metadata": {
+        "description": "The Elastic Pool database capacity max."
+      }
+    },
     "databaseCapacityMin": {
       "type": "int",
       "defaultValue": 0,
       "metadata": {
         "description": "The Elastic Pool database capacity min."
-      }
-    },
-    "databaseCapacityMax": {
-      "type": "int",
-      "metadata": {
-        "description": "The Elastic Pool database capacity max."
       }
     },
     "databasesNames": {
@@ -140,7 +140,7 @@
       "properties": {
         "perDatabaseSettings": {
           "minCapacity": "[parameters('databaseCapacityMin')]",
-          "maxCapacity": "[parameters('databaseCapacityMax')]"
+          "maxCapacity": "[parameters('SqlDatabaseCapacityMax')]"
         }
       }
     },
