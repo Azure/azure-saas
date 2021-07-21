@@ -16,6 +16,18 @@
     },
     "CosmosDbDatabaseName": {
       "value": "azuresaasdb018"
+    },
+    "SqlAdministratorLogin": {
+      "value": "saasadmin"
+    },
+    "SqlServerName": {
+      "value": "sql-saas-dev-029"
+    },
+    "SqlElasticPoolName": {
+      "value": "sql-saas-dev-029-elasticpool"
+    },
+    "SqlElasticPoolCapacity": {
+      "value": 50
     }
   }
 }
