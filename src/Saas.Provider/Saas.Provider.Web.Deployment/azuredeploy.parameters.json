@@ -9,16 +9,22 @@
       "value": "dev"
     },
     "SaasInstanceNumber": {
-      "value": "015"
+      "value": "026"
     },
     "SaasLocation": {
       "value": "eastus"
     },
     "CosmosDbConnectionString": {
-      "value": "AccountEndpoint=https://cosmos-org1-dev-013.documents.azure.com:443/;AccountKey=yMXTm5pCH4KYvEX0LKAXnznnPdEhc5ZdZdhfyE82OsRgXmf2x5nlE5aoOR4mh4DcdAX0WoNBZDbUqjWhLqnhVA==;"
+      "value": "AccountEndpoint=https://cosmos-contoso-dev-026.documents.azure.com:443/;AccountKey=v0UvAFBVW6Yx3bsWlNV8lVH7sx12jLGphyi9wyhfxp4bR2f7A1jwe1NDBfQn56fIBT8xIHcl9qTtsCr90GpTUA==;"
     },
     "CosmosDbAccountKey": {
-      "value": "asdf"
+      "value": "v0UvAFBVW6Yx3bsWlNV8lVH7sx12jLGphyi9wyhfxp4bR2f7A1jwe1NDBfQn56fIBT8xIHcl9qTtsCr90GpTUA=="
+    },
+    "CosmosDbEndpoint": {
+      "value": "https://cosmos-contoso-dev-026.documents.azure.com:443/"
+    },
+    "CosmosDbDatabaseName": {
+      "value": "azuresaas026"
     }
   }
 }
