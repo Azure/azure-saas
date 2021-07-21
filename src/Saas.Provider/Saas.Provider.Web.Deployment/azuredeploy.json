@@ -27,6 +27,15 @@
       "type": "string",
       "defaultValue": "001"
     },
+    "CosmosDbEndpoint": {
+      "type": "string"
+    },
+    "CosmosDbAccountKey": {
+      "type": "string",
+      "metadata": {
+        "description": "The account key output of CosmosDB"
+      }
+    },
     "CosmosDbAccountName": {
       "type": "string",
       "defaultValue": "[concat('cosmos-', parameters('SaaSProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]",
@@ -39,19 +48,6 @@
       "defaultValue": "azuresaas",
       "metadata": {
         "description": "The name for the Core (SQL) database"
-      }
-    },
-    "CosmosDbContainerName": {
-      "type": "string",
-      "defaultValue": "OnboardingFlow",
-      "metadata": {
-        "description": "The name for the container"
-      }
-    },
-    "CosmosDbAccountKey": {
-      "type": "string",
-      "metadata": {
-        "description": "The account key output of CosmosDB"
       }
     },
     "CosmosDbConnectionString": {
@@ -100,10 +96,10 @@
                 {
                   "name": "CosmosDb",
                   "value": {
-                    "Account": "[parameters('CosmosDbConnectionString')]",
+                    "Account": "[parameters('CosmosDbEndpoint')]",
                     "Key": "[parameters('CosmosDbAccountKey')]",
                     "DatabaseName": "[parameters('CosmosDbDatabaseName')]",
-                    "ContainerName": "[parameters('CosmosDbContainerName')]"
+                    "ContainerName": "OnboardingFlow"
                   }
                 }
               ],

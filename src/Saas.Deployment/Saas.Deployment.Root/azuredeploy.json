@@ -79,11 +79,13 @@
         "parameters": {
           "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
           "SaasEnvironment": { "value": "[parameters('SaasEnvironment')]" },
+          "SaasLocation": { "value": "[parameters('SaasLocation')]" },
           "SaasInstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" },
+          "CosmosDbEndpoint": { "value": "[reference('deployCosmosDb').outputs.documentEndpoint.value]" },
+          "CosmosDbAccountKey": { "value": "[reference('deployCosmosDb').outputs.accountKey.value]" },
           "CosmosDbAccountName": { "value": "[parameters('CosmosDbAccountName')]" },
           "CosmosDbDatabaseName": { "value": "[parameters('CosmosDbDatabaseName')]" },
-          "CosmosDbConnectionString": { "value": "[reference('deployCosmosDb').outputs.connectionString.value]" },
-          "CosmosDbAccountKey": { "value": "[reference('deployCosmosDb').outputs.accountKey.value]" }
+          "CosmosDbConnectionString": { "value": "[reference('deployCosmosDb').outputs.connectionString.value]" }
         },
         "mode": "Incremental"
       },
