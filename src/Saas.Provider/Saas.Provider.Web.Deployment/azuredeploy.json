@@ -94,13 +94,8 @@
               "netFrameworkVersion": "v5.0",
               "appSettings": [
                 {
-                  "name": "CosmosDb",
-                  "value": {
-                    "Account": "[parameters('CosmosDbEndpoint')]",
-                    "Key": "[parameters('CosmosDbAccountKey')]",
-                    "DatabaseName": "[parameters('CosmosDbDatabaseName')]",
-                    "ContainerName": "OnboardingFlow"
-                  }
+                  "name": "AppSettings:CosmosDb",
+                  "value": "[concat('{\"Account\": \"', parameters('CosmosDbEndpoint'), '\", \"Key\":\"', parameters('CosmosDbAccountKey'), '\", \"DatabaseName\":\"', parameters('CosmosDbDatabaseName'), '\", \"ContainerName\": \"OnboardingFlow\"}')]"
                 }
               ],
               "connectionStrings": [
