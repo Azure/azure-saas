@@ -115,7 +115,7 @@
           "id": "[parameters('CosmosDbContainerName')]",
           "partitionKey": {
             "paths": [
-              "/myPartitionKey"
+              "/name"
             ],
             "kind": "Hash"
           },

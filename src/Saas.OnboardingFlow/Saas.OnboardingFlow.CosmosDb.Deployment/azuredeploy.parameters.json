@@ -9,13 +9,13 @@
       "value": "dev"
     },
     "SaasInstanceNumber": {
-      "value": "023"
+      "value": "028"
     },
     "SaasLocation": {
       "value": "eastus"
     },
     "CosmosDbDatabaseName": {
-      "value": "azuresaas023"
+      "value": "azuresaas028"
     }
   }
 }

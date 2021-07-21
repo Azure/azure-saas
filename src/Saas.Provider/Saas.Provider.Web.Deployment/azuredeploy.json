@@ -94,8 +94,24 @@
               "netFrameworkVersion": "v5.0",
               "appSettings": [
                 {
-                  "name": "AppSettings:CosmosDb",
-                  "value": "[concat('{\"Account\": \"', parameters('CosmosDbEndpoint'), '\", \"Key\":\"', parameters('CosmosDbAccountKey'), '\", \"DatabaseName\":\"', parameters('CosmosDbDatabaseName'), '\", \"ContainerName\": \"OnboardingFlow\"}')]"
+                  "name": "ASPNETCORE_ENVIRONMENT",
+                  "value": "Production"
+                },
+                {
+                  "name": "AppSettings:CosmosDb:Account",
+                  "value": "[parameters('CosmosDbEndpoint')]"
+                },
+                {
+                  "name": "AppSettings:CosmosDb:Key",
+                  "value": "[parameters('CosmosDbAccountKey')]"
+                },
+                {
+                  "name": "AppSettings:CosmosDb:DatabaseName",
+                  "value": "[parameters('CosmosDbDatabaseName')]"
+                },
+                {
+                  "name": "AppSettings:CosmosDb:ContainerName",
+                  "value": "OnboardingFlow"
                 }
               ],
               "connectionStrings": [
