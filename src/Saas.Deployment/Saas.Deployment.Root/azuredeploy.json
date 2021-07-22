@@ -39,6 +39,58 @@
       "metadata": {
         "description": "The name for the Core (SQL) database"
       }
+    },
+    "SqlAdministratorLogin": {
+      "type": "string",
+      "metadata": {
+        "description": "The SQL Server administrator login"
+      }
+    },
+    "SqlAdministratorLoginPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The SQL Server administrator login password."
+      }
+    },
+    "SqlServerName": {
+      "type": "string",
+      "metadata": {
+        "description": "The SQL Server name."
+      }
+    },
+    "SqlElasticPoolName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Elastic Pool name."
+      }
+    },
+    "SqlEdition": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium",
+        "GP_Gen5",
+        "BC_Gen5"
+      ],
+      "metadata": {
+        "description": "The Elastic Pool edition."
+      }
+    },
+    "SqlElasticPoolCapacity": {
+      "type": "int",
+      "defaultValue": "50",
+      "metadata": {
+        "description": "The Elastic Pool DTU or nomber of vcore."
+      }
+    },
+    "SqlDatabaseCapacityMax": {
+      "type": "int",
+      "defaultValue": "5",
+      "metadata": {
+        "description": "The Elastic Pool database capacity max."
+      }
     }
   },
   "variables": {
@@ -49,6 +101,15 @@
       "SaasInstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" },
       "CosmosDbAccountName": { "value": "[parameters('CosmosDbAccountName')]" },
       "CosmosDbDatabaseName": { "value": "[parameters('CosmosDbDatabaseName')]" }
+    },
+    "parametersSql": {
+      "SqlAdministratorLogin": { "value": "[parameters('SqlAdministratorLogin')]" },
+      "SqlAdministratorLoginPassword": { "value": "[parameters('SqlAdministratorLoginPassword')]" },
+      "SqlServerName": { "value": "[parameters('SqlServerName')]" },
+      "SqlElasticPoolName": { "value": "[parameters('SqlElasticPoolName')]" },
+      "SqlEdition": { "value": "[parameters('SqlEdition')]" },
+      "SqlElasticPoolCapacity": { "value": "[parameters('SqlElasticPoolCapacity')]" },
+      "SqlDatabaseCapacityMax": { "value": "[parameters('SqlDatabaseCapacityMax')]" }
     }
   },
   "resources": [
@@ -66,10 +127,24 @@
       "tags": {}
     },
     {
+      "name": "deploySql",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2021-04-01",
+      "properties": {
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.Data/Saas.Data.Sql.Deployment/azuredeploy.json"
+        },
+        "parameters": "[variables('parametersSql')]",
+        "mode": "Incremental"
+      },
+      "tags": {}
+    },
+    {
       "name": "deployProviderWebApp",
       "type": "Microsoft.Resources/deployments",
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'deployCosmosDb')]"
+        "[resourceId('Microsoft.Resources/deployments', 'deployCosmosDb')]",
+        "[resourceId('Microsoft.Resources/deployments', 'deploySql')]"
       ],
       "apiVersion": "2021-04-01",
       "properties": {
