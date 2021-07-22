@@ -36,6 +36,7 @@
     },
     "CosmosDbDatabaseName": {
       "type": "string",
+      "defaultValue": "[concat('cosmos-', parameters('SaaSProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]",
       "metadata": {
         "description": "The name for the Core (SQL) database"
       }
@@ -54,12 +55,14 @@
     },
     "SqlServerName": {
       "type": "string",
+      "defaultValue": "[concat('sql-', parameters('SaaSProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]",
       "metadata": {
         "description": "The SQL Server name."
       }
     },
     "SqlElasticPoolName": {
       "type": "string",
+      "defaultValue": "[concat('sql-elasticpool-', parameters('SaaSProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]",
       "metadata": {
         "description": "The Elastic Pool name."
       }
