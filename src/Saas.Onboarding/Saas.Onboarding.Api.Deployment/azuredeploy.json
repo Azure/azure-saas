@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "SaasProviderName": {
+      "type": "string",
+      "defaultValue": "contoso"
+    },
+    "SaasEnvironment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": [
+        "dev",
+        "staging",
+        "test",
+        "prod"
+      ]
+    },
+    "SaasLocation": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for the Cosmos DB account."
+      }
+    },
+    "SaasInstanceNumber": {
+      "type": "string",
+      "defaultValue": "001"
+    }
+  },
+  "variables": {
+    "appServicePlanName": "[concat('app-', parameters('SaasProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]",
+    "onboardingApiAppName": "[concat('api-onboarding-', parameters('SaasProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]"
+  },
+  "resources": [
+    {
+      "name": "[variables('onboardingApiAppName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "kind": "api",
+      "tags": {
+        "displayName": "SaaS Onboarding API App"
+      },
+      "properties": {
+        "name": "[variables('onboardingApiAppName')]",
+        "serverFarmId": "[resourceId(resourceGroup().name, 'Microsoft.Web/serverFarms', variables('appServicePlanName'))]",
+        "siteConfig": {
+          "netFrameworkVersion": "v5.0",
+          "appSettings": [
+            {
+              "name": "ASPNETCORE_ENVIRONMENT",
+              "value": "Production"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

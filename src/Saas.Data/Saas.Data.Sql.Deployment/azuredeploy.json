@@ -2,6 +2,31 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "SaasProviderName": {
+      "type": "string",
+      "defaultValue": "contoso"
+    },
+    "SaasEnvironment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "allowedValues": [
+        "dev",
+        "staging",
+        "test",
+        "prod"
+      ]
+    },
+    "SaasLocation": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for the SQL Server."
+      }
+    },
+    "SaasInstanceNumber": {
+      "type": "string",
+      "defaultValue": "001"
+    },
     "SqlAdministratorLogin": {
       "type": "string",
       "metadata": {
@@ -16,12 +41,14 @@
     },
     "SqlServerName": {
       "type": "string",
+      "defaultValue": "[concat('sql-', parameters('SaaSProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]",
       "metadata": {
         "description": "The SQL Server name."
       }
     },
     "SqlElasticPoolName": {
       "type": "string",
+      "defaultValue": "[concat('sql-elasticpool-', parameters('SaaSProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'))]",
       "metadata": {
         "description": "The Elastic Pool name."
       }
