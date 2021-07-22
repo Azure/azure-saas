@@ -143,27 +143,6 @@
       "tags": {}
     },
     {
-      "name": "deployOnboardingApiApp",
-      "type": "Microsoft.Resources/deployments",
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'deploySql')]"
-      ],
-      "apiVersion": "2021-04-01",
-      "properties": {
-        "templateLink": {
-          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.Onboarding/Saas.Onboarding.Api.Deployment/azuredeploy.json"
-        },
-        "parameters": {
-          "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
-          "SaasEnvironment": { "value": "[parameters('SaasEnvironment')]" },
-          "SaasLocation": { "value": "[parameters('SaasLocation')]" },
-          "SaasInstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" }
-        },
-        "mode": "Incremental"
-      },
-      "tags": {}
-    },
-    {
       "name": "deployProviderWebApp",
       "type": "Microsoft.Resources/deployments",
       "dependsOn": [
@@ -185,6 +164,28 @@
           "CosmosDbAccountName": { "value": "[parameters('CosmosDbAccountName')]" },
           "CosmosDbDatabaseName": { "value": "[parameters('CosmosDbDatabaseName')]" },
           "CosmosDbConnectionString": { "value": "[reference('deployCosmosDb').outputs.connectionString.value]" }
+        },
+        "mode": "Incremental"
+      },
+      "tags": {}
+    },
+    {
+      "name": "deployOnboardingApiApp",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'deploySql')]",
+        "[resourceId('Microsoft.Resources/deployments', 'deployProviderWebApp')]"
+      ],
+      "apiVersion": "2021-04-01",
+      "properties": {
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.Onboarding/Saas.Onboarding.Api.Deployment/azuredeploy.json"
+        },
+        "parameters": {
+          "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
+          "SaasEnvironment": { "value": "[parameters('SaasEnvironment')]" },
+          "SaasLocation": { "value": "[parameters('SaasLocation')]" },
+          "SaasInstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" }
         },
         "mode": "Incremental"
       },
