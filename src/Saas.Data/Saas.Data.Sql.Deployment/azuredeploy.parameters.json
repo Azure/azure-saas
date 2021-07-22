@@ -2,26 +2,26 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "administratorLogin": {
+    "SqlAdministratorLogin": {
       "value": "saasadmin"
     },
-    "serverName": {
-      "value": "sql-saas-dev-029"
+    "SqlServerName": {
+      "value": "sql-saas-dev-036"
     },
-    "elasticPoolName": {
-      "value": "sql-saas-dev-029-elasticpool"
+    "SqlElasticPoolName": {
+      "value": "sql-saas-dev-036-elasticpool"
     },
-    "capacity": {
-      "value": 50
-    },
-    "edition": {
+    "SqlEdition": {
       "value": "Basic"
     },
-    "databaseCapacityMin": {
-      "value": 0
-    },
-    "databaseCapacityMax": {
+    "SqlDatabaseCapacityMax": {
       "value": 5
+    },
+    "SqlElasticPoolCapacity": {
+      "value": 50
+    },
+    "SaasInstanceNumber": {
+      "value": "036"
     }
   }
 }

@@ -26,6 +26,9 @@
     "SaasInstanceNumber": {
       "type": "string",
       "defaultValue": "001"
+    },
+    "CatalogDbAdoConnString": {
+      "type": "string"
     }
   },
   "variables": {
@@ -71,6 +74,13 @@
                 {
                   "name": "ASPNETCORE_ENVIRONMENT",
                   "value": "Production"
+                }
+              ],
+              "connectionStrings": [
+                {
+                  "name": "ConnectionStrings:CatalogDb",
+                  "connectionString": "[parameters('CatalogDbAdoConnString')]",
+                  "type": "SQL Server"
                 }
               ]
             }

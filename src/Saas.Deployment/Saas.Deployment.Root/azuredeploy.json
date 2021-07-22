@@ -184,7 +184,8 @@
           "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },
           "SaasEnvironment": { "value": "[parameters('SaasEnvironment')]" },
           "SaasLocation": { "value": "[parameters('SaasLocation')]" },
-          "SaasInstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" }
+          "SaasInstanceNumber": { "value": "[parameters('SaasInstanceNumber')]" },
+          "CatalogDbAdoConnString": { "value": "[reference('deploySql').outputs.catalogDbAdoConnString.value]" }
         },
         "mode": "Incremental"
       },
