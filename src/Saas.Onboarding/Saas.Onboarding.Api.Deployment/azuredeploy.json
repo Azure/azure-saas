@@ -34,27 +34,49 @@
   },
   "resources": [
     {
-      "name": "[variables('onboardingApiAppName')]",
-      "type": "Microsoft.Web/sites",
+      "name": "[variables('appServicePlanName')]",
+      "type": "Microsoft.Web/serverfarms",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-08-01",
-      "kind": "api",
+      "sku": {
+        "name": "F1"
+      },
+      "dependsOn": [],
       "tags": {
-        "displayName": "SaaS Onboarding API App"
+        "displayName": "SaaS Provider App Service Plan"
       },
       "properties": {
-        "name": "[variables('onboardingApiAppName')]",
-        "serverFarmId": "[resourceId(resourceGroup().name, 'Microsoft.Web/serverFarms', variables('appServicePlanName'))]",
-        "siteConfig": {
-          "netFrameworkVersion": "v5.0",
-          "appSettings": [
-            {
-              "name": "ASPNETCORE_ENVIRONMENT",
-              "value": "Production"
+        "name": "[variables('appServicePlanName')]",
+        "numberOfWorkers": 1
+      },
+      "resources": [
+        {
+          "name": "[variables('onboardingApiAppName')]",
+          "type": "Microsoft.Web/sites",
+          "location": "eastus",
+          "kind": "api",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[concat('Microsoft.Web/serverFarms/', variables('appServicePlanName'))]"
+          ],
+          "tags": {
+            "displayName": "SaaS Onboarding API App"
+          },
+          "properties": {
+            "name": "[variables('onboardingApiAppName')]",
+            "serverFarmId": "[resourceId(resourceGroup().name, 'Microsoft.Web/serverFarms', variables('appServicePlanName'))]",
+            "siteConfig": {
+              "netFrameworkVersion": "v5.0",
+              "appSettings": [
+                {
+                  "name": "ASPNETCORE_ENVIRONMENT",
+                  "value": "Production"
+                }
+              ]
             }
-          ]
+          }
         }
-      }
+      ]
     }
   ],
   "outputs": {
