@@ -28,6 +28,9 @@
     },
     "SqlElasticPoolCapacity": {
       "value": 50
+    },
+    "SqlDatabaseCapacityMax": {
+      "value": 5
     }
   }
 }
