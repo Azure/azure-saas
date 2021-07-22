@@ -64,8 +64,8 @@
       "defaultValue": [
         "sqldb-catalog-dev",
         "sqldb-identity-dev",
-        "sqldb-order-dev",
-        "sqldb-identity-dev"
+        "sqldb-orders-dev",
+        "sqldb-proprietary-dev"
       ],
       "metadata": {
         "description": "The SQL Databases names."
