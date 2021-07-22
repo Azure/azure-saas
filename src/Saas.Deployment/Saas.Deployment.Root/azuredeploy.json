@@ -173,8 +173,7 @@
       "name": "deployOnboardingApiApp",
       "type": "Microsoft.Resources/deployments",
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'deploySql')]",
-        "[resourceId('Microsoft.Resources/deployments', 'deployProviderWebApp')]"
+        "[resourceId('Microsoft.Resources/deployments', 'deploySql')]"
       ],
       "apiVersion": "2021-04-01",
       "properties": {
