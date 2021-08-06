@@ -42,8 +42,8 @@ The reference implementation provides an end-to-end SaaS service including all r
 </div>-->
 
 | Platform  | <div style="width:425px">Preview and Link</div>        |
-|:----|:------------|
-| <div style="valign:top;"><p><a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> is a live production SaaS solution from ISV Modern Appz built entirely on the Azure SaaS Development Kit.</p><p>Subscriber allows users to easily build their email and sms lists using social login with Facebook, Google, Apple, Email and SMS.  In addition, they can add profile pictures, bios and external and social links to their tenants.</p> | <a href="https://www.onsubscriber.com" target="_blank"><img src="docs/assets/images/azure-saas-production-service-subscriber.png" /></a>
+|:---|:---|
+| <div style="valign:top;"><p><a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> is a live production SaaS solution from ISV Modern Appz built entirely on the Azure SaaS Development Kit.</p><p>Subscriber allows users to easily build their email and sms lists using social login with Facebook, Google, Apple, Email and SMS.  In addition, they can add profile pictures, bios and external and social links to their tenants.</p> | <a href="https://www.onsubscriber.com" target="_blank"><img src="docs/assets/images/azure-saas-production-service-subscriber.png" width="425" /></a>
 
 ## Subscribe for Updates
 Subscribe for email notifications of updates and new features:  
