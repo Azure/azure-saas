@@ -33,7 +33,7 @@ The reference implementation provides an end-to-end SaaS service including all r
 - .NET MAUI Cross Platform Mobile Apps - Multitenant
 
 ## Production SaaS Reference
-<table>
+<table style="background-color:#ffffff;">
 <tr>
 <th align="left">
 Platform

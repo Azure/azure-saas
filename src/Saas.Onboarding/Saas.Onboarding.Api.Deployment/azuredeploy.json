@@ -80,7 +80,7 @@
                 {
                   "name": "ConnectionStrings:CatalogDb",
                   "connectionString": "[parameters('CatalogDbAdoConnString')]",
-                  "type": "SQL Server"
+                  "type": "SQLAzure"
                 }
               ]
             }
