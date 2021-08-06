@@ -43,10 +43,10 @@ Preview and Link
 </th>
 </tr>
 <tr style="background-color:#fff;">
-<td width="50%">
+<td width="50%" style="background-color:#fff;">
 <a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> is a live production SaaS solution from ISV Modern Appz built entirely on the Azure SaaS Development Kit.</p><p>Subscriber allows users to easily build their email and sms lists using social login with Facebook, Google, Apple, Email and SMS.  In addition, they can add profile pictures, bios and external and social links to their tenants.</p>  
 </td>
-<td width="50%">  
+<td width="50%" style="background-color:#fff;">  
 <a href="https://www.onsubscriber.com" target="_blank"><img src="docs/assets/images/azure-saas-production-service-subscriber.png" width="425" /></a>  
 </td>
 </tr>
