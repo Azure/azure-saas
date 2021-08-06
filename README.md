@@ -1,6 +1,6 @@
 # Azure SaaS Development Kit (ASDK)
 
-The Azure SaaS Development Kit (ASDK) provides a reference architecture, reference implementation and tools to help developers, startups, ISVs and Enterprises deliver their applications as a SaaS service.  A platform for platform creators.
+The Azure SaaS Development Kit (ASDK) provides a reference architecture, deployable reference implementation and tools to help developers, startups, ISVs and Enterprises deliver their applications as a SaaS service.  A platform for platform creators.
 
 [![Deploy to Azure](https://www.azuresaas.net/assets/images/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json)
 
@@ -33,15 +33,20 @@ The reference implementation provides an end-to-end SaaS service including all r
 - .NET MAUI Cross Platform Mobile Apps - Multitenant
 
 ## Production SaaS Services
-Subscriber from ISV Modern Appz is a live production SaaS solution built entirely on the Azure SaaS Development Kit:
-https://www.onsubscriber.com
+<div style="height:239px;">
+	<div style="float:right; text-align: right; width:50%; margin-right:1rem;"><a href="https://www.onsubscriber.com" target="_blank"><img src="docs/assets/images/azure-saas-production-service-subscriber.png" /></a></div>
+	<div>
+		Subscriber is a live production SaaS solution from ISV Modern Appz built entirely on the Azure SaaS Development Kit:
+		<a href="https://www.onsubscriber.com" target="_blank">https://www.onsubscriber.com</a></div>
+	</div>
+</div>
 
 ## Subscribe for Updates
 Subscribe for email notifications of updates and new features:  
-https://www.onsubscriber.com/azuresaas
+<a href="https://www.onsubscriber.com/azuresaas" target="_blank">https://www.onsubscriber.com/azuresaas</a>
 
 ## Downloads
-https://www.azuresaas.net/resources
+<a href="https://www.azuresaas.net/resources" target="_blank">https://www.azuresaas.net/resources</a>
 - How to Build a SaaS Service on Azure (Webinar Slide Deck)  
 - Multitenant SaaS Micrososervice Architecture Diagram
 
