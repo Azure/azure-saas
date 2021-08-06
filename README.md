@@ -33,17 +33,24 @@ The reference implementation provides an end-to-end SaaS service including all r
 - .NET MAUI Cross Platform Mobile Apps - Multitenant
 
 ## Production SaaS Reference
-<!--<div style="height:239px;">
-	<div style="float:right; text-align: right; width:50%; margin-right:1rem;"><a href="https://www.onsubscriber.com" target="_blank"><img src="docs/assets/images/azure-saas-production-service-subscriber.png" /></a></div>
-	<div>
-		Subscriber is a live production SaaS solution from ISV Modern Appz built entirely on the Azure SaaS Development Kit:
-		<a href="https://www.onsubscriber.com" target="_blank">https://www.onsubscriber.com</a></div>
-	</div>
-</div>-->
-
-| Platform  | <div style="width:425px">Preview and Link &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> |
-|:-----------|:-----------|
-| <p><a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> is a live production SaaS solution from ISV Modern Appz built entirely on the Azure SaaS Development Kit.</p><p>Subscriber allows users to easily build their email and sms lists using social login with Facebook, Google, Apple, Email and SMS.  In addition, they can add profile pictures, bios and external and social links to their tenants.</p> | <a href="https://www.onsubscriber.com" target="_blank"><img src="docs/assets/images/azure-saas-production-service-subscriber.png" width="425" /></a>
+<table>
+<tr>
+<th align="left">
+Platform
+</th>
+<th align="left">
+Preview and Link
+</th>
+</tr>
+<tr style="background-color:#fff;">
+<td width="50%">
+<a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> is a live production SaaS solution from ISV Modern Appz built entirely on the Azure SaaS Development Kit.</p><p>Subscriber allows users to easily build their email and sms lists using social login with Facebook, Google, Apple, Email and SMS.  In addition, they can add profile pictures, bios and external and social links to their tenants.</p>  
+</td>
+<td width="50%">  
+<a href="https://www.onsubscriber.com" target="_blank"><img src="docs/assets/images/azure-saas-production-service-subscriber.png" width="425" /></a>  
+</td>
+</tr>
+</table>
 
 ## Subscribe for Updates
 Subscribe for email notifications of updates and new features:  
