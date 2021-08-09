@@ -33,24 +33,10 @@ The reference implementation provides an end-to-end SaaS service including all r
 - .NET MAUI Cross Platform Mobile Apps - Multitenant
 
 ## Production SaaS Reference
-<table style="background-color:#ffffff;">
-<tr>
-<th align="left">
-Platform
-</th>
-<th align="left">
-Preview and Link
-</th>
-</tr>
-<tr style="background-color:#fff;">
-<td width="50%" style="background-color:#fff;">
-<a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> is a live production SaaS solution from ISV Modern Appz built entirely on the Azure SaaS Development Kit.</p><p>Subscriber allows users to easily build their email and sms lists using social login with Facebook, Google, Apple, Email and SMS.  In addition, they can add profile pictures, bios and external and social links to their tenants.</p>  
-</td>
-<td width="50%" style="background-color:#fff;">  
-<a href="https://www.onsubscriber.com" target="_blank"><img src="docs/assets/images/azure-saas-production-service-subscriber.png" width="425" /></a>  
-</td>
-</tr>
-</table>
+
+<a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> is a live production SaaS solution from ISV Modern Appz built entirely on the Azure SaaS Development Kit.</p><p><a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> allows users to easily build their Email and SMS lists using social login with Facebook, Google, Apple, Email and SMS.  In addition, users can add profile pictures, bios, external links and social accounts to their tenants.
+
+<a href="https://www.onsubscriber.com" target="_blank"><img src="docs/assets/images/azure-saas-production-service-subscriber.png" /></a>
 
 ## Subscribe for Updates
 Subscribe for email notifications of updates and new features:  
