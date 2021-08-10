@@ -3,8 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "SaasProviderName": {
-      "type": "string",
-      "defaultValue": "contoso"
+      "type": "string"
     },
     "SaasEnvironment": {
       "type": "string",
