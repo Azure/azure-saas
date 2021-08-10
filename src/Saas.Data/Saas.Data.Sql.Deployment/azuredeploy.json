@@ -211,7 +211,7 @@
     }
   ],
   "outputs": {
-    "CatalogDbAdoConnString": {
+    "catalogDbAdoConnString": {
       "type": "string",
       "value": "[concat('Server=tcp:',reference(parameters('SqlServerName')).fullyQualifiedDomainName,',1433;Initial Catalog=sqldb-catalog-dev;Persist Security Info=False;User ID=',reference(parameters('SqlServerName')).administratorLogin,';Password=',parameters('SqlAdministratorLoginPassword'),';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
     }

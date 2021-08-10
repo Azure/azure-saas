@@ -106,9 +106,15 @@ namespace Saas.Provider.Web.Controllers
 
             // Populate Categories dropdown list
             List<Category> categories = new List<Category>();
-            categories.Add(new Category { Id = 1, Name = "Healthcare" });
-            categories.Add(new Category { Id = 2, Name = "Finance" });
-            categories.Add(new Category { Id = 3, Name = "Technology" });
+            categories.Add(new Category { Id = 1, Name = "Automotive, Mobility & Transportation" });
+            categories.Add(new Category { Id = 2, Name = "Energy & Sustainability" });
+            categories.Add(new Category { Id = 3, Name = "Financial Services" });
+            categories.Add(new Category { Id = 4, Name = "Healthcare & Life Sciences" });
+            categories.Add(new Category { Id = 5, Name = "Manufacturing & Supply Chain" });
+            categories.Add(new Category { Id = 6, Name = "Media & Communications" });
+            categories.Add(new Category { Id = 7, Name = "Public Sector" });
+            categories.Add(new Category { Id = 8, Name = "Retail & Consumer Goods" });
+            categories.Add(new Category { Id = 9, Name = "Software" });
 
             return View(categories);
         }

@@ -10,6 +10,7 @@ using Saas.Provider.Web.Models;
 using Saas.Provider.Web.Repositories;
 using Saas.Provider.Web.Services;
 using System;
+using System.Configuration;
 using System.Threading.Tasks;
 
 namespace Saas.Provider.Web
@@ -41,7 +42,7 @@ namespace Saas.Provider.Web
             });
             services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
 
-            services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult());
+            services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("AppSettings:CosmosDb")).GetAwaiter().GetResult());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
