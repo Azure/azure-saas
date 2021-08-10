@@ -26,17 +26,17 @@ The reference implementation provides an end-to-end SaaS service including all r
 
 <img src="docs/assets/images/azure-saas-multitenant-deployment.png" width="850">
 
-## Solution Roadmap
-- Azure Kubernetes Services (AKS) for tenant containerization
-- Azure Container Registry (ACR)
-- Azure Bicep for Azure resource deployments
-- .NET MAUI Cross Platform Mobile Apps - Multitenant
-
 ## Production SaaS Reference
 
 <a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> is a live production SaaS solution from ISV Modern Appz built entirely on the Azure SaaS Development Kit.</p><p><a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> allows users to easily build their Email and SMS lists using social login with Facebook, Google, Apple, Email and SMS.  In addition, users can add profile pictures, bios, external links and social accounts to their tenants.
 
 <a href="https://www.onsubscriber.com" target="_blank"><img src="docs/assets/images/azure-saas-production-service-subscriber.png" /></a>
+
+## Solution Roadmap
+- Azure Kubernetes Services (AKS) for tenant containerization
+- Azure Container Registry (ACR)
+- Azure Bicep for Azure resource deployments
+- .NET MAUI Cross Platform Mobile Apps - Multitenant
 
 ## Subscribe for Updates
 Subscribe for email notifications of updates and new features:  
