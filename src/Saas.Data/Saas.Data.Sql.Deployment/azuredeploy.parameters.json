@@ -6,10 +6,10 @@
       "value": "saasadmin"
     },
     "SqlServerName": {
-      "value": "sql-saas-dev-036"
+      "value": "sql-saas-dev-043"
     },
     "SqlElasticPoolName": {
-      "value": "sql-saas-dev-036-elasticpool"
+      "value": "sql-saas-dev-043-elasticpool"
     },
     "SqlEdition": {
       "value": "Basic"
@@ -21,7 +21,10 @@
       "value": 50
     },
     "SaasInstanceNumber": {
-      "value": "036"
+      "value": "043"
+    },
+    "SqlAdministratorLoginPassword": {
+      "value": "pass@word1"
     }
   }
 }

@@ -156,11 +156,11 @@
     {
       "type": "Microsoft.Sql/servers/elasticPools",
       "apiVersion": "2020-02-02-preview",
+      "location": "[parameters('location')]",
+      "name": "[concat(parameters('SqlServerName'), '/', parameters('SqlElasticPoolName'))]",
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers/', parameters('SqlServerName'))]"
       ],
-      "location": "[parameters('location')]",
-      "name": "[concat(parameters('SqlServerName'), '/', parameters('SqlElasticPoolName'))]",
       "sku": {
         "name": "[variables('skuName')]",
         "tier": "[variables('skuTier')]",
@@ -191,23 +191,42 @@
         "collation": "[parameters('databaseCollation')]",
         "elasticPoolId": "[resourceId('Microsoft.Sql/servers/elasticpools', parameters('SqlServerName'), parameters('SqlElasticPoolName'))]"
       },
+      "resources": [
+        {
+          "apiVersion": "2014-04-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers/databases', parameters('SqlServerName'), parameters('databasesNames')[copyIndex()])]"
+          ],
+          "name": "DbSchemaImport",
+          "properties": {
+            "storageKeyType": "SharedAccessKey",
+            "storageKey": "?sv=2020-04-08&st=2021-08-12T18%3A21%3A36Z&se=2099-09-14T03%3A59%3A00Z&sr=c&sp=rl&sig=sVv7LZFA68jgu5yppI1Bq58HZ353evNm7%2F3Rtm8039M%3D",
+            "storageUri": "[concat('https://stsaasdev001.blob.core.windows.net/artifacts/data/bacpacs/',parameters('databasesNames')[copyIndex()],'.bacpac')]",
+            "administratorLogin": "[parameters('SqlAdministratorLogin')]",
+            "administratorLoginPassword": "[parameters('SqlAdministratorLoginPassword')]",
+            "authenticationType": "SQL",
+            "operationMode": "Import"
+          },
+          "type": "extensions"
+        }
+      ],
       "copy": {
         "name": "addDatabasesInElasticPool",
         "count": "[length(parameters('databasesNames'))]"
       }
     },
     {
+      "type": "Microsoft.Sql/servers/firewallrules",
       "apiVersion": "2020-02-02-preview",
+      "location": "[parameters('location')]",
+      "name": "[concat(parameters('SqlServerName'), '/', 'AllowAllWindowsAzureIps')]",
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers/', parameters('SqlServerName'))]"
       ],
-      "location": "[parameters('location')]",
-      "name": "[concat(parameters('SqlServerName'), '/', 'AllowAllWindowsAzureIps')]",
       "properties": {
         "endIpAddress": "0.0.0.0",
         "startIpAddress": "0.0.0.0"
-      },
-      "type": "Microsoft.Sql/servers/firewallrules"
+      }
     }
   ],
   "outputs": {

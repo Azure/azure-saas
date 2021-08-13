@@ -1,9 +1,12 @@
 ﻿CREATE TABLE [dbo].[Tenant]
 (
-    Id uniqueidentifier NOT NULL,
-    ApiKey uniqueidentifier NOT NULL,
-    TenantName nvarchar(200) NOT NULL,
-    IsActive bit NOT NULL, 
+    [Id] UNIQUEIDENTIFIER NOT NULL,
+    [ApiKey] UNIQUEIDENTIFIER NOT NULL,
+    [Name] NVARCHAR(200) NOT NULL,
+	[IsActive] BIT NOT NULL DEFAULT 1, 
+	[IsCancelled] BIT NOT NULL DEFAULT 0,
     [ProductId] INT NOT NULL, 
+	[UserId] NVARCHAR(37) NOT NULL,
+	[Created] DATETIME NOT NULL DEFAULT GetDate(), 
     CONSTRAINT [PK_Tenant] PRIMARY KEY ([Id])
 )
