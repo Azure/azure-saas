@@ -111,6 +111,13 @@
       "metadata": {
         "description": "Location for all resources."
       }
+    },
+    "storageAccountName": {
+      "type": "string",
+      "defaultValue": "[concat('st', parameters('SaasEnvironment'), 'audit', uniqueString(resourceGroup().id))]",
+      "metadata": {
+        "description": "The name of the auditing storage account."
+      }
     }
   },
   "variables": {
@@ -142,6 +149,17 @@
     "skuTier": "[variables('editionToSkuMap')[parameters('SqlEdition')].tier]"
   },
   "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[parameters('storageAccountName')]",
+      "apiVersion": "2019-06-01",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2",
+      "properties": {}
+    },
     {
       "type": "Microsoft.Sql/servers",
       "apiVersion": "2020-02-02-preview",
