@@ -169,7 +169,24 @@
         "administratorLogin": "[parameters('SqlAdministratorLogin')]",
         "administratorLoginPassword": "[parameters('SqlAdministratorLoginPassword')]",
         "version": "12.0"
-      }
+      },
+      "resources": [
+        {
+          "type": "auditingSettings",
+          "apiVersion": "2019-06-01-preview",
+          "name": "DefaultAuditingSettings",
+          "dependsOn": [
+            "[parameters('sqlServerName')]",
+            "[parameters('storageAccountName')]"
+          ],
+          "properties": {
+            "state": "Enabled",
+            "storageEndpoint": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))).primaryEndpoints.blob]",
+            "storageAccountAccessKey": "[listKeys(parameters('storageAccountName'), '2019-06-01').keys[0].value]",
+            "storageAccountSubscriptionId": "[subscription().subscriptionId]"
+          }
+        }
+      ]
     },
     {
       "type": "Microsoft.Sql/servers/elasticPools",
