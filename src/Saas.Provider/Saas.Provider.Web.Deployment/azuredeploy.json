@@ -82,7 +82,7 @@
         {
           "name": "[variables('providerWebAppName')]",
           "type": "Microsoft.Web/sites",
-          "location": "eastus",
+          "location": "[resourceGroup().location]",
           "apiVersion": "2015-08-01",
           "dependsOn": [
             "[concat('Microsoft.Web/serverFarms/', variables('appServicePlanName'))]"
@@ -124,7 +124,7 @@
                   "type": "Custom"
                 },
                 {
-                  "name": "ConnectionStrings:CatalogDb",
+                  "name": "ConnectionStrings:IdentityDb",
                   "connectionString": "[parameters('IdentityDbConnectionString')]",
                   "type": "SQLAzure"
                 }
