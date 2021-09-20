@@ -162,7 +162,8 @@
           "CosmosDbAccountKey": { "value": "[reference('deployCosmosDb').outputs.accountKey.value]" },
           "CosmosDbAccountName": { "value": "[parameters('CosmosDbAccountName')]" },
           "CosmosDbDatabaseName": { "value": "[parameters('CosmosDbDatabaseName')]" },
-          "CosmosDbConnectionString": { "value": "[reference('deployCosmosDb').outputs.connectionString.value]" }
+          "CosmosDbConnectionString": { "value": "[reference('deployCosmosDb').outputs.connectionString.value]" },
+          "IdentityDbAdoConnString": { "value": "[reference('deploySql').outputs.identityDbAdoConnString.value]" }
         },
         "mode": "Incremental"
       },
