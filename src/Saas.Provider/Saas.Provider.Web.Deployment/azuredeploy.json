@@ -52,6 +52,9 @@
     },
     "CosmosDbConnectionString": {
       "type": "string"
+    },
+    "IdentityDbConnectionString": {
+      "type": "string"
     }
   },
   "variables": {
@@ -119,6 +122,11 @@
                   "name": "CosmosDb",
                   "connectionString": "[parameters('CosmosDbConnectionString')]",
                   "type": "Custom"
+                },
+                {
+                  "name": "ConnectionStrings:CatalogDb",
+                  "connectionString": "[parameters('IdentityDbConnectionString')]",
+                  "type": "SQLAzure"
                 }
               ]
             }
