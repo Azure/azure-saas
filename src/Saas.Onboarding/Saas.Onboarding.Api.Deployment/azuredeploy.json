@@ -56,7 +56,7 @@
         {
           "name": "[variables('onboardingApiAppName')]",
           "type": "Microsoft.Web/sites",
-          "location": "eastus",
+          "location": "[resourceGroup().location]",
           "kind": "api",
           "apiVersion": "2015-08-01",
           "dependsOn": [
