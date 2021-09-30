@@ -7,7 +7,7 @@
   "parameters": {
     "resourceGroupName": {
       "type": "string",
-      "defaultValue": "rg-saas-dev-001",
+      "defaultValue": "rg-saas-dev-047",
       "metadata": {
         "description": "Name of the resource group for the resource. It is recommended to put resources under same resource group for better tracking."
       }
@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "app-provider-dev-001",
+      "defaultValue": "app-contoso047-dev-047",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }
