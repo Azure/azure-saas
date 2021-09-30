@@ -226,7 +226,21 @@ namespace Saas.Provider.Web.Controllers
         [Route("/create/deploy")]
         public async Task<IActionResult> DeployAsync(string id, string userId, string isExistingUser, string name, int categoryId, int productId)
         {
-            // Recreate order process id and object and set it to IsComplete = true
+            HttpClient httpClient = new HttpClient();
+            OnboardingClient onboardingClient = new OnboardingClient(_appSettings.OnboardingApiBaseUrl, httpClient);
+
+            Services.Tenant tenant = new Services.Tenant()
+            {
+                Name = name,
+                IsActive = true,
+                CategoryId = categoryId,
+                ProductId = productId,
+                UserId = userId
+            };
+
+            await onboardingClient.TenantsPOSTAsync(tenant);
+
+            // Recreate order process id and object and set IsComplete = true
             Item item = new Item()
             {
                 Id = id,
