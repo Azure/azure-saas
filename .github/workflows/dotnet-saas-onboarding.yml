@@ -1,4 +1,4 @@
-name: .NET Provider
+name: .NET Onboarding
 
 on:
   push:
@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 6.0.100-preview.7.21379.14
     - name: Restore dependencies
-      run: dotnet restore src/Saas.Provider/Saas.Provider.sln
+      run: dotnet restore src/Saas.Onboarding/Saas.Onboarding.sln
     - name: Build
-      run: dotnet build src/Saas.Provider/Saas.Provider.sln --no-restore
+      run: dotnet build src/Saas.Onboarding/Saas.Onboarding.sln --no-restore
     - name: Test
-      run: dotnet test src/Saas.Provider/Saas.Provider.sln --no-build --verbosity normal
+      run: dotnet test src/Saas.Onboarding/Saas.Onboarding.sln --no-build --verbosity normal
