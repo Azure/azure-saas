@@ -1,4 +1,4 @@
-name: .NET
+name: .NET Provider
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.100-preview.7.21379.14
     - name: Restore dependencies
       run: dotnet restore src/Saas.Provider/Saas.Provider.sln
     - name: Build
