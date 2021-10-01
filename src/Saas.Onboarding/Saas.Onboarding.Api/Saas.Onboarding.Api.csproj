@@ -17,6 +17,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0-rc.1.21464.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
+    <PackageReference Include="System.Collections.Immutable" Version="6.0.0-rc.1.21451.13" />
   </ItemGroup>
 
 </Project>
