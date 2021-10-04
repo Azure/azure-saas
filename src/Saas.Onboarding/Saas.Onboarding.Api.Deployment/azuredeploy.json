@@ -27,7 +27,7 @@
       "type": "string",
       "defaultValue": "001"
     },
-    "CatalogDbAdoConnString": {
+    "CatalogDbConnectionString": {
       "type": "string"
     }
   },
@@ -79,7 +79,7 @@
               "connectionStrings": [
                 {
                   "name": "ConnectionStrings:CatalogDb",
-                  "connectionString": "[parameters('CatalogDbAdoConnString')]",
+                  "connectionString": "[parameters('CatalogDbConnectionString')]",
                   "type": "SQLAzure"
                 }
               ]
