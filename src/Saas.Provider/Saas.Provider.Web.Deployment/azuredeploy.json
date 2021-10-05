@@ -124,7 +124,7 @@
                   "type": "Custom"
                 },
                 {
-                  "name": "ConnectionStrings:IdentityDbConnection",
+                  "name": "IdentityDbConnection",
                   "connectionString": "[parameters('IdentityDbConnectionString')]",
                   "type": "SQLAzure"
                 }

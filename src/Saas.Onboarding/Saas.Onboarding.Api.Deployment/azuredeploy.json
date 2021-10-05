@@ -58,7 +58,7 @@
           ],
           "connectionStrings": [
             {
-              "name": "ConnectionStrings:CatalogDb",
+              "name": "CatalogDbConnection",
               "connectionString": "[parameters('CatalogDbConnectionString')]",
               "type": "SQLAzure"
             }
