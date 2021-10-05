@@ -36,7 +36,7 @@ namespace Saas.Onboarding.Api
             });
 
             services.AddDbContext<sqldbcatalogdevContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("CatalogDatabase")));
+                options.UseSqlServer(Configuration.GetConnectionString("CatalogDbConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
