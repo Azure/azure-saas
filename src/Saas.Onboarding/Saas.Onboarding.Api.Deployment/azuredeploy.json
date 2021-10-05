@@ -64,7 +64,21 @@
             }
           ]
         }
-      }
+      },
+      "resources": [
+        {
+          "name": "MSDeploy",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [ "[resourceId('Microsoft.Web/sites', variables('onboardingApiAppName'))]" ],
+          "tags": { "displayName": "Deploy" },
+          "properties": {
+            "packageUri": "https://stsaasdev001.blob.core.windows.net/artifacts/saas-onboarding/Saas.Onboarding.Api.zip?sv=2020-04-08&st=2021-06-07T19%3A23%3A20Z&se=2022-06-08T19%3A23%3A00Z&sr=c&sp=rl&sig=kNf0qwTfaCJg02xYeUHlfmHOJvI1bGU1HftjUJ5hl5o%3D"
+          }
+        }
+      ]
+
     }
   ],
   "outputs": {

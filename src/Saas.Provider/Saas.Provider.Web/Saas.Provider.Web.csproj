@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
     <UserSecretsId>7b599cf5-3102-4740-ab34-69dd240f9ea3</UserSecretsId>
     <ApplicationInsightsResourceId>/subscriptions/357c83c2-bed7-4fe7-af6a-95835c6e2d91/resourceGroups/rg-saas-dev-001/providers/microsoft.insights/components/app-provider-dev-001</ApplicationInsightsResourceId>
