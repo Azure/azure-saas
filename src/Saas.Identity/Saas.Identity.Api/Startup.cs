@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Saas.Onboarding.Api.Models;
+using Saas.Identity.Api.Models;
 
-namespace Saas.Onboarding.Api
+namespace Saas.Identity.Api
 {
     public class Startup
     {
@@ -20,15 +21,16 @@ namespace Saas.Onboarding.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Saas.Onboarding.Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Saas.Identity.Api", Version = "v1" });
             });
 
-            services.AddDbContext<sqldbcatalogdevContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("CatalogDbConnection")));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdentityDbConnection")));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                            .AddEntityFrameworkStores<ApplicationDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,7 +38,7 @@ namespace Saas.Onboarding.Api
         {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Saas.Onboarding.Api v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Saas.Identity.Api v1"));
 
             app.UseHttpsRedirection();
 
