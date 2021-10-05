@@ -278,19 +278,19 @@
             }
         ],
         "outputs": {
-            "saasLocation": "[location()]",
-            "saasProviderName": "[steps('saasSettings').saasProviderName]",
-            "saasEnvironment": "[steps('saasSettings').saasEnvironment]",
-            "saasInstanceNumber": "[steps('saasSettings').saasInstanceNumber]",
-            "cosmosdbAccountName": "[steps('cosmosdbSettings').cosmosdbAccountName]",
-            "cosmosdbDatabaseName": "[steps('cosmosdbSettings').cosmosdbDatabaseName]",
-            "sqlAdministratorLogin": "[steps('sqlSettings').sqlAdministratorLogin]",
-            "sqlAdministratorLoginPassword": "[steps('sqlSettings').sqlAdministratorLoginPassword]",
-            "sqlServerName": "[steps('sqlSettings').sqlServerName]",
-            "sqlElasticPoolName": "[steps('sqlSettings').sqlElasticPoolName]",
-            "sqlEdition": "[steps('sqlSettings').sqlEdition]",
-            "sqlElasticPoolCapacity": "[steps('sqlSettings').sqlElasticPoolCapacity]",
-            "sqlDatabaseCapacityMax": "[steps('sqlSettings').sqlDatabaseCapacityMax]"
+            "SaasLocation": "[location()]",
+            "SaasProviderName": "[steps('saasSettings').saasProviderName]",
+            "SaasEnvironment": "[steps('saasSettings').saasEnvironment]",
+            "SaasInstanceNumber": "[steps('saasSettings').saasInstanceNumber]",
+            "CosmosdbAccountName": "[steps('cosmosdbSettings').cosmosdbAccountName]",
+            "CosmosdbDatabaseName": "[steps('cosmosdbSettings').cosmosdbDatabaseName]",
+            "SqlAdministratorLogin": "[steps('sqlSettings').sqlAdministratorLogin]",
+            "SqlAdministratorLoginPassword": "[steps('sqlSettings').sqlAdministratorLoginPassword]",
+            "SqlServerName": "[steps('sqlSettings').sqlServerName]",
+            "SqlElasticPoolName": "[steps('sqlSettings').sqlElasticPoolName]",
+            "SqlEdition": "[steps('sqlSettings').sqlEdition]",
+            "SqlElasticPoolCapacity": "[steps('sqlSettings').sqlElasticPoolCapacity]",
+            "SqlDatabaseCapacityMax": "[steps('sqlSettings').sqlDatabaseCapacityMax]"
         }
     }
 }
