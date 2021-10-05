@@ -349,3 +349,5 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /src/Saas.Provider/Saas.Provider.Web/appsettings.Development.json
+/src/Saas.Provider/Saas.Provider.Web/Properties/ServiceDependencies/app-contoso075-dev-075 - Web Deploy/profile.arm.json
+/src/Saas.Provider/Saas.Provider.Web/Properties/ServiceDependencies
