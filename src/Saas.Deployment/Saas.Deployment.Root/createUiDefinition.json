@@ -6,7 +6,7 @@
         "config": {
             "isWizard": true,
             "basics": {
-                "description": "Deploy Azure SaaS Dev Kit into your Azure subscription."
+                "description": "Deploy the Azure SaaS Development Kit (ASDK) into your Azure subscription."
             }
         },
         "resourceTypes": [
@@ -91,40 +91,40 @@
                 "name": "cosmosdbSettings",
                 "label": "Azure Cosmos DB Settings",
                 "elements": [
-                    {
-                        "type": "Microsoft.Common.TextBox",
-                        "name": "cosmosdbAccountName",
-                        "label": "Cosmos DB Account name",
-                        "toolTip": "Enter Cosmos DB Account name",
-                        "defaultValue": "[concat('cosmos-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
-                        "constraints": {
-                            "required": true,
-                            "validations": [
-                                {
-                                    "regex": "^[a-z0-9-]{6,44}$",
-                                    "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-44 characters long."
-                                }
-                            ]
-                        },
-                        "visible": true
+                  {
+                    "type": "Microsoft.Common.TextBox",
+                    "name": "cosmosdbAccountName",
+                    "label": "Azure Cosmos DB Account name",
+                    "toolTip": "Enter Azure Cosmos DB Account name",
+                    "defaultValue": "[concat('cosmos-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
+                    "constraints": {
+                      "required": true,
+                      "validations": [
+                        {
+                          "regex": "^[a-z0-9-]{6,44}$",
+                          "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-44 characters long."
+                        }
+                      ]
                     },
-                    {
-                        "type": "Microsoft.Common.TextBox",
-                        "name": "cosmosdbDatabaseName",
-                        "label": "Cosmos DB Database name",
-                        "toolTip": "Enter Cosmos DB Database name",
-                        "defaultValue": "[concat('cosmos-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
-                        "constraints": {
-                            "required": true,
-                            "validations": [
-                                {
-                                    "regex": "^[a-z0-9-]{6,44}$",
-                                    "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-44 characters long."
-                                }
-                            ]
-                        },
-                        "visible": true
-                    }
+                    "visible": true
+                  },
+                  {
+                    "type": "Microsoft.Common.TextBox",
+                    "name": "cosmosdbDatabaseName",
+                    "label": "Azure Cosmos DB Database name",
+                    "toolTip": "Enter Azure Cosmos DB Database name",
+                    "defaultValue": "[concat('cosmos-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
+                    "constraints": {
+                      "required": true,
+                      "validations": [
+                        {
+                          "regex": "^[a-z0-9-]{6,44}$",
+                          "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-44 characters long."
+                        }
+                      ]
+                    },
+                    "visible": true
+                  }
                 ]
             },
             {
