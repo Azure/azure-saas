@@ -27,10 +27,10 @@ namespace Saas.Identity.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Saas.Identity.Api", Version = "v1" });
             });
 
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdentityDbConnection")));
+            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdentityDbConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-                            .AddEntityFrameworkStores<ApplicationDbContext>();
+                            .AddEntityFrameworkStores<IdentityDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
