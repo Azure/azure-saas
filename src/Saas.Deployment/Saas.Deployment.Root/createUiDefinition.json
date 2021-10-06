@@ -1,0 +1,296 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Azure.CreateUIDef",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "config": {
+            "isWizard": true,
+            "basics": {
+                "description": "Deploy Azure SaaS Dev Kit into your Azure subscription."
+            }
+        },
+        "resourceTypes": [
+            "Microsoft.Sql/servers",
+            "Microsoft.Sql/servers/elasticPools",
+            "Microsoft.Sql/servers/databases",
+            "Microsoft.DocumentDB/databaseAccounts",
+            "Microsoft.Web/serverfarms"
+        ],
+        "basics": [],
+        "steps": [
+            {
+                "name": "saasSettings",
+                "label": "SaaS Settings",
+                "elements": [
+                    {
+                        "type": "Microsoft.Common.TextBox",
+                        "name": "saasProviderName",
+                        "label": "SaaS Unique Name Prefix",
+                        "toolTip": "Enter a short unique prefix to use for your SaaS deployment (e.g., contoso)",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9]{3,12}$",
+                                    "message": "Only alphanumeric characters are allowed, and the value must be 3-12 characters long."
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "type": "Microsoft.Common.DropDown",
+                        "name": "saasEnvironment",
+                        "label": "SaaS Environment",
+                        "defaultValue": "dev",
+                        "toolTip": "Select environment designation to use for name the resources of this deployment",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "dev",
+                                    "value": "dev"
+                                },
+                                {
+                                    "label": "staging",
+                                    "value": "staging"
+                                },
+                                {
+                                    "label": "test",
+                                    "value": "test"
+                                },
+                                {
+                                    "label": "prod",
+                                    "value": "prod"
+                                }
+                            ],
+                            "required": true
+                        },
+                        "visible": true
+                    },
+                    {
+                        "type": "Microsoft.Common.TextBox",
+                        "name": "saasInstanceNumber",
+                        "label": "SaaS Deployment Instance",
+                        "toolTip": "Enter deployment instance number like 001, 002, 003, etc. to use in resource naming",
+                        "defaultValue": "001",
+                        "placeholder": "001",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[0-9]{3,3}$",
+                                    "message": "Only alphanumeric characters are allowed, and the value must be 3 characters long."
+                                }
+                            ]
+                        },
+                        "visible": true
+                    }
+                ]
+            },
+            {
+                "name": "cosmosdbSettings",
+                "label": "Cosmos DB Settings",
+                "elements": [
+                    {
+                        "type": "Microsoft.Common.TextBox",
+                        "name": "cosmosdbAccountName",
+                        "label": "Cosmos DB Account name",
+                        "toolTip": "Enter Cosmos DB Account name",
+                        "defaultValue": "[concat('cosmos-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9-]{6,44}$",
+                                    "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-44 characters long."
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "type": "Microsoft.Common.TextBox",
+                        "name": "cosmosdbDatabaseName",
+                        "label": "Cosmos DB Database name",
+                        "toolTip": "Enter Cosmos DB Database name",
+                        "defaultValue": "[concat('cosmos-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9-]{6,44}$",
+                                    "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-44 characters long."
+                                }
+                            ]
+                        },
+                        "visible": true
+                    }
+                ]
+            },
+            {
+                "name": "sqlSettings",
+                "label": "Azure SQL Settings",
+                "elements": [
+                    {
+                        "type": "Microsoft.Common.DropDown",
+                        "name": "sqlEdition",
+                        "label": "Azure SQL Edition",
+                        "defaultValue": "Basic",
+                        "toolTip": "Select Azure SQL Edition to use for this deployment",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Basic",
+                                    "value": "Basic"
+                                },
+                                {
+                                    "label": "Standard",
+                                    "value": "Standard"
+                                },
+                                {
+                                    "label": "Premium",
+                                    "value": "Premium"
+                                },
+                                {
+                                    "label": "GP_Gen5",
+                                    "value": "GP_Gen5"
+                                },
+                                {
+                                    "label": "BC_Gen5",
+                                    "value": "BC_Gen5"
+                                }
+                            ],
+                            "required": true
+                        },
+                        "visible": true
+                    },
+                    {
+                        "type": "Microsoft.Common.TextBox",
+                        "name": "sqlServerName",
+                        "label": "Azure SQL server name",
+                        "toolTip": "Azure SQL server name",
+                        "defaultValue": "[concat('sql-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9-]{6,63}$",
+                                    "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-63 characters long."
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "type": "Microsoft.Common.TextBox",
+                        "name": "sqlAdministratorLogin",
+                        "label": "Azure SQL admin login username",
+                        "toolTip": "Enter Azure SQL admin login username",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9]{5,20}$",
+                                    "message": "Only lowercase alphanumeric characters are allowed, and the value must be 5-20 characters long."
+                                },
+                                {
+                                    "isValid": "[not(equals(steps('sqlSettings').sqlAdministratorLogin, 'sa'))]",
+                                    "message": "SQL admin login username cannot be 'sa'"
+                                },
+                                {
+                                    "isValid": "[not(equals(steps('sqlSettings').sqlAdministratorLogin, 'admin'))]",
+                                    "message": "SQL admin login username cannot be 'admin'"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "type": "Microsoft.Common.PasswordBox",
+                        "name": "sqlAdministratorLoginPassword",
+                        "label": {
+                            "password": "Azure SQL admin password",
+                            "confirmPassword": "Confirm Azure SQL admin password"
+                        },
+                        "toolTip": "Enter Azure SQL admin password",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!@#$%^&*()]{12,}$",
+                            "validationMessage": "The password must be alphanumeric, contain at least 12 characters, and have at least 1 letter and 1 number."
+                        },
+                        "options": {
+                            "hideConfirmation": false
+                        },
+                        "visible": true
+                    },
+                    {
+                        "type": "Microsoft.Common.TextBox",
+                        "name": "sqlElasticPoolName",
+                        "label": "Azure SQL Elastic Pool name",
+                        "toolTip": "Enter Azure SQL Elastic Pool name",
+                        "defaultValue": "[concat('sql-elasticpool-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9-]{1,128}$",
+                                    "message": "Only lowercase alphanumeric characters are allowed, and the value must be 1-128 characters long."
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "type": "Microsoft.Common.TextBox",
+                        "name": "sqlElasticPoolCapacity",
+                        "label": "Azure SQL Elastic Pool Capacity",
+                        "toolTip": "Enter Azure SQL Elastic Pool Capacity in DTUs or vCores",
+                        "defaultValue": "50",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[0-9]{1,4}$",
+                                    "message": "Only numeric characters are allowed."
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "type": "Microsoft.Common.TextBox",
+                        "name": "sqlDatabaseCapacityMax",
+                        "label": "Azure SQL Database max capacity",
+                        "toolTip": "Enter Azure SQL Database max capacity",
+                        "defaultValue": "5",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[0-9]{1,4}$",
+                                    "message": "Only numeric characters are allowed."
+                                }
+                            ]
+                        },
+                        "visible": true
+                    }
+                ]
+            }
+        ],
+        "outputs": {
+            "SaasLocation": "[location()]",
+            "SaasProviderName": "[steps('saasSettings').saasProviderName]",
+            "SaasEnvironment": "[steps('saasSettings').saasEnvironment]",
+            "SaasInstanceNumber": "[steps('saasSettings').saasInstanceNumber]",
+            "CosmosdbAccountName": "[steps('cosmosdbSettings').cosmosdbAccountName]",
+            "CosmosdbDatabaseName": "[steps('cosmosdbSettings').cosmosdbDatabaseName]",
+            "SqlAdministratorLogin": "[steps('sqlSettings').sqlAdministratorLogin]",
+            "SqlAdministratorLoginPassword": "[steps('sqlSettings').sqlAdministratorLoginPassword]",
+            "SqlServerName": "[steps('sqlSettings').sqlServerName]",
+            "SqlElasticPoolName": "[steps('sqlSettings').sqlElasticPoolName]",
+            "SqlEdition": "[steps('sqlSettings').sqlEdition]",
+            "SqlElasticPoolCapacity": "[steps('sqlSettings').sqlElasticPoolCapacity]",
+            "SqlDatabaseCapacityMax": "[steps('sqlSettings').sqlDatabaseCapacityMax]"
+        }
+    }
+}
