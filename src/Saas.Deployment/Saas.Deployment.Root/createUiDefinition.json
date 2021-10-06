@@ -89,7 +89,7 @@
             },
             {
                 "name": "cosmosdbSettings",
-                "label": "Cosmos DB Settings",
+                "label": "Azure Cosmos DB Settings",
                 "elements": [
                     {
                         "type": "Microsoft.Common.TextBox",
