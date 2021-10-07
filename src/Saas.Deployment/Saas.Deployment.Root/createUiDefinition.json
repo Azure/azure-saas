@@ -33,6 +33,14 @@
                                 {
                                     "regex": "^[a-z0-9]{3,12}$",
                                     "message": "Only alphanumeric characters are allowed, and the value must be 3-12 characters long."
+                                },
+                                {
+                                    "isValid": "[not(equals(steps('saasSettings').nameApiOnboarding.nameAvailable, false))]",
+                                    "message": "[concat('This SaaS prefix, environment, and instance combination is unavailable: ', concat('api-onboarding-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber))]"
+                                },
+                                {
+                                    "isValid": "[not(equals(steps('saasSettings').nameApiProvider.nameAvailable, false))]",
+                                    "message": "[concat('This SaaS prefix, environment, and instance combination is unavailable: ', concat('app-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber))]"
                                 }
                             ]
                         },
@@ -84,6 +92,26 @@
                             ]
                         },
                         "visible": true
+                    },
+                    {
+                        "name": "nameApiOnboarding",
+                        "type": "Microsoft.Solutions.ArmApiControl",
+                        "condition": "[greater(length(steps('saasSettings').saasProviderName), 0)]",
+                        "request": {
+                            "method": "POST",
+                            "path": "[concat(subscription().id, '/providers/Microsoft.Web/checknameavailability?api-version=2019-08-01')]",
+                            "body": "[parse(concat('{\"name\":', string(concat('api-onboarding-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)), ', \"type\": \"Microsoft.Web/sites\"}'))]"
+                        }
+                    },
+                    {
+                        "name": "nameApiProvider",
+                        "type": "Microsoft.Solutions.ArmApiControl",
+                        "condition": "[greater(length(steps('saasSettings').saasProviderName), 0)]",
+                        "request": {
+                            "method": "POST",
+                            "path": "[concat(subscription().id, '/providers/Microsoft.Web/checknameavailability?api-version=2019-08-01')]",
+                            "body": "[parse(concat('{\"name\":', string(concat('app-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)), ', \"type\": \"Microsoft.Web/sites\"}'))]"
+                        }
                     }
                 ]
             },
@@ -91,40 +119,40 @@
                 "name": "cosmosdbSettings",
                 "label": "Azure Cosmos DB Settings",
                 "elements": [
-                  {
-                    "type": "Microsoft.Common.TextBox",
-                    "name": "cosmosdbAccountName",
-                    "label": "Azure Cosmos DB Account name",
-                    "toolTip": "Enter Azure Cosmos DB Account name",
-                    "defaultValue": "[concat('cosmos-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
-                    "constraints": {
-                      "required": true,
-                      "validations": [
-                        {
-                          "regex": "^[a-z0-9-]{6,44}$",
-                          "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-44 characters long."
-                        }
-                      ]
+                    {
+                        "type": "Microsoft.Common.TextBox",
+                        "name": "cosmosdbAccountName",
+                        "label": "Azure Cosmos DB Account name",
+                        "toolTip": "Enter Azure Cosmos DB Account name",
+                        "defaultValue": "[concat('cosmos-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9-]{6,44}$",
+                                    "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-44 characters long."
+                                }
+                            ]
+                        },
+                        "visible": true
                     },
-                    "visible": true
-                  },
-                  {
-                    "type": "Microsoft.Common.TextBox",
-                    "name": "cosmosdbDatabaseName",
-                    "label": "Azure Cosmos DB Database name",
-                    "toolTip": "Enter Azure Cosmos DB Database name",
-                    "defaultValue": "[concat('cosmos-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
-                    "constraints": {
-                      "required": true,
-                      "validations": [
-                        {
-                          "regex": "^[a-z0-9-]{6,44}$",
-                          "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-44 characters long."
-                        }
-                      ]
-                    },
-                    "visible": true
-                  }
+                    {
+                        "type": "Microsoft.Common.TextBox",
+                        "name": "cosmosdbDatabaseName",
+                        "label": "Azure Cosmos DB Database name",
+                        "toolTip": "Enter Azure Cosmos DB Database name",
+                        "defaultValue": "[concat('cosmos-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber)]",
+                        "constraints": {
+                            "required": true,
+                            "validations": [
+                                {
+                                    "regex": "^[a-z0-9-]{6,44}$",
+                                    "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-44 characters long."
+                                }
+                            ]
+                        },
+                        "visible": true
+                    }
                 ]
             },
             {
@@ -176,10 +204,24 @@
                                 {
                                     "regex": "^[a-z0-9-]{6,63}$",
                                     "message": "Only lowercase alphanumeric characters are allowed, and the value must be 6-63 characters long."
+                                },
+                                {
+                                    "isValid": "[not(equals(steps('sqlSettings').nameApi.available, false))]",
+                                    "message": "[concat('This Azure SQL server name is unavailable: ', steps('sqlSettings').sqlServerName)]"
                                 }
                             ]
                         },
                         "visible": true
+                    },
+                    {
+                        "name": "nameApi",
+                        "type": "Microsoft.Solutions.ArmApiControl",
+                        "condition": "[greater(length(steps('sqlSettings').sqlServerName), 0)]",
+                        "request": {
+                            "method": "POST",
+                            "path": "[concat(subscription().id, '/providers/Microsoft.Sql/checkNameAvailability?api-version=2021-02-01-preview')]",
+                            "body": "[parse(concat('{\"name\":', string(steps('sqlSettings').sqlServerName), ', \"type\": \"Microsoft.Sql/servers\"}'))]"
+                        }
                     },
                     {
                         "type": "Microsoft.Common.TextBox",
