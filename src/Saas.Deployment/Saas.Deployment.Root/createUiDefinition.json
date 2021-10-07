@@ -33,14 +33,6 @@
                                 {
                                     "regex": "^[a-z0-9]{3,12}$",
                                     "message": "Only alphanumeric characters are allowed, and the value must be 3-12 characters long."
-                                },
-                                {
-                                    "isValid": "[not(equals(steps('saasSettings').nameApiOnboarding.nameAvailable, false))]",
-                                    "message": "[concat('This SaaS prefix, environment, and instance combination is unavailable: ', concat('api-onboarding-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber))]"
-                                },
-                                {
-                                    "isValid": "[not(equals(steps('saasSettings').nameApiProvider.nameAvailable, false))]",
-                                    "message": "[concat('This SaaS prefix, environment, and instance combination is unavailable: ', concat('app-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber))]"
                                 }
                             ]
                         },
@@ -88,6 +80,14 @@
                                 {
                                     "regex": "^[0-9]{3,3}$",
                                     "message": "Only alphanumeric characters are allowed, and the value must be 3 characters long."
+                                },
+                                {
+                                    "isValid": "[not(equals(steps('saasSettings').nameApiOnboarding.nameAvailable, false))]",
+                                    "message": "[concat('Onboarding API Web App with this name is not available: ', concat('api-onboarding-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber))]"
+                                },
+                                {
+                                    "isValid": "[not(equals(steps('saasSettings').nameApiProvider.nameAvailable, false))]",
+                                    "message": "[concat('Provider Web App with this name is not available: ', concat('app-',steps('saasSettings').saasProviderName,'-',steps('saasSettings').saasEnvironment,'-',steps('saasSettings').saasInstanceNumber))]"
                                 }
                             ]
                         },
@@ -207,7 +207,7 @@
                                 },
                                 {
                                     "isValid": "[not(equals(steps('sqlSettings').nameApi.available, false))]",
-                                    "message": "[concat('This Azure SQL server name is unavailable: ', steps('sqlSettings').sqlServerName)]"
+                                    "message": "[concat('Azure SQL server name with this name is not available: ', steps('sqlSettings').sqlServerName)]"
                                 }
                             ]
                         },
