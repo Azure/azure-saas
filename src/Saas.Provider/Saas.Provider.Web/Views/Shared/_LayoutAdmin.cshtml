@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"]</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css?v=1.2" />
+
+	<!-- Custom fonts for this template-->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.1/css/all.css">
+	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+	<!-- Custom styles for this template-->
+	<link href="~/css/admin.css?v=1.3" rel="stylesheet">
+
+	<script src="~/vendor/jquery/jquery.min.js"></script>
+
+	<!-- Page level plugins -->
+	<script src="~/vendor/chart.js/Chart.min.js"></script>
+
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="~/assets/images/favicon/16x16.png" sizes="16x16">
+	<link rel="icon" type="image/png" href="~/assets/images/favicon/32x32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="~/assets/images/favicon/48x48.png" sizes="48x48">
+	<link rel="icon" type="image/png" href="~/assets/images/favicon/64x64.png" sizes="64x64">
+
+	@RenderSection("OpenGraphRender", false)
+
+	<style type="text/css">
+		.navbar-light .navbar-toggler {
+			border-color: #ffffff;
+		}
+
+		.btn {
+			padding: .6rem 1rem;
+		}
+	</style>
+
+</head>
+<body id="page-top">
+	<nav class="navbar navbar-expand-sm navbar-light bg-white topbar static-top shadow">
+		<div style="width:100%">
+			<div style="float:left;">
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-cogs"></i>&nbsp;<span style="font-weight:500">Tenant Administration</span></a>
+			</div>
+			<div style="float:right;">
+				<partial name="_LoginPartial" />
+			</div>
+		</div>
+	</nav>
+
+	<div class="d-flex" id="wrapper">
+		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color:#243a5e" role="navigation">
+
+			@*Nav Item - Dashboard*@
+			<li class="nav-item dashboard">
+				<a class="nav-link" href="dashboard">
+					<i class="fas fa-fw fa-tachometer-alt"></i>
+					<span>Dashboard</span>
+				</a>
+			</li>
+
+			@*Divider*@
+			<hr class="sidebar-divider">
+
+			<li class="nav-item manage">
+				<a class="nav-link" href="manage">
+					<i class="fas fa-layer-group"></i>
+					<span>Manage</span>
+				</a>
+			</li>
+
+			<li class="nav-item users">
+				<a class="nav-link" href="users">
+					<i class="fas fa-users"></i>
+					<span>Users</span>
+				</a>
+			</li>
+
+			@*Divider*@
+			<hr class="sidebar-divider d-none d-md-block">
+
+			<div class="text-center d-none d-md-inline">
+				<button class="rounded-circle border-0" id="sidebarToggle"></button>
+			</div>
+
+			<div class="sidebar-card">
+				<p class="text-center mb-2"><strong>SaaS Services</strong> is packed with premium features, components, and more!</p>
+				<a class="btn btn-success btn-sm" href="upgrade">Upgrade!</a>
+			</div>
+
+		</ul>
+		<!-- End of Sidebar -->
+		<!-- Page Content -->
+		<div id="page-content-wrapper">
+			<div class="container" style="margin-top:2rem;">
+				<main id="main" role="main" style="margin-bottom:2rem;" class="main">
+					@RenderBody()
+				</main>
+			</div>
+		</div>
+		<!-- /#page-content-wrapper -->
+		<!-- Footer Content -->
+		<footer class="border-top footer text-muted">
+			<div class="container">
+				<i class="fab fa-microsoft"></i> Microsoft - &copy; 2021 - Azure SaaS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+			</div>
+		</footer>
+		<!-- /footer-content -->
+	</div>
+	<!-- /#wrapper -->
+	@RenderSection("Scripts", required: false)
+
+	<!-- Bootstrap core JavaScript-->
+	<script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Core plugin JavaScript-->
+	<script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+	<!-- Custom scripts for all pages-->
+	<script src="~/js/admin.js"></script>
+
+	<!-- Page level plugins -->
+	<script src="~/vendor/chart.js/Chart.min.js"></script>
+</body>
+</html>
