@@ -121,7 +121,7 @@
                 },
                 {
                   "name": "AppSettings:OnboardingApiBaseUrl",
-                  "value": "[concat('api-onboarding-', parameters('SaasProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'), '.azurewebsites.net')]"
+                  "value": "[concat('https://api-onboarding-', parameters('SaasProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'), '.azurewebsites.net/')]"
                 }
               ],
               "connectionStrings": [
