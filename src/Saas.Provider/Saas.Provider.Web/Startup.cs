@@ -50,6 +50,10 @@ namespace Saas.Provider.Web
             services.AddControllersWithViews();
             services.AddScoped<TenantRepository, TenantRepository>();
             services.AddScoped<CustomerRepository, CustomerRepository>();
+
+            var appSettings = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettings);
+
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(1);
