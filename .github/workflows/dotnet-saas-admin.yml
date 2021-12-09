@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0
+        dotnet-version: '6.0'
     - name: Restore dependencies
       run: dotnet restore src/Saas.Admin/Saas.Admin.sln
     - name: Build
