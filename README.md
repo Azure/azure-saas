@@ -1,5 +1,7 @@
 ﻿# Azure SaaS Development Kit (ASDK)
 
+[![.NET Onboarding](https://github.com/Azure/azure-saas/actions/workflows/dotnet-saas-onboarding.yml/badge.svg)](https://github.com/Azure/azure-saas/actions/workflows/dotnet-saas-onboarding.yml)   [![.NET Identity](https://github.com/Azure/azure-saas/actions/workflows/dotnet-saas-identity.yml/badge.svg)](https://github.com/Azure/azure-saas/actions/workflows/dotnet-saas-identity.yml)   [![.NET Provider](https://github.com/Azure/azure-saas/actions/workflows/dotnet-saas-provider.yml/badge.svg)](https://github.com/Azure/azure-saas/actions/workflows/dotnet-saas-provider.yml)   [![.NET Admin](https://github.com/Azure/azure-saas/actions/workflows/dotnet-saas-admin.yml/badge.svg)](https://github.com/Azure/azure-saas/actions/workflows/dotnet-saas-admin.yml)
+
 The Azure SaaS Development Kit (ASDK) provides a reference architecture, deployable reference implementation and tools to help developers, startups, ISVs and Enterprises deliver their applications as a SaaS service.  A platform for platform creators.  (Public Preview)
 
 [![Deploy to Azure](https://www.azuresaas.net/assets/images/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2FcreateUiDefinition.json)
