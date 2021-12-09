@@ -24,7 +24,7 @@ The reference implementation provides an end-to-end SaaS service including all r
 <!-- Demo SaaS Service:  https://www.azuresaas.net -->
 
 ## Deployment
-[Deploy](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json) an instance of the reference implemenation in less than 5 minutes.  Once the deployment completes, you'll have all the resources deployed in your Azure subscription. Please be aware that while the costs are low, you are responsible for any charges incurred.  Deploy the full service or deploy [microservices / componenents](docs/components.md) indivually.
+[Deploy](https://www.azuresaas.net/assets/images/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2FcreateUiDefinition.json) an instance of the reference implemenation in less than 5 minutes.  Once the deployment completes, you'll have all the resources deployed in your Azure subscription. Please be aware that while the costs are low, you are responsible for any charges incurred.  Deploy the full service or deploy [microservices / componenents](docs/components.md) indivually.
 
 <img src="docs/assets/images/azure-saas-multitenant-deployment.png" width="850">
 

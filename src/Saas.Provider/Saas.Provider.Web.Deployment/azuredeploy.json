@@ -118,6 +118,10 @@
                 {
                   "name": "AppSettings:CosmosDb:ContainerName",
                   "value": "OnboardingFlow"
+                },
+                {
+                  "name": "AppSettings:OnboardingApiBaseUrl",
+                  "value": "[concat('api-onboarding-', parameters('SaasProviderName'), '-', parameters('SaasEnvironment'), '-', parameters('SaasInstanceNumber'), '.azurewebsites.net')]"
                 }
               ],
               "connectionStrings": [
