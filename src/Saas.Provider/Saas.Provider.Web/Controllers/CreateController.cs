@@ -231,11 +231,15 @@ namespace Saas.Provider.Web.Controllers
 
             Services.Tenant tenant = new Services.Tenant()
             {
+                Id = Guid.NewGuid(), 
                 Name = name,
                 IsActive = true,
+                IsCancelled = false,
+                IsProvisioned = true,
+                ApiKey = Guid.NewGuid(),
                 CategoryId = categoryId,
                 ProductId = productId,
-                UserId = userId
+                UserId = userId,
             };
 
             await onboardingClient.TenantsPOSTAsync(tenant);

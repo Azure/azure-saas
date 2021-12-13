@@ -10,5 +10,5 @@
     [ProductId] INT NOT NULL, 
 	[UserId] NVARCHAR(37) NOT NULL,
 	[Created] DATETIME NOT NULL DEFAULT GetDate(), 
-    CONSTRAINT [PK_Tenant] PRIMARY KEY ([Id])
+    CONSTRAINT [PK_Tenant] PRIMARY KEY ([Id]) 
 )
