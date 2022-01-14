@@ -5,7 +5,7 @@
 - SaaS Microservice Architecture
 
 ### UX
-- [Web App: Provider Web App](src/Saas.Provider/README.md)
+- [Web App: Provider Web App](../src/Saas.Provider/README.md)
 	- Onboarding Flow
 	- Tenant Resolution Options
 	- Tenant Administration for Tenant Roles (Owner, Administrator, etc.)
