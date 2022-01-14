@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -88,9 +89,13 @@ namespace Saas.Provider.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
+                var routes = endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                if (env.IsDevelopment())
+                {
+                    routes.WithMetadata(new AllowAnonymousAttribute());
+                }
                 endpoints.MapRazorPages();
             });
         }
