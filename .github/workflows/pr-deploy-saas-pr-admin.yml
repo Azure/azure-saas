@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - "src/Saas.Admin/**"
+      - ".github/**"
 
 
 name: Build PR and Deploy to new Slot
