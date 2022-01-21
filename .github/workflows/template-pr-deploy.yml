@@ -3,14 +3,19 @@ on:
     inputs:
       dotnet_version:
         required: true
+        type: string
       artifact_name:
         required: true
+        type: string
       slot_name:
         required: true
+        type: string
       app_service_name:
         required: true
+        type: string
       app_service_resource_group_name:
         required: true
+        type: string
     secrets:
       AZURE_CREDENTIALS:
         required: true
