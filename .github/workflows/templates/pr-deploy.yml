@@ -1,0 +1,90 @@
+on:
+  workflow_call:
+    inputs:
+      dotnet_version:
+        required: true
+      artifact_name:
+        required: true
+      slot_name:
+        required: true
+      github_environment_name:
+        required: true
+      app_service_name:
+        required: true
+      app_service_resource_group_name:
+        required: true
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+
+name: Build PR and Deploy to new Slot
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.github_environment_name }}
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v2
+
+    - name: Setup Dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ inputs.dotnet_version }}
+
+    - name: dotnet build and publish
+      run: |
+        dotnet restore
+        dotnet build --configuration Release
+        dotnet publish -c Release -o './app'
+  #TODO:  insert test here when ready.
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: ${{ inputs.artifact_name }}
+        path: './app'
+
+  create-deployment-slot:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.github_environment_name }}
+    steps:
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az webapp deployment slot create \
+          --resource-group ${{ inputs.app_service_resource_group_name }} \
+          --name ${{ inputs.app_service_name }} \
+          --slot ${{ inputs.slot_name }}
+  
+  deploy-to-slot:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.github_environment_name }}
+    steps:
+
+    - name: Download Built Artifact
+      uses: actions/download-artifact@v2.1.0
+      with:
+        name: ${{ inputs.artifact_name }}
+        path: './app'
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Deploy to App Service Slot'
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ inputs.app_service_name }}
+        slot-name: ${{ inputs.slot_name }}
+        package: './app/${{ inputs.artifact_name }}' # TODO: fix needing artifact name here. 
+
+
