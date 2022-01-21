@@ -11,7 +11,7 @@ name: Build PR and Deploy to new Slot
 jobs:
   build-and-deploy:
     # Utilizes re-usable template to build and deploy to app service slot
-    uses: ./.github/workflows/templates/pr-deploy.yml@main
+    uses: Azure/azure-saas/.github/workflows/pr-deploy.yml@main
     with:
       dotnet_version: '5.0.x'
       artifact_name: ${{ format('{0}-{1}', env.GITHUB_REF_NAME, env.GITHUB_RUN_ID) }} 
