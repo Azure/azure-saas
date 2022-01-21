@@ -67,6 +67,7 @@ jobs:
   
   deploy-to-slot:
     runs-on: ubuntu-latest
+    needs: [build, create-deployment-slot]
     steps:
 
     - name: Download Built Artifact
