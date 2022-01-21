@@ -7,7 +7,7 @@ on:
       - "src/Saas.Onboarding/**"
       - ".github/**"
 
-name: Build PR and Deploy to new Slot
+name: Saas.Catalog.API PR Build
 
 jobs:
   build-and-deploy:
