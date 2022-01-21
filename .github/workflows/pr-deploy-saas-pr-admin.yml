@@ -16,8 +16,8 @@ jobs:
     uses: Azure/azure-saas/.github/workflows/template-pr-deploy.yml@users/landonpierce/devenv
     with:
       dotnet_version: '5.0.x'
-      artifact_name: "${{ env.GITHUB_REF_NAME }}-${{ env.GITHUB_RUN_ID }}"
-      slot_name: ${{ env.GITHUB_REF_NAME }}
+      artifact_name: ${{ format('{0}-{1}', github.ref_name, github.run_id) }} 
+      slot_name: ${{ github.ref_name }}
       app_service_name: app-asdk-admin-dev-001
       app_service_resource_group_name: azure-saas-dev
     secrets:
