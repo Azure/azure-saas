@@ -25,6 +25,7 @@ name: Build PR and Deploy to new Slot
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Build dotnet Project
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v2
@@ -49,6 +50,7 @@ jobs:
 
   create-deployment-slot:
     runs-on: ubuntu-latest
+    name: Create App Service Deployment Slot
     steps:
 
     - name: Azure Login
@@ -67,6 +69,7 @@ jobs:
   
   deploy-to-slot:
     runs-on: ubuntu-latest
+    name: Deploy dotnet Project to Deployment Slot
     needs: [build, create-deployment-slot]
     steps:
 
