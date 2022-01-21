@@ -7,8 +7,6 @@ on:
         required: true
       slot_name:
         required: true
-      github_environment_name:
-        required: true
       app_service_name:
         required: true
       app_service_resource_group_name:
@@ -22,7 +20,6 @@ name: Build PR and Deploy to new Slot
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.github_environment_name }}
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v2
