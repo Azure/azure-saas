@@ -8,7 +8,7 @@ on:
       - ".github/**"
 
 
-name: Build PR and Deploy to new Slot
+name: Saas.Admin PR Build
 
 jobs:
   build-and-deploy:
