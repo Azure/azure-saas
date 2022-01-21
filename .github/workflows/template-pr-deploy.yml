@@ -44,7 +44,6 @@ jobs:
 
   create-deployment-slot:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.github_environment_name }}
     steps:
 
     - name: Azure Login
@@ -63,7 +62,6 @@ jobs:
   
   deploy-to-slot:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.github_environment_name }}
     steps:
 
     - name: Download Built Artifact
