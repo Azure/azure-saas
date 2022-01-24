@@ -101,6 +101,6 @@ jobs:
       with: 
         app-name: ${{ inputs.app_service_name }}
         slot-name: ${{ steps.get-slot-name.outputs.slot_name }}
-        package: './app/${{ inputs.artifact_name }}' # TODO: fix needing artifact name here. 
+        package: './app' # TODO: fix needing artifact name here. 
 
 
