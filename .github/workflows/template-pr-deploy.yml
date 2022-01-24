@@ -16,14 +16,17 @@ on:
       app_service_resource_group_name:
         required: true
         type: string
+      project_build_path:
+        required: true
+        type: string
     secrets:
       AZURE_CREDENTIALS:
         required: true
 
 name: Build PR and Deploy to new Slot
 
+# This is needed for the get-slot-name step
 env:
-  app_service_name: ${{ inputs.app_service_name }}
   slot_name: ${{ inputs.slot_name }}
 
 jobs:
@@ -41,8 +44,8 @@ jobs:
 
     - name: dotnet build and publish
       run: |
-        dotnet restore
-        dotnet build --configuration Release
+        dotnet restore ${{ inputs.project_build_path }}
+        dotnet build --configuration Release --no-restore ${{ inputs.project_build_path }}
         dotnet publish -c Release -o './app'
   #TODO:  insert test here when ready.
 
