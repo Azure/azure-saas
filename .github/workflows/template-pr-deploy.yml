@@ -25,10 +25,6 @@ on:
 
 name: Build PR and Deploy to new Slot
 
-# This is needed for the get-slot-name step
-env:
-  slot_name: ${{ inputs.slot_name }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -45,11 +41,13 @@ jobs:
     - name: dotnet build and publish
       run: |
         dotnet restore ${{ inputs.project_build_path }}
-        dotnet build --configuration Release --no-restore ${{ inputs.project_build_path }}
-        dotnet publish -c Release -o './app'
+        dotnet build ${{ inputs.project_build_path }} --configuration Release --no-restore 
+        dotnet publish ${{ inputs.project_build_path }} -c Release -o './app'
   #TODO:  insert test here when ready.
 
     - name: Upload a Build Artifact
+      env:
+        slot_name: ${{ inputs.slot_name }}
       uses: actions/upload-artifact@v2.3.1
       with:
         name: ${{ inputs.artifact_name }}
