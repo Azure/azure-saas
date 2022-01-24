@@ -22,6 +22,10 @@ on:
 
 name: Build PR and Deploy to new Slot
 
+env:
+  app_service_name: ${{ inputs.app_service_name }}
+  slot_name: ${{ inputs.slot_name }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -58,6 +62,14 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    # We must do this to replace any "/" characters in the path. The Azure CLI will not accept slot names with "/".
+    
+    - name: Get Slot Name
+      id: get-slot-name
+      run: |
+        slot_name_replaced=${$slot_name////-}
+        echo "::set-output name=slot_name::slot_name_replaced"
+
     - name: Azure CLI script
       uses: azure/CLI@v1
       with:
@@ -65,7 +77,7 @@ jobs:
           az webapp deployment slot create \
           --resource-group ${{ inputs.app_service_resource_group_name }} \
           --name ${{ inputs.app_service_name }} \
-          --slot ${{ inputs.slot_name }}
+          --slot ${{ steps.get-slot-name.outputs.slot_name }}
   
   deploy-to-slot:
     runs-on: ubuntu-latest
@@ -88,7 +100,7 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
         app-name: ${{ inputs.app_service_name }}
-        slot-name: ${{ inputs.slot_name }}
+        slot-name: ${{ steps.get-slot-name.outputs.slot_name }}
         package: './app/${{ inputs.artifact_name }}' # TODO: fix needing artifact name here. 
 
 
