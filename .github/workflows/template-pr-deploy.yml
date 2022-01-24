@@ -63,11 +63,10 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     # We must do this to replace any "/" characters in the path. The Azure CLI will not accept slot names with "/".
-    
     - name: Get Slot Name
       id: get-slot-name
       run: |
-        slot_name_replaced=${$slot_name////-}
+        slot_name_replaced=${slot_name////-}
         echo "::set-output name=slot_name::slot_name_replaced"
 
     - name: Azure CLI script
