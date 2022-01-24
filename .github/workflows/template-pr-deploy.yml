@@ -46,8 +46,6 @@ jobs:
   #TODO:  insert test here when ready.
 
     - name: Upload a Build Artifact
-      env:
-        slot_name: ${{ inputs.slot_name }}
       uses: actions/upload-artifact@v2.3.1
       with:
         name: ${{ inputs.artifact_name }}
@@ -66,6 +64,8 @@ jobs:
     # We must do this to replace any "/" characters in the path. The Azure CLI will not accept slot names with "/".
     - name: Get Slot Name
       id: get-slot-name
+      env:
+        slot_name: ${{ inputs.slot_name }}
       run: |
         slot_name_replaced=${slot_name////-}
         echo "::set-output name=slot_name::$slot_name_replaced"

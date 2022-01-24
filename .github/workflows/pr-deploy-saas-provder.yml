@@ -19,6 +19,6 @@ jobs:
       slot_name: ${{ github.ref_name }}
       app_service_name: app-asdk-dev-001
       app_service_resource_group_name: azure-saas-dev
-      project_build_path: src/Saas.Admin/Saas.Provider.sln      
+      project_build_path: src/Saas.Admin/Saas.Provider.Web      
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
