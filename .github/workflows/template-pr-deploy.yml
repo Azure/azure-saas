@@ -73,7 +73,7 @@ jobs:
     needs: [build, create-deployment-slot]
     steps:
 
-    - name: Download Built Artifact
+    - name: Download Build Artifact
       uses: actions/download-artifact@v2.1.0
       with:
         name: ${{ inputs.artifact_name }}
