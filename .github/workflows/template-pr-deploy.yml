@@ -78,6 +78,8 @@ jobs:
           --resource-group ${{ inputs.app_service_resource_group_name }} \
           --name ${{ inputs.app_service_name }} \
           --slot ${{ steps.get-slot-name.outputs.slot_name }}
+    outputs:
+      slot_name: ${{ steps.get-slot-name.outputs.slot_name }}
   
   deploy-to-slot:
     runs-on: ubuntu-latest
@@ -100,7 +102,7 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
         app-name: ${{ inputs.app_service_name }}
-        slot-name: ${{ steps.get-slot-name.outputs.slot_name }}
+        slot-name: ${{ needs.create-deployment-slot.outputs.slot_name }}
         package: './app' # TODO: fix needing artifact name here. 
 
 
