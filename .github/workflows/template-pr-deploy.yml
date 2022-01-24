@@ -67,7 +67,7 @@ jobs:
       id: get-slot-name
       run: |
         slot_name_replaced=${slot_name////-}
-        echo "::set-output name=slot_name::slot_name_replaced"
+        echo "::set-output name=slot_name::$slot_name_replaced"
 
     - name: Azure CLI script
       uses: azure/CLI@v1
