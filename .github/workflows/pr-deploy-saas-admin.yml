@@ -1,6 +1,7 @@
-# Catalog API is currently named Saas.Onboarding.Api. 
+# Builds any PR with target branch of "main". Creates app service slot with PR number and deploys built code
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     branches:
       - main
     paths:
@@ -17,7 +18,6 @@ jobs:
     with:
       dotnet_version: '6.0.x'
       artifact_name: ${{github.run_id}} 
-      slot_name: ${{ github.ref_name }}
       app_service_name: app-asdk-admin-dev-001
       app_service_resource_group_name: azure-saas-dev
       project_build_path: src/Saas.Admin/Saas.Admin.Web
