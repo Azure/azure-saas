@@ -92,6 +92,5 @@ jobs:
       with: 
         app-name: ${{ inputs.app_service_name }}
         slot-name: ${{ env.slot_name }}
-        package: './app' # TODO: fix needing artifact name here. 
-
+        package: './app'
 
