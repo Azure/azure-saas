@@ -43,7 +43,7 @@ jobs:
         dotnet restore ${{ inputs.project_build_path }}
         dotnet build ${{ inputs.project_build_path }} --configuration Release --no-restore 
         dotnet publish ${{ inputs.project_build_path }} -c Release -o './app'
-  #TODO:  insert test here when ready.
+#TODO:  insert tests here when ready.
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
