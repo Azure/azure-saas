@@ -7,14 +7,16 @@ on:
       app_service_resource_group_name:
         required: true
         type: string
+      slot_name:
+        required: false
+        type: string
+        default: pr-${{github.event.pull_request.number}}
     secrets:
       AZURE_CREDENTIALS:
         required: true
 
 name: Swap PR slot into production and delete slot.
 
-env:
-  slot_name: pr-${{github.event.pull_request.number}}
 
 jobs:
   swap-slot:
@@ -35,7 +37,7 @@ jobs:
             az webapp deployment slot swap \
             -g ${{ inputs.app_service_resource_group_name }} \
             -n ${{ inputs.app_service_name }} \
-            --slot ${{ env.slot_name }} \
+            --slot ${{ inputs.slot_name }} \
             --target-slot production
 
   delete-slot:
@@ -57,4 +59,4 @@ jobs:
             az webapp deployment slot delete \
             --resource-group ${{ inputs.app_service_resource_group_name }} \
             --name ${{ inputs.app_service_name }} \
-            --slot ${{ env.slot_name }}
+            --slot ${{ inputs.slot_name }}

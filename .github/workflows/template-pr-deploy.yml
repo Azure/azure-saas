@@ -16,14 +16,15 @@ on:
       project_build_path:
         required: true
         type: string
+      slot_name:
+        required: false
+        type: string
+        default: pr-${{github.event.pull_request.number}}
     secrets:
       AZURE_CREDENTIALS:
         required: true
 
 name: Build PR and Deploy to new Slot
-
-env:
-  slot_name: pr-${{github.event.pull_request.number}}
 
 jobs:
   build:
@@ -68,7 +69,7 @@ jobs:
           --resource-group ${{ inputs.app_service_resource_group_name }} \
           --name ${{ inputs.app_service_name }} \
           --configuration-source ${{ inputs.app_service_name }} \
-          --slot ${{ env.slot_name }}
+          --slot ${{ inputs.slot_name }}
   
   deploy-to-slot:
     runs-on: ubuntu-latest
@@ -91,6 +92,6 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
         app-name: ${{ inputs.app_service_name }}
-        slot-name: ${{ env.slot_name }}
+        slot-name: ${{ inputs.slot_name }}
         package: './app'
 
