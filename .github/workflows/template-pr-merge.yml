@@ -1,0 +1,62 @@
+on:
+  workflow_call:
+    inputs:
+      app_service_name:
+        required: true
+        type: string
+      app_service_resource_group_name:
+        required: true
+        type: string
+      slot_name:
+        required: false
+        type: string
+        default: pr-${{github.event.pull_request.number}}
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+
+name: Swap PR slot into production and delete slot.
+
+
+jobs:
+  swap-slot:
+    # We will skip this job if the pull request was closed without merging.
+    if: github.event.pull_request.merged
+    runs-on: ubuntu-latest
+    steps:  
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Swap Slot
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az webapp deployment slot swap \
+            -g ${{ inputs.app_service_resource_group_name }} \
+            -n ${{ inputs.app_service_name }} \
+            --slot ${{ inputs.slot_name }} \
+            --target-slot production
+
+  delete-slot:
+    runs-on: ubuntu-latest
+    needs: swap-slot
+    # Don't run deletion if previous step failed
+    if: ${{ failure() == false }}
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Delete Slot
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az webapp deployment slot delete \
+            --resource-group ${{ inputs.app_service_resource_group_name }} \
+            --name ${{ inputs.app_service_name }} \
+            --slot ${{ inputs.slot_name }}
