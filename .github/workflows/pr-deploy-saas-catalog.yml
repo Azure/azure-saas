@@ -14,7 +14,7 @@ name: Saas.Catalog.API PR Build
 jobs:
   build-and-deploy:
     # Utilizes re-usable template to build and deploy to app service slot
-    uses: Azure/azure-saas/.github/workflows/template-pr-deploy.yml@users/landonpierce/devenv
+    uses: Azure/azure-saas/.github/workflows/template-pr-deploy.yml@main
     with:
       dotnet_version: '5.0.x'
       artifact_name: ${{ github.run_id }} 

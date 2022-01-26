@@ -12,7 +12,7 @@ name: Saas.Provider.Web Swap Slot
 jobs:
   build-and-deploy:
     # Utilizes re-usable template to build and deploy to app service slot
-    uses: Azure/azure-saas/.github/workflows/template-pr-merge.yml@users/landonpierce/devenv
+    uses: Azure/azure-saas/.github/workflows/template-pr-merge.yml@main
     with:
       app_service_name: app-asdk-dev-001
       app_service_resource_group_name: azure-saas-dev
