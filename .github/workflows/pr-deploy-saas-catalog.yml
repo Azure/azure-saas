@@ -4,9 +4,8 @@ on:
     types: [opened, synchronize, reopened]  
     branches:
       - main
-    paths:
-    # Catalog API is currently named Saas.Onboarding.Api. 
-      - "src/Saas.Onboarding/**"
+    paths: 
+      - "src/Saas.Catalog/**"
       - ".github/**"
 
 name: Saas.Catalog.API PR Build
