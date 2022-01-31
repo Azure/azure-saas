@@ -4,9 +4,8 @@ on:
     types: [opened, synchronize, reopened]  
     branches:
       - main
-    paths:
-    # Catalog API is currently named Saas.Onboarding.Api. 
-      - "src/Saas.Onboarding/**"
+    paths: 
+      - "src/Saas.Catalog/**"
       - ".github/**"
 
 name: Saas.Catalog.API PR Build
@@ -20,6 +19,6 @@ jobs:
       artifact_name: ${{ github.run_id }} 
       app_service_name: api-onboarding-asdk-dev-001
       app_service_resource_group_name: azure-saas-dev
-      project_build_path: src/Saas.Onboarding/Saas.Onboarding.Api
+      project_build_path: src/Saas.Catalog/Saas.Catalog.Api
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}

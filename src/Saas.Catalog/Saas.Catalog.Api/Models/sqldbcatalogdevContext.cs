@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Saas.Onboarding.Api.Models
+namespace Saas.Catalog.Api.Models
 {
     public partial class sqldbcatalogdevContext : DbContext
     {

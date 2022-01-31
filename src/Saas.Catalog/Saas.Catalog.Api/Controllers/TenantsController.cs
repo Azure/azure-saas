@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Saas.Onboarding.Api.Models;
+using Saas.Catalog.Api.Models;
 
-namespace Saas.Onboarding.Api.Controllers
+namespace Saas.Catalog.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

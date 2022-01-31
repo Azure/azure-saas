@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Saas.Onboarding.Api.Models
+namespace Saas.Catalog.Api.Models
 {
     public partial class Tenant
     {

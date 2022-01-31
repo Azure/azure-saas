@@ -5,8 +5,7 @@ on:
     branches:
       - main
     paths:
-    # Catalog API is currently named Saas.Onboarding.Api. 
-      - "src/Saas.Onboarding/**"
+      - "src/Saas.Catalog/**"
       - ".github/**"
 
 name: Saas.Catalog.Api Swap Slot
