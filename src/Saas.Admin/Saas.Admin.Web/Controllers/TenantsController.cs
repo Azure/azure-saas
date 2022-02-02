@@ -1,25 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Saas.Admin.Web.Models;
+using Saas.Admin.Web.Services;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Saas.Admin.Web.Controllers
 {
     public class TenantsController : Controller
     {
-        private readonly CatalogDbContext _context;
+        private readonly ITenantService _tenantService;
 
-        public TenantsController(CatalogDbContext context)
+        public TenantsController(ITenantService tenantService)
         {
-            _context = context;
+            _tenantService = tenantService;
         }
 
         // GET: Tenants
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tenants.ToListAsync());
+            return View(await _tenantService.GetItemsAsync());
         }
 
         // GET: Tenants/Details/5
@@ -30,8 +29,7 @@ namespace Saas.Admin.Web.Controllers
                 return NotFound();
             }
 
-            var tenant = await _context.Tenants
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var tenant = await _tenantService.GetItemAsync(id.Value);
             if (tenant == null)
             {
                 return NotFound();
@@ -55,9 +53,7 @@ namespace Saas.Admin.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                tenant.Id = Guid.NewGuid();
-                _context.Add(tenant);
-                await _context.SaveChangesAsync();
+                await _tenantService.AddItemAsync(tenant);
                 return RedirectToAction(nameof(Index));
             }
             return View(tenant);
@@ -71,7 +67,7 @@ namespace Saas.Admin.Web.Controllers
                 return NotFound();
             }
 
-            var tenant = await _context.Tenants.FindAsync(id);
+            var tenant = await _tenantService.GetItemAsync(id.Value);
             if (tenant == null)
             {
                 return NotFound();
@@ -93,22 +89,12 @@ namespace Saas.Admin.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                var lookupTenant = await _tenantService.GetItemAsync(id);
+                if (lookupTenant == null)
                 {
-                    _context.Update(tenant);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TenantExists(tenant.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _tenantService.UpdateItemAsync(tenant);
                 return RedirectToAction(nameof(Index));
             }
             return View(tenant);
@@ -122,13 +108,11 @@ namespace Saas.Admin.Web.Controllers
                 return NotFound();
             }
 
-            var tenant = await _context.Tenants
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var tenant = await _tenantService.GetItemAsync(id.Value);
             if (tenant == null)
             {
                 return NotFound();
             }
-
             return View(tenant);
         }
 
@@ -137,15 +121,13 @@ namespace Saas.Admin.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var tenant = await _context.Tenants.FindAsync(id);
-            _context.Tenants.Remove(tenant);
-            await _context.SaveChangesAsync();
+            var tenant = await _tenantService.GetItemAsync(id);
+            if (tenant == null)
+            {
+                return NotFound();
+            }
+            await _tenantService.DeleteItemAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool TenantExists(Guid id)
-        {
-            return _context.Tenants.Any(e => e.Id == id);
         }
     }
 }
