@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using Saas.Admin.Web.Models;
+using Saas.Admin.Web.Services;
 
 namespace Saas.Admin.Web
 {
@@ -26,6 +27,7 @@ namespace Saas.Admin.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CatalogDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CatalogDbConnection")));
+            services.AddTransient<ITenantService, TenantService>();
 
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
