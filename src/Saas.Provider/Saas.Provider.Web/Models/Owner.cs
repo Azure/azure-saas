@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
-namespace Saas.Provider.Web.Models
+﻿namespace Saas.Provider.Web.Models
 {
     public class Owner
     {

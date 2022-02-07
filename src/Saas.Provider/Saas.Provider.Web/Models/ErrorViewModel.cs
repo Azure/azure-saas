@@ -1,5 +1,3 @@
-using System;
-
 namespace Saas.Provider.Web.Models
 {
     public class ErrorViewModel
