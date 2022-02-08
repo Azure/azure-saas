@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Catalog.Api", "src\Saa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Web.Tests", "Saas.Admin.Web.Tests\Saas.Admin.Web.Tests.csproj", "{CF923D89-FA69-4351-9EE1-7FD75F0A45BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saas.Catalog.Api.Tests", "Saas.Catalog.Api.Tests\Saas.Catalog.Api.Tests.csproj", "{58659E0F-EF2A-4421-9704-F8816BF6417C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Catalog.Api.Tests", "Saas.Catalog.Api.Tests\Saas.Catalog.Api.Tests.csproj", "{58659E0F-EF2A-4421-9704-F8816BF6417C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,15 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Saas.Admin.Web.Models;
 using Saas.Admin.Web.Services;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Saas.Admin.Web.Tests.Services
 {
-    [TestClass]
     public class TenantServiceTests
     {
         private ITenantService _tenantService;
@@ -19,13 +17,7 @@ namespace Saas.Admin.Web.Tests.Services
             _tenantService = new TenantService(Context);
         }
 
-        [TestInitialize]
-        public void Setup()
-        {
-            _tenantService = new TenantService(Context);
-        }
-
-        [TestMethod]
+        [Fact]
         public async Task TenantService_GetItems_EmptyReturnsNone()
         {
             //Arrange
@@ -34,10 +26,10 @@ namespace Saas.Admin.Web.Tests.Services
             var results = await _tenantService.GetItemsAsync();
 
             //Assert
-            Assert.IsFalse(results.Any());
+            Assert.False(results.Any());
         }
 
-        [TestMethod]
+        [Fact]
         public async Task TenantService_GetItem_EmptyReturnsNone()
         {
             //Arrange
@@ -47,24 +39,23 @@ namespace Saas.Admin.Web.Tests.Services
             var results = await _tenantService.GetItemAsync(guid);
 
             //Assert
-            Assert.IsNull(results);
+            Assert.Null(results);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(DbUpdateException))]  
+        [Fact]
         public async Task TenantService_AddItemWithoutRequired_Throws()
         {
             //Arrange
             var tenant = new Tenant();
 
             //Act
-            await _tenantService.AddItemAsync(tenant);
+            var ex = await Assert.ThrowsAsync<DbUpdateException>(async () => await _tenantService.AddItemAsync(tenant));
 
             //Assert
             // Expected Exception Microsoft.EntityFrameworkCore.DbUpdateException
         }
 
-        [TestMethod]
+        [Fact]
         public async Task TenantService_AddItemWithRequired_Adds()
         {
             //Arrange
@@ -82,11 +73,11 @@ namespace Saas.Admin.Web.Tests.Services
 
             //Assert
             int afterAddCount = (await _tenantService.GetItemsAsync()).Count<Tenant>();
-            Assert.AreNotEqual(beforeCount, afterAddCount);
-            Assert.IsTrue(afterAddCount == 1);
+            Assert.NotEqual(beforeCount, afterAddCount);
+            Assert.True(afterAddCount == 1);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task TenantService_GetItemInvalid_ReturnsTenant()
         {
             //Arrange
@@ -109,11 +100,11 @@ namespace Saas.Admin.Web.Tests.Services
             var result = await _tenantService.GetItemAsync(tenant1.Id);
 
             //Assert
-            Assert.IsTrue((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
-            Assert.AreEqual(result, tenant1);
+            Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
+            Assert.Equal(result, tenant1);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task TenantService_GetItemInvalid_Null()
         {
             //Arrange
@@ -136,12 +127,11 @@ namespace Saas.Admin.Web.Tests.Services
             var result = await _tenantService.GetItemAsync(Guid.NewGuid());
 
             //Assert
-            Assert.IsTrue((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
-            Assert.IsNull(result);
+            Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
+            Assert.Null(result);
         }
 
-
-        [TestMethod]
+        [Fact]
         public async Task TenantService_DeleteItemInvalid_DeletesNothing()
         {
             //Arrange
@@ -164,11 +154,11 @@ namespace Saas.Admin.Web.Tests.Services
             await _tenantService.DeleteItemAsync(Guid.NewGuid());
 
             //Assert
-            Assert.IsTrue((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
+            Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
         }
 
 
-        [TestMethod]
+        [Fact]
         public async Task TenantService_DeleteItem_DeletesTenant()
         {
             //Arrange
@@ -191,10 +181,10 @@ namespace Saas.Admin.Web.Tests.Services
             await _tenantService.DeleteItemAsync(tenant1.Id);
 
             //Assert
-            Assert.IsTrue((await _tenantService.GetItemsAsync()).Count<Tenant>() == 1);
+            Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 1);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task TenantService_UpdateItem_UpdatesTenant()
         {
             //Arrange
@@ -206,7 +196,7 @@ namespace Saas.Admin.Web.Tests.Services
             };
             await _tenantService.AddItemAsync(tenant1);
             var tenantFromDB = await _tenantService.GetItemAsync(tenant1.Id);
-            Assert.AreEqual(tenant1, tenantFromDB);
+            Assert.Equal(tenant1, tenantFromDB);
 
             //Act
             var updatedName = "Updated Name";
@@ -215,10 +205,10 @@ namespace Saas.Admin.Web.Tests.Services
             var updatedTenantFromDB = await _tenantService.GetItemAsync(tenant1.Id);
 
             //Assert
-            Assert.IsTrue(updatedTenantFromDB.Name == updatedName);
+            Assert.True(updatedTenantFromDB.Name == updatedName);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task TenantService_UpdateInvalidItem_NoUpdate()
         {
             //Arrange
@@ -243,7 +233,7 @@ namespace Saas.Admin.Web.Tests.Services
             var updatedTenantFromDB = await _tenantService.GetItemAsync(tenant1.Id);
 
             //Assert
-            Assert.AreEqual("Test tenant 1", updatedTenantFromDB.Name);
+            Assert.Equal("Test tenant 1", updatedTenantFromDB.Name);
         }
 
 
