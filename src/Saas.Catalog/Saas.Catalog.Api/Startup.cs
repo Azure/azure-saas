@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Saas.Catalog.Api.Models;
+using Saas.Catalog.Api.Services;
 
 namespace Saas.Catalog.Api
 {
@@ -27,8 +28,9 @@ namespace Saas.Catalog.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Saas.Catalog.Api", Version = "v1" });
             });
 
-            services.AddDbContext<sqldbcatalogdevContext>(options =>
+            services.AddDbContext<CatalogDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("CatalogDbConnection")));
+            services.AddTransient<ITenantService, TenantService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
