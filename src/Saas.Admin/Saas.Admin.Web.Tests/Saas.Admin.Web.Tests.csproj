@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Saas.Admin\Saas.Admin.Web\Saas.Admin.Web.csproj" />
+    <ProjectReference Include="..\Saas.Admin.Web\Saas.Admin.Web.csproj" />
   </ItemGroup>
 
 </Project>
