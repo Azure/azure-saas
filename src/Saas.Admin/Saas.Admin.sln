@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Web", "Saas.Admi
 EndProject
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Admin.Web.Deployment", "Saas.Admin.Web.Deployment\Saas.Admin.Web.Deployment.deployproj", "{D52C84E3-A85C-4BDE-9550-35E6C075381C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Web.Tests", "Saas.Admin.Web.Tests\Saas.Admin.Web.Tests.csproj", "{C8CCC477-7034-4C9D-8992-3A3F0C16E00B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D52C84E3-A85C-4BDE-9550-35E6C075381C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D52C84E3-A85C-4BDE-9550-35E6C075381C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D52C84E3-A85C-4BDE-9550-35E6C075381C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8CCC477-7034-4C9D-8992-3A3F0C16E00B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8CCC477-7034-4C9D-8992-3A3F0C16E00B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8CCC477-7034-4C9D-8992-3A3F0C16E00B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8CCC477-7034-4C9D-8992-3A3F0C16E00B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

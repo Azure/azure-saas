@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Saas.Catalog.Api.Models
+namespace Saas.Domain.Models
 {
-    public partial class Tenant
+    public class Tenant
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

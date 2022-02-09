@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Saas.Catalog\Saas.Catalog.Api\Saas.Catalog.Api.csproj" />
+    <ProjectReference Include="..\Saas.Catalog.Api\Saas.Catalog.Api.csproj" />
   </ItemGroup>
 
 </Project>

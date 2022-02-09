@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Saas.Catalog.Api.Models;
 using Saas.Catalog.Api.Services;
+using Saas.Domain.Exceptions;
+using Saas.Domain.Models;
 
 namespace Saas.Catalog.Api.Controllers
 {
@@ -50,14 +50,14 @@ namespace Saas.Catalog.Api.Controllers
                 return BadRequest();
             }
 
-            //TODO replace with exception
-            var dbtenant = await _tenantService.GetItemAsync(id);
-            if (dbtenant == null)
+            try
+            {
+                await _tenantService.UpdateItemAsync(tenant);
+            }
+            catch (TenantNotFoundException)
             {
                 return NotFound();
             }
-
-            await _tenantService.UpdateItemAsync(tenant);
             return NoContent();
         }
 
@@ -88,13 +88,15 @@ namespace Saas.Catalog.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTenant(Guid id)
         {
-            var tenant = await _tenantService.GetItemAsync(id);
-            if (tenant == null)
+            try
+            {
+                await _tenantService.DeleteItemAsync(id);
+            }
+            catch (TenantNotFoundException)
             {
                 return NotFound();
             }
 
-            await _tenantService.DeleteItemAsync(id);
             return NoContent();
         }
     }

@@ -1,17 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Saas.Catalog.Api.Models;
-using Saas.Catalog.Api.Services;
+using Saas.Admin.Web.Models;
+using Saas.Admin.Web.Services;
+using Saas.Domain.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Saas.Catalog.Api.Tests.Services
+namespace Saas.Admin.Web.Tests.Services
 {
     public class TenantServiceTests
     {
         private ITenantService _tenantService;
-
+        
         public TenantServiceTests()
         {
             _tenantService = new TenantService(Context);
@@ -21,7 +22,7 @@ namespace Saas.Catalog.Api.Tests.Services
         public async Task TenantService_GetItems_EmptyReturnsNone()
         {
             //Arrange
-
+            
             //Act
             var results = await _tenantService.GetItemsAsync();
 

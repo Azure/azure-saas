@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Saas.Catalog.Api.Models;
+using Saas.Domain.Exceptions;
+using Saas.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Saas.Catalog.Api.Services
@@ -26,7 +29,7 @@ namespace Saas.Catalog.Api.Services
             var tenant = await GetItemAsync(Id);
             if (tenant == null)
             {
-                // TODO: throw not found exception
+                throw new TenantNotFoundException();
             }
             else
             {
@@ -47,12 +50,19 @@ namespace Saas.Catalog.Api.Services
 
         public async Task UpdateItemAsync(Tenant item)
         {
-            if (!await _context.Tenants.AnyAsync(t => t.Id == item.Id))
+            var tenant = await GetItemAsync(item.Id);
+            if (tenant == null)
             {
-                // TODO: throw not found exception
-                return;
+                throw new TenantNotFoundException();
             }
-            _context.Tenants.Update(item);
+            tenant.Name = item.Name;
+            tenant.UserId = item.UserId;
+            tenant.IsActive = item.IsActive;
+            tenant.IsCancelled = item.IsCancelled;  
+            tenant.IsProvisioned = item.IsProvisioned;  
+            tenant.ApiKey = item.ApiKey;
+            tenant.CategoryId = item.CategoryId;
+            _context.Tenants.Update(tenant);
             await _context.SaveChangesAsync();
         }
 
