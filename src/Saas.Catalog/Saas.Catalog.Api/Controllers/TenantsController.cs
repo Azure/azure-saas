@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Saas.Catalog.Api.Models;
+using Saas.Catalog.Api.Services;
 
 namespace Saas.Catalog.Api.Controllers
 {
@@ -12,25 +12,25 @@ namespace Saas.Catalog.Api.Controllers
     [ApiController]
     public class TenantsController : ControllerBase
     {
-        private readonly sqldbcatalogdevContext _context;
+        private readonly ITenantService _tenantService;
 
-        public TenantsController(sqldbcatalogdevContext context)
+        public TenantsController(ITenantService tenantService)
         {
-            _context = context;
+            _tenantService = tenantService;
         }
 
         // GET: api/Tenants
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tenant>>> GetTenants()
+        public async Task<IEnumerable<Tenant>> GetTenants()
         {
-            return await _context.Tenants.ToListAsync();
+            return await _tenantService.GetItemsAsync();
         }
 
         // GET: api/Tenants/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Tenant>> GetTenant(Guid id)
         {
-            var tenant = await _context.Tenants.FindAsync(id);
+            var tenant = await _tenantService.GetItemAsync(id);
 
             if (tenant == null)
             {
@@ -50,24 +50,14 @@ namespace Saas.Catalog.Api.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(tenant).State = EntityState.Modified;
-
-            try
+            //TODO replace with exception
+            var dbtenant = await _tenantService.GetItemAsync(id);
+            if (dbtenant == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TenantExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
+            await _tenantService.UpdateItemAsync(tenant);
             return NoContent();
         }
 
@@ -76,21 +66,19 @@ namespace Saas.Catalog.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Tenant>> PostTenant(Tenant tenant)
         {
-            _context.Tenants.Add(tenant);
-            try
+            if (ModelState.IsValid)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (TenantExists(tenant.Id))
+                // TODO use exceptions or tweak checking method
+                var dbtenant = await _tenantService.GetItemAsync(tenant.Id);
+                if (dbtenant != null)
                 {
                     return Conflict();
                 }
                 else
                 {
-                    throw;
+                    await _tenantService.AddItemAsync(tenant);
                 }
+
             }
 
             return CreatedAtAction("GetTenant", new { id = tenant.Id }, tenant);
@@ -100,21 +88,14 @@ namespace Saas.Catalog.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTenant(Guid id)
         {
-            var tenant = await _context.Tenants.FindAsync(id);
+            var tenant = await _tenantService.GetItemAsync(id);
             if (tenant == null)
             {
                 return NotFound();
             }
 
-            _context.Tenants.Remove(tenant);
-            await _context.SaveChangesAsync();
-
+            await _tenantService.DeleteItemAsync(id);
             return NoContent();
-        }
-
-        private bool TenantExists(Guid id)
-        {
-            return _context.Tenants.Any(e => e.Id == id);
         }
     }
 }

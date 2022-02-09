@@ -2,13 +2,13 @@
 
 namespace Saas.Catalog.Api.Models
 {
-    public partial class sqldbcatalogdevContext : DbContext
+    public partial class CatalogDbContext : DbContext
     {
-        public sqldbcatalogdevContext()
+        public CatalogDbContext()
         {
         }
 
-        public sqldbcatalogdevContext(DbContextOptions<sqldbcatalogdevContext> options)
+        public CatalogDbContext(DbContextOptions<CatalogDbContext> options)
             : base(options)
         {
         }
@@ -30,7 +30,7 @@ namespace Saas.Catalog.Api.Models
             {
                 entity.ToTable("Tenant");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Created)
                     .HasColumnType("datetime")
