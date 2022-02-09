@@ -11,7 +11,6 @@ using Saas.Provider.Web.Models;
 using Saas.Provider.Web.Repositories;
 using Saas.Provider.Web.Services;
 using System;
-using System.Configuration;
 using System.Threading.Tasks;
 
 namespace Saas.Provider.Web

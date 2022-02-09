@@ -1,4 +1,4 @@
-﻿namespace Saas.Domain.Models
+namespace Saas.Domain.Models
 {
     public class Tenant
     {
