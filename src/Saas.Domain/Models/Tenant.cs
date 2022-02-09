@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Saas.Admin.Web.Models
+﻿namespace Saas.Domain.Models
 {
-    public partial class Tenant
+    public class Tenant
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

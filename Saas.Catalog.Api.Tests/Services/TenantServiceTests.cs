@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Saas.Catalog.Api.Models;
 using Saas.Catalog.Api.Services;
+using Saas.Domain.Exceptions;
+using Saas.Domain.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -132,7 +134,7 @@ namespace Saas.Catalog.Api.Tests.Services
         }
 
         [Fact]
-        public async Task TenantService_DeleteItemInvalid_DeletesNothing()
+        public async Task TenantService_DeleteItemInvalid_TenantNotFoundException()
         {
             //Arrange
             var tenant1 = new Tenant()
@@ -151,10 +153,10 @@ namespace Saas.Catalog.Api.Tests.Services
             await _tenantService.AddItemAsync(tenant2);
 
             //Act
-            await _tenantService.DeleteItemAsync(Guid.NewGuid());
+            var ex = await Assert.ThrowsAsync<TenantNotFoundException>(async () => await _tenantService.DeleteItemAsync(Guid.NewGuid()));
 
             //Assert
-            Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
+            //Expected Exception Saas.Domain.Exceptions.TenantNotFoundException
         }
 
 
@@ -209,7 +211,7 @@ namespace Saas.Catalog.Api.Tests.Services
         }
 
         [Fact]
-        public async Task TenantService_UpdateInvalidItem_NoUpdate()
+        public async Task TenantService_UpdateInvalidItem_TenantNotFoundException()
         {
             //Arrange
             var tenant1 = new Tenant()
@@ -229,11 +231,11 @@ namespace Saas.Catalog.Api.Tests.Services
                 Name = "Updated Name",
                 UserId = tenant1.UserId
             };
-            await _tenantService.UpdateItemAsync(updatedItem);
-            var updatedTenantFromDB = await _tenantService.GetItemAsync(tenant1.Id);
+            
+            var ex = await Assert.ThrowsAsync<TenantNotFoundException>(async () => await _tenantService.UpdateItemAsync(updatedItem));
 
             //Assert
-            Assert.Equal("Test tenant 1", updatedTenantFromDB.Name);
+            //Expected Exception Saas.Domain.Exceptions.TenantNotFoundException
         }
 
 

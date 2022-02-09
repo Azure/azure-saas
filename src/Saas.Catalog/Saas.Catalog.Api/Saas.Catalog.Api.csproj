@@ -1,13 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>1e32cbcf-30d7-4da0-a7fd-6d13d57f8af8</UserSecretsId>
   </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.2" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Saas.Domain\Saas.Domain.csproj" />
 	</ItemGroup>
 
 </Project>

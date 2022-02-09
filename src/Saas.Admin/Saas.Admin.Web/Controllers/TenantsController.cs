@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Saas.Admin.Web.Models;
 using Saas.Admin.Web.Services;
+using Saas.Domain.Models;
 using System;
 using System.Threading.Tasks;
 

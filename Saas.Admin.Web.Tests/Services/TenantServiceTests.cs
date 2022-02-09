@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Saas.Admin.Web.Models;
 using Saas.Admin.Web.Services;
+using Saas.Domain.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

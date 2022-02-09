@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Saas.Domain.Models;
 
 namespace Saas.Admin.Web.Models
 {
