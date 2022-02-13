@@ -12,7 +12,6 @@ namespace Saas.Catalog.Api.Models
     {
         public static void Initialize(this CatalogDbContext context, ILogger logger)
         {
-            //_ = context ?? throw new ArgumentNullException(nameof(context));
             Guard.Argument(context, nameof(context)).NotNull();
 
             context.Database.EnsureCreated();
