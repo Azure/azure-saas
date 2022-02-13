@@ -4,16 +4,12 @@ namespace Saas.Catalog.Api.Models
 {
     public partial class CatalogDbContext : DbContext
     {
-        public CatalogDbContext()
-        {
-        }
-
         public CatalogDbContext(DbContextOptions<CatalogDbContext> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<CatalogTenant> Tenants { get; set; }
+        internal virtual DbSet<CatalogTenant> Tenants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -13,9 +13,6 @@
 		<PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
 		<PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.17.0" />
 		<PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Customizations\" />
+		<PackageReference Include="xunit.assert" Version="2.4.1" />
 	</ItemGroup>
 </Project>
