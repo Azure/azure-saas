@@ -20,7 +20,7 @@ namespace Saas.Catalog.Api.Services
 
         public async Task AddItemAsync(Tenant item)
         {
-            _context.Tenants.Add(item);
+            //_context.Tenants.Add(item);
             await _context.SaveChangesAsync();
         }
 
@@ -33,37 +33,41 @@ namespace Saas.Catalog.Api.Services
             }
             else
             {
-                _context.Tenants.Remove(tenant);
+                //_context.Tenants.Remove(tenant);
                 await _context.SaveChangesAsync();
             }
         }
 
         public async Task<Tenant> GetItemAsync(Guid id)
         {
-            return await _context.Tenants.FindAsync(id);
+            //return await _context.Tenants.FindAsync(id);
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Tenant>> GetItemsAsync()
         {
-            return await _context.Tenants.ToListAsync();
+            //return await _context.Tenants.ToListAsync();
+            throw new NotImplementedException();
         }
 
         public async Task UpdateItemAsync(Tenant item)
         {
-            var tenant = await GetItemAsync(item.Id);
-            if (tenant == null)
-            {
-                throw new TenantNotFoundException();
-            }
-            tenant.Name = item.Name;
-            tenant.UserId = item.UserId;
-            tenant.IsActive = item.IsActive;
-            tenant.IsCancelled = item.IsCancelled;  
-            tenant.IsProvisioned = item.IsProvisioned;  
-            tenant.ApiKey = item.ApiKey;
-            tenant.CategoryId = item.CategoryId;
-            _context.Tenants.Update(tenant);
-            await _context.SaveChangesAsync();
+            throw new NotImplementedException();
+
+            //var tenant = await GetItemAsync(item.Id);
+            //if (tenant == null)
+            //{
+            //    throw new TenantNotFoundException();
+            //}
+            //tenant.Name = item.Name;
+            //tenant.UserId = item.UserId;
+            //tenant.IsActive = item.IsActive;
+            //tenant.IsCancelled = item.IsCancelled;  
+            //tenant.IsProvisioned = item.IsProvisioned;  
+            //tenant.ApiKey = item.ApiKey;
+            //tenant.CategoryId = item.CategoryId;
+            //_context.Tenants.Update(tenant);
+            //await _context.SaveChangesAsync();
         }
 
     }
