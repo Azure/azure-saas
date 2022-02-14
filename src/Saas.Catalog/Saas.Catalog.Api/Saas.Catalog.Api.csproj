@@ -6,6 +6,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Dawn.Guard" Version="1.12.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.2" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
@@ -13,6 +14,12 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Saas.Domain\Saas.Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>$(AssemblyName).Tests</_Parameter1>
+		</AssemblyAttribute>
 	</ItemGroup>
 
 </Project>

@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\TestUtilities\TestUtilities.csproj" />
     <ProjectReference Include="..\Saas.Catalog.Api\Saas.Catalog.Api.csproj" />
   </ItemGroup>
 

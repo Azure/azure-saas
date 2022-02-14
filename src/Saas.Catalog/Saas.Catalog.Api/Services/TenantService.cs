@@ -4,6 +4,7 @@ using Saas.Domain.Exceptions;
 using Saas.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -20,13 +21,16 @@ namespace Saas.Catalog.Api.Services
 
         public async Task AddItemAsync(Tenant item)
         {
-            _context.Tenants.Add(item);
+            CatalogTenant catalogTenant = CatalogTenant.FromTenant(item);
+
+            _context.Tenants.Add(catalogTenant);
             await _context.SaveChangesAsync();
+            item.Id = catalogTenant.Id;
         }
 
-        public async Task DeleteItemAsync(Guid Id)
+        public async Task DeleteItemAsync(Guid id)
         {
-            var tenant = await GetItemAsync(Id);
+            var tenant = await _context.Tenants.FindAsync(id);
             if (tenant == null)
             {
                 throw new TenantNotFoundException();
@@ -40,29 +44,42 @@ namespace Saas.Catalog.Api.Services
 
         public async Task<Tenant> GetItemAsync(Guid id)
         {
-            return await _context.Tenants.FindAsync(id);
+            CatalogTenant catalogTenant = await _context.Tenants.FindAsync(id);
+            
+            if(catalogTenant == null)
+            {
+                return null;
+            }
+
+            return CatalogTenant.ToTenant(catalogTenant);
         }
 
         public async Task<IEnumerable<Tenant>> GetItemsAsync()
         {
-            return await _context.Tenants.ToListAsync();
+            IEnumerable<CatalogTenant> catalogTenants = await _context.Tenants.ToListAsync();
+
+            IEnumerable<Tenant> tenants = catalogTenants.Select(ct => CatalogTenant.ToTenant(ct));
+            return tenants;
         }
 
         public async Task UpdateItemAsync(Tenant item)
         {
-            var tenant = await GetItemAsync(item.Id);
-            if (tenant == null)
+
+            var catalogTenant = await _context.Tenants.FindAsync(item.Id);
+            if (catalogTenant == null)
             {
                 throw new TenantNotFoundException();
             }
-            tenant.Name = item.Name;
-            tenant.UserId = item.UserId;
-            tenant.IsActive = item.IsActive;
-            tenant.IsCancelled = item.IsCancelled;  
-            tenant.IsProvisioned = item.IsProvisioned;  
-            tenant.ApiKey = item.ApiKey;
-            tenant.CategoryId = item.CategoryId;
-            _context.Tenants.Update(tenant);
+            catalogTenant.Name = item.Name;
+            catalogTenant.UserId = item.UserId;
+            catalogTenant.IsActive = item.IsActive;
+            catalogTenant.IsCancelled = item.IsCancelled;
+            catalogTenant.IsProvisioned = item.IsProvisioned;
+            catalogTenant.ApiKey = item.ApiKey;
+            catalogTenant.CategoryId = item.CategoryId;
+
+            _context.Tenants.Update(catalogTenant);
+
             await _context.SaveChangesAsync();
         }
 

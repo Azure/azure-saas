@@ -6,6 +6,9 @@ using Saas.Domain.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+
+using TestUtilities;
+
 using Xunit;
 
 namespace Saas.Catalog.Api.Tests.Services
@@ -103,7 +106,7 @@ namespace Saas.Catalog.Api.Tests.Services
 
             //Assert
             Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
-            Assert.Equal(result, tenant1);
+            AssertAdditions.AllPropertiesAreEqual(result, tenant1);
         }
 
         [Fact]
@@ -198,7 +201,7 @@ namespace Saas.Catalog.Api.Tests.Services
             };
             await _tenantService.AddItemAsync(tenant1);
             var tenantFromDB = await _tenantService.GetItemAsync(tenant1.Id);
-            Assert.Equal(tenant1, tenantFromDB);
+            AssertAdditions.AllPropertiesAreEqual(tenant1, tenantFromDB);
 
             //Act
             var updatedName = "Updated Name";
