@@ -13,10 +13,6 @@ Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Deployment.Root", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Orders.Api", "src\Saas.Orders\Saas.Orders.Api\Saas.Orders.Api.csproj", "{9E16855F-02A0-4C85-BCDA-9CA1795169D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Provider.Web", "src\Saas.Provider\Saas.Provider.Web\Saas.Provider.Web.csproj", "{DA71E2ED-1C8E-4918-96A5-BAD8F286B39D}"
-EndProject
-Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Provider.Web.Deployment", "src\Saas.Provider\Saas.Provider.Web.Deployment\Saas.Provider.Web.Deployment.deployproj", "{DE61C194-11B4-4868-92C8-E32F9716232D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Catalog.Api", "src\Saas.Catalog\Saas.Catalog.Api\Saas.Catalog.Api.csproj", "{08C4A2D8-9EF7-4874-8ACE-07881A71E064}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Domain", "src\Saas.Domain\Saas.Domain.csproj", "{9CC87091-ABA0-4D34-B8C5-F24C56C2360D}"
@@ -25,7 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Web.Tests", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Catalog.Api.Tests", "src\Saas.Catalog\Saas.Catalog.Api.Tests\Saas.Catalog.Api.Tests.csproj", "{F76216F1-7410-4F10-A086-E3F676B962C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestUtilities", "TestUtilities\TestUtilities.csproj", "{62537DAE-9BCD-4062-AD16-E71A6E731BAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestUtilities", "TestUtilities\TestUtilities.csproj", "{62537DAE-9BCD-4062-AD16-E71A6E731BAB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.LandingSignup.Web", "src\Saas.LandingSignup\Saas.LandingSignup.Web\Saas.LandingSignup.Web.csproj", "{30CB6631-72E0-4C43-859A-EEBB548A1F21}"
+EndProject
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.LandingSignup.Web.Deployment", "src\Saas.LandingSignup\Saas.LandingSignup.Web.Deployment\Saas.LandingSignup.Web.Deployment.deployproj", "{AF7BC4E4-50A9-4588-B1A7-8AC685B41DD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,14 +53,6 @@ Global
 		{9E16855F-02A0-4C85-BCDA-9CA1795169D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E16855F-02A0-4C85-BCDA-9CA1795169D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E16855F-02A0-4C85-BCDA-9CA1795169D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DA71E2ED-1C8E-4918-96A5-BAD8F286B39D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DA71E2ED-1C8E-4918-96A5-BAD8F286B39D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DA71E2ED-1C8E-4918-96A5-BAD8F286B39D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DA71E2ED-1C8E-4918-96A5-BAD8F286B39D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE61C194-11B4-4868-92C8-E32F9716232D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE61C194-11B4-4868-92C8-E32F9716232D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE61C194-11B4-4868-92C8-E32F9716232D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE61C194-11B4-4868-92C8-E32F9716232D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08C4A2D8-9EF7-4874-8ACE-07881A71E064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08C4A2D8-9EF7-4874-8ACE-07881A71E064}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08C4A2D8-9EF7-4874-8ACE-07881A71E064}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -81,6 +73,14 @@ Global
 		{62537DAE-9BCD-4062-AD16-E71A6E731BAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62537DAE-9BCD-4062-AD16-E71A6E731BAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62537DAE-9BCD-4062-AD16-E71A6E731BAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30CB6631-72E0-4C43-859A-EEBB548A1F21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30CB6631-72E0-4C43-859A-EEBB548A1F21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30CB6631-72E0-4C43-859A-EEBB548A1F21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30CB6631-72E0-4C43-859A-EEBB548A1F21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF7BC4E4-50A9-4588-B1A7-8AC685B41DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF7BC4E4-50A9-4588-B1A7-8AC685B41DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF7BC4E4-50A9-4588-B1A7-8AC685B41DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF7BC4E4-50A9-4588-B1A7-8AC685B41DD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
