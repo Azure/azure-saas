@@ -151,7 +151,7 @@
       "apiVersion": "2021-04-01",
       "properties": {
         "templateLink": {
-          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.Provider/Saas.Provider.Web.Deployment/azuredeploy.json"
+          "uri": "https://raw.githubusercontent.com/Azure/azure-saas/main/src/Saas.Provider/Saas.LandingSignup.Web.Deployment/azuredeploy.json"
         },
         "parameters": {
           "SaasProviderName": { "value": "[parameters('SaasProviderName')]" },

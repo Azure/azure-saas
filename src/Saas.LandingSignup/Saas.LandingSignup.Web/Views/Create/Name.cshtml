@@ -1,0 +1,42 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+	ViewData["Title"] = "Create your Subscriber - Give your Subscriber a Name";
+}
+
+<div class="row" style="margin: 0 auto; max-width: 600px;">
+ <div class="col-12">
+  <div style="font-size:.75rem;">STEP 1 OF 3</div>
+  <div style="margin-top:.5rem;"><progress class="progress" id="file" value="33" max="100"> 33% </progress></div>
+ </div>
+</div>
+
+<div class="row" style="margin: 0 auto; max-width: 600px;">
+ <div class="col-12" style="margin-top: 1.5rem;">
+  <div style="margin-bottom: 10px;">
+   <h3 style="margin-bottom: 0px;">What is your Organization's Name?</h3>
+  </div>
+  <form method="post">
+   <div style="margin-top: 1rem; margin-bottom: 1rem;">
+	<input type="text" name="name" class="form-control" placeholder="Start typing..." required minlength="2" maxlength="44" pattern="[a-zA-Z0-9_' ]*$" value="@Context.Request.Query["name"]" />
+   </div>
+			@if (Context.Request.Query["userNameExists"] == "True")
+			{
+	   <div>
+		<p style="color:#dc3545!important;"> Subscriber name '@Context.Request.Query["name"]' is already taken.</p>
+	   </div>
+			}
+   <div>
+	<p>The name should be the name of your business, brand or organization.  You can change this later.</p>
+   </div>
+   <div style="margin-top: 1rem;">
+	<input type="hidden" name="Id" value="@ViewBag.Id" />
+	<input type="hidden" name="UserId" value="@ViewBag.UserId" />
+	<input type="hidden" name="IsExistingUser" value="@ViewBag.IsExistingUser" />
+	<input type="submit" class="btn btn-primary" style="width:100%;" value="NEXT" />
+   </div>
+  </form>
+ </div>
+</div>
+
+

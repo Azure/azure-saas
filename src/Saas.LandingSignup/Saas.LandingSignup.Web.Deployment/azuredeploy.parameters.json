@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "SaasProviderName": {
+      "value": "org1"
+    },
+    "SaasEnvironment": {
+      "value": "dev"
+    },
+    "SaasInstanceNumber": {
+      "value": "028"
+    },
+    "SaasLocation": {
+      "value": "eastus"
+    },
+    "CosmosDbConnectionString": {
+      "value": "AccountEndpoint=https://cosmos-org1-dev-028.documents.azure.com:443/;AccountKey=J92lmfHRM5pGvUJxEqhDqa5LuwGtcMntoV4j9x0sMin52sgMyQKflkFR9kMYtwOockyMVMcYbE4wK6eK1jbL7Q==;"
+    },
+    "CosmosDbAccountKey": {
+      "value": "J92lmfHRM5pGvUJxEqhDqa5LuwGtcMntoV4j9x0sMin52sgMyQKflkFR9kMYtwOockyMVMcYbE4wK6eK1jbL7Q=="
+    },
+    "CosmosDbEndpoint": {
+      "value": "https://cosmos-org1-dev-028.documents.azure.com:443/"
+    },
+    "CosmosDbDatabaseName": {
+      "value": "azuresaas028"
+    }
+  }
+}
