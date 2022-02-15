@@ -13,10 +13,6 @@ Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Deployment.Root", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Orders.Api", "src\Saas.Orders\Saas.Orders.Api\Saas.Orders.Api.csproj", "{9E16855F-02A0-4C85-BCDA-9CA1795169D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Provider.Web", "src\Saas.Provider\Saas.Provider.Web\Saas.Provider.Web.csproj", "{DA71E2ED-1C8E-4918-96A5-BAD8F286B39D}"
-EndProject
-Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Provider.Web.Deployment", "src\Saas.Provider\Saas.Provider.Web.Deployment\Saas.Provider.Web.Deployment.deployproj", "{DE61C194-11B4-4868-92C8-E32F9716232D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Catalog.Api", "src\Saas.Catalog\Saas.Catalog.Api\Saas.Catalog.Api.csproj", "{08C4A2D8-9EF7-4874-8ACE-07881A71E064}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Domain", "src\Saas.Domain\Saas.Domain.csproj", "{9CC87091-ABA0-4D34-B8C5-F24C56C2360D}"
@@ -57,14 +53,6 @@ Global
 		{9E16855F-02A0-4C85-BCDA-9CA1795169D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E16855F-02A0-4C85-BCDA-9CA1795169D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E16855F-02A0-4C85-BCDA-9CA1795169D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DA71E2ED-1C8E-4918-96A5-BAD8F286B39D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DA71E2ED-1C8E-4918-96A5-BAD8F286B39D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DA71E2ED-1C8E-4918-96A5-BAD8F286B39D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DA71E2ED-1C8E-4918-96A5-BAD8F286B39D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE61C194-11B4-4868-92C8-E32F9716232D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE61C194-11B4-4868-92C8-E32F9716232D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE61C194-11B4-4868-92C8-E32F9716232D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE61C194-11B4-4868-92C8-E32F9716232D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08C4A2D8-9EF7-4874-8ACE-07881A71E064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08C4A2D8-9EF7-4874-8ACE-07881A71E064}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08C4A2D8-9EF7-4874-8ACE-07881A71E064}.Release|Any CPU.ActiveCfg = Release|Any CPU
