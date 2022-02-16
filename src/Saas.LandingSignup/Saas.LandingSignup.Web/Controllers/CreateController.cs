@@ -187,6 +187,8 @@ namespace Saas.LandingSignup.Web.Controllers
                 _logger.LogInformation(ex.ToString());
             }
 
+            /* Converting this flow to use Deploy route only. This will bypass the Stripe could and prevent the calls. 
+             * The result will be always going to the confirmation page regardless of tier chosen
             if (productId == 5)
             {
                 return RedirectToAction("deploy", "create", new { id, userId, isExistingUser, name, categoryId, productId });
@@ -198,7 +200,9 @@ namespace Saas.LandingSignup.Web.Controllers
             else
             {
                 return RedirectToAction("merchant", "create", new { id, userId, isExistingUser, name, categoryId, productId });
-            }
+            }*/
+
+            return RedirectToAction("deploy", "create", new { id, userId, isExistingUser, name, categoryId, productId });
         }
 
         [Route("/create/merchant")]
