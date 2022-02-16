@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Saas.LandingSignup.Web.Models.Category>
+@{
+    ViewData["Title"] = "Create your Subscriber - Select a Category";
+}
+
+<div class="row" style="margin: 0 auto; max-width: 600px;">
+ <div class="col-12">
+  <div style="font-size:.75rem;">STEP 2 OF 3</div>
+  <div style="margin-top:.5rem;"><progress class="progress" id="file" value="66" max="100"> 66% </progress></div>
+ </div>
+</div>
+
+<div class="row" style="margin: 0 auto; max-width: 600px;">
+    <div class="col-12" style="margin-top: 1rem;">
+        <div style="margin-top: .5rem;">
+            <div style="margin-bottom: 10px;">
+                <h3 style="margin-bottom: 0px;">In what industry is your organization?</h3>
+            </div>
+            <div>
+                <p>Identifying your industry will help people find you in search results.  Choose the closest one - you can update it later.</p>
+            </div>
+            <form method="post">
+                <div style="margin-bottom: 30px;">
+                    <select class="form-control" name="CategoryId" required>
+                        <option value="">Select an Industry</option>
+                        @foreach (var item in Model)
+                            {
+                        <option value="@item.Id">
+                            @item.Name
+                        </option>
+                            }
+                    </select>
+                </div>
+                <div style="margin-top: .5rem;">
+                    <input type="hidden" name="Id" value="@ViewBag.Id" />
+                    <input type="hidden" name="UserId" value="@ViewBag.UserId" />
+                    <input type="hidden" name="IsExistingUser" value="@ViewBag.IsExistingUser" />
+                    <input type="hidden" name="Name" value="@ViewBag.Name" />
+                    <input type="submit" class="btn btn-primary" style="width:100%;" value="NEXT" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

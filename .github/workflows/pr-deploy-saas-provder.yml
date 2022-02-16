@@ -5,10 +5,10 @@ on:
     branches:
       - main
     paths:
-      - "src/Saas.Provider/**"
+      - "src/Saas.LandingSignup/**"
       - ".github/**"
     
-name: Saas.Provider.Web PR Build
+name: Saas.LandingSignup.Web PR Build
 
 jobs:
   build-and-deploy:
@@ -19,6 +19,6 @@ jobs:
       artifact_name: ${{ github.run_id }} 
       app_service_name: app-asdk-dev-001
       app_service_resource_group_name: azure-saas-dev
-      project_build_path: src/Saas.Provider/Saas.Provider.Web      
+      project_build_path: src/Saas.LandingSignup/Saas.LandingSignup.Web      
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
