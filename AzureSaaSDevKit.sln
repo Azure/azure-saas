@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Web.Tests", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Catalog.Api.Tests", "src\Saas.Catalog\Saas.Catalog.Api.Tests\Saas.Catalog.Api.Tests.csproj", "{F76216F1-7410-4F10-A086-E3F676B962C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestUtilities", "TestUtilities\TestUtilities.csproj", "{62537DAE-9BCD-4062-AD16-E71A6E731BAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestUtilities", "src\TestUtilities\TestUtilities.csproj", "{02F6CFF4-70ED-4C9D-AF21-4EE3AD668AA4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.LandingSignup.Web", "src\Saas.LandingSignup\Saas.LandingSignup.Web\Saas.LandingSignup.Web.csproj", "{71694EE0-1D10-4DC3-B4EA-30C45A9FF31F}"
 EndProject
@@ -81,6 +81,10 @@ Global
 		{6A0836ED-483E-4F7E-8248-AC00FB52E778}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A0836ED-483E-4F7E-8248-AC00FB52E778}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A0836ED-483E-4F7E-8248-AC00FB52E778}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02F6CFF4-70ED-4C9D-AF21-4EE3AD668AA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02F6CFF4-70ED-4C9D-AF21-4EE3AD668AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02F6CFF4-70ED-4C9D-AF21-4EE3AD668AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02F6CFF4-70ED-4C9D-AF21-4EE3AD668AA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
