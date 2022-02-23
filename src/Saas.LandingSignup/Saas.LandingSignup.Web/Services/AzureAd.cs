@@ -8,9 +8,10 @@ namespace Saas.LandingSignup.Web.Services
     {
         private readonly AppSettings _appSettings;
 
-        private const string AuthorityFormat = "https://login.microsoftonline.com/{0}/v2.0";
+        private const string AuthorityFormat = SR.AzureAdAuthorityFormat;
 
         const string MSATenantId = "";
+
         public static string clientId = "";
         public static string clientSecret = "";
 
@@ -26,6 +27,7 @@ namespace Saas.LandingSignup.Web.Services
             // Get a token for the Microsoft Graph. If this line throws an exception for any reason, we'll just let the exception be returned as a 500 response
             // to the caller, and show a generic error message to the user.
             IConfidentialClientApplication daemonClient;
+
             daemonClient = ConfidentialClientApplicationBuilder.Create(clientId)
                 .WithAuthority(string.Format(AuthorityFormat, MSATenantId))
                 .WithRedirectUri(_appSettings.RedirectUri)

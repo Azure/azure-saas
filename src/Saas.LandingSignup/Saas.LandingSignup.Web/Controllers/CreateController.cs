@@ -7,17 +7,13 @@ using Saas.LandingSignup.Web.Models.CosmosDb;
 using Saas.LandingSignup.Web.Services;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Saas.LandingSignup.Web.Controllers
 {
     public class CreateController : Controller
     {
-        private const string AuthorityFormat = "https://login.microsoftonline.com/{0}/v2.0";
-
         private readonly ILogger<CreateController> _logger;
         private readonly AppSettings _appSettings;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -33,26 +29,19 @@ namespace Saas.LandingSignup.Web.Controllers
             _cosmosDbService = cosmosDbService;
         }
 
-        [Route("/create")]
+        [Route("/" + SR.CreateController)]
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Route("/create/name")]
+        [Route("/" + SR.CreateController + "/" + SR.NameAction)]
+        [HttpGet]
         public IActionResult Name(string id, string userId, string isExistingUser, string userNameExists)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                string processId = Guid.NewGuid().ToString();
-                ViewBag.Id = processId;
-            }
-            else
-            {
-                ViewBag.Id = id;
-            }
-
             // Populate hidden input fields
+            ViewBag.Id = (string.IsNullOrEmpty(id)) ? Guid.NewGuid().ToString() : id;
             ViewBag.UserId = userId;
             ViewBag.IsExistingUser = isExistingUser;
             ViewBag.userNameExists = userNameExists;
@@ -60,16 +49,16 @@ namespace Saas.LandingSignup.Web.Controllers
             return View();
         }
 
-        [Route("/create/name")]
+        [Route("/" + SR.CreateController + "/" + SR.NameAction)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> NameAsync(string id, string userId, string isExistingUser, string name)
         {
             // Create order process id and object
-            Item item = new Item()
+            var item = new Item()
             {
                 Id = id,
-                Name = "Onboarding Flow",
+                Name = SR.OnboardingFlowName,
                 TenantName = name,
                 UserId = userId,
                 IsExistingUser = isExistingUser,
@@ -77,7 +66,7 @@ namespace Saas.LandingSignup.Web.Controllers
                 Created = DateTime.Now
             };
 
-            // Commit to CosmosDB
+            // Commmit to CosmosDB
             try
             {
                 await _cosmosDbService.UpdateItemAsync(id, item);
@@ -87,10 +76,11 @@ namespace Saas.LandingSignup.Web.Controllers
                 _logger.LogInformation(ex.ToString());
             }
 
-            return RedirectToAction("category", "create", new { item.Id, userId, isExistingUser, name });
+            return RedirectToAction(SR.CategoryAction,SR.CreateController, new { item.Id, userId, isExistingUser, name });
         }
 
-        [Route("/create/category")]
+        [Route("/" + SR.CreateController+ "/"+ SR.CategoryAction)]
+        [HttpGet]
         public IActionResult Category(string id, string userId, string isExistingUser, string name)
         {
             // Populate hidden input fields
@@ -100,30 +90,31 @@ namespace Saas.LandingSignup.Web.Controllers
             ViewBag.Name = name;
 
             // Populate Categories dropdown list
-            List<Category> categories = new List<Category>();
-            categories.Add(new Category { Id = 1, Name = "Automotive, Mobility & Transportation" });
-            categories.Add(new Category { Id = 2, Name = "Energy & Sustainability" });
-            categories.Add(new Category { Id = 3, Name = "Financial Services" });
-            categories.Add(new Category { Id = 4, Name = "Healthcare & Life Sciences" });
-            categories.Add(new Category { Id = 5, Name = "Manufacturing & Supply Chain" });
-            categories.Add(new Category { Id = 6, Name = "Media & Communications" });
-            categories.Add(new Category { Id = 7, Name = "Public Sector" });
-            categories.Add(new Category { Id = 8, Name = "Retail & Consumer Goods" });
-            categories.Add(new Category { Id = 9, Name = "Software" });
+            var categories = new List<Category>();
+
+            categories.Add(new Category { Id = 1, Name = SR.AutomotiveMobilityAndTransportationPrompt });
+            categories.Add(new Category { Id = 2, Name = SR.EnergyAndSustainabilityPrompt });
+            categories.Add(new Category { Id = 3, Name = SR.FinancialServicesPrompt });
+            categories.Add(new Category { Id = 4, Name = SR.HealthcareAndLifeSciencesPrompt });
+            categories.Add(new Category { Id = 5, Name = SR.ManufacturingAndSupplyChainPrompt });
+            categories.Add(new Category { Id = 6, Name = SR.MediaAndCommunicationsPrompt });
+            categories.Add(new Category { Id = 7, Name = SR.PublicSectorPrompt });
+            categories.Add(new Category { Id = 8, Name = SR.RetailAndConsumerGoodsPrompt });
+            categories.Add(new Category { Id = 9, Name = SR.SoftwarePrompt });
 
             return View(categories);
         }
 
-        [Route("/create/category")]
+        [Route("/" + SR.CreateController + "/" + SR.CategoryAction)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CategoryAsync(string id, string userId, string isExistingUser, string name, int categoryId)
         {
             // Recreate order process id and object
-            Item item = new Item()
+            var item = new Item()
             {
                 Id = id,
-                Name = "Onboarding Flow",
+                Name = SR.OnboardingFlowName,
                 TenantName = name,
                 UserId = userId,
                 IsExistingUser = isExistingUser,
@@ -142,10 +133,11 @@ namespace Saas.LandingSignup.Web.Controllers
                 _logger.LogInformation(ex.ToString());
             }
 
-            return RedirectToAction("plans", "create", new { id, userId, isExistingUser, name, categoryId });
+            return RedirectToAction(SR.PlansAction, SR.CreateController, new { id, userId, isExistingUser, name, categoryId });
         }
 
-        [Route("/create/plans")]
+        [Route("/" + SR.CreateController+"/"+SR.PlansAction)]
+        [HttpGet]
         public IActionResult Plans(string id, string userId, string isExistingUser, string name, int categoryId)
         {
             // Populate hidden input fields
@@ -158,16 +150,16 @@ namespace Saas.LandingSignup.Web.Controllers
             return View();
         }
 
-        [Route("/create/plans")]
+        [Route("/" + SR.CreateController + "/" + SR.PlansAction)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PlansAsync(string id, string userId, string isExistingUser, string name, int categoryId, int productId)
         {
             // Recreate order process id and object
-            Item item = new Item()
+            var item = new Item()
             {
                 Id = id,
-                Name = "Onboarding Flow",
+                Name = SR.OnboardingFlowName,
                 TenantName = name,
                 UserId = userId,
                 IsExistingUser = isExistingUser,
@@ -202,10 +194,11 @@ namespace Saas.LandingSignup.Web.Controllers
                 return RedirectToAction("merchant", "create", new { id, userId, isExistingUser, name, categoryId, productId });
             }*/
 
-            return RedirectToAction("deploy", "create", new { id, userId, isExistingUser, name, categoryId, productId });
+            return RedirectToAction(SR.DeployAction, SR.CreateController, new { id, userId, isExistingUser, name, categoryId, productId });
         }
 
-        [Route("/create/merchant")]
+        [Route("/" + SR.CreateController + "/" + SR.MerchantAction)]
+        [HttpGet]
         public IActionResult Merchant(string id, string userId, string isExistingUser, string name, int categoryId, int productId)
         {
             // Populate hidden input fields
@@ -222,15 +215,16 @@ namespace Saas.LandingSignup.Web.Controllers
             return View();
         }
 
-        [Route("/create/deploy")]
+        [Route("/" + SR.CreateController + "/" + SR.DeployAction)]
+        [HttpGet]
         public async Task<IActionResult> DeployAsync(string id, string userId, string isExistingUser, string name, int categoryId, int productId)
         {
-            HttpClient httpClient = new HttpClient();
-            OnboardingClient onboardingClient = new OnboardingClient(_appSettings.OnboardingApiBaseUrl, httpClient);
+            var httpClient = new HttpClient();
+            var onboardingClient = new OnboardingClient(_appSettings.OnboardingApiBaseUrl, httpClient);
 
             Services.Tenant tenant = new Services.Tenant()
             {
-                Id = Guid.NewGuid(), 
+                Id = Guid.NewGuid(),
                 Name = name,
                 IsActive = true,
                 IsCancelled = false,
@@ -244,10 +238,10 @@ namespace Saas.LandingSignup.Web.Controllers
             await onboardingClient.TenantsPOSTAsync(tenant);
 
             // Recreate order process id and object and set IsComplete = true
-            Item item = new Item()
+            var item = new Item()
             {
                 Id = id,
-                Name = "Onboarding Flow",
+                Name = SR.OnboardingFlowName,
                 TenantName = name,
                 UserId = userId,
                 IsExistingUser = isExistingUser,
@@ -268,86 +262,22 @@ namespace Saas.LandingSignup.Web.Controllers
                 _logger.LogInformation(ex.ToString());
             }
 
-            return RedirectToAction("confirmation", "create", new { isExistingUser });
+            return RedirectToAction(SR.ConfirmationAction, SR.CreateController, new { isExistingUser });
         }
 
-        [Route("/create/confirmation")]
+        [Route("/" + SR.CreateController + "/" + SR.ConfirmationAction)]
+        [HttpGet]
         public IActionResult Confirmation(string isExistingUser)
         {
             return View();
         }
 
-        [Route("/create/confirmation")]
+        [Route("/" + SR.CreateController + "/" + SR.ConfirmationAction)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Confirmation([Bind("Email,Password,TenantId,TenantUserName")] OnboardingFlow onboardingFlow)
         {
             return View();
-        }
-
-        protected int CreateCustomer(string email)
-        {
-            // Create customer 
-            using (SqlConnection connection = new SqlConnection("Data Source=tcp:ma.database.windows.net;Initial Catalog=ma-provider-sql;User Id=modernappz;Password=N0sK3Tamanda;"))
-            {
-                connection.Open();
-
-                using (SqlCommand cmd = new SqlCommand("usp_CreateCustomer", connection))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@email", email);
-                    //cmd.Parameters.AddWithValue("@userId", User.Identity.GetUserId());
-
-                    SqlParameter returnValue = new SqlParameter();
-                    returnValue.Direction = System.Data.ParameterDirection.ReturnValue;
-                    cmd.Parameters.Add(returnValue);
-
-                    cmd.ExecuteNonQuery();
-
-                    int customerId = (int)returnValue.Value;
-
-                    return customerId;
-                }
-            }
-        }
-
-        protected int CreateOrder(string userId, int productId)
-        {
-            // Create order
-            using (SqlConnection connection = new SqlConnection("Data Source=tcp:ma.database.windows.net;Initial Catalog=ma-provider-sql;User Id=modernappz;Password=N0sK3Tamanda;"))
-            {
-                connection.Open();
-
-                using (SqlCommand cmd = new SqlCommand("usp_CreateOrder", connection))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@productId", productId);
-                    cmd.Parameters.AddWithValue("@userId", userId);
-
-                    SqlParameter returnValue = new SqlParameter();
-                    returnValue.Direction = System.Data.ParameterDirection.ReturnValue;
-                    cmd.Parameters.Add(returnValue);
-
-                    cmd.ExecuteNonQuery();
-
-                    int orderId = (int)returnValue.Value;
-
-                    return orderId;
-                }
-            }
-        }
-
-        private string Clean(string s)
-        {
-            return new StringBuilder(s)
-                  .Replace("&", "and")
-                  .Replace(",", "")
-                  .Replace("  ", "")
-                  .Replace(" ", "")
-                  .Replace("'", "")
-                  .Replace(".", "")
-                  .ToString()
-                  .ToLower();
         }
     }
 }

@@ -18,22 +18,33 @@ namespace Saas.LandingSignup.Web.Repositories
         public async Task<string> GetTenantId(Guid apiKey)
         {
             string tenantId = null;
+
             try
             {
-                using (var connection = new SqlConnection(_configuration["ConnectionStrings:CatalogDbConnection"]))
+                using (var connection = new SqlConnection(_configuration[SR.CatalogDbConnectionProperty]))
                 {
                     await connection.OpenAsync();
-                    using (var command = new SqlCommand("SELECT Id  FROM Tenant WHERE ApiKey = @apiKey", connection))
+
+                    using (var command = new SqlCommand(SR.CatalogTenantSelectQuery, connection))
                     {
-                        command.Parameters.AddWithValue("@apiKey", apiKey);
+                        command.Parameters.AddWithValue(SR.CatalogApiKeyParameter, apiKey);
+
                         var reader = await command.ExecuteReaderAsync();
+
                         if (reader.Read())
                         {
-                            tenantId = reader["Id"].ToString();
+                            tenantId = reader[SR.CatalogIdProperty].ToString();
                         }
 
-                        if (!reader.IsClosed) await reader.CloseAsync();
-                        if (connection.State != ConnectionState.Closed) await connection.CloseAsync();
+                        if (!reader.IsClosed)
+                        {
+                            await reader.CloseAsync();
+                        }
+
+                        if (connection.State != ConnectionState.Closed)
+                        {
+                            await connection.CloseAsync();
+                        }
 
                         return tenantId;
                     }
