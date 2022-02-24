@@ -2,8 +2,13 @@
 
 namespace Saas.Catalog.Api.Models
 {
-    public partial class CatalogDbContext : DbContext
+    /// <inheritdoc/>
+    public class CatalogDbContext : DbContext
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
         public CatalogDbContext(DbContextOptions<CatalogDbContext> options)
             : base(options)
         {
@@ -11,6 +16,7 @@ namespace Saas.Catalog.Api.Models
 
         internal virtual DbSet<CatalogTenant> Tenants => Set<CatalogTenant>();
 
+        /// <inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CatalogTenant>(entity =>
@@ -35,10 +41,6 @@ namespace Saas.Catalog.Api.Models
                     .IsRequired()
                     .HasMaxLength(37);
             });
-
-            OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
