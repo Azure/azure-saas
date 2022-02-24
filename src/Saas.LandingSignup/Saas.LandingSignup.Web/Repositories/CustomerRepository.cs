@@ -21,33 +21,44 @@ namespace Saas.LandingSignup.Web.Repositories
         {
             try
             {
-                List<Customer> customers = new List<Customer>();
+                var customers = new List<Customer>();
 
-                using (var connection = new SqlConnection(_configuration["ConnectionStrings:CatalogDbConnection"]))
+                using (var connection = new SqlConnection(_configuration[SR.CatalogDbConnectionProperty]))
                 {
                     await connection.OpenAsync();
-                    using (var command = new SqlCommand("SELECT * FROM dbo.Customer Where TenantId = @TenantId", connection))
+
+                    using (var command = new SqlCommand(SR.CatalogCustomerSelectQuery, connection))
                     {
-                        SqlParameter param = new SqlParameter();
-                        param.ParameterName = "@TenantId";
+                        var param = new SqlParameter();
+
+                        param.ParameterName = SR.CatalogTenantIdParameter;
                         param.Value = tenantId;
                         command.Parameters.Add(param);
 
                         var reader = command.ExecuteReader();
+
                         while (reader.Read())
                         {
-                            Customer customer = new Customer();
-                            customer.Id = Guid.Parse(reader["Id"].ToString());
-                            customer.TenantId = Guid.Parse(reader["TenantId"].ToString());
-                            customer.CustomerName = reader["CustomerName"].ToString();
-                            customer.IsActive = bool.Parse(reader["IsActive"].ToString());
+                            var customer = new Customer();
+
+                            customer.Id = Guid.Parse(reader[SR.CatalogIdProperty].ToString());
+                            customer.TenantId = Guid.Parse(reader[SR.CatalogTenantIdProperty].ToString());
+                            customer.CustomerName = reader[SR.CatalogCustomerNameProperty].ToString();
+                            customer.IsActive = bool.Parse(reader[SR.CatalogIsActiveProperty].ToString());
                             customers.Add(customer);
                         }
 
-                        if (!reader.IsClosed) await reader.CloseAsync();
+                        if (!reader.IsClosed)
+                        {
+                            await reader.CloseAsync();
+                        }
                     }
 
-                    if (connection.State != ConnectionState.Closed) await connection.CloseAsync();
+                    if (connection.State != ConnectionState.Closed)
+                    {
+                        await connection.CloseAsync();
+                    }
+
                     return customers;
                 }
             }

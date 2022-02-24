@@ -23,11 +23,13 @@ namespace Saas.LandingSignup.Web.Controllers
             _cosmosDbService = cosmosDbService;
         }
 
+        [HttpGet]
         public IActionResult Help()
         {
             return View();
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -41,17 +43,18 @@ namespace Saas.LandingSignup.Web.Controllers
 
             // Do a check to see if username already taken
             var user = new ApplicationUser { UserName = emailAddress, Email = emailAddress };
+
             var result = await _userManager.CreateAsync(user);
 
             if (result.Succeeded)
             {
                 // Create order process id and object
-                Item item = new Item()
+                var item = new Item()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Name = "Onboarding Flow",
+                    Name = SR.OnboardingFlowName,
                     UserId = user.Id,
-                    IsExistingUser = "false",
+                    IsExistingUser = bool.FalseString,
                     IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(),
                     Created = DateTime.Now
                 };
@@ -66,7 +69,7 @@ namespace Saas.LandingSignup.Web.Controllers
                     _logger.LogInformation(ex.ToString());
                 }
 
-                return RedirectToAction("name", "create", new { id = item.Id, userId = user.Id, isExistingUser = "false" });
+                return RedirectToAction(SR.NameAction, SR.CreateController, new { id = item.Id, userId = user.Id, isExistingUser = bool.FalseString });
             }
             else
             {
@@ -80,11 +83,13 @@ namespace Saas.LandingSignup.Web.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult Pricing()
         {
             return View();
         }
 
+        [HttpGet]
         public IActionResult Privacy()
         {
             return View();
