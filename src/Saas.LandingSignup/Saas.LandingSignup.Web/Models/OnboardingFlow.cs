@@ -6,13 +6,13 @@ namespace Saas.LandingSignup.Web.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = SR.EmailPrompt)]
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = SR.PasswordErrorMessageTemplate, MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = SR.PasswordPrompt)]
         public string Password { get; set; }
 
         public string TenantId { get; set; }

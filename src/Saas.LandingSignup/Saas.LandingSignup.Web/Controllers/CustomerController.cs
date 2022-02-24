@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Saas.LandingSignup.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route(SR.ApiRouteTemplate)]
     [ApiController]
     public class CustomersController : ControllerBase
     {
@@ -30,28 +30,32 @@ namespace Saas.LandingSignup.Web.Controllers
         {
             await AddTenantIdToSession();
 
-            return await _customerRepository.GetAllCustomers(HttpContext.Session.GetString("TenantId"));
+            return await _customerRepository.GetAllCustomers(HttpContext.Session.GetString(SR.TenantId));
         }
 
         public async Task AddTenantIdToSession()
         {
-            string tenantIdentifier = HttpContext.Session.GetString("TenantId");
+            var tenantIdentifier = HttpContext.Session.GetString(SR.TenantId);
+
             if (string.IsNullOrEmpty(tenantIdentifier))
             {
-                var apiKey = HttpContext.Request.Headers["X-Api-Key"].FirstOrDefault();
+                var apiKey = HttpContext.Request.Headers[SR.XApiKey].FirstOrDefault();
+
                 if (string.IsNullOrEmpty(apiKey))
                 {
                     return;
                 }
 
                 Guid apiKeyGuid;
+
                 if (!Guid.TryParse(apiKey, out apiKeyGuid))
                 {
                     return;
                 }
 
-                string tenantId = await _tenantRepository.GetTenantId(apiKeyGuid); 
-                HttpContext.Session.SetString("TenantId", tenantId);
+                var tenantId = await _tenantRepository.GetTenantId(apiKeyGuid); 
+
+                HttpContext.Session.SetString(SR.TenantId, tenantId);
             }
         }
     }

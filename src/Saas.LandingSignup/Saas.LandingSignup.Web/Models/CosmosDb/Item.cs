@@ -5,34 +5,34 @@ namespace Saas.LandingSignup.Web.Models.CosmosDb
 {
     public class Item
     {
-        [JsonProperty(PropertyName = "id")]
+        [JsonProperty(PropertyName = SR.CosmosIdProperty)]
         public string Id { get; set; }
 
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = SR.CosmosNameProperty)]
         public string Name { get; set; }
 
-        [JsonProperty(PropertyName = "tenantName")]
+        [JsonProperty(PropertyName = SR.CosmosTenantNameProperty)]
         public string TenantName { get; set; }
 
-        [JsonProperty(PropertyName = "userId")]
+        [JsonProperty(PropertyName = SR.CosmosUserIdProperty)]
         public string UserId { get; set; }
 
-        [JsonProperty(PropertyName = "isExistingUser")]
+        [JsonProperty(PropertyName = SR.CosmosIsExistingUserProperty)]
         public string IsExistingUser { get; set; }
 
-        [JsonProperty(PropertyName = "categoryId")]
+        [JsonProperty(PropertyName = SR.CosmosCategoryIdProperty)]
         public int CategoryId { get; set; }
 
-        [JsonProperty(PropertyName = "productId")]
+        [JsonProperty(PropertyName = SR.CosmosProductIdProperty)]
         public int ProductId { get; set; }
 
-        [JsonProperty(PropertyName = "isComplete")]
+        [JsonProperty(PropertyName = SR.CosmosIsCompleteProperty)]
         public bool IsComplete { get; set; }
 
-        [JsonProperty(PropertyName = "ipAddress")]
+        [JsonProperty(PropertyName = SR.CosmosIpAddressProperty)]
         public string IpAddress { get; set; }
 
-        [JsonProperty(PropertyName = "created")]
+        [JsonProperty(PropertyName = SR.CosmosCreatedProperty)]
         public DateTime Created { get; set; }
     }
 }
