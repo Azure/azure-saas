@@ -26,15 +26,13 @@ namespace Saas.LandingSignup.Web.Services
         {
             // Get a token for the Microsoft Graph. If this line throws an exception for any reason, we'll just let the exception be returned as a 500 response
             // to the caller, and show a generic error message to the user.
-            IConfidentialClientApplication daemonClient;
-
-            daemonClient = ConfidentialClientApplicationBuilder.Create(clientId)
+            var daemonClient = ConfidentialClientApplicationBuilder.Create(clientId)
                 .WithAuthority(string.Format(AuthorityFormat, MSATenantId))
                 .WithRedirectUri(_appSettings.RedirectUri)
                 .WithClientSecret(clientSecret)
                 .Build();
 
-            AuthenticationResult authResult = await daemonClient.AcquireTokenForClient(new[] { OnboardingScope })
+            var authResult = await daemonClient.AcquireTokenForClient(new[] { OnboardingScope })
                 .ExecuteAsync();
 
             return authResult;
