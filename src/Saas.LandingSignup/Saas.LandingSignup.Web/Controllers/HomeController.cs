@@ -49,7 +49,7 @@ namespace Saas.LandingSignup.Web.Controllers
             if (result.Succeeded)
             {
                 // Create order process id and object
-                Item item = new Item()
+                var item = new Item()
                 {
                     Id = Guid.NewGuid().ToString(),
                     Name = SR.OnboardingFlowName,

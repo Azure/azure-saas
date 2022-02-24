@@ -36,6 +36,7 @@ namespace Saas.LandingSignup.Web.Controllers
             return View();
         }
 
+        // Step 1
         [Route("/" + SR.CreateController + "/" + SR.NameAction)]
         [HttpGet]
         public IActionResult Name(string id, string userId, string isExistingUser, string userNameExists)
@@ -49,6 +50,7 @@ namespace Saas.LandingSignup.Web.Controllers
             return View();
         }
 
+        // Step 1
         [Route("/" + SR.CreateController + "/" + SR.NameAction)]
         [HttpPost]
         [ValidateAntiForgeryToken]
