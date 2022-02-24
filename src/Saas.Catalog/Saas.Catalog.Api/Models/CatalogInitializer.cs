@@ -13,6 +13,7 @@ namespace Saas.Catalog.Api.Models
         public static void Initialize(this CatalogDbContext context, ILogger logger)
         {
             Guard.Argument(context, nameof(context)).NotNull();
+            Guard.Argument(logger, nameof(logger)).NotNull();
 
             context.Database.EnsureCreated();
         }

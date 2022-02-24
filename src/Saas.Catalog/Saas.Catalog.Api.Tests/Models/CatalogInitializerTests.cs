@@ -10,15 +10,11 @@ namespace Saas.Catalog.Api.Tests.Models
     public static class CatalogInitializerTests
     {
         [Theory, AutoDataNSubstitute]
-        public static void CannotCallInitializeWithNullContext(ILogger logger)
+        public static void LoggerIsRequriedToCallInitialize(CatalogDbContext context)
         {
-            Assert.Throws<ArgumentNullException>(() => default(CatalogDbContext).Initialize(logger));
-        }
-
-        [Theory, AutoDataNSubstitute]
-        public static void LoggerIsNotRequriedToCallInitialize(CatalogDbContext context)
-        {
-            context.Initialize(null);
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+            Assert.Throws<ArgumentNullException>(() => context.Initialize(null));
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
     }
 }

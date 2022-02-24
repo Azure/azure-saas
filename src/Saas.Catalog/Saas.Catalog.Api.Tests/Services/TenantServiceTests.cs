@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Saas.Catalog.Api.Models;
-using Saas.Catalog.Api.Services;
+﻿using Saas.Catalog.Api.Services;
 using Saas.Domain.Exceptions;
 using Saas.Domain.Models;
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,244 +14,134 @@ namespace Saas.Catalog.Api.Tests.Services
 {
     public class TenantServiceTests
     {
-        private ITenantService _tenantService;
-
-        public TenantServiceTests()
-        {
-            _tenantService = new TenantService(Context);
-        }
-
-        [Fact]
-        public async Task TenantService_GetItems_EmptyReturnsNone()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_GetItems_EmptyReturnsNone(TenantService tenantService)
         {
             //Arrange
 
             //Act
-            var results = await _tenantService.GetItemsAsync();
+            var results = await tenantService.GetItemsAsync();
 
             //Assert
             Assert.False(results.Any());
         }
 
-        [Fact]
-        public async Task TenantService_GetItem_EmptyReturnsNone()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_GetItem_EmptyReturnsNone(TenantService tenantService)
         {
             //Arrange
             var guid = Guid.NewGuid();
 
             //Act
-            var results = await _tenantService.GetItemAsync(guid);
+            var results = await tenantService.GetItemAsync(guid);
 
             //Assert
             Assert.Null(results);
         }
 
-        [Fact]
-        public async Task TenantService_AddItemWithoutRequired_Throws()
+
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_AddItemWithRequired_Adds(TenantService tenantService, Tenant tenant)
         {
-            //Arrange
-            var tenant = new Tenant();
 
             //Act
-            var ex = await Assert.ThrowsAsync<DbUpdateException>(async () => await _tenantService.AddItemAsync(tenant));
+            var beforeCount = (await tenantService.GetItemsAsync()).Count<Tenant>();
+
+            await tenantService.AddItemAsync(tenant);
 
             //Assert
-            // Expected Exception Microsoft.EntityFrameworkCore.DbUpdateException
-        }
-
-        [Fact]
-        public async Task TenantService_AddItemWithRequired_Adds()
-        {
-            //Arrange
-            var tenant = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
-
-            //Act
-            var beforeCount = (await _tenantService.GetItemsAsync()).Count<Tenant>();
-
-            await _tenantService.AddItemAsync(tenant);
-
-            //Assert
-            int afterAddCount = (await _tenantService.GetItemsAsync()).Count<Tenant>();
+            int afterAddCount = (await tenantService.GetItemsAsync()).Count<Tenant>();
             Assert.NotEqual(beforeCount, afterAddCount);
-            Assert.True(afterAddCount == 1);
+
+            Assert.True(afterAddCount == beforeCount + 1);
         }
 
-        [Fact]
-        public async Task TenantService_GetItemInvalid_ReturnsTenant()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_GetItemInvalid_ReturnsTenant(TenantService tenantService, Tenant tenant1, Tenant tenant2)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
-            await _tenantService.AddItemAsync(tenant1);
-            var tenant2 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 2",
-                UserId = Guid.NewGuid().ToString()
-            };
-            await _tenantService.AddItemAsync(tenant2);
+            await tenantService.AddItemAsync(tenant1);
+
+            await tenantService.AddItemAsync(tenant2);
 
             //Act
-            var result = await _tenantService.GetItemAsync(tenant1.Id);
+            var result = await tenantService.GetItemAsync(tenant1.Id);
 
             //Assert
-            Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
+            Assert.True((await tenantService.GetItemsAsync()).Count<Tenant>() == 2);
             AssertAdditions.AllPropertiesAreEqual(result, tenant1);
         }
 
-        [Fact]
-        public async Task TenantService_GetItemInvalid_Null()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_GetItemInvalid_Null(TenantService tenantService, Tenant tenant1, Tenant tenant2)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
-            await _tenantService.AddItemAsync(tenant1);
-            var tenant2 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 2",
-                UserId = Guid.NewGuid().ToString()
-            };
-            await _tenantService.AddItemAsync(tenant2);
+            await tenantService.AddItemAsync(tenant1);
+            await tenantService.AddItemAsync(tenant2);
 
             //Act
-            var result = await _tenantService.GetItemAsync(Guid.NewGuid());
+            var result = await tenantService.GetItemAsync(Guid.NewGuid());
 
             //Assert
-            Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
+            Assert.True((await tenantService.GetItemsAsync()).Count<Tenant>() == 2);
             Assert.Null(result);
         }
 
-        [Fact]
-        public async Task TenantService_DeleteItemInvalid_TenantNotFoundException()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_DeleteItemInvalid_TenantNotFoundException(TenantService tenantService, Tenant tenant1, Tenant tenant2)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
-            await _tenantService.AddItemAsync(tenant1);
-            var tenant2 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 2",
-                UserId = Guid.NewGuid().ToString()
-            };
-            await _tenantService.AddItemAsync(tenant2);
+            await tenantService.AddItemAsync(tenant1);
+            await tenantService.AddItemAsync(tenant2);
 
             //Act
-            var ex = await Assert.ThrowsAsync<TenantNotFoundException>(async () => await _tenantService.DeleteItemAsync(Guid.NewGuid()));
-
-            //Assert
-            //Expected Exception Saas.Domain.Exceptions.TenantNotFoundException
+            var ex = await Assert.ThrowsAsync<TenantNotFoundException>(async () => await tenantService.DeleteItemAsync(Guid.NewGuid()));
         }
 
 
-        [Fact]
-        public async Task TenantService_DeleteItem_DeletesTenant()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_DeleteItem_DeletesTenant(TenantService tenantService, Tenant tenant1, Tenant tenant2)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
-            await _tenantService.AddItemAsync(tenant1);
-            var tenant2 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 2",
-                UserId = Guid.NewGuid().ToString()
-            };
-            await _tenantService.AddItemAsync(tenant2);
+            await tenantService.AddItemAsync(tenant1);
+            await tenantService.AddItemAsync(tenant2);
 
             //Act
-            await _tenantService.DeleteItemAsync(tenant1.Id);
+            await tenantService.DeleteItemAsync(tenant1.Id);
 
             //Assert
-            Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 1);
+            Assert.True((await tenantService.GetItemsAsync()).Count<Tenant>() == 1);
         }
 
-        [Fact]
-        public async Task TenantService_UpdateItem_UpdatesTenant()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_UpdateItem_UpdatesTenant(TenantService tenantService, Tenant tenant1)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
-            await _tenantService.AddItemAsync(tenant1);
-            var tenantFromDB = await _tenantService.GetItemAsync(tenant1.Id);
+            await tenantService.AddItemAsync(tenant1);
+            var tenantFromDB = await tenantService.GetItemAsync(tenant1.Id);
             AssertAdditions.AllPropertiesAreEqual(tenant1, tenantFromDB);
 
             //Act
             var updatedName = "Updated Name";
             tenant1.Name = updatedName;
-            await _tenantService.UpdateItemAsync(tenant1);
-            var updatedTenantFromDB = await _tenantService.GetItemAsync(tenant1.Id);
+            await tenantService.UpdateItemAsync(tenant1);
+            var updatedTenantFromDB = await tenantService.GetItemAsync(tenant1.Id);
 
             //Assert
-            Assert.True(updatedTenantFromDB.Name == updatedName);
+            Assert.True(updatedTenantFromDB?.Name == updatedName);
         }
 
-        [Fact]
-        public async Task TenantService_UpdateInvalidItem_TenantNotFoundException()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_UpdateInvalidItem_TenantNotFoundException(TenantService tenantService, Tenant tenant1, Tenant updatedItem)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                Id = Guid.NewGuid(),
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
-            await _tenantService.AddItemAsync(tenant1);
+            await tenantService.AddItemAsync(tenant1);
 
             //Act
-            var updatedItem = new Tenant()
-            {
-                Id = Guid.NewGuid(),
-                IsActive = tenant1.IsActive,
-                Name = "Updated Name",
-                UserId = tenant1.UserId
-            };
-            
-            var ex = await Assert.ThrowsAsync<TenantNotFoundException>(async () => await _tenantService.UpdateItemAsync(updatedItem));
+            updatedItem.IsActive = tenant1.IsActive;
+            updatedItem.UserId = tenant1.UserId;
 
-            //Assert
-            //Expected Exception Saas.Domain.Exceptions.TenantNotFoundException
+            var ex = await Assert.ThrowsAsync<TenantNotFoundException>(async () => await tenantService.UpdateItemAsync(updatedItem));
         }
-
-
-        public CatalogDbContext Context => InMemoryContext();
-        private CatalogDbContext InMemoryContext()
-        {
-            var options = new DbContextOptionsBuilder<CatalogDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .EnableSensitiveDataLogging()
-                .Options;
-            var context = new CatalogDbContext(options);
-
-            return context;
-        }
-
     }
 }

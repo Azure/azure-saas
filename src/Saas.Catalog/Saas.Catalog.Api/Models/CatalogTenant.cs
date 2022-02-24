@@ -1,14 +1,24 @@
-﻿using Saas.Domain.Models;
+﻿using Dawn;
+
+using Saas.Domain.Models;
 
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Saas.Catalog.Api.Models
 {
     public class CatalogTenant
     {
+        public CatalogTenant(string name, string userId)
+        {
+            this.Name = Guard.Argument(name, nameof(name)).NotEmpty();
+            this.UserId = Guard.Argument(userId, nameof(userId)).NotEmpty();
+
+        }
         public Guid Id { get; set; }
+        [Required]
         public string Name { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
         public bool IsCancelled { get; set; }
         public bool IsProvisioned { get; set; }
         public Guid ApiKey { get; set; }
@@ -19,7 +29,7 @@ namespace Saas.Catalog.Api.Models
 
         internal static CatalogTenant FromTenant(Tenant tenant)
         {
-            CatalogTenant catalogTenant = new CatalogTenant();
+            CatalogTenant catalogTenant = new CatalogTenant(tenant.Name, tenant.UserId);
             catalogTenant.Id = tenant.Id;
             catalogTenant.Name = tenant.Name;
             catalogTenant.IsActive = tenant.IsActive;   
@@ -36,7 +46,7 @@ namespace Saas.Catalog.Api.Models
 
         internal static Tenant ToTenant(CatalogTenant catalogTenant)
         {
-            Tenant tenant = new Tenant();
+            Tenant tenant = new Tenant(catalogTenant.Name, catalogTenant.UserId);
             tenant.Id = catalogTenant.Id;
             tenant.Name = catalogTenant.Name;
             tenant.IsActive = catalogTenant.IsActive;
