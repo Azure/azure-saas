@@ -1,10 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using Saas.Admin.Web.Models;
 using Saas.Admin.Web.Services;
 using Saas.Domain.Models;
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+
+using TestUtilities;
+
 using Xunit;
 
 namespace Saas.Admin.Web.Tests.Services
@@ -12,7 +17,7 @@ namespace Saas.Admin.Web.Tests.Services
     public class TenantServiceTests
     {
         private ITenantService _tenantService;
-        
+
         public TenantServiceTests()
         {
             _tenantService = new TenantService(Context);
@@ -22,7 +27,7 @@ namespace Saas.Admin.Web.Tests.Services
         public async Task TenantService_GetItems_EmptyReturnsNone()
         {
             //Arrange
-            
+
             //Act
             var results = await _tenantService.GetItemsAsync();
 
@@ -43,30 +48,10 @@ namespace Saas.Admin.Web.Tests.Services
             Assert.Null(results);
         }
 
-        [Fact]
-        public async Task TenantService_AddItemWithoutRequired_Throws()
+
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_AddItemWithRequired_Adds(Tenant tenant)
         {
-            //Arrange
-            var tenant = new Tenant();
-
-            //Act
-            var ex = await Assert.ThrowsAsync<DbUpdateException>(async () => await _tenantService.AddItemAsync(tenant));
-
-            //Assert
-            // Expected Exception Microsoft.EntityFrameworkCore.DbUpdateException
-        }
-
-        [Fact]
-        public async Task TenantService_AddItemWithRequired_Adds()
-        {
-            //Arrange
-            var tenant = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
-
             //Act
             var beforeCount = (await _tenantService.GetItemsAsync()).Count<Tenant>();
 
@@ -78,77 +63,42 @@ namespace Saas.Admin.Web.Tests.Services
             Assert.True(afterAddCount == 1);
         }
 
-        [Fact]
-        public async Task TenantService_GetItemInvalid_ReturnsTenant()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_GetItemValid_ReturnsTenant(Tenant tenant1, Tenant tenant2)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
             await _tenantService.AddItemAsync(tenant1);
-            var tenant2 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 2",
-                UserId = Guid.NewGuid().ToString()
-            };
             await _tenantService.AddItemAsync(tenant2);
 
             //Act
             var result = await _tenantService.GetItemAsync(tenant1.Id);
+            Assert.NotNull(result);
+            Assert.Equal(result.Id, tenant1.Id);
+            Assert.Equal(result.Name, tenant1.Name);
 
             //Assert
             Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
-            Assert.Equal(result, tenant1);
         }
 
-        [Fact]
-        public async Task TenantService_GetItemInvalid_Null()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_GetItemInvalid_Null(Tenant tenant1, Tenant tenant2)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
             await _tenantService.AddItemAsync(tenant1);
-            var tenant2 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 2",
-                UserId = Guid.NewGuid().ToString()
-            };
             await _tenantService.AddItemAsync(tenant2);
 
-            //Act
-            var result = await _tenantService.GetItemAsync(Guid.NewGuid());
 
             //Assert
             Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 2);
-            Assert.Null(result);
+            Assert.Null(await _tenantService.GetItemAsync(Guid.NewGuid()));
+            Assert.NotNull(await _tenantService.GetItemAsync(tenant1.Id));
         }
 
-        [Fact]
-        public async Task TenantService_DeleteItemInvalid_DeletesNothing()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_DeleteItemInvalid_DeletesNothing(Tenant tenant1, Tenant tenant2)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
             await _tenantService.AddItemAsync(tenant1);
-            var tenant2 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 2",
-                UserId = Guid.NewGuid().ToString()
-            };
             await _tenantService.AddItemAsync(tenant2);
 
             //Act
@@ -159,23 +109,11 @@ namespace Saas.Admin.Web.Tests.Services
         }
 
 
-        [Fact]
-        public async Task TenantService_DeleteItem_DeletesTenant()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_DeleteItem_DeletesTenant(Tenant tenant1, Tenant tenant2)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
             await _tenantService.AddItemAsync(tenant1);
-            var tenant2 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 2",
-                UserId = Guid.NewGuid().ToString()
-            };
             await _tenantService.AddItemAsync(tenant2);
 
             //Act
@@ -185,16 +123,10 @@ namespace Saas.Admin.Web.Tests.Services
             Assert.True((await _tenantService.GetItemsAsync()).Count<Tenant>() == 1);
         }
 
-        [Fact]
-        public async Task TenantService_UpdateItem_UpdatesTenant()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_UpdateItem_UpdatesTenant(Tenant tenant1)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
             await _tenantService.AddItemAsync(tenant1);
             var tenantFromDB = await _tenantService.GetItemAsync(tenant1.Id);
             Assert.Equal(tenant1, tenantFromDB);
@@ -209,32 +141,22 @@ namespace Saas.Admin.Web.Tests.Services
             Assert.True(updatedTenantFromDB.Name == updatedName);
         }
 
-        [Fact]
-        public async Task TenantService_UpdateInvalidItem_NoUpdate()
+        [Theory, AutoDataNSubstitute]
+        public async Task TenantService_UpdateInvalidItem_NoUpdate(Tenant tenant1, Tenant updatedItem)
         {
             //Arrange
-            var tenant1 = new Tenant()
-            {
-                Id = Guid.NewGuid(),
-                IsActive = true,
-                Name = "Test tenant 1",
-                UserId = Guid.NewGuid().ToString()
-            };
             await _tenantService.AddItemAsync(tenant1);
 
             //Act
-            var updatedItem = new Tenant()
-            {
-                Id = Guid.NewGuid(),
-                IsActive = tenant1.IsActive,
-                Name = "Updated Name",
-                UserId = tenant1.UserId
-            };
+            updatedItem.UserId = tenant1.UserId;
+            updatedItem.IsActive = tenant1.IsActive;
+
             await _tenantService.UpdateItemAsync(updatedItem);
             var updatedTenantFromDB = await _tenantService.GetItemAsync(tenant1.Id);
 
             //Assert
-            Assert.Equal("Test tenant 1", updatedTenantFromDB.Name);
+            Assert.NotEqual(tenant1.Name, updatedItem.Name);
+            Assert.Equal(tenant1.Name, updatedTenantFromDB.Name);
         }
 
 

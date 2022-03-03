@@ -42,9 +42,9 @@ namespace Saas.Catalog.Api.Services
             }
         }
 
-        public async Task<Tenant> GetItemAsync(Guid id)
+        public async Task<Tenant?> GetItemAsync(Guid id)
         {
-            CatalogTenant catalogTenant = await _context.Tenants.FindAsync(id);
+            CatalogTenant? catalogTenant = await _context.Tenants.FindAsync(id);
             
             if(catalogTenant == null)
             {

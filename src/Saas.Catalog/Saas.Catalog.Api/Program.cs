@@ -31,8 +31,8 @@ namespace Saas.Catalog.Api
 
             IServiceProvider services = scope.ServiceProvider;
             
-            ILoggerFactory loggerFactory = services.GetService<ILoggerFactory>();
-            ILogger logger = loggerFactory?.CreateLogger<Program>();
+            ILoggerFactory loggerFactory = services.GetRequiredService<ILoggerFactory>();
+            ILogger logger = loggerFactory.CreateLogger<Program>();
             
             try
             {

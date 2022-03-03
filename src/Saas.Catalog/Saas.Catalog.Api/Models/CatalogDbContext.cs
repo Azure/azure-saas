@@ -9,7 +9,7 @@ namespace Saas.Catalog.Api.Models
         {
         }
 
-        internal virtual DbSet<CatalogTenant> Tenants { get; set; }
+        internal virtual DbSet<CatalogTenant> Tenants => Set<CatalogTenant>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
