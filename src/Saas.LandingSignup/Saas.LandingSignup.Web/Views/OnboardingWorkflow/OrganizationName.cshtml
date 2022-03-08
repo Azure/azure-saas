@@ -18,12 +18,12 @@
   </div>
   <form method="post">
    <div style="margin-top: 1rem; margin-bottom: 1rem;">
-	<input type="text" name="name" class="form-control" placeholder="Start typing..." required minlength="2" maxlength="44" pattern="[a-zA-Z0-9_' ]*$" value="@Context.Request.Query["name"]" />
+	<input type="text" name="organizationName" class="form-control" placeholder="Start typing..." required minlength="2" maxlength="44" pattern="[a-zA-Z0-9_' ]*$" value="@Context.Request.Query["organizationName"]" />
    </div>
 			@if (Context.Request.Query["userNameExists"] == "True")
 			{
 	   <div>
-		<p style="color:#dc3545!important;"> Subscriber name '@Context.Request.Query["name"]' is already taken.</p>
+		<p style="color:#dc3545!important;"> Subscriber name '@Context.Request.Query["organizationName"]' is already taken.</p>
 	   </div>
 			}
    <div>
