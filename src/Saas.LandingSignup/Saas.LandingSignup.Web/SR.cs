@@ -69,6 +69,7 @@ namespace Saas.LandingSignup.Web
         public const string OnboardingWorkflowCreatedProperty = "created";
         public const string OnboardingWorkflowStateProperty = "state";
         public const string OnboardingWorkflowEmailAddressProperty = "emailAddress";
+        public const string OnboardingWorkflowOrganizationNameProperty = "organizationName";
 
         // AppSettings Properties
         public const string CatalogDbConnectionProperty = "ConnectionStrings:CatalogDbConnection";

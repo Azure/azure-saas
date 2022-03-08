@@ -8,7 +8,6 @@ namespace Saas.LandingSignup.Web.Models
         [JsonProperty(PropertyName = SR.OnboardingWorkflowEmailAddressProperty)]
         public string EmailAddress { get; set; }   
 
-
         [JsonProperty(PropertyName = SR.OnboardingWorkflowIdProperty)]
         public string Id { get; set; }
 
@@ -38,6 +37,9 @@ namespace Saas.LandingSignup.Web.Models
 
         [JsonProperty(PropertyName = SR.OnboardingWorkflowCreatedProperty)]
         public DateTime Created { get; set; }
+
+        [JsonProperty(PropertyName = SR.OnboardingWorkflowOrganizationNameProperty)]
+        public string OrganizationName { get; set; }
 
         [JsonProperty(PropertyName = SR.OnboardingWorkflowStateProperty)]
         public OnboardingWorkflowState WorkflowState { get; set; }

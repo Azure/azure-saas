@@ -64,7 +64,7 @@ namespace Saas.LandingSignup.Web.Controllers
 
                 ViewBag.OnboardingWorkflowItem = onboardingWorkflowItem;
 
-                return RedirectToAction(SR.OrganizationNameAction, SR.OnboardingWorkflowController, new { id = onboardingWorkflowItem.Id, userId = user.Id, isExistingUser = bool.FalseString });
+                return RedirectToAction(SR.OrganizationNameAction, SR.OnboardingWorkflowController);
             }
             else
             {
@@ -82,22 +82,16 @@ namespace Saas.LandingSignup.Web.Controllers
         [HttpGet]
         public IActionResult OrganizationName()//string id, string userId, string isExistingUser, string userNameExists)
         {
-            // Populate hidden input fields
-            //ViewBag.Id = (string.IsNullOrEmpty(id)) ? Guid.NewGuid().ToString() : id;
-            //ViewBag.UserId = userId;
-            //ViewBag.IsExistingUser = isExistingUser;
-            //ViewBag.userNameExists = userNameExists;
-
             return View();
         }
 
         // Step 2 - Submit the organization name
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult OrganizationName(string organizationName)
+        public IActionResult OrganizationName(OnboardingWorkflowItem workflowItem)
         {
             _workflowState.StateMachine.Fire(OnboardingWorkflowState.Trigger.OnOrganizationNamePosted);
-            ViewBag.OnboardingWorkflowItem.OrganizationName = organizationName;
+            ViewBag.OnboardingWorkflowItem.OrganizationName = workflowItem.OrganizationName;
 
             return RedirectToAction(SR.OrganizationCategoryAction, SR.OnboardingWorkflowController);
         }
