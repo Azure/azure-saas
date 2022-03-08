@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Saas.LandingSignup.Web.Models.StateMachine;
 using System;
 
 namespace Saas.LandingSignup.Web.Models
