@@ -31,8 +31,4 @@
     <Folder Include="wwwroot\assets\images\favicon\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Stateless\Stateless.csproj" />
-  </ItemGroup>
-
 </Project>
