@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Saas.LandingSignup.Web.Models;
+using Saas.LandingSignup.Web.Models.StateMachine;
 using System.Threading.Tasks;
 using System;
 using Microsoft.Extensions.Options;
@@ -49,7 +50,7 @@ namespace Saas.LandingSignup.Web.Controllers
 
             if (result.Succeeded)
             {
-                _workflowState.StateMachine.Fire(OnboardingWorkflowState.Trigger.OnUserNamePosted);
+                _workflowState.Transition(OnboardingWorkflowState.Triggers.OnUserNamePosted);
 
                 var onboardingWorkflowItem = new OnboardingWorkflowItem()
                 {
@@ -96,7 +97,7 @@ namespace Saas.LandingSignup.Web.Controllers
         [HttpPost]
         public IActionResult OrganizationName(string organizationName)
         {
-            _workflowState.StateMachine.Fire(OnboardingWorkflowState.Trigger.OnOrganizationNamePosted);
+            _workflowState.Transition(OnboardingWorkflowState.Triggers.OnOrganizationNamePosted);
             ViewBag.OnboardingWorkflowItem.OrganizationName = organizationName;
 
             return RedirectToAction(SR.OrganizationCategoryAction, SR.OnboardingWorkflowController);
