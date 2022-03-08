@@ -44,6 +44,8 @@ namespace Saas.LandingSignup.Web
                 options.Password.RequiredUniqueChars = 0;
             });
 
+            services.AddMvc();
+            services.AddDistributedMemoryCache();
             services.AddControllersWithViews();
             services.AddScoped<TenantRepository, TenantRepository>();
             services.AddScoped<CustomerRepository, CustomerRepository>();

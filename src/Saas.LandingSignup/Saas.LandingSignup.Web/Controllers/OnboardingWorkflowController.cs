@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace Saas.LandingSignup.Web.Controllers
 {
@@ -16,12 +17,13 @@ namespace Saas.LandingSignup.Web.Controllers
         private readonly AppSettings _appSettings;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-
-        private OnboardingWorkflowState _workflowState;
+        private readonly OnboardingWorkflowState _workflowState;
+        private readonly OnboardingWorkflowItem _workflowItem;
 
         public OnboardingWorkflowController(ILogger<OnboardingWorkflowController> logger, IOptions<AppSettings> appSettings, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _workflowState = new OnboardingWorkflowState();
+            _workflowItem = new OnboardingWorkflowItem();
             
             _logger = logger;
             _appSettings = appSettings.Value;
@@ -32,38 +34,30 @@ namespace Saas.LandingSignup.Web.Controllers
         // Step 1 - Submit the email and determine if it is in use
         [HttpGet]
         public IActionResult Username()
-        {       
+        {
             return View();
         }
 
         // Step 1 - Submit the email and determine if it is in use
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> UsernameAsync(OnboardingWorkflowItem workflowItem)
+        public async Task<IActionResult> UsernameAsync(string emailAddress)
         {
-            ViewBag.EmailAddress = workflowItem.EmailAddress;
-
             // Do a check to see if username already taken
-            var user = new ApplicationUser { UserName = workflowItem.EmailAddress, Email = workflowItem.EmailAddress };
+            var user = new ApplicationUser { UserName = emailAddress, Email = emailAddress };
 
             var result = await _userManager.CreateAsync(user);
 
             if (result.Succeeded)
             {
-                _workflowState.Transition(OnboardingWorkflowState.Triggers.OnUserNamePosted);
-
-                var onboardingWorkflowItem = new OnboardingWorkflowItem()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    OnboardingWorkflowName = SR.OnboardingWorkflowName,
-                    UserId = user.Id,
-                    IsExistingUser = bool.FalseString,
-                    IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(),
-                    Created = DateTime.Now,
-                    WorkflowState = _workflowState
-                };
-
-                ViewBag.OnboardingWorkflowItem = onboardingWorkflowItem;
+                _workflowItem.Id = Guid.NewGuid().ToString();
+                _workflowItem.OnboardingWorkflowName = SR.OnboardingWorkflowName;
+                _workflowItem.UserId = user.Id;
+                _workflowItem.EmailAddress = emailAddress;
+                _workflowItem.IsExistingUser = bool.FalseString;
+                _workflowItem.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                _workflowItem.Created = DateTime.Now;
+                UpdateSessionAndTranstionState(_workflowItem, OnboardingWorkflowState.Triggers.OnUserNamePosted);
 
                 return RedirectToAction(SR.OrganizationNameAction, SR.OnboardingWorkflowController);
             }
@@ -81,7 +75,7 @@ namespace Saas.LandingSignup.Web.Controllers
 
         // Step 2 - Submit the organization name
         [HttpGet]
-        public IActionResult OrganizationName()//string id, string userId, string isExistingUser, string userNameExists)
+        public IActionResult OrganizationName()
         {
             return View();
         }
@@ -89,25 +83,21 @@ namespace Saas.LandingSignup.Web.Controllers
         // Step 2 - Submit the organization name
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult OrganizationName(OnboardingWorkflowItem workflowItem)
+        public IActionResult OrganizationName(string organizationName)
         {
-            _workflowState.StateMachine.Fire(OnboardingWorkflowState.Trigger.OnOrganizationNamePosted);
-            ViewBag.OnboardingWorkflowItem.OrganizationName = workflowItem.OrganizationName;
+            var workflowItem = GetOnboardingWorkflowItemFromSession();
+
+            workflowItem.OrganizationName = organizationName;
+            UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnOrganizationNamePosted);
 
             return RedirectToAction(SR.OrganizationCategoryAction, SR.OnboardingWorkflowController);
         }
 
-        // Step 2 - Organization Category
+        // Step 3 - Organization Category
         [Route(SR.OnboardingWorkflowOrganizationCategoryRoute)]
         [HttpGet]
-        public IActionResult OrganizationCategory(string id, string userId, string isExistingUser, string name)
+        public IActionResult OrganizationCategory()
         {
-            // Populate hidden input fields
-            ViewBag.Id = id;
-            ViewBag.UserId = userId;
-            ViewBag.IsExistingUser = isExistingUser;
-            ViewBag.Name = name;
-
             // Populate Categories dropdown list
             var categories = new List<Category>();
 
@@ -124,68 +114,49 @@ namespace Saas.LandingSignup.Web.Controllers
             return View(categories);
         }
 
-        // Step 2 Submitted - Organization Category
-        [Route(SR.OnboardingWorkflowOrganizationCategoryRoute)]
+        // Step 3 Submitted - Organization Category
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CategoryAsync(string id, string userId, string isExistingUser, string name, int categoryId)
+        public IActionResult OrganizationCategoryAsync(int categoryId)
         {
-            // Recreate order process id and object
-            var item = new OnboardingWorkflowItem()
-            {
-                Id = id,
-                OnboardingWorkflowName = SR.OnboardingWorkflowName,
-                TenantName = name,
-                UserId = userId,
-                IsExistingUser = isExistingUser,
-                CategoryId = categoryId,
-                IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(),
-                Created = DateTime.Now
-            };
+            var workflowItem = GetOnboardingWorkflowItemFromSession();
 
-            ViewBag.Item = item;
+            workflowItem.CategoryId = categoryId;
+            UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnOrganizationCategoryPosted);
 
-            return RedirectToAction(SR.ServicePlansAction, SR.OnboardingWorkflowController, new { id, userId, isExistingUser, name, categoryId });
+            return RedirectToAction(SR.ServicePlansAction, SR.OnboardingWorkflowController);
         }
 
-        // Step 3 - Service Plan
-        [Route(SR.OnboardingWorkflowServicePlansRoute)]
+        // Step 4 - Service Plan
         [HttpGet]
         public IActionResult ServicePlans(string id, string userId, string isExistingUser, string name, int categoryId)
         {
-            // Populate hidden input fields
-            ViewBag.Id = id;
-            ViewBag.UserId = userId;
-            ViewBag.IsExistingUser = isExistingUser;
-            ViewBag.Name = name;
-            ViewBag.CategoryId = categoryId;
-
             return View();
         }
 
-        // Step 3 Submitted - Service PLan
-        [Route(SR.OnboardingWorkflowServicePlansRoute)]
+        // Step 4 Submitted - Service PLan
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ServicePlans(string id, string userId, string isExistingUser, string name, int categoryId, int productId)
+        public IActionResult ServicePlans(int productId)
         {
-            // Recreate order process id and object
-            var item = new OnboardingWorkflowItem()
-            {
-                Id = id,
-                OnboardingWorkflowName = SR.OnboardingWorkflowName,
-                TenantName = name,
-                UserId = userId,
-                IsExistingUser = isExistingUser,
-                CategoryId = categoryId,
-                ProductId = productId,
-                IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(),
-                Created = DateTime.Now
-            };
+            var workflowItem = GetOnboardingWorkflowItemFromSession();
 
-            ViewBag.Iteam = item;
+            workflowItem.ProductId = productId;
+            UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnServicePlanPosted);
 
-            return RedirectToAction(SR.DeployTenantAction, SR.CreateTenantController, new { id, userId, isExistingUser, name, categoryId, productId });
+            return RedirectToAction(SR.DeployTenantAction, SR.CreateTenantController);
+        }
+
+        private OnboardingWorkflowItem GetOnboardingWorkflowItemFromSession()
+        {
+            return HttpContext.Session.GetObjectFromJson<OnboardingWorkflowItem>(SR.OnboardingWorkflowItemKey);
+        }
+
+        private void UpdateSessionAndTranstionState(OnboardingWorkflowItem workflowItem, OnboardingWorkflowState.Triggers trigger)
+        {
+            _workflowState.CurrentState = workflowItem.CurrentWorkflowState;
+            workflowItem.CurrentWorkflowState = _workflowState.Transition(trigger);
+            HttpContext.Session.SetObjectAsJson(SR.OnboardingWorkflowItemKey, workflowItem);
         }
     }
 }

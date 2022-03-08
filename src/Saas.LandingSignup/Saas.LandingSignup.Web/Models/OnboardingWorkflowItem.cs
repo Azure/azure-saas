@@ -43,6 +43,6 @@ namespace Saas.LandingSignup.Web.Models
         public string OrganizationName { get; set; }
 
         [JsonProperty(PropertyName = SR.OnboardingWorkflowStateProperty)]
-        public OnboardingWorkflowState WorkflowState { get; set; }
+        public OnboardingWorkflowState.States CurrentWorkflowState { get; set; }
     }
 }

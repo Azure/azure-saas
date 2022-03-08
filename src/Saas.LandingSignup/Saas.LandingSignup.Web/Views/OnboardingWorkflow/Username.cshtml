@@ -1,5 +1,4 @@
-﻿@model  Saas.LandingSignup.Web.Models.OnboardingWorkflowItem
-@{
+﻿@{
 	ViewData["Title"] = "SaaS Service | Your SaaS Service";
 	Layout = "~/Views/Shared/_LayoutMarketing.cshtml";
 }
@@ -10,15 +9,14 @@
   <div class="container-fluid py-5">
    <h1 class="display-5 fw-bold">Welcome to your SaaS Service</h1>
    <p class="col-md-12 fs-4" style="padding-left:0px;">Software as a service (SaaS) allows users to connect to and use cloud-based apps over the Internet. Common examples are email, calendaring, and office tools (such as Microsoft Office 365).</p>
-   @using(Html.BeginForm(FormMethod.Post))
-   {
+   <form method="post">
 	<div>
-		@Html.TextBoxFor(m => m.EmailAddress, new { type = "email", @class = "form-control", style = "width:100%; max-width:350px;", placeholder = "Enter your Email Address", required = "true" })
+	 <input type="email" name="emailAddress" class="form-control" style="width:100%; max-width:350px;" placeholder="Enter your Email Address" required />
 	</div>
 	<div style="margin-top:.75rem;">
 	 <input type="submit" class="btn btn-cta btn-primary" value="GET STARTED FREE" style="width:100%; max-width:350px;" />
 	</div>
-   }
+   </form>
   </div>
  </div>
 </div>

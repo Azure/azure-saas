@@ -7,6 +7,7 @@ using Saas.LandingSignup.Web.Services;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Saas.LandingSignup.Web.Models.StateMachine;
 
 namespace Saas.LandingSignup.Web.Controllers
 {
@@ -25,54 +26,43 @@ namespace Saas.LandingSignup.Web.Controllers
             _signInManager = signInManager;
         }
 
-        // Step 4 - Submitted Tenant Creation
-        [Route(SR.CreateTenantDeployRoute)]
+        // Step 5 - Submitted Tenant Creation
         [HttpGet]
-        public async Task<IActionResult> DeployTenantAsync(string id, string userId, string isExistingUser, string name, int categoryId, int productId)
+        public async Task<IActionResult> DeployTenantAsync()
         {
             var httpClient = new HttpClient();
             var onboardingClient = new OnboardingClient(_appSettings.OnboardingApiBaseUrl, httpClient);
 
+            var workflowItem = HttpContext.Session.GetObjectFromJson<OnboardingWorkflowItem>(SR.OnboardingWorkflowItemKey);
+
             Services.Tenant tenant = new Services.Tenant()
             {
                 Id = Guid.NewGuid(),
-                Name = name,
+                Name = workflowItem.Id,
                 IsActive = true,
                 IsCancelled = false,
                 IsProvisioned = true,
                 ApiKey = Guid.NewGuid(),
-                CategoryId = categoryId,
-                ProductId = productId,
-                UserId = userId,
+                CategoryId = workflowItem.CategoryId,
+                ProductId = workflowItem.ProductId,
+                UserId = workflowItem.UserId
             };
 
             await onboardingClient.TenantsPOSTAsync(tenant);
 
-            // Recreate order process id and object and set IsComplete = true
-            var onboardingWorkflowItem = new OnboardingWorkflowItem()
-            {
-                Id = id,
-                OnboardingWorkflowName = SR.OnboardingWorkflowName,
-                TenantName = name,
-                UserId = userId,
-                IsExistingUser = isExistingUser,
-                CategoryId = categoryId,
-                ProductId = productId,
-                IsComplete = true,
-                IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(),
-                Created = DateTime.Now
-            };
+            workflowItem.IsComplete = true;
+            workflowItem.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            workflowItem.Created = DateTime.Now;
+            workflowItem.CurrentWorkflowState = OnboardingWorkflowState.States.TenantDeploymentConfirmation;
 
-            ViewBag.OnboardingWorkflowItem = onboardingWorkflowItem;
+            HttpContext.Session.SetObjectAsJson(SR.OnboardingWorkflowItemKey, workflowItem);
 
-            return RedirectToAction(SR.ConfirmationAction, SR.CreateTenantController, new { isExistingUser });
+            return RedirectToAction(SR.ConfirmationAction, SR.CreateTenantController);
         }
 
-        // Step 5 - Tenant Created Confirmation
-        [Route(SR.CreateTenantConfirmationRoute)]
+        // Step 6 - Tenant Created Confirmation
         [HttpGet]
-        [ValidateAntiForgeryToken]
-        public IActionResult Confirmation([Bind("Email,Password,TenantId,TenantUserName")] OnboardingFlow onboardingFlow)
+        public IActionResult Confirmation()
         {
             return View();
         }

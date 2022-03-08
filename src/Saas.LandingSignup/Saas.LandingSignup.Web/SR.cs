@@ -49,6 +49,7 @@ namespace Saas.LandingSignup.Web
         public const string OnboardingWorkflowOrganizationNameRoute = "/" + OnboardingWorkflowController + "/" + OrganizationNameAction;
         public const string OnboardingWorkflowOrganizationCategoryRoute = "/" + OnboardingWorkflowController + "/" + OrganizationCategoryAction;
         public const string OnboardingWorkflowServicePlansRoute = "/" + OnboardingWorkflowController + "/" + ServicePlansAction;
+        public const string OnboardingWorkflowUsernameRoute = "/" + OnboardingWorkflowController + "/" + UsernameAction;
 
         // Session Variables
         public const string TenantId = "TenantId";
@@ -70,6 +71,9 @@ namespace Saas.LandingSignup.Web
         public const string OnboardingWorkflowStateProperty = "state";
         public const string OnboardingWorkflowEmailAddressProperty = "emailAddress";
         public const string OnboardingWorkflowOrganizationNameProperty = "organizationName";
+
+        // Temp Data KEys
+        public const string OnboardingWorkflowItemKey = "OnboardingWorkflowItem";
 
         // AppSettings Properties
         public const string CatalogDbConnectionProperty = "ConnectionStrings:CatalogDbConnection";
