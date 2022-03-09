@@ -1,0 +1,108 @@
+﻿@page
+@using Humanizer
+@model IndexModel
+@{
+    ViewData["Title"] = "Welcome";
+}
+
+<div class="container">
+    <section class="row mb-5 pb-md-4">
+        <div class="col-md-5">
+            <h2 class="display-5 fw-normal">Welcome to BadgeMeUp!</h2>
+            <p>
+                BadgeMeUp is a platform to engage with and empower your fellow colleagues,
+                giving recognition for skills, activities, and more! 
+            </p>
+        </div>
+        <div class="col-md-7 ps-md-5 d-flex justify-content-center">
+            <img src="/images/logo-dark.svg" id="logo" alt="BadgeMeUp Logo" title="BadgeMeUp" class="mw-100 w-75 h-auto" />
+        </div>
+    </section>
+    <section class="row mb-5 pb-md-4">
+        <div class="col-md-5">
+            <h2 class="display-5 fw-normal">See what others are earning</h2>
+            <p>
+                Check out what others are earning, and view a badge details to check
+                out everyone that has earned a badge.
+            </p>
+            <p>
+                See the <a asp-page="Activity">activity stream</a> for the latest badges
+                earned or the <a asp-page="Leaderboard">leaderboard</a> to see who has
+                given or received the most!
+            </p>
+        </div>
+@*        <div class="col-md-7 ps-md-5">
+            @foreach(var assignedBadge in Model.BadgeAssignments)
+            {
+                <div>
+                    <b>
+                        <a asp-page="badges/Index" asp-route-id="@assignedBadge.User.PrincipalId">@assignedBadge.User.PrincipalName</a>
+                    </b>
+                    received the
+                    <b>
+                        <a asp-page="badges/Edit" asp-route-id="@assignedBadge.Badge.Id">@assignedBadge.Badge.Name</a>
+                    </b>
+                    badge
+                    @assignedBadge.DateAssigned.Humanize()
+                </div>
+            }
+        </div>*@
+    </section>
+
+    <section class="row mb-5 pb-md-4">
+        <div class="col-md-5">
+            <h2 class="display-5 fw-normal">Badge Types</h2>
+            <p>
+                Badges can be fun like "Wall of Guitars" or "Designer glasses". Badges can also
+                be skill-based, like "Azure Functions" or "Certified Kubernetes Administrator".
+            </p>
+        </div>
+        <div class="col-md-7 ps-md-5">
+            <img src="~/images/badge-types.png"/>
+        </div>
+    </section>
+
+    <section class="row mb-5 pb-md-4">
+        <div class="col-md-5">
+            <h2 class="display-5 fw-normal">Show off your badges</h2>
+            <p>
+                Share a link to your badges in your email signature or your bio.
+            </p>
+            <p>
+                You earned them, now show them off proudly!
+            </p>
+        </div>
+        <div class="col-md-7 ps-md-5">
+            <img src="~/images/my-badges.png"/>
+        </div>
+    </section>
+
+    <section class="row mb-5 pb-md-4">
+        <div class="col-md-5">
+            <h2 class="display-5 fw-normal">Great for events!</h2>
+            <p>
+                When you share a badge, you can send it to everyone that attended an event. When
+                they click the link, they're able to accept the badge and it's added to their wall.
+            </p>
+        </div>
+        <div class="col-md-7 ps-md-5">
+            <img src="~/images/badge-accept.png"/>
+        </div>
+    </section>
+
+    <section class="row mb-5 pb-md-4">
+        <div class="col-md-5">
+            <h2 class="display-5 fw-normal">Anyone can create or share</h2>
+            <p>
+                Anyone can create or share a badge. We're counting on you to remain
+                respectful and honest about who deserves a badge.
+            </p>
+            <p>
+                You can include a personalized message when sharing a badge.
+            </p>
+        </div>
+        <div class="col-md-7 ps-md-5">
+            <img src="~/images/badge-share.png"/>
+        </div>
+    </section>
+</div>

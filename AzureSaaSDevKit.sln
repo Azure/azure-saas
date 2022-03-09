@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.LandingSignup.Web", "s
 EndProject
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.LandingSignup.Web.Deployment", "src\Saas.LandingSignup\Saas.LandingSignup.Web.Deployment\Saas.LandingSignup.Web.Deployment.deployproj", "{6A0836ED-483E-4F7E-8248-AC00FB52E778}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saas.Application.Web", "src\Saas.Application\Saas.Application.Web\Saas.Application.Web.csproj", "{547B0C46-F17D-4DA7-9072-3F242D364236}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Application.Web", "src\Saas.Application\Saas.Application.Web\Saas.Application.Web.csproj", "{29BBEAD7-1043-41EC-A89D-766E1402B701}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,10 +77,10 @@ Global
 		{6A0836ED-483E-4F7E-8248-AC00FB52E778}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A0836ED-483E-4F7E-8248-AC00FB52E778}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A0836ED-483E-4F7E-8248-AC00FB52E778}.Release|Any CPU.Build.0 = Release|Any CPU
-		{547B0C46-F17D-4DA7-9072-3F242D364236}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{547B0C46-F17D-4DA7-9072-3F242D364236}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{547B0C46-F17D-4DA7-9072-3F242D364236}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{547B0C46-F17D-4DA7-9072-3F242D364236}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29BBEAD7-1043-41EC-A89D-766E1402B701}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29BBEAD7-1043-41EC-A89D-766E1402B701}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29BBEAD7-1043-41EC-A89D-766E1402B701}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29BBEAD7-1043-41EC-A89D-766E1402B701}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

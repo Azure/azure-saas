@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - BadgeMeUp</title>
+    <link rel="stylesheet" href="https://use.typekit.net/wme0tzj.css"/>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/BadgeMeUp.styles.css" asp-append-version="true"/>
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-bmu-dark border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-page="/Index">
+                <img src="/images/logo.svg" id="logo" alt="BadgeMeUp Logo" title="BadgeMeUp"/>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/Index">Welcome</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/badges/Index">My Badges</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/badges/Create">Create a Badge</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/badges/All">All Badges</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/Activity">Activity</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/Leaderboard">Leaderboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        Thank you for using BadgeMeUp! Hope you're having fun. A gold stars v2 experiment by lalovi and jayoung.
+    </div>
+</footer>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", false)
+<svg width="0" height="0">
+    <defs>
+        <clipPath id="badge-clipping-path">
+            <path d="M204.74,193.94c6.81-3.39,11-9.78,11-16.67V51.46l-4.25-.78C201.36,48.82,194,41.38,194,33c0-.44,0-.9.07-1.41l.49-5.11L131.2,19.59a57.57,57.57,0,0,0-12.38,0L59.23,26.05l.61,5.2a17.41,17.41,0,0,1,.1,1.74c0,9.44-9.16,17.39-20.84,18.09l-4.88.29v125.9c0,6.89,4.23,13.28,11,16.66l68.89,34.31a25.14,25.14,0,0,0,21.69,0Z" style="fill:#e1f5f9" data-name="003"/>
+        </clipPath>
+    </defs>
+</svg>
+</body>
+</html>
