@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace Saas.Amin.Service.Tests
+namespace Saas.Admin.Service.Tests
 {
     public class UnitTest1
     {
