@@ -4,6 +4,14 @@
       "secretStore": "LocalSecretsFile",
       "type": "identityapp.secretStore",
       "connectionId": "AzureAD:ClientSecret"
+    },
+    "mssql1": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:SaasAdminServiceContext"
+    },
+    "mssql2": {
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:SubscriptionsContext"
     }
   }
 }
