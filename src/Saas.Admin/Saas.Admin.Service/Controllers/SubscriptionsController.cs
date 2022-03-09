@@ -167,7 +167,7 @@ namespace Saas.Admin.Service.Controllers
         [HttpGet("{subscriptionId}/users")]
         public async Task<ActionResult<IEnumerable<string>>> GetSubscriptionUsers(Guid subscriptionId)
         {
-            IEnumerable<string> users = await _permissionService.GetSubsriptionUsersAsync(subscriptionId);
+            IEnumerable<string> users = await _permissionService.GetSubscriptionUsersAsync(subscriptionId);
             return users.ToList();
         }
 

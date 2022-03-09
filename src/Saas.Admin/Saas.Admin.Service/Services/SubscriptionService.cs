@@ -89,7 +89,7 @@ namespace Saas.Admin.Service.Services
 
         public async Task<IEnumerable<string>> GetSubscriptionUsersAsync(Guid subscriptionId)
         {
-            IEnumerable<string> users = await _permissionService.GetSubsriptionUsersAsync(subscriptionId);
+            IEnumerable<string> users = await _permissionService.GetSubscriptionUsersAsync(subscriptionId);
             return users;
         }
 

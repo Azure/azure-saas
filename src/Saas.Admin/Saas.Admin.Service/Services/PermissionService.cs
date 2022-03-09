@@ -12,7 +12,7 @@
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<string>> GetSubsriptionUsersAsync(Guid subscriptionId)
+        public Task<IEnumerable<string>> GetSubscriptionUsersAsync(Guid subscriptionId)
         {
             throw new NotImplementedException();
         }
