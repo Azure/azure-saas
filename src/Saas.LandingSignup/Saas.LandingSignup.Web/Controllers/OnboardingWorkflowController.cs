@@ -8,6 +8,8 @@ using System;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using System.Net.Http;
+using Saas.LandingSignup.Web.Services;
 
 namespace Saas.LandingSignup.Web.Controllers
 {
@@ -144,7 +146,47 @@ namespace Saas.LandingSignup.Web.Controllers
             workflowItem.ProductId = productId;
             UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnServicePlanPosted);
 
-            return RedirectToAction(SR.DeployTenantAction, SR.CreateTenantController);
+            return RedirectToAction(SR.DeployTenantAction, SR.OnboardingWorkflowController);
+        }
+
+        // Step 5 - Submitted Tenant Creation
+        [HttpGet]
+        public async Task<IActionResult> DeployTenantAsync()
+        {
+            var httpClient = new HttpClient();
+            var onboardingClient = new OnboardingClient(_appSettings.OnboardingApiBaseUrl, httpClient);
+
+            var workflowItem = GetOnboardingWorkflowItemFromSession();
+
+            Services.Tenant tenant = new Services.Tenant()
+            {
+                Id = Guid.NewGuid(),
+                Name = workflowItem.Id,
+                IsActive = true,
+                IsCancelled = false,
+                IsProvisioned = true,
+                ApiKey = Guid.NewGuid(),
+                CategoryId = workflowItem.CategoryId,
+                ProductId = workflowItem.ProductId,
+                UserId = workflowItem.UserId
+            };
+
+            await onboardingClient.TenantsPOSTAsync(tenant);
+
+            workflowItem.IsComplete = true;
+            workflowItem.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            workflowItem.Created = DateTime.Now;
+
+            UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnTenantDeploymentSuccessful);
+
+            return RedirectToAction(SR.ConfirmationAction, SR.OnboardingWorkflowController);
+        }
+
+        // Step 6 - Tenant Created Confirmation
+        [HttpGet]
+        public IActionResult Confirmation()
+        {
+            return View();
         }
 
         private OnboardingWorkflowItem GetOnboardingWorkflowItemFromSession()

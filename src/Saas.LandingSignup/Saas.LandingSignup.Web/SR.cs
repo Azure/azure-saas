@@ -30,7 +30,6 @@ namespace Saas.LandingSignup.Web
         public const string PasswordErrorMessageTemplate = "The {0} must be at least {2} and at max {1} characters long.";
 
         // Controller Names
-        public const string CreateTenantController = "CreateTenant";
         public const string OnboardingWorkflowController = "OnboardingWorkflow";
 
         // Controller Actions
@@ -44,8 +43,8 @@ namespace Saas.LandingSignup.Web
         public const string UsernameAction = "Username";
 
         // Controller Routes
-        public const string CreateTenantDeployRoute = "/" + CreateTenantController + "/" + DeployTenantAction;
-        public const string CreateTenantConfirmationRoute = "/" + CreateTenantController + "/" + ConfirmationAction;
+        public const string OnboardingWorkflowDeployRoute = "/" + OnboardingWorkflowController + "/" + DeployTenantAction;
+        public const string OnboardingWorkflowConfirmationRoute = "/" + OnboardingWorkflowController + "/" + ConfirmationAction;
         public const string OnboardingWorkflowOrganizationNameRoute = "/" + OnboardingWorkflowController + "/" + OrganizationNameAction;
         public const string OnboardingWorkflowOrganizationCategoryRoute = "/" + OnboardingWorkflowController + "/" + OrganizationCategoryAction;
         public const string OnboardingWorkflowServicePlansRoute = "/" + OnboardingWorkflowController + "/" + ServicePlansAction;

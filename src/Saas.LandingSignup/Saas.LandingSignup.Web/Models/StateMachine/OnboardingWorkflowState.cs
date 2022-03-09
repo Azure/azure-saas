@@ -26,7 +26,6 @@ namespace Saas.LandingSignup.Web.Models.StateMachine
             OnServicePlanPosted,
             OnTenantDeploymentSuccessful,
             OnError,
-            OnConfirmation
         };
 
         public States CurrentState { get; internal set; }
