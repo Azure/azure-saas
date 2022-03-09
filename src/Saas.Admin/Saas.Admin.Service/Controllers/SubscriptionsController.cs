@@ -31,16 +31,37 @@ namespace Saas.Admin.Service.Controllers
             _permissionService = permissionService;
         }
 
-        // GET: api/Subscriptions
+        /// <summary>
+        /// Get all subscriptions in the system
+        /// </summary>
+        /// <returns>List of all subscriptions</returns>
+        /// <remarks>
+        /// <para><b>Requires:</b> admin.subscription.read</para>
+        /// <para>This call will return all the subscriptions in the system.</para>
+        /// </remarks>
         [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IEnumerable<SubscriptionDTO>>> GetAllSubscriptions()
         {
             IEnumerable<Subscription> allSubscriptions = await _subscriptionService.GetAllSubscriptionsAsync();
             return allSubscriptions.Select(s => new SubscriptionDTO(s)).ToList();
         }
 
-        // GET: api/Subscriptions/5
+        /// <summary>
+        /// Get a subscription by subscription ID
+        /// </summary>
+        /// <param name="subscriptionId">Guid representing the subscription</param>
+        /// <returns>Information about the subscription</returns>
+        /// <remarks>
+        /// <para><b>Requires:</b> admin.subscription.read  or  {subscriptionId}.subscription.read</para>
+        /// <para>Will return details of a single subscription, if user has access.</para>
+        /// </remarks>
         [HttpGet("{subscriptionId}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<SubscriptionDTO>> GetSubscription(Guid subscriptionId)
         {
             try
@@ -55,9 +76,20 @@ namespace Saas.Admin.Service.Controllers
         }
 
 
-        // POST: api/Subscriptions
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Add a new subscription
+        /// </summary>
+        /// <param name="subscriptionDTO"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <para><b>Requires:</b> Authenticated user</para>
+        /// <para>This call needs a user to make admin of this subscription.  TBD explicitly pass in the user ID or 
+        /// make the current user the admin (would prevent a third party creating subscriptions on behalf of user)</para>
+        /// </remarks>
         [HttpPost]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<SubscriptionDTO>> PostSubscription(SubscriptionDTO subscriptionDTO)
         {
 
@@ -69,9 +101,19 @@ namespace Saas.Admin.Service.Controllers
 
 
 
-        // PUT: api/Subscriptions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update an existing subscription
+        /// </summary>
+        /// <param name="subscriptionId"></param>
+        /// <param name="subscriptionDTO"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <para><b>Requires:</b> admin.subscription.write  or  {subscriptionId}.subscription.write</para>
+        /// </remarks>
         [HttpPut("{subscriptionId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> PutSubscription(Guid subscriptionId, SubscriptionDTO subscriptionDTO)
         {
             if (subscriptionId != subscriptionDTO.Id)
@@ -92,7 +134,11 @@ namespace Saas.Admin.Service.Controllers
         }
 
 
-        // DELETE: api/Subscriptions/5
+       /// <summary>
+       /// Deletes a subscription
+       /// </summary>
+       /// <param name="subscriptionId"></param>
+       /// <returns></returns>
         [HttpDelete("{subscriptionId}")]
         public async Task<IActionResult> DeleteSubscription(Guid subscriptionId)
         {
@@ -109,7 +155,15 @@ namespace Saas.Admin.Service.Controllers
             return NoContent();
         }
 
-
+        /// <summary>
+        /// Get all users associated with a subscription
+        /// </summary>
+        /// <param name="subscriptionId"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <para>Right now only returns user IDs, should consider returning a user object with 
+        /// user info + permissions for the subscription</para>
+        /// </remarks>
         [HttpGet("{subscriptionId}/users")]
         public async Task<ActionResult<IEnumerable<string>>> GetSubscriptionUsers(Guid subscriptionId)
         {
@@ -117,6 +171,13 @@ namespace Saas.Admin.Service.Controllers
             return users.ToList();
         }
 
+        /// <summary>
+        /// Get all permissions a user has in a subscription
+        /// </summary>
+        /// <param name="subscriptionId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <remarks>This might be better combined with GetSubscriptionUsers, all usescases seem like they would need both</remarks>
         [HttpGet("{subscriptionId}/Users/{userId}/permissions")]
         public async Task<ActionResult<IEnumerable<string>>> GetUserPermissions(Guid subscriptionId, string userId)
         {
@@ -124,6 +185,14 @@ namespace Saas.Admin.Service.Controllers
             return permissions.ToList();
         }
 
+
+        /// <summary>
+        /// Add a set of permissions for a user on a subscription
+        /// </summary>
+        /// <param name="subscriptionId"></param>
+        /// <param name="userId"></param>
+        /// <param name="permissions"></param>
+        /// <returns></returns>
         [HttpPost("{subscriptionId}/Users/{userId}/permissions")]
         public async Task<IActionResult> PostUserPermissions(Guid subscriptionId, string userId, [FromBody] string[] permissions)
         {
@@ -131,6 +200,14 @@ namespace Saas.Admin.Service.Controllers
             return NoContent();
         }
 
+
+        /// <summary>
+        /// Delete a set of permissions for a user on a subscription
+        /// </summary>
+        /// <param name="subscriptionId"></param>
+        /// <param name="userId"></param>
+        /// <param name="permissions"></param>
+        /// <returns></returns>
         [HttpDelete("{subscriptionId}/Users/{userId}/permissions")]
         public async Task<IActionResult> DeleteUserPermissions(Guid subscriptionId, string userId, [FromBody] string[] permissions)
         {
@@ -138,6 +215,12 @@ namespace Saas.Admin.Service.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Get all subscription IDs that a user has access to
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="filter">Optionally filter by access type</param>
+        /// <returns></returns>
         [HttpGet("user/{userId}/subscriptions")]
         [Produces("application/json")]
         [ProducesResponseType(200)]
