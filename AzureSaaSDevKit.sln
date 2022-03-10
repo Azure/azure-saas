@@ -5,17 +5,11 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Onboarding.Api.Deployment", "src\Saas.Onboarding\Saas.Onboarding.Api.Deployment\Saas.Onboarding.Api.Deployment.deployproj", "{897A9457-B94B-4920-AEBB-8CDD403D9A1E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Web", "src\Saas.Admin\Saas.Admin.Web\Saas.Admin.Web.csproj", "{20F9B9C4-00AE-47C9-8E89-34DB844534AC}"
-EndProject
-Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Admin.Web.Deployment", "src\Saas.Admin\Saas.Admin.Web.Deployment\Saas.Admin.Web.Deployment.deployproj", "{D52C84E3-A85C-4BDE-9550-35E6C075381C}"
-EndProject
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Deployment.Root", "src\Saas.Deployment\Saas.Deployment.Root\Saas.Deployment.Root.deployproj", "{BF9A592C-510B-493C-AEE4-45BA45A8323E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Catalog.Api", "src\Saas.Catalog\Saas.Catalog.Api\Saas.Catalog.Api.csproj", "{08C4A2D8-9EF7-4874-8ACE-07881A71E064}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Domain", "src\Saas.Domain\Saas.Domain.csproj", "{9CC87091-ABA0-4D34-B8C5-F24C56C2360D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Web.Tests", "src\Saas.Admin\Saas.Admin.Web.Tests\Saas.Admin.Web.Tests.csproj", "{E96A18E8-2B08-4F9D-87F8-0D52721A775F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Catalog.Api.Tests", "src\Saas.Catalog\Saas.Catalog.Api.Tests\Saas.Catalog.Api.Tests.csproj", "{F76216F1-7410-4F10-A086-E3F676B962C3}"
 EndProject
@@ -50,14 +44,6 @@ Global
 		{897A9457-B94B-4920-AEBB-8CDD403D9A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{897A9457-B94B-4920-AEBB-8CDD403D9A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{897A9457-B94B-4920-AEBB-8CDD403D9A1E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20F9B9C4-00AE-47C9-8E89-34DB844534AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20F9B9C4-00AE-47C9-8E89-34DB844534AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20F9B9C4-00AE-47C9-8E89-34DB844534AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20F9B9C4-00AE-47C9-8E89-34DB844534AC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D52C84E3-A85C-4BDE-9550-35E6C075381C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D52C84E3-A85C-4BDE-9550-35E6C075381C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D52C84E3-A85C-4BDE-9550-35E6C075381C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D52C84E3-A85C-4BDE-9550-35E6C075381C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BF9A592C-510B-493C-AEE4-45BA45A8323E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF9A592C-510B-493C-AEE4-45BA45A8323E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF9A592C-510B-493C-AEE4-45BA45A8323E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -70,10 +56,6 @@ Global
 		{9CC87091-ABA0-4D34-B8C5-F24C56C2360D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CC87091-ABA0-4D34-B8C5-F24C56C2360D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CC87091-ABA0-4D34-B8C5-F24C56C2360D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E96A18E8-2B08-4F9D-87F8-0D52721A775F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E96A18E8-2B08-4F9D-87F8-0D52721A775F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E96A18E8-2B08-4F9D-87F8-0D52721A775F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E96A18E8-2B08-4F9D-87F8-0D52721A775F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F76216F1-7410-4F10-A086-E3F676B962C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F76216F1-7410-4F10-A086-E3F676B962C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F76216F1-7410-4F10-A086-E3F676B962C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
