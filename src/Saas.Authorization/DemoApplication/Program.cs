@@ -5,11 +5,16 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 
+using Sass.AspNetCore.Authorization.ClaimTransformers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+
+
+builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTransformer");
 
 builder.Services.AddAuthorization(options =>
 {
