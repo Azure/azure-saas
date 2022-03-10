@@ -1,23 +1,20 @@
-﻿using System.Runtime.Serialization;
+﻿namespace Saas.Admin.Service.Exceptions;
 
-namespace Saas.Admin.Service.Exceptions
+public class ItemNotFoundExcepton : Exception
 {
-    public class ItemNotFoundExcepton : Exception
+    ItemNotFoundExcepton() : base()
     {
-        ItemNotFoundExcepton() : base()
-        {
 
-        }
-        public ItemNotFoundExcepton(string? message) : base(message)
-        {
-        }
+    }
+    public ItemNotFoundExcepton(string? message) : base(message)
+    {
+    }
 
-        public ItemNotFoundExcepton(string? message, Exception? innerException) : base(message, innerException)
-        {
-        }
+    public ItemNotFoundExcepton(string? message, Exception? innerException) : base(message, innerException)
+    {
+    }
 
-        protected ItemNotFoundExcepton(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+    protected ItemNotFoundExcepton(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
     }
 }

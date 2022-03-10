@@ -1,22 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-using Saas.Admin.Service.Data;
-
-namespace Saas.Admin.Service.Services
+﻿namespace Saas.Admin.Service.Services;
+public interface ITenantService
 {
-    public interface ISubscriptionService
-    {
-        
-        Task<IEnumerable<Subscription>> GetAllSubscriptionsAsync();
+    Task<IEnumerable<Tenant>> GetAllTenantsAsync();
 
-        Task<Subscription> GetSubscriptionAsync(Guid subscriptionId);
+    Task<Tenant> GetTenantAsync(Guid tenantId);
 
-        Task<Subscription> AddSubscriptionAsync(Subscription subscription);
+    Task<Tenant> AddTenantAsync(Tenant tenant);
 
-        Task<Subscription> UpdateSubscriptionAsync(Subscription subscription);
+    Task<Tenant> UpdateTenantAsync(Tenant tenant);
 
-        Task DeleteSubscriptionAsync(Guid subscriptionId);
+    Task DeleteTenantAsync(Guid tenantId);
 
-        Task<bool> SubscriptionExistsAsync(Guid subscriptionId);
-    }
+    Task<bool> TenantExistsAsync(Guid tenantId);
 }

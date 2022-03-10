@@ -1,120 +1,108 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
+﻿namespace Saas.Admin.Service.Services;
 
-using Saas.Admin.Service.Data;
-using Saas.Admin.Service.Exceptions;
-
-namespace Saas.Admin.Service.Services
+public class TenantService : ITenantService
 {
-    public class SubscriptionService : ISubscriptionService
+    private readonly TenantsContext _context;
+    private readonly IPermissionService _permissionService;
+    private readonly ILogger _logger;
+
+    public TenantService(TenantsContext tenantContext, IPermissionService permissionService, ILogger<TenantService> logger)
     {
-        private readonly SubscriptionsContext _context;
-        private readonly IPermissionService _permissionService;
-        private readonly ILogger _logger;
+        _context = tenantContext;
+        _permissionService = permissionService;
+        _logger = logger;
+    }
 
-        public SubscriptionService(SubscriptionsContext subscriptionContext, IPermissionService permissionService, ILogger<SubscriptionService> logger)
+    public async Task<IEnumerable<Tenant>> GetAllTenantsAsync()
+    {
+        return await _context.Tenant.ToListAsync();
+    }
+
+    public async Task<Tenant> GetTenantAsync(Guid tenantId)
+    {
+        var tenant = await _context.Tenant.FindAsync(tenantId);
+
+        if (tenant == null)
         {
-            _context = subscriptionContext;
-            _permissionService = permissionService;
-            _logger = logger;
+            throw new ItemNotFoundExcepton("Tenant");
         }
 
+        return tenant;
+    }
 
-        public async Task<IEnumerable<Subscription>> GetAllSubscriptionsAsync()
+    public async Task<Tenant> AddTenantAsync(Tenant tenant)
+    {
+        _context.Tenant.Add(tenant);
+        await _context.SaveChangesAsync();
+
+        return tenant;
+    }
+
+    public async Task<Tenant> UpdateTenantAsync(Tenant tenant)
+    {
+        _context.Entry(tenant).State = EntityState.Modified;
+
+        try
         {
-            return await _context.Subscription.ToListAsync();
-        }
-
-        public async Task<Subscription> GetSubscriptionAsync(Guid subscriptionId)
-        {
-            var subscription = await _context.Subscription.FindAsync(subscriptionId);
-
-            if (subscription == null)
-            {
-                throw new ItemNotFoundExcepton("Subscription");
-            }
-
-            return subscription;
-        }
-
-        public async Task<Subscription> AddSubscriptionAsync(Subscription subscription)
-        {
-            _context.Subscription.Add(subscription);
-            await _context.SaveChangesAsync();
-
-            return subscription;
-        }
-
-
-        public async Task<Subscription> UpdateSubscriptionAsync(Subscription subscription)
-        {
-            _context.Entry(subscription).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (! await SubscriptionExistsAsync(subscription.Id))
-                {
-                    throw new ItemNotFoundExcepton("Subscription");
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return subscription;
-        }
-
-
-        public async Task DeleteSubscriptionAsync(Guid subscriptionId)
-        {
-            var subscription = await _context.Subscription.FindAsync(subscriptionId);
-            if (subscription == null)
-            {
-                throw new ItemNotFoundExcepton("Subscription");
-            }
-
-            _context.Subscription.Remove(subscription);
             await _context.SaveChangesAsync();
         }
-
-        public async Task<bool> SubscriptionExistsAsync(Guid subscriptionId)
+        catch (DbUpdateConcurrencyException)
         {
-            return await _context.Subscription.AnyAsync(e => e.Id == subscriptionId);
+            if (!await TenantExistsAsync(tenant.Id))
+            {
+                throw new ItemNotFoundExcepton("Tenant");
+            }
+            else
+            {
+                throw;
+            }
+        }
+        return tenant;
+    }
+
+    public async Task DeleteTenantAsync(Guid tenantId)
+    {
+        var tenant = await _context.Tenant.FindAsync(tenantId);
+        if (tenant == null)
+        {
+            throw new ItemNotFoundExcepton("Tenant");
         }
 
+        _context.Tenant.Remove(tenant);
+        await _context.SaveChangesAsync();
+    }
 
-        public async Task<IEnumerable<string>> GetSubscriptionUsersAsync(Guid subscriptionId)
-        {
-            IEnumerable<string> users = await _permissionService.GetSubscriptionUsersAsync(subscriptionId);
-            return users;
-        }
+    public async Task<bool> TenantExistsAsync(Guid tenantId)
+    {
+        return await _context.Tenant.AnyAsync(e => e.Id == tenantId);
+    }
 
-        public async Task<IEnumerable<string>> GetUserPermissionsForSubscriptionAsync(Guid subscriptionId, string userId)
-        {
-            IEnumerable<string> users = await _permissionService.GetUserPermissionsForSubscriptionAsync(subscriptionId, userId);
-            return users;
-        }
+    public async Task<IEnumerable<string>> GetTenantUsersAsync(Guid tenantId)
+    {
+        IEnumerable<string> users = await _permissionService.GetTenantUsersAsync(tenantId);
+        return users;
+    }
 
-
-        public async Task AddUserPermissionsToSubscriptionAsync(Guid subscriptionId, string userId, string[] permissions)
-        {
-            await _permissionService.AddUserPermissionsToSubscriptionAsyc(subscriptionId, userId, permissions);
-        }
-
-        public async Task RemoveUserPermissionsFromSubscriptionAsync(Guid subscriptionId, string userId, string[] permissions)
-        {
-            await _permissionService.RemoveUserPermissionsFromSubscriptionAsync(subscriptionId, userId, permissions);
-        }
+    public async Task<IEnumerable<string>> GetUserPermissionsForTenantAsync(Guid tenantId, string userId)
+    {
+        IEnumerable<string> users = await _permissionService.GetUserPermissionsForTenantAsync(tenantId, userId);
+        return users;
+    }
 
 
-        public async Task<IEnumerable<Guid>> GetSubscriptionsForUserAsync(string userId, string? filter = null)
-        {
-            IEnumerable<Guid> subscriptions = await _permissionService.GetSubscriptionsForUserAsync(userId, filter);
-            return subscriptions;
-        }
+    public async Task AddUserPermissionsToTenantAsync(Guid tenantId, string userId, string[] permissions)
+    {
+        await _permissionService.AddUserPermissionsToTenantAsyc(tenantId, userId, permissions);
+    }
+
+    public async Task RemoveUserPermissionsFromTenantAsync(Guid tenantId, string userId, string[] permissions)
+    {
+        await _permissionService.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
+    }
+
+    public async Task<IEnumerable<Guid>> GetTenantsForUserAsync(string userId, string? filter = null)
+    {
+        IEnumerable<Guid> tenants = await _permissionService.GetTenantsForUserAsync(userId, filter);
+        return tenants;
     }
 }
