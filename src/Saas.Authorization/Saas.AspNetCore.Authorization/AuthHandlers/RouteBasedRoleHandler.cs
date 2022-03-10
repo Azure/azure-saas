@@ -7,10 +7,9 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Sass.AspNetCore.Authorization.AuthHandlers
+namespace Saas.AspNetCore.Authorization.AuthHandlers
 {
     public class RouteBasedRoleHandler : AuthorizationHandler<RolesAuthorizationRequirement>
     {

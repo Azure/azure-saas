@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Sass.AspNetCore.Authorization.AuthHandlers
+namespace Saas.AspNetCore.Authorization.AuthHandlers
 {
     public static class RouteBasedRoleHandlerExtensions
     {

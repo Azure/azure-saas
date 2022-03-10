@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Sass.AspNetCore.Authorization.PolicyRequirements
+namespace Saas.AspNetCore.Authorization.PolicyRequirements
 {
     public class RouteBasedPolicyHandler : AuthorizationHandler<RouteBasedPolicyRequirement>
     {

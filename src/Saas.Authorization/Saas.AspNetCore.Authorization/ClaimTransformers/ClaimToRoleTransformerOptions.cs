@@ -1,4 +1,4 @@
-﻿namespace Sass.AspNetCore.Authorization.ClaimTransformers
+﻿namespace Saas.AspNetCore.Authorization.ClaimTransformers
 {
     public class ClaimToRoleTransformerOptions
     {

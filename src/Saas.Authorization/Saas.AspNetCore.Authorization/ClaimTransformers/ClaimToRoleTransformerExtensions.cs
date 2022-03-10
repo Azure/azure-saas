@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-namespace Sass.AspNetCore.Authorization.ClaimTransformers
+namespace Saas.AspNetCore.Authorization.ClaimTransformers
 {
     public static class ClaimToRoleTransformerExtensions
     {

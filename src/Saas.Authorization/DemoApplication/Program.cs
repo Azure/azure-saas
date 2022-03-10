@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 
-using Sass.AspNetCore.Authorization.ClaimTransformers;
-using Sass.AspNetCore.Authorization.AuthHandlers;
-using Sass.AspNetCore.Authorization.PolicyRequirements;
+using Saas.AspNetCore.Authorization.ClaimTransformers;
+using Saas.AspNetCore.Authorization.AuthHandlers;
+using Saas.AspNetCore.Authorization.PolicyRequirements;
 
 var builder = WebApplication.CreateBuilder(args);
 

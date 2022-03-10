@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Sass.AspNetCore.Authorization.PolicyRequirements
+namespace Saas.AspNetCore.Authorization.PolicyRequirements
 {
     public static class RouteBasedPolicyExtensions
     {

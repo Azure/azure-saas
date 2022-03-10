@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Routing;
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Sass.AspNetCore.Authorization.PolicyRequirements
+namespace Saas.AspNetCore.Authorization.PolicyRequirements
 {
     public class RouteBasedPolicyRequirement : IAuthorizationRequirement
     {

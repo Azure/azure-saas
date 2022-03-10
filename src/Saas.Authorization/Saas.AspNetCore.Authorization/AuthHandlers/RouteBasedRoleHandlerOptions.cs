@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Sass.AspNetCore.Authorization.AuthHandlers
+﻿namespace Saas.AspNetCore.Authorization.AuthHandlers
 {
     public class RouteBasedRoleHandlerOptions
     {

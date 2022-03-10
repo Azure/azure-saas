@@ -6,12 +6,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Sass.AspNetCore.Authorization.ClaimTransformers
+namespace Saas.AspNetCore.Authorization.ClaimTransformers
 {
-/// <summary>
-/// Transforms a custom claim in space delimited format to roles
-/// The user pricipal will factor in the custom roles when IsInRole is called
-/// </summary>
+    /// <summary>
+    /// Transforms a custom claim in space delimited format to roles
+    /// The user pricipal will factor in the custom roles when IsInRole is called
+    /// </summary>
     public class ClaimToRoleTransformer : IClaimsTransformation
     {
         private readonly string _sourceClaimType;
@@ -34,7 +34,7 @@ namespace Sass.AspNetCore.Authorization.ClaimTransformers
 
         public ClaimToRoleTransformer(IOptions<ClaimToRoleTransformerOptions> options)
             : this(options.Value.SourceClaimType, options.Value.RoleClaimType, options.Value.AuthenticationType)
-        { 
+        {
         }
 
         public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
