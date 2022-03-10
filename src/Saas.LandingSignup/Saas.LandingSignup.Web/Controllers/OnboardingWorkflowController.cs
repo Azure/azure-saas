@@ -67,12 +67,16 @@ namespace Saas.LandingSignup.Web.Controllers
             {
                 foreach (var error in result.Errors)
                 {
+                    if (error.Code.ToLower() == SR.DuplicateUserNameErrorCode.ToLower())
+                    {
+                        ViewBag.ErrorMessage = error.Description;
+                    }
+
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-            }
 
-            // If we got this far, something failed, redisplay view
-            return View();
+                return View();
+            }
         }
 
         // Step 2 - Submit the organization name

@@ -104,5 +104,8 @@ namespace Saas.LandingSignup.Web
         public const string AccountProperty = "Account";
         public const string KeyProperty = "Key";
         public const string CosmosNamePartitionKey = "/name";
+
+        // Error Codes
+        public const string DuplicateUserNameErrorCode = "DuplicateUserName";
     }
 }
