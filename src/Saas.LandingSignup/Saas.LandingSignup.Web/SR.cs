@@ -5,7 +5,7 @@ namespace Saas.LandingSignup.Web
     internal static class SR
     {
         // Internal Data Names
-        public const string OnboardingFlowName = "Onboarding Flow";
+        public const string OnboardingWorkflowName = "Onboarding Workflow";
 
         // Prompts
         public const string AutomotiveMobilityAndTransportationPrompt = "Automotive, Mobility & Transportation";
@@ -30,15 +30,26 @@ namespace Saas.LandingSignup.Web
         public const string PasswordErrorMessageTemplate = "The {0} must be at least {2} and at max {1} characters long.";
 
         // Controller Names
-        public const string CreateController = "Create";
+        public const string OnboardingWorkflowController = "OnboardingWorkflow";
 
         // Controller Actions
-        public const string NameAction = "Name";
-        public const string CategoryAction = "Category";
-        public const string PlansAction = "Plans";
-        public const string DeployAction = "Deploy";
+        public const string OrganizationNameAction = "OrganizationName";
+        public const string OrganizationCategoryAction = "OrganizationCategory";
+        public const string ServicePlansAction = "ServicePlans";
+        public const string DeployTenantAction = "DeployTenant";
         public const string ConfirmationAction = "Confirmation";
         public const string MerchantAction = "Merchant";
+        public const string IndexAction = "Index";
+        public const string UsernameAction = "Username";
+
+        // Controller Routes
+        public const string OnboardingWorkflowDeployRoute = "/" + OnboardingWorkflowController + "/" + DeployTenantAction;
+        public const string OnboardingWorkflowConfirmationRoute = "/" + OnboardingWorkflowController + "/" + ConfirmationAction;
+        public const string OnboardingWorkflowOrganizationNameRoute = "/" + OnboardingWorkflowController + "/" + OrganizationNameAction;
+        public const string OnboardingWorkflowOrganizationCategoryRoute = "/" + OnboardingWorkflowController + "/" + OrganizationCategoryAction;
+        public const string OnboardingWorkflowServicePlansRoute = "/" + OnboardingWorkflowController + "/" + ServicePlansAction;
+        public const string OnboardingWorkflowUsernameRoute = "/" + OnboardingWorkflowController + "/" + UsernameAction;
+        public const string TenantRoute = "/" + SR.TenantTemplate;
 
         // Session Variables
         public const string TenantId = "TenantId";
@@ -46,17 +57,23 @@ namespace Saas.LandingSignup.Web
         // Header Variables
         public const string XApiKey = "X-Api-Key";
 
-        // Cosmos DB Properties
-        public const string CosmosIdProperty = "id";
-        public const string CosmosNameProperty = "name";
-        public const string CosmosTenantNameProperty = "tenantName";
-        public const string CosmosUserIdProperty = "userId";
-        public const string CosmosIsExistingUserProperty = "isExistingUser";
-        public const string CosmosCategoryIdProperty = "categoryId";
-        public const string CosmosProductIdProperty = "productId";
-        public const string CosmosIsCompleteProperty = "isComplete";
-        public const string CosmosIpAddressProperty = "ipAddress";
-        public const string CosmosCreatedProperty = "created";
+        // Onboarding Workflow Properties
+        public const string OnboardingWorkflowIdProperty = "id";
+        public const string OnboardingWorkflowNameProperty = "onboardingWorkflowName";
+        public const string OnboardingWorkflowTenantNameProperty = "tenantName";
+        public const string OnboardingWorkflowUserIdProperty = "userId";
+        public const string OnboardingWorkflowIsExistingUserProperty = "isExistingUser";
+        public const string OnboardingWorkflowCategoryIdProperty = "categoryId";
+        public const string OnboardingWorkflowProductIdProperty = "productId";
+        public const string OnboardingWorkflowIsCompleteProperty = "isComplete";
+        public const string OnboardingWorkflowIpAddressProperty = "ipAddress";
+        public const string OnboardingWorkflowCreatedProperty = "created";
+        public const string OnboardingWorkflowStateProperty = "state";
+        public const string OnboardingWorkflowEmailAddressProperty = "emailAddress";
+        public const string OnboardingWorkflowOrganizationNameProperty = "organizationName";
+
+        // Temp Data KEys
+        public const string OnboardingWorkflowItemKey = "OnboardingWorkflowItem";
 
         // AppSettings Properties
         public const string CatalogDbConnectionProperty = "ConnectionStrings:CatalogDbConnection";
@@ -87,5 +104,8 @@ namespace Saas.LandingSignup.Web
         public const string AccountProperty = "Account";
         public const string KeyProperty = "Key";
         public const string CosmosNamePartitionKey = "/name";
+
+        // Error Codes
+        public const string DuplicateUserNameErrorCode = "DuplicateUserName";
     }
 }

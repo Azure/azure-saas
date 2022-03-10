@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,9 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Saas.LandingSignup.Web.Data;
 using Saas.LandingSignup.Web.Models;
 using Saas.LandingSignup.Web.Repositories;
-using Saas.LandingSignup.Web.Services;
 using System;
-using System.Threading.Tasks;
 
 namespace Saas.LandingSignup.Web
 {
@@ -47,6 +44,8 @@ namespace Saas.LandingSignup.Web
                 options.Password.RequiredUniqueChars = 0;
             });
 
+            services.AddMvc();
+            services.AddDistributedMemoryCache();
             services.AddControllersWithViews();
             services.AddScoped<TenantRepository, TenantRepository>();
             services.AddScoped<CustomerRepository, CustomerRepository>();
@@ -61,7 +60,6 @@ namespace Saas.LandingSignup.Web
             });
             
             services.AddApplicationInsightsTelemetry(Configuration[SR.AppInsightsConnectionProperty]);
-            services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection(SR.CosmosDbProperty)).GetAwaiter().GetResult());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,27 +94,6 @@ namespace Saas.LandingSignup.Web
 
                 endpoints.MapRazorPages();
             });
-        }
-
-        /// <summary>
-        /// Creates a Cosmos DB database and a container with the specified partition key. 
-        /// </summary>
-        /// <returns></returns>
-        private static async Task<CosmosDbService> InitializeCosmosClientInstanceAsync(IConfigurationSection configurationSection)
-        {
-            var databaseName = configurationSection.GetSection(SR.DatabaseNameProperty).Value;
-            var containerName = configurationSection.GetSection(SR.ContainerNameProperty).Value;
-            var account = configurationSection.GetSection(SR.AccountProperty).Value;
-            var key = configurationSection.GetSection(SR.KeyProperty).Value;
-           
-            var client = new CosmosClient(account, key);
-            var cosmosDbService = new CosmosDbService(client, databaseName, containerName);
-            
-            var database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
-            
-            await database.Database.CreateContainerIfNotExistsAsync(containerName, SR.CosmosNamePartitionKey);
-
-            return cosmosDbService;
         }
     }
 }

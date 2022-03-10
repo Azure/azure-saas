@@ -2,10 +2,10 @@
 
 namespace Saas.LandingSignup.Web.Controllers
 {
-    [Route("/" + SR.TenantTemplate)]
+    [Route(SR.TenantRoute)]
     public class RequestPathController : Controller
     {
-        [Route("/" + SR.TenantTemplate)]
+        [Route(SR.TenantRoute)]
         [HttpGet]
         public IActionResult Index(string tenant)
         {
