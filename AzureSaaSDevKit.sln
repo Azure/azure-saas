@@ -25,7 +25,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.LandingSignup.Web", "s
 EndProject
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.LandingSignup.Web.Deployment", "src\Saas.LandingSignup\Saas.LandingSignup.Web.Deployment\Saas.LandingSignup.Web.Deployment.deployproj", "{6A0836ED-483E-4F7E-8248-AC00FB52E778}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saas.Application.Web", "src\Saas.Application\Saas.Application.Web\Saas.Application.Web.csproj", "{547B0C46-F17D-4DA7-9072-3F242D364236}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Application.Web", "src\Saas.Application\Saas.Application.Web\Saas.Application.Web.csproj", "{547B0C46-F17D-4DA7-9072-3F242D364236}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Service.Tests", "src\Saas.Admin\Saas.Admin.Service.Tests\Saas.Admin.Service.Tests.csproj", "{7AAD364B-DEFB-4C66-AEBA-D0A10DBDE45B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Service", "src\Saas.Admin\Saas.Admin.Service\Saas.Admin.Service.csproj", "{B75AFCC1-A92D-4122-9FB2-6C478C67132F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7037F896-6D8A-49AD-964C-6A0FA9AE09DC}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoApplication", "src\Saas.Authorization\DemoApplication\DemoApplication.csproj", "{1769DC80-92F9-4823-BC47-FF503FC1017C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.AspNetCore.Authorization", "src\Saas.Authorization\Saas.AspNetCore.Authorization\Saas.AspNetCore.Authorization.csproj", "{6B9F75FC-4739-4CA1-9347-2F4092A794B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +94,22 @@ Global
 		{547B0C46-F17D-4DA7-9072-3F242D364236}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{547B0C46-F17D-4DA7-9072-3F242D364236}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{547B0C46-F17D-4DA7-9072-3F242D364236}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AAD364B-DEFB-4C66-AEBA-D0A10DBDE45B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AAD364B-DEFB-4C66-AEBA-D0A10DBDE45B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AAD364B-DEFB-4C66-AEBA-D0A10DBDE45B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AAD364B-DEFB-4C66-AEBA-D0A10DBDE45B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B75AFCC1-A92D-4122-9FB2-6C478C67132F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B75AFCC1-A92D-4122-9FB2-6C478C67132F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B75AFCC1-A92D-4122-9FB2-6C478C67132F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B75AFCC1-A92D-4122-9FB2-6C478C67132F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1769DC80-92F9-4823-BC47-FF503FC1017C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1769DC80-92F9-4823-BC47-FF503FC1017C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1769DC80-92F9-4823-BC47-FF503FC1017C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1769DC80-92F9-4823-BC47-FF503FC1017C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B9F75FC-4739-4CA1-9347-2F4092A794B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B9F75FC-4739-4CA1-9347-2F4092A794B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B9F75FC-4739-4CA1-9347-2F4092A794B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B9F75FC-4739-4CA1-9347-2F4092A794B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
