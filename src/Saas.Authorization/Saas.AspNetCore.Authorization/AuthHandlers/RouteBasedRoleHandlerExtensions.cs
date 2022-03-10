@@ -21,6 +21,7 @@ namespace Saas.AspNetCore.Authorization.AuthHandlers
 
         private static void RegisterHandler(this IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
             services.AddSingleton<IAuthorizationHandler, RouteBasedRoleHandler>();
         }
     }

@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Saas.AspNetCore.Authorization;
 
 using System.Diagnostics;
 
@@ -37,28 +38,32 @@ namespace DemoApplication.Controllers
 
         [Authorize(Roles = "SuperAdmin")]
         [Route("subscriptions/{subscriptionId}/SuperAdmins")]
-        public IActionResult GetUsersSuperAdmin(string customerId)
+        public IActionResult GetUsersSuperAdmin(string subscriptionId)
         {
             return RedirectToAction("privacy");
         }
 
         [Authorize(Roles = "SystemAdmin, SubscriptionAdmin")]
         [Route("subscriptions/{subscriptionId}/Admins")]
-        public IActionResult GetUsersAdmin(string customerId)
+        public IActionResult GetUsersAdmin(string subscriptionId)
         {
             return RedirectToAction("privacy");
         }
 
         [Authorize(Roles = "SubscriptionAdmin")]
         [Route("subscriptions/{subscriptionId}/SubAdmins")]
-        public IActionResult GetUsersSubAdmin(string customerId)
+        public IActionResult GetUsersSubAdmin(string subscriptionId)
         {
+            if(!HttpContext.User.IsInRole(subscriptionId, "SubscriptionAdmin"))
+            {
+                throw new UnauthorizedAccessException();
+            }
             return RedirectToAction("privacy");
         }
 
         [Authorize(Roles = "SubscriptionUser")]
         [Route("subscriptions/{subscriptionId}/SubUsers")]
-        public IActionResult GetUsersSubUser(string customerId)
+        public IActionResult GetUsersSubUser(string subscriptionId)
         {
             return RedirectToAction("privacy");
         }
@@ -66,28 +71,28 @@ namespace DemoApplication.Controllers
 
         [Authorize(Policy = "SuperAdminOnly")]
         [Route("subscriptions/{subscriptionId}/superAdminPolicy")]
-        public IActionResult GetUsersSuperAdminPolicy(string customerId)
+        public IActionResult GetUsersSuperAdminPolicy(string subscriptionId)
         {
             return RedirectToAction("privacy");
         }
 
         [Authorize(Policy = "AdminsOnlyPolicy")]
         [Route("subscriptions/{subscriptionId}/AdminsPolicy")]
-        public IActionResult GetUsersAdminPolicy(string customerId)
+        public IActionResult GetUsersAdminPolicy(string subscriptionId)
         {
             return RedirectToAction("privacy");
         }
 
         [Authorize(Policy = "SubscriptionAdminOnly")]
         [Route("subscriptions/{subscriptionId}/SubAdminsPolicy")]
-        public IActionResult GetUsersSubAdminPolicy(string customerId)
+        public IActionResult GetUsersSubAdminPolicy(string subscriptionId)
         {
             return RedirectToAction("privacy");
         }
 
         [Authorize(Policy = "SubscriptionUsersOnly")]
         [Route("subscriptions/{subscriptionId}/SubUsersPolicy")]
-        public IActionResult GetUsersSubUserPolicy(string customerId)
+        public IActionResult GetUsersSubUserPolicy(string subscriptionId)
         {
             return RedirectToAction("privacy");
         }
