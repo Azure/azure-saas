@@ -41,6 +41,7 @@ namespace Saas.SignupAdministration.Web
         public const string MerchantAction = "Merchant";
         public const string IndexAction = "Index";
         public const string UsernameAction = "Username";
+        public const string TenantRouteAction = "TenantRoute";
 
         // Controller Routes
         public const string OnboardingWorkflowDeployRoute = "/" + OnboardingWorkflowController + "/" + DeployTenantAction;
@@ -71,6 +72,7 @@ namespace Saas.SignupAdministration.Web
         public const string OnboardingWorkflowStateProperty = "state";
         public const string OnboardingWorkflowEmailAddressProperty = "emailAddress";
         public const string OnboardingWorkflowOrganizationNameProperty = "organizationName";
+        public const string OnboardingWorkflowTenantRouteNameProperty = "tenantRouteName";
 
         // Temp Data KEys
         public const string OnboardingWorkflowItemKey = "OnboardingWorkflowItem";

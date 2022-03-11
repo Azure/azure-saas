@@ -46,7 +46,7 @@ namespace Saas.SignupAdministration.Web.Controllers
         public async Task<IActionResult> UsernameAsync(string emailAddress)
         {
             // Do a check to see if username already taken
-            var user = new ApplicationUser { UserName = emailAddress, Email = emailAddress };
+            ApplicationUser user = new ApplicationUser { UserName = emailAddress, Email = emailAddress };
 
             var result = await _userManager.CreateAsync(user);
 
@@ -100,12 +100,11 @@ namespace Saas.SignupAdministration.Web.Controllers
         }
 
         // Step 3 - Organization Category
-        [Route(SR.OnboardingWorkflowOrganizationCategoryRoute)]
         [HttpGet]
         public IActionResult OrganizationCategory()
         {
             // Populate Categories dropdown list
-            var categories = new List<Category>();
+            List<Category> categories = new List<Category>();
 
             categories.Add(new Category { Id = 1, Name = SR.AutomotiveMobilityAndTransportationPrompt });
             categories.Add(new Category { Id = 2, Name = SR.EnergyAndSustainabilityPrompt });
@@ -130,35 +129,64 @@ namespace Saas.SignupAdministration.Web.Controllers
             workflowItem.CategoryId = categoryId;
             UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnOrganizationCategoryPosted);
 
-            return RedirectToAction(SR.ServicePlansAction, SR.OnboardingWorkflowController);
+            return RedirectToAction(SR.TenantRouteAction, SR.OnboardingWorkflowController);
         }
 
-        // Step 4 - Service Plan
+        // Step 4 - Tenant Route Creation
         [HttpGet]
-        public IActionResult ServicePlans(string id, string userId, string isExistingUser, string name, int categoryId)
+        public IActionResult TenantRoute()
         {
             return View();
         }
 
-        // Step 4 Submitted - Service PLan
+        // Step 4 Submitted - Tenant Route Creation
+        [HttpPost]
+        public IActionResult TenantRoute(string tenantRouteName)
+        {
+            // TODO:Validate route is available
+
+            var workflowItem = GetOnboardingWorkflowItemFromSession();
+
+            workflowItem.TenantRouteName = tenantRouteName;
+            UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnTenantRoutePosted);
+
+            return RedirectToAction(SR.ServicePlansAction, SR.OnboardingWorkflowController);
+        }
+
+        // Step 5 - Service Plan
+        [HttpGet]
+        public IActionResult ServicePlans()
+        {
+            return View();
+        }
+
+        // Step 5 Submitted - Service PLan
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ServicePlans(int productId)
+        public async Task<IActionResult> ServicePlans(int productId)
         {
             var workflowItem = GetOnboardingWorkflowItemFromSession();
 
             workflowItem.ProductId = productId;
             UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnServicePlanPosted);
 
-            return RedirectToAction(SR.DeployTenantAction, SR.OnboardingWorkflowController);
+            // If everything is good to go, then deploy the tenant
+            await DeployTenantAsync();
+
+            return RedirectToAction(SR.ConfirmationAction, SR.OnboardingWorkflowController);
         }
 
-        // Step 5 - Submitted Tenant Creation
+        // Step 6 - Tenant Created Confirmation
         [HttpGet]
-        public async Task<IActionResult> DeployTenantAsync()
+        public IActionResult Confirmation()
         {
-            var httpClient = new HttpClient();
-            var onboardingClient = new OnboardingClient(_appSettings.OnboardingApiBaseUrl, httpClient);
+            return View();
+        }
+
+        private async Task DeployTenantAsync()
+        {
+            HttpClient httpClient = new HttpClient();
+            OnboardingClient onboardingClient = new OnboardingClient(_appSettings.OnboardingApiBaseUrl, httpClient);
 
             var workflowItem = GetOnboardingWorkflowItemFromSession();
 
@@ -175,22 +203,22 @@ namespace Saas.SignupAdministration.Web.Controllers
                 UserId = workflowItem.UserId
             };
 
-            await onboardingClient.TenantsPOSTAsync(tenant);
+            try
+            {
+                await onboardingClient.TenantsPOSTAsync(tenant);
 
-            workflowItem.IsComplete = true;
-            workflowItem.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            workflowItem.Created = DateTime.Now;
+                workflowItem.IsComplete = true;
+                workflowItem.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                workflowItem.Created = DateTime.Now;
 
-            UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnTenantDeploymentSuccessful);
+                UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnTenantDeploymentSuccessful);
+            }
+            catch (Exception ex)
+            {
+                string ErrorMessage = ex.Message;  
 
-            return RedirectToAction(SR.ConfirmationAction, SR.OnboardingWorkflowController);
-        }
-
-        // Step 6 - Tenant Created Confirmation
-        [HttpGet]
-        public IActionResult Confirmation()
-        {
-            return View();
+                UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnError);
+            }
         }
 
         private OnboardingWorkflowItem GetOnboardingWorkflowItemFromSession()
