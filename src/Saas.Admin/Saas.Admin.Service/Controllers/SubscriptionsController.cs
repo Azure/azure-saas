@@ -1,236 +1,214 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+namespace Saas.Admin.Service.Controllers;
 
-using Saas.Admin.Service.Data;
-using Saas.Admin.Service.Exceptions;
-using Saas.Admin.Service.Services;
-
-namespace Saas.Admin.Service.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class TenantsController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SubscriptionsController : ControllerBase
+    private readonly ITenantService _tenantService;
+    private readonly IPermissionService _permissionService;
+    private readonly ILogger _logger;
+
+    public TenantsController(ITenantService tenantService, IPermissionService permissionService, ILogger<TenantsController> logger)
     {
-        private readonly ISubscriptionService _subscriptionService;
-        private readonly IPermissionService _permissionService;
-        private readonly ILogger _logger;
-        
+        _logger = logger;
+        _tenantService = tenantService;
+        _permissionService = permissionService;
+    }
 
-        public SubscriptionsController(ISubscriptionService subscriptionService, IPermissionService permissionService, ILogger<SubscriptionsController> logger)
+    /// <summary>
+    /// Get all tenants in the system
+    /// </summary>
+    /// <returns>List of all tenants</returns>
+    /// <remarks>
+    /// <para><b>Requires:</b> admin.tenant.read</para>
+    /// <para>This call will return all the tenants in the system.</para>
+    /// </remarks>
+    [HttpGet]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<IEnumerable<TenantDTO>>> GetAllTenants()
+    {
+        IEnumerable<Tenant> allTenants = await _tenantService.GetAllTenantsAsync();
+        return allTenants.Select(s => new TenantDTO(s)).ToList();
+    }
+
+    /// <summary>
+    /// Get a tenant by tenant ID
+    /// </summary>
+    /// <param name="tenantId">Guid representing the tenant</param>
+    /// <returns>Information about the tenant</returns>
+    /// <remarks>
+    /// <para><b>Requires:</b> admin.tenant.read  or  {tenantId}.tenant.read</para>
+    /// <para>Will return details of a single tenant, if user has access.</para>
+    /// </remarks>
+    [HttpGet("{tenantId}")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<TenantDTO>> GetTenant(Guid tenantId)
+    {
+        try
         {
-            _logger = logger;
-            _subscriptionService = subscriptionService;
-            _permissionService = permissionService;
+            var tenant = await _tenantService.GetTenantAsync(tenantId);
+            return new TenantDTO(tenant);
+        }
+        catch (ItemNotFoundExcepton)
+        {
+            return NotFound();
+        }
+    }
+
+    /// <summary>
+    /// Add a new tenant
+    /// </summary>
+    /// <param name="tenantDTO"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// <para><b>Requires:</b> Authenticated user</para>
+    /// <para>This call needs a user to make admin of this tenant.  TBD explicitly pass in the user ID or 
+    /// make the current user the admin (would prevent a third party creating tenants on behalf of user)</para>
+    /// </remarks>
+    [HttpPost]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<TenantDTO>> PostTenant(TenantDTO tenantDTO)
+    {
+
+        Tenant tenant = tenantDTO.ToTenant();
+        tenant = await _tenantService.AddTenantAsync(tenant);
+
+        return CreatedAtAction("GetTenant", new { id = tenant.Id }, tenant);
+    }
+
+    /// <summary>
+    /// Update an existing tenant
+    /// </summary>
+    /// <param name="tenantId"></param>
+    /// <param name="tenantDTO"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// <para><b>Requires:</b> admin.tenant.write  or  {tenantId}.tenant.write</para>
+    /// </remarks>
+    [HttpPut("{tenantId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> PutTenant(Guid tenantId, TenantDTO tenantDTO)
+    {
+        if (tenantId != tenantDTO.Id)
+        {
+            return BadRequest();
         }
 
-        /// <summary>
-        /// Get all subscriptions in the system
-        /// </summary>
-        /// <returns>List of all subscriptions</returns>
-        /// <remarks>
-        /// <para><b>Requires:</b> admin.subscription.read</para>
-        /// <para>This call will return all the subscriptions in the system.</para>
-        /// </remarks>
-        [HttpGet]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<IEnumerable<SubscriptionDTO>>> GetAllSubscriptions()
+        try
         {
-            IEnumerable<Subscription> allSubscriptions = await _subscriptionService.GetAllSubscriptionsAsync();
-            return allSubscriptions.Select(s => new SubscriptionDTO(s)).ToList();
+            await _tenantService.UpdateTenantAsync(tenantDTO.ToTenant());
+        }
+        catch (ItemNotFoundExcepton)
+        {
+            return NotFound();
         }
 
-        /// <summary>
-        /// Get a subscription by subscription ID
-        /// </summary>
-        /// <param name="subscriptionId">Guid representing the subscription</param>
-        /// <returns>Information about the subscription</returns>
-        /// <remarks>
-        /// <para><b>Requires:</b> admin.subscription.read  or  {subscriptionId}.subscription.read</para>
-        /// <para>Will return details of a single subscription, if user has access.</para>
-        /// </remarks>
-        [HttpGet("{subscriptionId}")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<SubscriptionDTO>> GetSubscription(Guid subscriptionId)
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Deletes a tenant
+    /// </summary>
+    /// <param name="tenantId"></param>
+    /// <returns></returns>
+    [HttpDelete("{tenantId}")]
+    public async Task<IActionResult> DeleteTenant(Guid tenantId)
+    {
+        try
         {
-            try
-            {
-                var subscription = await _subscriptionService.GetSubscriptionAsync(subscriptionId);
-                return new SubscriptionDTO(subscription);
-            }
-            catch (ItemNotFoundExcepton)
-            {
-                return NotFound();
-            }
+            await _tenantService.DeleteTenantAsync(tenantId);
+        }
+        catch (ItemNotFoundExcepton)
+        {
+            return NotFound();
         }
 
+        return NoContent();
+    }
 
-        /// <summary>
-        /// Add a new subscription
-        /// </summary>
-        /// <param name="subscriptionDTO"></param>
-        /// <returns></returns>
-        /// <remarks>
-        /// <para><b>Requires:</b> Authenticated user</para>
-        /// <para>This call needs a user to make admin of this subscription.  TBD explicitly pass in the user ID or 
-        /// make the current user the admin (would prevent a third party creating subscriptions on behalf of user)</para>
-        /// </remarks>
-        [HttpPost]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<SubscriptionDTO>> PostSubscription(SubscriptionDTO subscriptionDTO)
-        {
+    /// <summary>
+    /// Get all users associated with a tenant
+    /// </summary>
+    /// <param name="tenantId"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// <para>Right now only returns user IDs, should consider returning a user object with 
+    /// user info + permissions for the tenant</para>
+    /// </remarks>
+    [HttpGet("{tenantId}/users")]
+    public async Task<ActionResult<IEnumerable<string>>> GetTenantUsers(Guid tenantId)
+    {
+        IEnumerable<string> users = await _permissionService.GetTenantUsersAsync(tenantId);
+        return users.ToList();
+    }
 
-            Subscription subscription = subscriptionDTO.ToSubscription();
-            subscription= await _subscriptionService.AddSubscriptionAsync(subscription);
+    /// <summary>
+    /// Get all permissions a user has in a tenant
+    /// </summary>
+    /// <param name="tenantId"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    /// <remarks>This might be better combined with GetTenantUsers, all usescases seem like they would need both</remarks>
+    [HttpGet("{tenantId}/Users/{userId}/permissions")]
+    public async Task<ActionResult<IEnumerable<string>>> GetUserPermissions(Guid tenantId, string userId)
+    {
+        var permissions = await _permissionService.GetUserPermissionsForTenantAsync(tenantId, userId);
+        return permissions.ToList();
+    }
 
-            return CreatedAtAction("GetSubscription", new { id = subscription.Id }, subscription);
-        }
+    /// <summary>
+    /// Add a set of permissions for a user on a tenant
+    /// </summary>
+    /// <param name="tenantId"></param>
+    /// <param name="userId"></param>
+    /// <param name="permissions"></param>
+    /// <returns></returns>
+    [HttpPost("{tenantId}/Users/{userId}/permissions")]
+    public async Task<IActionResult> PostUserPermissions(Guid tenantId, string userId, [FromBody] string[] permissions)
+    {
+        await _permissionService.AddUserPermissionsToTenantAsyc(tenantId, userId, permissions);
+        return NoContent();
+    }
 
+    /// <summary>
+    /// Delete a set of permissions for a user on a tenant
+    /// </summary>
+    /// <param name="tenantId"></param>
+    /// <param name="userId"></param>
+    /// <param name="permissions"></param>
+    /// <returns></returns>
+    [HttpDelete("{tenantId}/Users/{userId}/permissions")]
+    public async Task<IActionResult> DeleteUserPermissions(Guid tenantId, string userId, [FromBody] string[] permissions)
+    {
+        await _permissionService.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
+        return NoContent();
+    }
 
+    /// <summary>
+    /// Get all tenant IDs that a user has access to
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="filter">Optionally filter by access type</param>
+    /// <returns></returns>
+    [HttpGet("user/{userId}/tenants")]
+    [Produces("application/json")]
+    [ProducesResponseType(200)]
+    //sysadmin or current user
+    public async Task<ActionResult<IEnumerable<Guid>>> UserTenants(string userId, string filter = null)
+    {
+        this._logger.LogDebug("Geting all tenants for user {userId}", userId);
 
-        /// <summary>
-        /// Update an existing subscription
-        /// </summary>
-        /// <param name="subscriptionId"></param>
-        /// <param name="subscriptionDTO"></param>
-        /// <returns></returns>
-        /// <remarks>
-        /// <para><b>Requires:</b> admin.subscription.write  or  {subscriptionId}.subscription.write</para>
-        /// </remarks>
-        [HttpPut("{subscriptionId}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> PutSubscription(Guid subscriptionId, SubscriptionDTO subscriptionDTO)
-        {
-            if (subscriptionId != subscriptionDTO.Id)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                await _subscriptionService.UpdateSubscriptionAsync(subscriptionDTO.ToSubscription());
-            }
-            catch(ItemNotFoundExcepton)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
-
-       /// <summary>
-       /// Deletes a subscription
-       /// </summary>
-       /// <param name="subscriptionId"></param>
-       /// <returns></returns>
-        [HttpDelete("{subscriptionId}")]
-        public async Task<IActionResult> DeleteSubscription(Guid subscriptionId)
-        {
-
-            try
-            {
-                await _subscriptionService.DeleteSubscriptionAsync(subscriptionId);
-            }
-            catch (ItemNotFoundExcepton)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
-        /// <summary>
-        /// Get all users associated with a subscription
-        /// </summary>
-        /// <param name="subscriptionId"></param>
-        /// <returns></returns>
-        /// <remarks>
-        /// <para>Right now only returns user IDs, should consider returning a user object with 
-        /// user info + permissions for the subscription</para>
-        /// </remarks>
-        [HttpGet("{subscriptionId}/users")]
-        public async Task<ActionResult<IEnumerable<string>>> GetSubscriptionUsers(Guid subscriptionId)
-        {
-            IEnumerable<string> users = await _permissionService.GetSubscriptionUsersAsync(subscriptionId);
-            return users.ToList();
-        }
-
-        /// <summary>
-        /// Get all permissions a user has in a subscription
-        /// </summary>
-        /// <param name="subscriptionId"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        /// <remarks>This might be better combined with GetSubscriptionUsers, all usescases seem like they would need both</remarks>
-        [HttpGet("{subscriptionId}/Users/{userId}/permissions")]
-        public async Task<ActionResult<IEnumerable<string>>> GetUserPermissions(Guid subscriptionId, string userId)
-        {
-            var permissions = await _permissionService.GetUserPermissionsForSubscriptionAsync(subscriptionId, userId);
-            return permissions.ToList();
-        }
-
-
-        /// <summary>
-        /// Add a set of permissions for a user on a subscription
-        /// </summary>
-        /// <param name="subscriptionId"></param>
-        /// <param name="userId"></param>
-        /// <param name="permissions"></param>
-        /// <returns></returns>
-        [HttpPost("{subscriptionId}/Users/{userId}/permissions")]
-        public async Task<IActionResult> PostUserPermissions(Guid subscriptionId, string userId, [FromBody] string[] permissions)
-        {
-            await _permissionService.AddUserPermissionsToSubscriptionAsyc(subscriptionId, userId, permissions);
-            return NoContent();
-        }
-
-
-        /// <summary>
-        /// Delete a set of permissions for a user on a subscription
-        /// </summary>
-        /// <param name="subscriptionId"></param>
-        /// <param name="userId"></param>
-        /// <param name="permissions"></param>
-        /// <returns></returns>
-        [HttpDelete("{subscriptionId}/Users/{userId}/permissions")]
-        public async Task<IActionResult> DeleteUserPermissions(Guid subscriptionId, string userId, [FromBody] string[] permissions)
-        {
-            await _permissionService.RemoveUserPermissionsFromSubscriptionAsync(subscriptionId, userId, permissions);
-            return NoContent();
-        }
-
-        /// <summary>
-        /// Get all subscription IDs that a user has access to
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="filter">Optionally filter by access type</param>
-        /// <returns></returns>
-        [HttpGet("user/{userId}/subscriptions")]
-        [Produces("application/json")]
-        [ProducesResponseType(200)]
-        //sysadmin or current user
-        public async Task<ActionResult<IEnumerable<Guid>>> UserSubscriptions(string userId, string filter = null)
-        {
-            this._logger.LogDebug("Geting all subscriptions for user {userId}", userId);
-
-            IEnumerable<Guid> subscriptions = await _permissionService.GetSubscriptionsForUserAsync(userId, filter);
-            return subscriptions.ToList();
-        }
+        IEnumerable<Guid> tenants = await _permissionService.GetTenantsForUserAsync(userId, filter);
+        return tenants.ToList();
     }
 }

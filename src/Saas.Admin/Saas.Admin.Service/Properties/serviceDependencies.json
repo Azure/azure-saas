@@ -10,7 +10,7 @@
     },
     "mssql2": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:SubscriptionsContext"
+      "connectionId": "ConnectionStrings:TenantsContext"
     }
   }
 }

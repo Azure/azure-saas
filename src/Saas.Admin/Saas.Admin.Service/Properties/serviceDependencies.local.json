@@ -11,7 +11,7 @@
     },
     "mssql2": {
       "type": "mssql.local",
-      "connectionId": "ConnectionStrings:SubscriptionsContext"
+      "connectionId": "ConnectionStrings:TenantsContext"
     }
   }
 }

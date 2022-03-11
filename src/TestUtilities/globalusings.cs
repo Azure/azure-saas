@@ -1,0 +1,9 @@
+﻿global using System.Reflection;
+global using Xunit;
+global using AutoFixture;
+global using AutoFixture.AutoNSubstitute;
+global using AutoFixture.Kernel;
+global using AutoFixture.Xunit2;
+global using EntityFrameworkCore.AutoFixture.InMemory;
+global using System.ComponentModel;
+global using TestUtilities.Utility;
