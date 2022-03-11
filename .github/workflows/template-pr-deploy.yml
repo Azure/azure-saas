@@ -7,10 +7,6 @@ on:
       artifact_name:
         required: true
         type: string
-      deploy:
-        required: false
-        default: true
-        type: boolean
       app_service_name:
         required: true
         type: string
@@ -57,7 +53,6 @@ jobs:
         path: './app'
 
   create-deployment-slot:
-    if: deploy == true
     runs-on: ubuntu-latest
     name: Create App Service Deployment Slot
     steps:
