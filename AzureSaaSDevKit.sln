@@ -3,21 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Onboarding.Api.Deployment", "src\Saas.Onboarding\Saas.Onboarding.Api.Deployment\Saas.Onboarding.Api.Deployment.deployproj", "{897A9457-B94B-4920-AEBB-8CDD403D9A1E}"
-EndProject
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Deployment.Root", "src\Saas.Deployment\Saas.Deployment.Root\Saas.Deployment.Root.deployproj", "{BF9A592C-510B-493C-AEE4-45BA45A8323E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Catalog.Api", "src\Saas.Catalog\Saas.Catalog.Api\Saas.Catalog.Api.csproj", "{08C4A2D8-9EF7-4874-8ACE-07881A71E064}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Domain", "src\Saas.Domain\Saas.Domain.csproj", "{9CC87091-ABA0-4D34-B8C5-F24C56C2360D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Catalog.Api.Tests", "src\Saas.Catalog\Saas.Catalog.Api.Tests\Saas.Catalog.Api.Tests.csproj", "{F76216F1-7410-4F10-A086-E3F676B962C3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestUtilities", "src\TestUtilities\TestUtilities.csproj", "{02F6CFF4-70ED-4C9D-AF21-4EE3AD668AA4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.LandingSignup.Web", "src\Saas.LandingSignup\Saas.LandingSignup.Web\Saas.LandingSignup.Web.csproj", "{71694EE0-1D10-4DC3-B4EA-30C45A9FF31F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.SignupAdministration.Web", "src\Saas.SignupAdministration\Saas.SignupAdministration.Web\Saas.SignupAdministration.Web.csproj", "{71694EE0-1D10-4DC3-B4EA-30C45A9FF31F}"
 EndProject
-Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.LandingSignup.Web.Deployment", "src\Saas.LandingSignup\Saas.LandingSignup.Web.Deployment\Saas.LandingSignup.Web.Deployment.deployproj", "{6A0836ED-483E-4F7E-8248-AC00FB52E778}"
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.SignupAdministration.Web.Deployment", "src\Saas.SignupAdministration\Saas.SignupAdministration.Web.Deployment\Saas.SignupAdministration.Web.Deployment.deployproj", "{6A0836ED-483E-4F7E-8248-AC00FB52E778}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Application.Web", "src\Saas.Application\Saas.Application.Web\Saas.Application.Web.csproj", "{547B0C46-F17D-4DA7-9072-3F242D364236}"
 EndProject
