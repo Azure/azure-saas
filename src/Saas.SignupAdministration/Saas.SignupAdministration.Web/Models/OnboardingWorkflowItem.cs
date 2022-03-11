@@ -44,5 +44,8 @@ namespace Saas.SignupAdministration.Web.Models
 
         [JsonProperty(PropertyName = SR.OnboardingWorkflowStateProperty)]
         public OnboardingWorkflowState.States CurrentWorkflowState { get; set; }
+
+        [JsonProperty(PropertyName = SR.OnboardingWorkflowTenantRouteNameProperty)]
+        public string TenantRouteName { get; set; } 
     }
 }
