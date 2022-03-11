@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Saas.AspNetCore.Authorization;
 
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace DemoApplication.Controllers
 {

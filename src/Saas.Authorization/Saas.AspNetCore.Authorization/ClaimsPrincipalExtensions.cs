@@ -12,7 +12,7 @@
         /// <example>
         /// user.IsInRole(mySubscriptionId, "SubscriptionAdmin");
         /// </example>
-        public static bool IsInRole(this ClaimsPrincipal cp, string context, string role)
+        public static bool IsInRole(this System.Security.Claims.ClaimsPrincipal cp, string context, string role)
         {
             string newRole = RoleFormatter(context, role);
             return cp.IsInRole(newRole);
