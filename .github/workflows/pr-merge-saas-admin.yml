@@ -8,7 +8,7 @@ on:
       - "src/Saas.Admin/**"
       - ".github/**"
 
-name: Saas.Admin.Web Swap Slot
+name: Saas.Admin.Service Swap Slot
 jobs:
   build-and-deploy:
     # Utilizes re-usable template to build and deploy to app service slot

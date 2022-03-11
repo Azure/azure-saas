@@ -9,7 +9,7 @@ on:
       - ".github/**"
 
 
-name: Saas.Admin PR Build
+name: Saas.Admin.Service PR Build
 
 jobs:
   build-and-deploy:
