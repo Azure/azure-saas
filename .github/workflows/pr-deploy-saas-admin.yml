@@ -18,6 +18,7 @@ jobs:
     with:
       dotnet_version: '6.0.x'
       artifact_name: ${{github.run_id}} 
+      deploy: false
       app_service_name: app-asdk-admin-dev-001
       app_service_resource_group_name: azure-saas-dev
       project_build_path: src/Saas.Admin/Saas.Admin.Service
