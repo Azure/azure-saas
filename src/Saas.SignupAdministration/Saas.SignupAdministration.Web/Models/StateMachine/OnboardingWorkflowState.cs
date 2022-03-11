@@ -1,4 +1,6 @@
 ﻿using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Saas.SignupAdministration.Web.Models.StateMachine
 {
@@ -9,7 +11,6 @@ namespace Saas.SignupAdministration.Web.Models.StateMachine
             UserNameEntry,
             OrganizationNameEntry,
             OrganizationCategoryEntry,
-            TenantRouteEntry,
             ServicePlanEntry,
             TenantDeploymentRequested,
             TenantDeploymentConfirmation,
@@ -22,14 +23,12 @@ namespace Saas.SignupAdministration.Web.Models.StateMachine
             OnUserNameExists,
             OnOrganizationNamePosted,
             OnOrganizationCategoryPosted,
-            OnTenantRoutePosted,
             OnServicePlanPosted,
             OnTenantDeploymentSuccessful,
             OnError,
         };
 
         public States CurrentState { get; internal set; }
-        public string ErrorMessage { get; internal set; }
 
         public OnboardingWorkflowState(States state = States.UserNameEntry)
         {
@@ -51,10 +50,8 @@ namespace Saas.SignupAdministration.Web.Models.StateMachine
                 (States.UserNameEntry, Triggers.OnError) => CurrentState = States.Error,
                 (States.OrganizationNameEntry, Triggers.OnOrganizationNamePosted) => States.OrganizationCategoryEntry,
                 (States.OrganizationNameEntry, Triggers.OnError) => States.Error,
-                (States.OrganizationCategoryEntry, Triggers.OnOrganizationCategoryPosted) => States.TenantRouteEntry,
+                (States.OrganizationCategoryEntry, Triggers.OnOrganizationCategoryPosted) => States.ServicePlanEntry,
                 (States.OrganizationCategoryEntry, Triggers.OnError) => States.Error,
-                (States.TenantRouteEntry, Triggers.OnTenantRoutePosted) => States.ServicePlanEntry,
-                (States.TenantRouteEntry, Triggers.OnError) => States.Error,
                 (States.ServicePlanEntry, Triggers.OnServicePlanPosted) => States.TenantDeploymentRequested,
                 (States.ServicePlanEntry, Triggers.OnError) => States.Error,
                 (States.TenantDeploymentRequested, Triggers.OnTenantDeploymentSuccessful) => States.TenantDeploymentConfirmation,
