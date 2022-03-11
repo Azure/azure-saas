@@ -13,6 +13,7 @@ namespace Saas.LandingSignup.Web.Models.StateMachine
             OrganizationCategoryEntry,
             ServicePlanEntry,
             TenantDeploymentRequested,
+            TenantRouteRequested,
             TenantDeploymentConfirmation,
             UsernameExistsError,
             Error
@@ -24,6 +25,7 @@ namespace Saas.LandingSignup.Web.Models.StateMachine
             OnOrganizationNamePosted,
             OnOrganizationCategoryPosted,
             OnServicePlanPosted,
+            OnTenantRoutePosted,
             OnTenantDeploymentSuccessful,
             OnError,
         };
@@ -52,8 +54,10 @@ namespace Saas.LandingSignup.Web.Models.StateMachine
                 (States.OrganizationNameEntry, Triggers.OnError) => States.Error,
                 (States.OrganizationCategoryEntry, Triggers.OnOrganizationCategoryPosted) => States.ServicePlanEntry,
                 (States.OrganizationCategoryEntry, Triggers.OnError) => States.Error,
-                (States.ServicePlanEntry, Triggers.OnServicePlanPosted) => States.TenantDeploymentRequested,
+                (States.ServicePlanEntry, Triggers.OnServicePlanPosted) => States.TenantRouteRequested,
                 (States.ServicePlanEntry, Triggers.OnError) => States.Error,
+                (States.TenantRouteRequested, Triggers.OnTenantRoutePosted) => States.TenantDeploymentRequested,
+                (States.TenantRouteRequested, Triggers.OnError) => States.Error,
                 (States.TenantDeploymentRequested, Triggers.OnTenantDeploymentSuccessful) => States.TenantDeploymentConfirmation,
                 (States.TenantDeploymentRequested, Triggers.OnError) => States.Error,
                 _ => throw new NotSupportedException($"{current} has no transition on {trigger}")

@@ -41,6 +41,7 @@ namespace Saas.LandingSignup.Web
         public const string MerchantAction = "Merchant";
         public const string IndexAction = "Index";
         public const string UsernameAction = "Username";
+        public const string TenantRouteAction = "TenantRoute";
 
         // Controller Routes
         public const string OnboardingWorkflowDeployRoute = "/" + OnboardingWorkflowController + "/" + DeployTenantAction;
