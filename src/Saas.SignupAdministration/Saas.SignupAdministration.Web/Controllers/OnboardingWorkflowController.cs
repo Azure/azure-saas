@@ -20,12 +20,10 @@ namespace Saas.SignupAdministration.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly OnboardingWorkflowState _workflowState;
-        private readonly OnboardingWorkflowItem _workflowItem;
 
         public OnboardingWorkflowController(ILogger<OnboardingWorkflowController> logger, IOptions<AppSettings> appSettings, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _workflowState = new OnboardingWorkflowState();
-            _workflowItem = new OnboardingWorkflowItem();
 
             _logger = logger;
             _appSettings = appSettings.Value;
@@ -33,60 +31,16 @@ namespace Saas.SignupAdministration.Web.Controllers
             _signInManager = signInManager;
         }
 
-        // Step 1 - Submit the email and determine if it is in use
-        [HttpGet]
-        public IActionResult Username()
-        {
-            return View();
-        }
-
-        // Step 1 - Submit the email and determine if it is in use
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public async Task<IActionResult> UsernameAsync(string emailAddress)
-        {
-            // Do a check to see if username already taken
-            ApplicationUser user = new ApplicationUser { UserName = emailAddress, Email = emailAddress };
-
-            var result = await _userManager.CreateAsync(user);
-
-            if (result.Succeeded)
-            {
-                _workflowItem.Id = Guid.NewGuid().ToString();
-                _workflowItem.OnboardingWorkflowName = SR.OnboardingWorkflowName;
-                _workflowItem.UserId = user.Id;
-                _workflowItem.EmailAddress = emailAddress;
-                _workflowItem.IsExistingUser = bool.FalseString;
-                _workflowItem.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-                _workflowItem.Created = DateTime.Now;
-                UpdateSessionAndTranstionState(_workflowItem, OnboardingWorkflowState.Triggers.OnUserNamePosted);
-
-                return RedirectToAction(SR.OrganizationNameAction, SR.OnboardingWorkflowController);
-            }
-            else
-            {
-                foreach (var error in result.Errors)
-                {
-                    if (error.Code.ToLower() == SR.DuplicateUserNameErrorCode.ToLower())
-                    {
-                        ViewBag.ErrorMessage = error.Description;
-                    }
-
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-
-                return View();
-            }
-        }
-
-        // Step 2 - Submit the organization name
+        // Step 1 - Submit the organization name
         [HttpGet]
         public IActionResult OrganizationName()
         {
+            Initialize();
+
             return View();
         }
 
-        // Step 2 - Submit the organization name
+        // Step 1 - Submit the organization name
         [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult OrganizationName(string organizationName)
@@ -99,7 +53,7 @@ namespace Saas.SignupAdministration.Web.Controllers
             return RedirectToAction(SR.OrganizationCategoryAction, SR.OnboardingWorkflowController);
         }
 
-        // Step 3 - Organization Category
+        // Step 2 - Organization Category
         [Route(SR.OnboardingWorkflowOrganizationCategoryRoute)]
         [HttpGet]
         public IActionResult OrganizationCategory()
@@ -120,7 +74,7 @@ namespace Saas.SignupAdministration.Web.Controllers
             return View(categories);
         }
 
-        // Step 3 Submitted - Organization Category
+        // Step 2 Submitted - Organization Category
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult OrganizationCategoryAsync(int categoryId)
@@ -133,14 +87,14 @@ namespace Saas.SignupAdministration.Web.Controllers
             return RedirectToAction(SR.TenantRouteNameAction, SR.OnboardingWorkflowController);
         }
 
-        // Step 4 - Tenant Route Name
+        // Step 3 - Tenant Route Name
         [HttpGet]
         public IActionResult TenantRouteName()
         {
             return View();
         }
 
-        // Step 4 Submitted - Tenant Route Name
+        // Step 3 Submitted - Tenant Route Name
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult TenantRouteName(string tenantRouteName)
@@ -155,14 +109,14 @@ namespace Saas.SignupAdministration.Web.Controllers
             return RedirectToAction(SR.ServicePlansAction, SR.OnboardingWorkflowController);
         }
 
-        // Step 5 - Service Plan
+        // Step 4 - Service Plan
         [HttpGet]
         public IActionResult ServicePlans()
         {
             return View();
         }
 
-        // Step 5 Submitted - Service Plan
+        // Step 4 Submitted - Service Plan
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult ServicePlans(int productId)
@@ -175,7 +129,7 @@ namespace Saas.SignupAdministration.Web.Controllers
             return RedirectToAction(SR.ConfirmationAction, SR.OnboardingWorkflowController);
         }
 
-        // Step 6 - Tenant Created Confirmation
+        // Step 5 - Tenant Created Confirmation
         [HttpGet]
         public async Task<IActionResult> Confirmation()
         {
@@ -185,6 +139,22 @@ namespace Saas.SignupAdministration.Web.Controllers
             return View();
         }
 
+        private void Initialize()
+        {
+            // TODO: UserId needs to be replaced with value from SSO
+            // TODO: EmailAddress needs to be replaced with value from SSO
+            OnboardingWorkflowItem workflowItem = new OnboardingWorkflowItem();
+
+            workflowItem.Id = Guid.NewGuid().ToString();
+            workflowItem.OnboardingWorkflowName = SR.OnboardingWorkflowName;
+            workflowItem.UserId = Guid.NewGuid().ToString();
+            workflowItem.EmailAddress = "temp_email@testing.com";
+            workflowItem.IsExistingUser = bool.FalseString;
+            workflowItem.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            workflowItem.Created = DateTime.Now;
+
+            HttpContext.Session.SetObjectAsJson(SR.OnboardingWorkflowItemKey, workflowItem);
+        }
 
         private async Task DeployTenantAsync()
         {

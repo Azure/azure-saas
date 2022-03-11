@@ -8,20 +8,16 @@ namespace Saas.SignupAdministration.Web.Models.StateMachine
     {
         public enum States
         {
-            UserNameEntry,
             OrganizationNameEntry,
             OrganizationCategoryEntry,
             TenantRouteNameEntry,
             ServicePlanEntry,
             TenantDeploymentRequested,
             TenantDeploymentConfirmation,
-            UsernameExistsError,
             Error
         };
         public enum Triggers
         {
-            OnUserNamePosted,
-            OnUserNameExists,
             OnOrganizationNamePosted,
             OnOrganizationCategoryPosted,
             OnTenantRouteNamePosted,
@@ -32,7 +28,7 @@ namespace Saas.SignupAdministration.Web.Models.StateMachine
 
         public States CurrentState { get; internal set; }
 
-        public OnboardingWorkflowState(States state = States.UserNameEntry)
+        public OnboardingWorkflowState(States state = States.OrganizationNameEntry)
         {
             CurrentState = state;
         }
@@ -47,9 +43,6 @@ namespace Saas.SignupAdministration.Web.Models.StateMachine
         States ChangeState(States current, Triggers trigger) =>
             CurrentState = ((current, trigger) switch
             {
-                (States.UserNameEntry, Triggers.OnUserNamePosted) => States.OrganizationNameEntry,
-                (States.UserNameEntry, Triggers.OnUserNameExists) => States.UsernameExistsError,
-                (States.UserNameEntry, Triggers.OnError) => CurrentState = States.Error,
                 (States.OrganizationNameEntry, Triggers.OnOrganizationNamePosted) => States.OrganizationCategoryEntry,
                 (States.OrganizationNameEntry, Triggers.OnError) => States.Error,
                 (States.OrganizationCategoryEntry, Triggers.OnOrganizationCategoryPosted) => States.TenantRouteNameEntry,

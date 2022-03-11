@@ -26,7 +26,7 @@ namespace Saas.SignupAdministration.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return RedirectToAction(SR.UsernameAction, SR.OnboardingWorkflowController);
+            return View();
         }
 
         [HttpGet]
