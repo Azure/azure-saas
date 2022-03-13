@@ -1,0 +1,20 @@
+{
+  "name": "docsy",
+  "version": "0.2.0-dev",
+  "repository": "github:google/docsy",
+  "scripts": {
+    "_docs": "cd userguide && npm run",
+    "build:preview": "npm run _docs build:preview",
+    "build:production": "npm run _docs build:production",
+    "build": "npm run _docs build",
+    "docs-install": "cd userguide && npm install",
+    "serve": "npm run _docs serve"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "bootstrap": "^4.6.1"
+  },
+  "devDependencies": {
+    "hugo-extended": "0.93.2"
+  }
+}
