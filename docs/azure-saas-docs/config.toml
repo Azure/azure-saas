@@ -12,11 +12,11 @@ enableGitInfo = true
 [[menu.main]]
     name = "Homepage"
     weight = 40
-    url = "https://github.com/Azure/azure-saas"
+    url = "#"
 [[menu.main]]
     name = "GitHub"
     weight = 50
-    url = "https://github.com/dapr"
+    url = "https://github.com/Azure/azure-saas"
 
 
 [params]
