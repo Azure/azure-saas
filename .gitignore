@@ -352,3 +352,7 @@ MigrationBackup/
 /src/Saas.Onboarding/Saas.Onboarding.Api/appsettings.Development.json
 /src/Saas.Provider/Saas.Provider.Web/appsettings.Development.json
 /src/Saas.Provider/Saas.Provider.Web/Properties/ServiceDependencies/
+
+#docs
+.hugo_build.lock
+docs/azure-saas-docs/resources/_gen
