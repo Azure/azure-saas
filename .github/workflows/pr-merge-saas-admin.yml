@@ -14,7 +14,7 @@ jobs:
     # Utilizes re-usable template to build and deploy to app service slot
     uses: Azure/azure-saas/.github/workflows/template-pr-merge.yml@main
     with:
-      app_service_name: app-asdk-admin-dev-001
+      app_service_name: api-asdk-admin-dev-001
       app_service_resource_group_name: azure-saas-dev  
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}

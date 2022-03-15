@@ -17,7 +17,7 @@ jobs:
     with:
       dotnet_version: '6.0.x'
       artifact_name: ${{ github.run_id }} 
-      app_service_name: app-asdk-dev-001
+      app_service_name: app-signup-admin-dev-001
       app_service_resource_group_name: azure-saas-dev
       project_build_path: src/Saas.SignupAdministration/Saas.SignupAdministration.Web      
     secrets:

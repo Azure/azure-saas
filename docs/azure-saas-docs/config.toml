@@ -1,0 +1,30 @@
+baseURL = 'http://example.org/'
+languageCode = 'en-us'
+title = 'Azure Saas Dev Kit(ASDK)'
+theme = "docsy"
+
+
+enableRobotsTXT = true
+enableGitInfo = true
+
+
+# Top Nav Bar
+[[menu.main]]
+    name = "Homepage"
+    weight = 40
+    url = "#"
+[[menu.main]]
+    name = "GitHub"
+    weight = 50
+    url = "https://github.com/Azure/azure-saas"
+
+
+[params]
+
+# Algolia
+algolia_docsearch = true
+offlineSearch = false
+
+# GitHub Information
+github_repo = "https://github.com/Azure/azure-saas"
+github_subdir = "docs"
