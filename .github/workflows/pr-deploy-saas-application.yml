@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths: 
-      - "src/Saas.Catalog/**"
+      - "src/Saas.Application/**"
       - ".github/**"
 
 name: Saas.Application.Web PR Build
@@ -17,8 +17,7 @@ jobs:
     with:
       dotnet_version: '6.0.x'
       artifact_name: ${{ github.run_id }} 
-      #TODO: Re-deploy app service with new name
-      app_service_name: api-onboarding-asdk-dev-001
+      app_service_name: app-saas-app-asdk-dev-001
       app_service_resource_group_name: azure-saas-dev
       project_build_path: src/Saas.Application/Saas.Application.Web
     secrets:
