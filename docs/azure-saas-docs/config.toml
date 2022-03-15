@@ -1,5 +1,4 @@
 baseURL = 'http://example.org/'
-languageCode = 'en-us'
 title = 'Azure Saas Dev Kit(ASDK)'
 theme = "docsy"
 
@@ -7,6 +6,17 @@ theme = "docsy"
 enableRobotsTXT = true
 enableGitInfo = true
 
+
+# Language configuration
+languageCode = "en-us"
+
+[languages]
+    [languages.en]
+    title = "Azure SaaS Dev Kit Docs"
+    contentDir = "content/en"
+    languageName ="English"
+    # Weight used for sorting.
+    weight = 1
 
 # Top Nav Bar
 [[menu.main]]
@@ -27,4 +37,5 @@ offlineSearch = false
 
 # GitHub Information
 github_repo = "https://github.com/Azure/azure-saas"
-github_subdir = "docs"
+github_subdir = "docs/azure-saas-docs"
+github_branch = "main"
