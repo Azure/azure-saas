@@ -1,37 +1,34 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.31911.260
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Web", "Saas.Admin.Web\Saas.Admin.Web.csproj", "{2DD62574-4495-4F92-85A8-44CCAFDB3BCD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saas.Admin.Service", "Saas.Admin.Service\Saas.Admin.Service.csproj", "{A6134452-BA8E-4C84-8879-C8EEF82ED5C9}"
 EndProject
-Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Admin.Web.Deployment", "Saas.Admin.Web.Deployment\Saas.Admin.Web.Deployment.deployproj", "{D52C84E3-A85C-4BDE-9550-35E6C075381C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saas.Admin.Service.Tests", "Saas.Admin.Service.Tests\Saas.Admin.Service.Tests.csproj", "{5974515A-43DF-43E7-A1E6-FC97E47E480F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Web.Tests", "Saas.Admin.Web.Tests\Saas.Admin.Web.Tests.csproj", "{C8CCC477-7034-4C9D-8992-3A3F0C16E00B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestUtilities", "..\TestUtilities\TestUtilities.csproj", "{5A220537-38DA-495B-8CCF-723FA65310F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2DD62574-4495-4F92-85A8-44CCAFDB3BCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DD62574-4495-4F92-85A8-44CCAFDB3BCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DD62574-4495-4F92-85A8-44CCAFDB3BCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2DD62574-4495-4F92-85A8-44CCAFDB3BCD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D52C84E3-A85C-4BDE-9550-35E6C075381C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D52C84E3-A85C-4BDE-9550-35E6C075381C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D52C84E3-A85C-4BDE-9550-35E6C075381C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D52C84E3-A85C-4BDE-9550-35E6C075381C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8CCC477-7034-4C9D-8992-3A3F0C16E00B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8CCC477-7034-4C9D-8992-3A3F0C16E00B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8CCC477-7034-4C9D-8992-3A3F0C16E00B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8CCC477-7034-4C9D-8992-3A3F0C16E00B}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F979A8AE-8E6F-4FDB-A37A-3CA824D1C3D4}
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6134452-BA8E-4C84-8879-C8EEF82ED5C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6134452-BA8E-4C84-8879-C8EEF82ED5C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6134452-BA8E-4C84-8879-C8EEF82ED5C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6134452-BA8E-4C84-8879-C8EEF82ED5C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5974515A-43DF-43E7-A1E6-FC97E47E480F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5974515A-43DF-43E7-A1E6-FC97E47E480F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5974515A-43DF-43E7-A1E6-FC97E47E480F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5974515A-43DF-43E7-A1E6-FC97E47E480F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A220537-38DA-495B-8CCF-723FA65310F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A220537-38DA-495B-8CCF-723FA65310F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A220537-38DA-495B-8CCF-723FA65310F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A220537-38DA-495B-8CCF-723FA65310F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

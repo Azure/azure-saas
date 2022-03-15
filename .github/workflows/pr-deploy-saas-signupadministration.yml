@@ -1,0 +1,24 @@
+# Builds any PR with target branch of "main". Creates app service slot with PR number and deploys built code
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+    paths:
+      - "src/Saas.SignupAdministration/**"
+      - ".github/**"
+    
+name: Saas.SignupAdministration.Web PR Build
+
+jobs:
+  build-and-deploy:
+    # Utilizes re-usable template to build and deploy to app service slot
+    uses: Azure/azure-saas/.github/workflows/template-pr-deploy.yml@main
+    with:
+      dotnet_version: '6.0.x'
+      artifact_name: ${{ github.run_id }} 
+      app_service_name: app-asdk-dev-001
+      app_service_resource_group_name: azure-saas-dev
+      project_build_path: src/Saas.SignupAdministration/Saas.SignupAdministration.Web      
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
