@@ -1,7 +1,14 @@
+using Saas.Application.Web.Services;
+using Saas.Application.Web.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<ITenantService, TenantService>(config => 
+{
+    config.BaseAddress = new Uri(Environment.GetEnvironmentVariable("AdminServiceUrl") ?? "");
+});
+builder.Services.AddSingleton<ITenantService, TenantService>();  
 
 // Add services to the container.
 var app = builder.Build();
