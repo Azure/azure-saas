@@ -2,7 +2,7 @@
 type: docs
 title: "Getting Started"
 linkTitle: "Getting Started"
-weight: 20
+weight: 10
 description: "Getting Started with the Azure SaaS Dev Kit"
 ---
 
