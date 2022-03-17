@@ -4,10 +4,22 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/**'
+      - 'docs/**'
+      - '**.md'
+      - '**.png'
+      - '**.svg'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
+    paths:
+      - '.github/**'
+      - 'docs/**'
+      - '**.md'
+      - '**.png'
+      - '**.svg'
 
 jobs:
   build_and_deploy_job:
