@@ -1,18 +1,88 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #00354c;
+}
+
+h1, h2 {
+    font-family: eds-market-main-script, sans-serif !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+}
+
+.bg-bmu-dark {
+    background-color: #00354c;
+}
+
+.badge-widget {
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+    display: block;
+    position: relative;
+}
+
+.badge-widget .overlay, .badge-widget img, .badge-widget .clipping-path, .badge-widget .clipping-path .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 250px;
+    background-repeat: no-repeat;
+}
+
+.badge-widget .overlay {
+    background-image: url('/images/badge-mask.svg');
+    z-index: 2;
+}
+
+.badge-widget .clipping-path {
+    clip-path: url(#badge-clipping-path);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge-widget .clipping-path .title {
+    z-index: 2;
+    font-family: eds-market-main-script, sans-serif !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    color: #fff;
+    background-color: #00354c;
+    width: 100%;
+    text-align: center;
+    padding: 0.5rem 3rem;
+    opacity: 0.9;
+}
+
+.badge-widget .clipping-path .background {
+    background-position: center center;
+    background-size: cover;
+    z-index: 1;
+}
+.badge-list .row .card{
+    border: none;
+}
+
+.badge-card{
+    height: 395px;
 }

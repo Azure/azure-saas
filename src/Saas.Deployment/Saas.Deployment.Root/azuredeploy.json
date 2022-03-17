@@ -45,6 +45,7 @@
       "metadata": {
         "description": "The SQL Server administrator login"
       }
+      
     },
     "SqlAdministratorLoginPassword": {
       "type": "securestring",
