@@ -26,6 +26,10 @@ graph LR
 	isv-->vendor
 ```
 
+## Roles
+
+![Contoso Tickets Roles](../contoso-tickets-roles.png)
+
 ### Onboarding
 
 1. Doug, the manager at Fourth Coffee navigated to the Contoso Tickets website (tickets.Contoso.com) and signed up for a plan, adding the venue to the site with a unique URL (tickets.Contoso.com/FourthCoffee).
