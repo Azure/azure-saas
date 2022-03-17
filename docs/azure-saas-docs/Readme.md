@@ -2,7 +2,8 @@
 
 The user guide is built using markdown files generated using [Hugo](https://gohugo.io/) and [Docsy](https://www.docsy.dev/) Template.  To get started developing the User Guide site, locally:
 
-- [Install Hugo](https://gohugo.io/getting-started/)
+- [Install Hugo](https://gohugo.io/getting-started/) - Note: You'll need to pick the "extended" version if you're on Windows.
+- Run `npm install postcss-cli`
 - Change to the /docs/azure-saas-docs folder
 - Start the Hugo Server 
 
