@@ -31,6 +31,16 @@
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK"
   crossorigin="anonymous"></script>
+
+<!-- Mermaid chart support -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(() => {
+    $(".language-mermaid").wrapInner("<div class=\"mermaid\"></div>");
+    mermaid.init();
+  });
+</script>
+
 {{ if .Site.Params.offlineSearch -}}
 <script
   src="https://unpkg.com/lunr@2.3.9/lunr.min.js"
