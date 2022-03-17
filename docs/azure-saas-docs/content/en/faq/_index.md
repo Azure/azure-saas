@@ -2,7 +2,7 @@
 type: docs
 title: "FAQ"
 linkTitle: "FAQ"
-weight: 60
+weight: 100
 description: "Frequently Asked Questions"
 ---
 
