@@ -1,27 +1,16 @@
-using System.Linq;
+namespace Saas.Admin.Service.Tests;
 
-namespace Saas.Admin.Service.Tests
+public class TenantsContextTests
 {
-    using Saas.Admin.Service.Data;
 
-    using System.Threading.Tasks;
-
-    using TestUtilities;
-
-    using Xunit;
-
-    public class TenantsContextTests
+    [Theory, AutoDataNSubstitute]
+    public async Task Add_New_Will_Update_Created_Time(TenantsContext context, Tenant tenant)
     {
+        tenant.CreatedTime = null;
 
-        [Theory, AutoDataNSubstitute]
-        public async Task Add_New_Will_Update_Created_Time(TenantsContext context, Tenant tenant)
-        {
-            tenant.CreatedTime = null;
+        await context.AddAsync(tenant);
+        await context.SaveChangesAsync();
 
-            await context.AddAsync(tenant);
-            await context.SaveChangesAsync();
-
-            Assert.NotNull(tenant.CreatedTime);
-        }
+        Assert.NotNull(tenant.CreatedTime);
     }
 }

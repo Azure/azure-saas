@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Saas.Admin.Service.Data;
-
 
 public class Tenant
 {

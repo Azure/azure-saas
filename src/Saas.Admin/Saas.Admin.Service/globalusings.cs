@@ -9,3 +9,4 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.Identity.Web;
 global using System.Reflection;
 global using System.Runtime.Serialization;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;

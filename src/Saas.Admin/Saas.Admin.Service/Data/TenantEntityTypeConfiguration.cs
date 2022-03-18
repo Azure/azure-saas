@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 namespace Saas.Admin.Service.Data;
 
 public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
