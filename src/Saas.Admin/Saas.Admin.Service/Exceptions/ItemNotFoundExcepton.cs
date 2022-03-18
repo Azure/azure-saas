@@ -2,7 +2,7 @@
 
 public class ItemNotFoundExcepton : Exception
 {
-    ItemNotFoundExcepton() : base()
+    private ItemNotFoundExcepton() : base()
     {
 
     }

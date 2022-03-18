@@ -10,15 +10,15 @@ public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
         builder.HasIndex(t => t.RoutePrefix).IsUnique(true);
 
         builder.Property(t => t.Name).IsRequired();
-        
+
         builder.Property(t => t.IsCancelled).HasDefaultValue(false)
             .ValueGeneratedOnAdd();
-        
+
         builder.Property(t => t.IsProvisioned).HasDefaultValue(false)
             .ValueGeneratedOnAdd();
-        
+
         builder.Property(t => t.RoutePrefix).IsRequired();
-        
+
         builder.Property(t => t.CreatedTime)
             .HasDefaultValue<DateTime?>(DateTime.UtcNow)
             .ValueGeneratedOnAdd();

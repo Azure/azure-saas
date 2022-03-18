@@ -20,7 +20,7 @@ public class TenantService : ITenantService
 
     public async Task<Tenant> GetTenantAsync(Guid tenantId)
     {
-        var tenant = await _context.Tenants.FindAsync(tenantId);
+        Tenant? tenant = await _context.Tenants.FindAsync(tenantId);
 
         if (tenant == null)
         {
@@ -62,7 +62,7 @@ public class TenantService : ITenantService
 
     public async Task DeleteTenantAsync(Guid tenantId)
     {
-        var tenant = await _context.Tenants.FindAsync(tenantId);
+        Tenant? tenant = await _context.Tenants.FindAsync(tenantId);
         if (tenant == null)
         {
             throw new ItemNotFoundExcepton("Tenant");

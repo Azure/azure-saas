@@ -2,13 +2,13 @@
 
 public class NewTenantRequest
 {
-    public string Name { get; set; } = String.Empty;
-    public string RoutePrefix { get; set; } = String.Empty;
-    Guid OwnerId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string RoutePrefix { get; set; } = string.Empty;
+    private Guid OwnerId { get; set; }
 
     internal Tenant ToTenant()
     {
-        Tenant tenant = new Tenant(this.Name, this.RoutePrefix)
+        Tenant tenant = new Tenant(Name, RoutePrefix)
         {
             IsCancelled = false,
             IsProvisioned = false,

@@ -7,9 +7,9 @@ public class TenantDTO
     /// </summary>
     public TenantDTO()
     {
-        Name = String.Empty;
+        Name = string.Empty;
         RoutePrefix = string.Empty;
-        Version = String.Empty;
+        Version = string.Empty;
     }
 
     public TenantDTO(Tenant tenant)
@@ -28,12 +28,12 @@ public class TenantDTO
 
     public Tenant ToTenant()
     {
-        Tenant tenant = new Tenant(this.Name, this.RoutePrefix)
+        Tenant tenant = new Tenant(Name, RoutePrefix)
         {
-            Id = this.Id,
-            IsCancelled = this.IsCancelled,
-            IsProvisioned = this.IsProvisioned,
-            ConcurrencyToken = this.Version != null ? Convert.FromBase64String(this.Version) : null,
+            Id = Id,
+            IsCancelled = IsCancelled,
+            IsProvisioned = IsProvisioned,
+            ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null,
             CreatedTime = null,
         };
         return tenant;
@@ -42,12 +42,12 @@ public class TenantDTO
 
     public void CopyTo(Tenant target)
     {
-        target.Name = this.Name;
-        target.IsCancelled = this.IsCancelled;
-        target.IsProvisioned = this.IsProvisioned;
-        target.RoutePrefix = this.RoutePrefix;
+        target.Name = Name;
+        target.IsCancelled = IsCancelled;
+        target.IsProvisioned = IsProvisioned;
+        target.RoutePrefix = RoutePrefix;
         target.CreatedTime = null;
-        target.ConcurrencyToken = this.Version != null  ? Convert.FromBase64String(this.Version) : null;
+        target.ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null;
     }
 
     public Guid Id { get; set; }

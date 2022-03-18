@@ -6,7 +6,7 @@ public static class TenantDbInitializer
     public static void ConfigureDatabase(this IHost host)
     {
         using IServiceScope scope = host.Services.CreateScope();
-        
+
         ILogger logger = scope.ServiceProvider.GetRequiredService<ILogger<TenantsContext>>();
         TenantsContext tenantsContext = scope.ServiceProvider.GetRequiredService<TenantsContext>();
 
