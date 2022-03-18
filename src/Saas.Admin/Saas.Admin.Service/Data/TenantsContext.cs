@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+
 namespace Saas.Admin.Service.Data;
 
 public class TenantsContext : DbContext
@@ -10,4 +11,9 @@ public class TenantsContext : DbContext
     }
 
     public DbSet<Tenant> Tenant { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        new TenantEntityTypeConfiguration().Configure(modelBuilder.Entity<Tenant>());
+    }
 }

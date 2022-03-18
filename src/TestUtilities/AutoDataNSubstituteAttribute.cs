@@ -1,4 +1,6 @@
-﻿namespace TestUtilities;
+﻿using EntityFrameworkCore.AutoFixture.Sqlite;
+
+namespace TestUtilities;
 
 /// <summary>
 /// Use this attribute when you want AutoFixture to populate values for both
@@ -67,12 +69,25 @@ public class AutoDataNSubstituteAttribute : AutoDataAttribute
 
             fixture = fixture.Customize(new AutoNSubstituteCustomization() { ConfigureMembers = (options & AutoDataOptions.SkipMembers) != AutoDataOptions.SkipMembers });
 
-            if ((options & AutoDataOptions.SkipEFMemoryContext) != AutoDataOptions.SkipEFMemoryContext)
+            if ((options & AutoDataOptions.UseEFMemoryContext) == AutoDataOptions.UseEFMemoryContext)
             {
-                fixture = fixture.Customize(new InMemoryContextCustomization());
-            }
+                fixture = fixture.Customize(new InMemoryContextCustomization()
+                {
+                    AutoCreateDatabase = true,
+                    OmitDbSets = true
+                });
 
-            return fixture;
+            }
+            else if ((options & AutoDataOptions.UseEFSQLiteContext) == AutoDataOptions.UseEFSQLiteContext)
+            {
+                fixture = fixture.Customize(new SqliteContextCustomization()
+                {
+                    AutoCreateDatabase = true,
+                    AutoOpenConnection = true,
+                    OmitDbSets = true
+                });
+            }
+                return fixture;
         };
     }
 }
@@ -82,7 +97,8 @@ public enum AutoDataOptions
 {
     SkipMembers = 0x01,
     SkipLiveTest = 0x02,
-    SkipEFMemoryContext = 0x04,
+    UseEFMemoryContext = 0x04,
+    UseEFSQLiteContext = 0x10,
 
-    Default = 0x00
+    Default = UseEFSQLiteContext
 }
