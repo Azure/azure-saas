@@ -15,12 +15,12 @@ public class TenantService : ITenantService
 
     public async Task<IEnumerable<Tenant>> GetAllTenantsAsync()
     {
-        return await _context.Tenant.ToListAsync();
+        return await _context.Tenants.ToListAsync();
     }
 
     public async Task<Tenant> GetTenantAsync(Guid tenantId)
     {
-        var tenant = await _context.Tenant.FindAsync(tenantId);
+        Tenant? tenant = await _context.Tenants.FindAsync(tenantId);
 
         if (tenant == null)
         {
@@ -32,7 +32,7 @@ public class TenantService : ITenantService
 
     public async Task<Tenant> AddTenantAsync(Tenant tenant)
     {
-        _context.Tenant.Add(tenant);
+        _context.Tenants.Add(tenant);
         await _context.SaveChangesAsync();
 
         return tenant;
@@ -62,19 +62,19 @@ public class TenantService : ITenantService
 
     public async Task DeleteTenantAsync(Guid tenantId)
     {
-        var tenant = await _context.Tenant.FindAsync(tenantId);
+        Tenant? tenant = await _context.Tenants.FindAsync(tenantId);
         if (tenant == null)
         {
             throw new ItemNotFoundExcepton("Tenant");
         }
 
-        _context.Tenant.Remove(tenant);
+        _context.Tenants.Remove(tenant);
         await _context.SaveChangesAsync();
     }
 
     public async Task<bool> TenantExistsAsync(Guid tenantId)
     {
-        return await _context.Tenant.AnyAsync(e => e.Id == tenantId);
+        return await _context.Tenants.AnyAsync(e => e.Id == tenantId);
     }
 
     public async Task<IEnumerable<string>> GetTenantUsersAsync(Guid tenantId)
