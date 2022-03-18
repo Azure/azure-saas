@@ -31,6 +31,11 @@ public static class TenantDbInitializer
     {
         try
         {
+            if (tenantsContext.Tenants.Any())
+            {
+                return;   // DB has been seeded
+            }
+
             //Add any code required to seed the database here
         }
         catch (Exception ex)
