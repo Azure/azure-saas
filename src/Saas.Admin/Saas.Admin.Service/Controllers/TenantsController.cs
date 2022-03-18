@@ -64,21 +64,21 @@ public class TenantsController : ControllerBase
     /// <summary>
     /// Add a new tenant
     /// </summary>
-    /// <param name="tenantDTO"></param>
+    /// <param name="tenantRequest"></param>
     /// <returns></returns>
     /// <remarks>
     /// <para><b>Requires:</b> Authenticated user</para>
     /// <para>This call needs a user to make admin of this tenant.  TBD explicitly pass in the user ID or 
     /// make the current user the admin (would prevent a third party creating tenants on behalf of user)</para>
     /// </remarks>
-    [HttpPost]
+    [HttpPost()]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<TenantDTO>> PostTenant(TenantDTO tenantDTO)
+    public async Task<ActionResult<TenantDTO>> PostTenant(NewTenantRequest tenantRequest)
     {
 
-        Tenant tenant = tenantDTO.ToTenant();
+        Tenant tenant = tenantRequest.ToTenant();
         tenant = await _tenantService.AddTenantAsync(tenant);
 
         return CreatedAtAction("GetTenant", new { id = tenant.Id }, tenant);
