@@ -2,10 +2,10 @@ namespace Saas.Admin.Service.Data;
 
 public class Tenant
 {
-    public Tenant(string name, string userId, byte[] concurrencyToken)
+    public Tenant(string name, string createdBy, byte[] concurrencyToken)
     {
         Name = Guard.Argument(name, nameof(name)).NotEmpty();
-        CreatedBy = Guard.Argument(userId, nameof(userId)).NotEmpty();
+        CreatedBy = Guard.Argument(createdBy, nameof(createdBy)).NotEmpty();
         ConcurrencyToken = concurrencyToken;
     }
 
