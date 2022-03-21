@@ -6,28 +6,28 @@
 
 <div class="row" style="margin: 0 auto; max-width: 600px;">
  <div class="col-12">
-  <div style="font-size:.75rem;">Step 1 of 5 - Enter Your Organization's Name</div>
-  <div style="margin-top:.5rem;"><progress class="progress" id="file" value="20" max="100"> 20% </progress></div>
+  <div style="font-size:.75rem;">Step 3 of 5 - Enter a Tenant Route Name</div>
+  <div style="margin-top:.5rem;"><progress class="progress" id="file" value="60" max="100"> 60% </progress></div>
  </div>
 </div>
 
 <div class="row" style="margin: 0 auto; max-width: 600px;">
  <div class="col-12" style="margin-top: 1.5rem;">
   <div style="margin-bottom: 10px;">
-   <h3 style="margin-bottom: 0px;">What is your Organization's Name?</h3>
+   <h3 style="margin-bottom: 0px;">Please choose a name for your custom Tenant Route</h3>
   </div>
   <form method="post">
    <div style="margin-top: 1rem; margin-bottom: 1rem;">
-	<input type="text" name="organizationName" class="form-control" placeholder="Start typing..." required minlength="2" maxlength="44" pattern="[a-zA-Z0-9_' ]*$" value="@Context.Request.Query["organizationName"]" />
+	<input type="text" name="tenantRouteName" class="form-control" placeholder="Start typing..." required minlength="2" maxlength="44" pattern="[a-zA-Z0-9_' ]*$" />
    </div>
-			@if (Context.Request.Query["userNameExists"] == "True")
+			@if (Context.Request.Query["tenantReouteNameExists"] == "True")
 			{
 	   <div>
-		<p style="color:#dc3545!important;"> Subscriber name '@Context.Request.Query["organizationName"]' is already taken.</p>
+		<p style="color:#dc3545!important;"> Subscriber name '@Context.Request.Query["tenatRouteName"]' is already taken.</p>
 	   </div>
 			}
    <div>
-	<p>The name should be the name of your business, brand or organization.  You can change this later.</p>
+	<p>Choose a unique route to use when accessing your tenant. You can change this later.</p>
    </div>
    <div style="margin-top: 1rem;">
 	<input type="hidden" name="Id" value="@ViewBag.Id" />
