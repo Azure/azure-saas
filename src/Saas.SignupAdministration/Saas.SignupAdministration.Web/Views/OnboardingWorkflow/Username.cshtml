@@ -10,10 +10,6 @@
    <h1 class="display-5 fw-bold">Welcome to your SaaS Service</h1>
    <p class="col-md-12 fs-4" style="padding-left:0px;">Software as a service (SaaS) allows users to connect to and use cloud-based apps over the Internet. Common examples are email, calendaring, and office tools (such as Microsoft Office 365).</p>
    <form method="post">
-	<div>
-	@Html.Label("errorMessage", ViewBag.ErrorMessage, new { style="color:red;display:" + (string.IsNullOrWhiteSpace(ViewBag.ErrorMessage) ? "none" : "inline") })
-	 <input type="email" name="emailAddress" class="form-control" style="width:100%; max-width:350px;" placeholder="Enter your Email Address" required />
-	</div>
 	<div style="margin-top:.75rem;">
 	 <input type="submit" class="btn btn-cta btn-primary" value="GET STARTED FREE" style="width:100%; max-width:350px;" />
 	</div>

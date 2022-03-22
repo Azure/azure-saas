@@ -1,4 +1,5 @@
 ﻿namespace Saas.Admin.Service.Services;
+
 public interface ITenantService
 {
     Task<IEnumerable<Tenant>> GetAllTenantsAsync();

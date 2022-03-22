@@ -1,6 +1,6 @@
 ﻿# About
 This library is useful if you have a multi tenant ASP.NET application with users potentially having 
-different roles in different tentants.
+different roles in different tenants.
 ## Goals
 - Easy to use for developers
 - Integrate with ASP.NET authorization libraries
