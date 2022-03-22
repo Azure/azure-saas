@@ -32,6 +32,10 @@ Whether you're modernizing an existing application, building a new application, 
 
 It's a real production site that allows users to easily build their Email and SMS lists using social login with Facebook, Google, Apple, Email and SMS. In addition, users can add profile pictures, bios, external links and social accounts to their tenants.
 
+## Ready to get started?
+
+Check out the [getting started page](/getting-started/).
+
 ## Additional Recommended Resources
 
 * [Best practices for architecting multi-tenant solutions](https://aka.ms/multitenancy)

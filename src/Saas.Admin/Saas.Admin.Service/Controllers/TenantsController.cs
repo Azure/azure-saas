@@ -52,7 +52,7 @@ public class TenantsController : ControllerBase
     {
         try
         {
-            var tenant = await _tenantService.GetTenantAsync(tenantId);
+            Tenant tenant = await _tenantService.GetTenantAsync(tenantId);
             return new TenantDTO(tenant);
         }
         catch (ItemNotFoundExcepton)
@@ -64,21 +64,21 @@ public class TenantsController : ControllerBase
     /// <summary>
     /// Add a new tenant
     /// </summary>
-    /// <param name="tenantDTO"></param>
+    /// <param name="tenantRequest"></param>
     /// <returns></returns>
     /// <remarks>
     /// <para><b>Requires:</b> Authenticated user</para>
     /// <para>This call needs a user to make admin of this tenant.  TBD explicitly pass in the user ID or 
     /// make the current user the admin (would prevent a third party creating tenants on behalf of user)</para>
     /// </remarks>
-    [HttpPost]
+    [HttpPost()]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<TenantDTO>> PostTenant(TenantDTO tenantDTO)
+    public async Task<ActionResult<TenantDTO>> PostTenant(NewTenantRequest tenantRequest)
     {
 
-        Tenant tenant = tenantDTO.ToTenant();
+        Tenant tenant = tenantRequest.ToTenant();
         tenant = await _tenantService.AddTenantAsync(tenant);
 
         return CreatedAtAction("GetTenant", new { id = tenant.Id }, tenant);
@@ -162,7 +162,7 @@ public class TenantsController : ControllerBase
     [HttpGet("{tenantId}/Users/{userId}/permissions")]
     public async Task<ActionResult<IEnumerable<string>>> GetUserPermissions(Guid tenantId, string userId)
     {
-        var permissions = await _permissionService.GetUserPermissionsForTenantAsync(tenantId, userId);
+        IEnumerable<string> permissions = await _permissionService.GetUserPermissionsForTenantAsync(tenantId, userId);
         return permissions.ToList();
     }
 
@@ -206,7 +206,7 @@ public class TenantsController : ControllerBase
     //sysadmin or current user
     public async Task<ActionResult<IEnumerable<Guid>>> UserTenants(string userId, string filter = null)
     {
-        this._logger.LogDebug("Geting all tenants for user {userId}", userId);
+        _logger.LogDebug("Geting all tenants for user {userId}", userId);
 
         IEnumerable<Guid> tenants = await _permissionService.GetTenantsForUserAsync(userId, filter);
         return tenants.ToList();

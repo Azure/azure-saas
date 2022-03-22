@@ -24,6 +24,10 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+//Call this as early as possible to make sure DB is ready
+//In a larger project it's better update the database during deployment process
+app.ConfigureDatabase();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -39,3 +43,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

@@ -7,56 +7,56 @@ public class TenantDTO
     /// </summary>
     public TenantDTO()
     {
-        Name = String.Empty;
-        CreatedBy = String.Empty;
-        Version = String.Empty;
+        Name = string.Empty;
+        RoutePrefix = string.Empty;
+        Version = string.Empty;
     }
 
     public TenantDTO(Tenant tenant)
     {
         Id = tenant.Id;
-        IsActive = tenant.IsActive;
         IsCancelled = tenant.IsCancelled;
         IsProvisioned = tenant.IsProvisioned;
-        ApiKey = tenant.ApiKey;
-        CategoryId = tenant.CategoryId;
-        ProductId = tenant.ProductId;
-        CreatedTime = tenant.CreatedTime;
+
+        CreatedTime = Guard.Argument(tenant.CreatedTime, nameof(tenant.CreatedTime)).NotNull();
 
         Name = Guard.Argument(tenant.Name, nameof(tenant.Name)).NotEmpty();
-        CreatedBy = Guard.Argument(tenant.CreatedBy, nameof(tenant.CreatedBy)).NotEmpty();
+        RoutePrefix = Guard.Argument(tenant.RoutePrefix, nameof(tenant.RoutePrefix)).NotEmpty();
+
         Version = Convert.ToBase64String(Guard.Argument(tenant.ConcurrencyToken, nameof(tenant.ConcurrencyToken)).NotEmpty());
     }
 
     public Tenant ToTenant()
     {
-
-        byte[] concurrentcyToken = Convert.FromBase64String(this.Version);
-        Tenant tenant = new Tenant(this.Name, this.CreatedBy, concurrentcyToken)
+        Tenant tenant = new Tenant(Name, RoutePrefix)
         {
-            Id = this.Id,
-            IsActive = this.IsActive,
-            IsCancelled = this.IsCancelled,
-            IsProvisioned = this.IsProvisioned,
-            ApiKey = this.ApiKey,
-            CategoryId = this.CategoryId,
-            ProductId = this.ProductId,
-            CreatedTime = this.CreatedTime,
+            Id = Id,
+            IsCancelled = IsCancelled,
+            IsProvisioned = IsProvisioned,
+            ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null,
+            CreatedTime = null,
         };
         return tenant;
     }
 
+
+    public void CopyTo(Tenant target)
+    {
+        target.Name = Name;
+        target.IsCancelled = IsCancelled;
+        target.IsProvisioned = IsProvisioned;
+        target.RoutePrefix = RoutePrefix;
+        target.CreatedTime = null;
+        target.ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null;
+    }
+
     public Guid Id { get; set; }
     public string Name { get; set; }
-    public bool IsActive { get; set; }
     public bool IsCancelled { get; set; }
     public bool IsProvisioned { get; set; }
-    public Guid ApiKey { get; set; }
-    public int CategoryId { get; set; }
-    public int ProductId { get; set; }
-    public string CreatedBy { get; set; }
+    public string RoutePrefix { get; set; }
     public DateTime CreatedTime { get; set; }
-    public string Version { get; set; }
+    public string? Version { get; set; }
 }
 
 public class TenantDTOPage
