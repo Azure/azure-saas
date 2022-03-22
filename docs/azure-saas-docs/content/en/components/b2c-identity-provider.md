@@ -1,13 +1,13 @@
 ---
 type: docs
-title: "B2C Authentication Service"
+title: "B2C Identity Provider"
 ---
 
 ```mermaid
 graph
 	user("fa:fa-user Contoso Business Admin")
 	adminweb("Saas.Admin.Web")
-	identityapi("fa:fa-key Auth Provider")
+	identityapi("fa:fa-key Identity Provider")
 	catalogapi("Saas.Catalog.Api")
 	catalogsql[(Saas.Catalog.Sql)]
 
