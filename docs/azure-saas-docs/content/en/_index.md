@@ -34,7 +34,7 @@ It's a real production site that allows users to easily build their Email and SM
 
 ## Ready to get started?
 
-Check out the [getting started page](/getting-started/).
+Check out the [getting started page](/overview/getting-started/).
 
 ## Additional Recommended Resources
 
