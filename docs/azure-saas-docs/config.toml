@@ -39,3 +39,6 @@ offlineSearch = false
 github_repo = "https://github.com/Azure/azure-saas"
 github_subdir = "docs/azure-saas-docs"
 github_branch = "main"
+
+[params.drawio]
+enable = false
