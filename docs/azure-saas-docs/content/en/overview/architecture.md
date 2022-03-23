@@ -1,4 +1,0 @@
----
-type: docs
-title: "Architecture"
----
