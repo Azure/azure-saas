@@ -73,9 +73,12 @@ namespace Saas.SignupAdministration.Web
         public const string OnboardingWorkflowEmailAddressProperty = "emailAddress";
         public const string OnboardingWorkflowOrganizationNameProperty = "organizationName";
         public const string OnboardingWorkflowTenantRouteNameProperty = "tenantRouteName";
+        public const string OnboardingWorkflowStateCurrentStateProperty = "currentState";
 
-        // Temp Data KEys
+        // Session Keys
+        public const string OnboardingWorkflowKey = "OnboardingWorkflow";
         public const string OnboardingWorkflowItemKey = "OnboardingWorkflowItem";
+        public const string OnboardingWorkflowStateKey = "OnboardingWorkflowState";
 
         // AppSettings Properties
         public const string CatalogDbConnectionProperty = "ConnectionStrings:CatalogDbConnection";

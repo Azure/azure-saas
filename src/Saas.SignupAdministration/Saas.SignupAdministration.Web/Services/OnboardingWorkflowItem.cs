@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Saas.SignupAdministration.Web.Models.StateMachine;
+using Saas.SignupAdministration.Web.Services.StateMachine;
 using System;
 
-namespace Saas.SignupAdministration.Web.Models
+namespace Saas.SignupAdministration.Web.Services
 {
     public class OnboardingWorkflowItem
     {
@@ -46,6 +46,25 @@ namespace Saas.SignupAdministration.Web.Models
         public OnboardingWorkflowState.States CurrentWorkflowState { get; set; }
 
         [JsonProperty(PropertyName = SR.OnboardingWorkflowTenantRouteNameProperty)]
-        public string TenantRouteName { get; set; } 
+        public string TenantRouteName { get; set; }
+
+        public OnboardingWorkflowItem()
+        {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            Id = Guid.NewGuid().ToString();
+            OnboardingWorkflowName = SR.OnboardingWorkflowName;
+
+            // TODO: UserId needs to be replaced with value from SSO
+            UserId = Guid.NewGuid().ToString();
+
+            // TODO: EmailAddress needs to be replaced with value from SSO
+            EmailAddress = "temp_email@testing.com";
+            IsExistingUser = bool.FalseString;
+            Created = DateTime.Now;
+        }
     }
 }

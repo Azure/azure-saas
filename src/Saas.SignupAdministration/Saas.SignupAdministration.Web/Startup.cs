@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Saas.SignupAdministration.Web.Data;
 using Saas.SignupAdministration.Web.Models;
 using Saas.SignupAdministration.Web.Repositories;
+using Saas.SignupAdministration.Web.Services;
 using System;
 
 namespace Saas.SignupAdministration.Web
@@ -49,6 +51,8 @@ namespace Saas.SignupAdministration.Web
             services.AddControllersWithViews();
             services.AddScoped<TenantRepository, TenantRepository>();
             services.AddScoped<CustomerRepository, CustomerRepository>();
+            services.AddScoped<OnboardingWorkflow, OnboardingWorkflow>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             var appSettings = Configuration.GetSection(SR.AppSettingsProperty);
 
@@ -56,7 +60,7 @@ namespace Saas.SignupAdministration.Web
 
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(1);
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
             
             services.AddApplicationInsightsTelemetry(Configuration[SR.AppInsightsConnectionProperty]);
@@ -94,6 +98,8 @@ namespace Saas.SignupAdministration.Web
 
                 endpoints.MapRazorPages();
             });
+
+            AppHttpContext.Services = app.ApplicationServices;
         }
     }
 }
