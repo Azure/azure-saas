@@ -45,7 +45,7 @@ namespace Saas.SignupAdministration.Web.Services
 
         public async Task OnboardTenet()
         {
-            HttpClient httpClient = new HttpClient();
+            HttpClient httpClient = new();
             OnboardingClient onboardingClient = new OnboardingClient(_appSettings.OnboardingApiBaseUrl, httpClient);
 
             Tenant tenant = new()
