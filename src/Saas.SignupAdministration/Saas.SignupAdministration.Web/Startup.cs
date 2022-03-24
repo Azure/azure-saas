@@ -44,23 +44,33 @@ namespace Saas.SignupAdministration.Web
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 0;
             });
+            var appSettings = Configuration.GetSection(SR.AppSettingsProperty);
+
+            services.Configure<AppSettings>(appSettings);
 
             services.AddMvc();
             services.AddDistributedMemoryCache();
             services.AddControllersWithViews();
             services.AddScoped<OnboardingWorkflow, OnboardingWorkflow>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            var appSettings = Configuration.GetSection(SR.AppSettingsProperty);
-
-            services.Configure<AppSettings>(appSettings);
+         
+            services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
+                .ConfigureHttpClient(client =>
+               client.BaseAddress = new Uri(Configuration[SR.AdminServiceBaseUrl]));
+          
+            services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
+                .ConfigureHttpClient(client =>
+               client.BaseAddress = new Uri(Configuration[SR.AdminServiceBaseUrl]));
 
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
-            
+
             services.AddApplicationInsightsTelemetry(Configuration[SR.AppInsightsConnectionProperty]);
+
+            services.AddDbContext<SaasSignupAdministrationWebContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SaasSignupAdministrationWebContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,11 +96,14 @@ namespace Saas.SignupAdministration.Web
 
             app.UseEndpoints(endpoints =>
             {
+                var adminRoutes = endpoints.MapControllerRoute(
+                    name: "Admin",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 var routes = endpoints.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
-
                 if (env.IsDevelopment())
                 {
                     routes.WithMetadata(new AllowAnonymousAttribute());
+                    
                 }
 
                 endpoints.MapRazorPages();
