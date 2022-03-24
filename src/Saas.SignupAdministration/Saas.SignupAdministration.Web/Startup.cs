@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Saas.SignupAdministration.Web.Data;
 using Saas.SignupAdministration.Web.Models;
-using Saas.SignupAdministration.Web.Repositories;
 using Saas.SignupAdministration.Web.Services;
 using System;
 
@@ -49,8 +48,6 @@ namespace Saas.SignupAdministration.Web
             services.AddMvc();
             services.AddDistributedMemoryCache();
             services.AddControllersWithViews();
-            services.AddScoped<TenantRepository, TenantRepository>();
-            services.AddScoped<CustomerRepository, CustomerRepository>();
             services.AddScoped<OnboardingWorkflow, OnboardingWorkflow>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

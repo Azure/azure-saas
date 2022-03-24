@@ -61,7 +61,8 @@ namespace Saas.SignupAdministration.Web.Services
                 UserId = OnboardingWorkflowItem.UserId
             };
 
-            await onboardingClient.TenantsPOSTAsync(tenant);
+            //TODO: Call new Admin API
+            //await onboardingClient.TenantsPOSTAsync(tenant);
 
             OnboardingWorkflowItem.IsComplete = true;
             OnboardingWorkflowItem.Created = DateTime.Now;
