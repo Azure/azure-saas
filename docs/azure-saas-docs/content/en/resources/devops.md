@@ -1,10 +1,8 @@
 ---
 type: docs
-title: "DevOps"
+title: "DevOps Workflows"
 weight: 100
 ---
-
-# DevOps Workflows
 
 For your convenience, we have provided some sample GitHub workflows that you can use to build and deploy code changes to each module. They were created as a baseline reference with the intent to be extensible when needed.
 
