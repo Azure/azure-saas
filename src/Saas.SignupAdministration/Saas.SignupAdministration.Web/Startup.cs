@@ -60,6 +60,10 @@ namespace Saas.SignupAdministration.Web
             services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
                 .ConfigureHttpClient(client =>
                client.BaseAddress = new Uri(Configuration[SR.AdminServiceBaseUrl]));
+          
+            services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
+                .ConfigureHttpClient(client =>
+               client.BaseAddress = new Uri(Configuration[SR.AdminServiceBaseUrl]));
 
             services.AddSession(options =>
             {
