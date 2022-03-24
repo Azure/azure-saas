@@ -104,6 +104,7 @@ namespace Saas.SignupAdministration.Web
         public const string AccountProperty = "Account";
         public const string KeyProperty = "Key";
         public const string CosmosNamePartitionKey = "/name";
+        public const string AdminServiceBaseUrl = "AppSettings:AdminServiceBaseUrl";
 
         // Error Codes
         public const string DuplicateUserNameErrorCode = "DuplicateUserName";
