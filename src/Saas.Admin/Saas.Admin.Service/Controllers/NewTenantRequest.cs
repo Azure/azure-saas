@@ -1,10 +1,12 @@
-﻿namespace Saas.Admin.Service.Controllers;
+﻿using Saas.Admin.Service.Data;
+
+namespace Saas.Admin.Service.Controllers;
 
 public class NewTenantRequest
 {
     public string Name { get; set; } = string.Empty;
     public string RoutePrefix { get; set; } = string.Empty;
-    private Guid OwnerId { get; set; }
+    public Guid OwnerId { get; set; }
 
     internal Tenant ToTenant()
     {

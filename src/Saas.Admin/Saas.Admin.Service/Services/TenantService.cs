@@ -1,4 +1,7 @@
-﻿namespace Saas.Admin.Service.Services;
+﻿using Saas.Admin.Service.Controllers;
+using Saas.Admin.Service.Data;
+
+namespace Saas.Admin.Service.Services;
 
 public class TenantService : ITenantService
 {
@@ -13,51 +16,61 @@ public class TenantService : ITenantService
         _logger = logger;
     }
 
-    public async Task<IEnumerable<Tenant>> GetAllTenantsAsync()
+    public async Task<IList<TenantDTO>> GetAllTenantsAsync()
     {
-        return await _context.Tenants.ToListAsync();
+        List<Tenant> allTenants = await _context.Tenants.ToListAsync();
+        List<TenantDTO> returnList = allTenants.Select(t => new TenantDTO(t)).ToList();
+        return returnList;
     }
 
-    public async Task<Tenant> GetTenantAsync(Guid tenantId)
+    public async Task<TenantDTO> GetTenantAsync(Guid tenantId)
     {
         Tenant? tenant = await _context.Tenants.FindAsync(tenantId);
-
         if (tenant == null)
         {
             throw new ItemNotFoundExcepton("Tenant");
         }
 
-        return tenant;
+        TenantDTO returnValue = new TenantDTO(tenant);
+        return returnValue;
     }
 
-    public async Task<Tenant> AddTenantAsync(Tenant tenant)
+    public async Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest)
     {
+        Tenant tenant = newTenantRequest.ToTenant();
         _context.Tenants.Add(tenant);
         await _context.SaveChangesAsync();
 
-        return tenant;
+        //TODO: Add permissiosn for the user
+
+        TenantDTO? returnValue = new TenantDTO(tenant);
+        return returnValue;
     }
 
-    public async Task<Tenant> UpdateTenantAsync(Tenant tenant)
+    public async Task<TenantDTO> UpdateTenantAsync(TenantDTO tenantDto)
     {
-        _context.Entry(tenant).State = EntityState.Modified;
+        Tenant? fromDB = await _context.Tenants.FindAsync(tenantDto.Id);
+
+        if (fromDB == null)
+        {
+            throw new ItemNotFoundExcepton("Tenant");
+        }
+
+        tenantDto.CopyTo(fromDB);
+        _context.Entry(fromDB).State = EntityState.Modified;
 
         try
         {
             await _context.SaveChangesAsync();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (DbUpdateConcurrencyException ex)
         {
-            if (!await TenantExistsAsync(tenant.Id))
-            {
-                throw new ItemNotFoundExcepton("Tenant");
-            }
-            else
-            {
-                throw;
-            }
+            _logger.LogInformation(ex, "Concurrency exception saving changes to {TenatnID}, {TenantName}", fromDB.Id, fromDB.Name);
+            throw;
         }
-        return tenant;
+
+        TenantDTO returnValue = new TenantDTO(fromDB);
+        return returnValue;
     }
 
     public async Task DeleteTenantAsync(Guid tenantId)
