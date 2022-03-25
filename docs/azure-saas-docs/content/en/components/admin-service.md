@@ -1,11 +1,15 @@
 ---
 type: docs
-title: "Admin Service"
+title: "Admin API"
 ---
-# Admin Service
+
 The Admin Service has two main responsibilities: 
 1. Preforming CRUD operations on tenants
 2. Serving as a broker to assign roles and permissions to tenants. 
+
+## Running Locally
+
+Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin
 
 ## Dependencies
 - SaaS.Identity.Service

@@ -1,7 +1,7 @@
 ---
 type: docs
 no_list: false
-linkTitle: "Welcome"
+linkTitle: "Introduction"
 weight: 0
 ---
 # Welcome to the Azure SaaS Dev Kit
@@ -42,3 +42,5 @@ Check out the [getting started page](/overview/getting-started/).
 * [ISV Considerations for Azure landing zones](https://aka.ms/isv-landing-zones)
 * [Azure Well-Architected Framework](https://docs.microsoft.com/en-us/azure/architecture/framework/)
 * [WingTips Tickets SaaS Application](https://docs.microsoft.com/en-us/azure/azure-sql/database/saas-tenancy-welcome-wingtip-tickets-app) - Provides details into tradeoffs with various tenancy models within the database layer.
+
+## Next Steps
