@@ -8,7 +8,7 @@ weight: 0
 
 [Software as a Service (SaaS)](https://azure.microsoft.com/en-us/overview/what-is-saas/) doesn’t need to be complex and time consuming.
 
-The Azure SaaS Development Kit is a set of pre-built modular resources to help you launch your SaaS offering faster:
+The Azure SaaS Development Kit is a reference implementation of pre-built modular resources to help you launch your SaaS offering faster:
 
 * Standard SaaS components deployable individually or mix-and-match
 * [Open-source code](https://github.com/Azure/azure-saas), allowing engineers to build by example or modify/extend to be purpose-built
