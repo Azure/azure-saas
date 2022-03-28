@@ -1,17 +1,12 @@
-﻿using Saas.SignupAdministration.Web.Models;
-using System;
-using System.Net.Http;
-using Saas.SignupAdministration.Web.Services.StateMachine;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Session;
-using Microsoft.Extensions.Options;
+﻿using Saas.SignupAdministration.Web.Services.StateMachine;
+
 
 namespace Saas.SignupAdministration.Web.Services
 {
     public class OnboardingWorkflow
     {
-        private AppSettings _appSettings;
+        private IAdminServiceClient _adminServiceClient;
+        private IPersistenceProvider _persistenceProvider;
 
         public OnboardingWorkflowItem OnboardingWorkflowItem { get; internal set; }
         public OnboardingWorkflowState OnboardingWorkflowState { get; internal set; }
@@ -25,14 +20,15 @@ namespace Saas.SignupAdministration.Web.Services
             }
         }
 
-        public OnboardingWorkflow(IOptions<AppSettings> appSettings)
+        public OnboardingWorkflow(IAdminServiceClient adminServiceClient, IPersistenceProvider persistenceProvider)
         {
-            _appSettings = appSettings.Value;
+            _adminServiceClient = adminServiceClient;
+            _persistenceProvider = persistenceProvider;
 
             var session = AppHttpContext.Current.Session;
 
-            OnboardingWorkflowItem item = session.GetObjectFromJson<OnboardingWorkflowItem>(SR.OnboardingWorkflowItemKey);
-            OnboardingWorkflowState state = session.GetObjectFromJson<OnboardingWorkflowState>(SR.OnboardingWorkflowStateKey);
+            OnboardingWorkflowItem item = _persistenceProvider.Retrieve<OnboardingWorkflowItem>(SR.OnboardingWorkflowItemKey);
+            OnboardingWorkflowState state = _persistenceProvider.Retrieve<OnboardingWorkflowState>(SR.OnboardingWorkflowStateKey);
 
             OnboardingWorkflowItem = (item == null) ? new() : item;
             OnboardingWorkflowState = (state == null) ? new() : state;
@@ -45,24 +41,22 @@ namespace Saas.SignupAdministration.Web.Services
 
         public async Task OnboardTenet()
         {
-            HttpClient httpClient = new();
-            OnboardingClient onboardingClient = new OnboardingClient(_appSettings.OnboardingApiBaseUrl, httpClient);
-
-            Tenant tenant = new()
+            NewTenantRequest tenantRequest = new()
             {
-                Id = Guid.NewGuid(),
-                Name = OnboardingWorkflowItem.Id,
-                IsActive = true,
-                IsCancelled = false,
-                IsProvisioned = true,
-                ApiKey = Guid.NewGuid(),
-                CategoryId = OnboardingWorkflowItem.CategoryId,
-                ProductId = OnboardingWorkflowItem.ProductId,
-                UserId = OnboardingWorkflowItem.UserId
+                //Id = Guid.NewGuid(),
+                Name = OnboardingWorkflowItem.TenantName,
+                RoutePrefix = OnboardingWorkflowItem.TenantRouteName
+                //IsActive = true,
+                //IsCancelled = false,
+                //IsProvisioned = true,
+                //ApiKey = Guid.NewGuid(),
+                //CategoryId = OnboardingWorkflowItem.CategoryId,
+                //ProductId = OnboardingWorkflowItem.ProductId,
+               // UserId = OnboardingWorkflowItem.UserId
             };
 
             //TODO: Call new Admin API
-            //await onboardingClient.TenantsPOSTAsync(tenant);
+            await _adminServiceClient.TenantsPOSTAsync(tenantRequest);
 
             OnboardingWorkflowItem.IsComplete = true;
             OnboardingWorkflowItem.Created = DateTime.Now;
@@ -70,10 +64,8 @@ namespace Saas.SignupAdministration.Web.Services
 
         public void PersistToSession()
         {
-            var session = AppHttpContext.Current.Session;
-
-            session.SetObjectAsJson(SR.OnboardingWorkflowStateKey, OnboardingWorkflowState);
-            session.SetObjectAsJson(SR.OnboardingWorkflowItemKey, OnboardingWorkflowItem);
+            _persistenceProvider.Persist(SR.OnboardingWorkflowStateKey, OnboardingWorkflowState);
+            _persistenceProvider.Persist(SR.OnboardingWorkflowItemKey, OnboardingWorkflowItem);
         }
     }
 }

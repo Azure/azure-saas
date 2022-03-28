@@ -44,6 +44,7 @@ namespace Saas.SignupAdministration.Web
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 0;
             });
+
             var appSettings = Configuration.GetSection(SR.AppSettingsProperty);
 
             services.Configure<AppSettings>(appSettings);
@@ -52,12 +53,17 @@ namespace Saas.SignupAdministration.Web
             services.AddDistributedMemoryCache();
             services.AddControllersWithViews();
             services.AddScoped<OnboardingWorkflow, OnboardingWorkflow>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-         
+
+            //TODO: Replace with your implementation of persistence provider
+            // Session persistence is the default
+            services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>();
+
             services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
                 .ConfigureHttpClient(client =>
                client.BaseAddress = new Uri(Configuration[SR.AdminServiceBaseUrl]));
-          
+
             services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
                 .ConfigureHttpClient(client =>
                client.BaseAddress = new Uri(Configuration[SR.AdminServiceBaseUrl]));
@@ -103,7 +109,7 @@ namespace Saas.SignupAdministration.Web
                 if (env.IsDevelopment())
                 {
                     routes.WithMetadata(new AllowAnonymousAttribute());
-                    
+
                 }
 
                 endpoints.MapRazorPages();

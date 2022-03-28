@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 
-namespace Saas.SignupAdministration.Web.Services
+namespace Saas.SignupAdministration.Web
 {
     public static class AppHttpContext
     {

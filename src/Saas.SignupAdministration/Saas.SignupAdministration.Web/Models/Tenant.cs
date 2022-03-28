@@ -2,6 +2,7 @@
 
 namespace Saas.SignupAdministration.Web.Models
 {
+    //TODO: Is this class needed?
     public class Tenant
     {
         public string Id { get; set; }

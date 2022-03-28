@@ -1,5 +1,6 @@
 ﻿namespace Saas.SignupAdministration.Web.Models
 {
+    //TODO: Is this class needed?
     public class Owner
     {
         public string Id { get; set; }
