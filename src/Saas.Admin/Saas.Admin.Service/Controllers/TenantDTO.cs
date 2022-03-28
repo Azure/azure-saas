@@ -1,4 +1,6 @@
-﻿namespace Saas.Admin.Service.Controllers;
+﻿using Saas.Admin.Service.Data;
+
+namespace Saas.Admin.Service.Controllers;
 
 public class TenantDTO
 {
@@ -23,7 +25,7 @@ public class TenantDTO
         Name = Guard.Argument(tenant.Name, nameof(tenant.Name)).NotEmpty();
         RoutePrefix = Guard.Argument(tenant.RoutePrefix, nameof(tenant.RoutePrefix)).NotEmpty();
 
-        Version = Convert.ToBase64String(Guard.Argument(tenant.ConcurrencyToken, nameof(tenant.ConcurrencyToken)).NotEmpty());
+        Version = tenant.ConcurrencyToken != null ? Convert.ToBase64String(tenant.ConcurrencyToken) : null;
     }
 
     public Tenant ToTenant()
@@ -46,7 +48,6 @@ public class TenantDTO
         target.IsCancelled = IsCancelled;
         target.IsProvisioned = IsProvisioned;
         target.RoutePrefix = RoutePrefix;
-        target.CreatedTime = null;
         target.ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null;
     }
 

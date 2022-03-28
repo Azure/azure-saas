@@ -1,3 +1,5 @@
+using Saas.Admin.Service.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TenantsContext>(options =>

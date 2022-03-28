@@ -20,9 +20,11 @@ public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
         builder.Property(t => t.RoutePrefix).IsRequired();
 
         builder.Property(t => t.CreatedTime)
+            .IsRequired()
             .HasDefaultValue<DateTime?>(DateTime.UtcNow)
             .ValueGeneratedOnAdd();
 
-        builder.Property(t => t.ConcurrencyToken).IsConcurrencyToken();
+        builder.Property(t => t.ConcurrencyToken)
+            .IsConcurrencyToken();
     }
 }
