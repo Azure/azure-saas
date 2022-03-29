@@ -1,7 +1,7 @@
 ---
 type: docs
-title: "Identity & Authorization"
-linkTitle: "Identity & Authorization"
+title: "Identity Framework"
+linkTitle: "Identity Framework"
 weight: 30
 description: "Overview of identity and authorization."
 ---
@@ -15,9 +15,11 @@ The goal of our identity and authorization strategy is to enable us to easily au
 ## Overview
 
 ## Sign Up
-Upon clicking the sign up button on either application, a request is submitted to the identity api. The identity API returns a redirect URL for the appropriate b2c sign up page, and the user is redirected to the sign up page hosted by B2C. Upon successfully signing up, the user is redirected back to the identity API. The Identity api verifies permissions and adds custom claims to the user's JWT and then finally redirects once more back to the originating application with a valid JWT token complete with claims. 
+
+Upon clicking the signup button in either the SignupAdministration site or the end user application, the user is redirected to an Azure B2C hosted signup page. After providing the neccesary information and submitting the signup form, Azure B2C will create the account and redirect the user back to the originating application with a JWT token. 
 
 ## Sign In
 
+Upon clicking the Sign In button in either the SignupAdministration site or the end user application, the user is redirected to an Azure B2C hosted signup page. After successfully authenticating (either with a local or federated account), Azure B2C makes a call to a route on the [Permissons Service](permissions-service.md) to retreive role information. Upon receiving this data, B2C injects data in the form of custom claims, and redirects the user back to the originating application with a JWT token.
 
 ## More Identity Topics
