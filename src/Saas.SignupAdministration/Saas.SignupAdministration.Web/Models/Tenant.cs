@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Saas.SignupAdministration.Web.Models
+﻿namespace Saas.SignupAdministration.Web.Models
 {
     public class Tenant
     {

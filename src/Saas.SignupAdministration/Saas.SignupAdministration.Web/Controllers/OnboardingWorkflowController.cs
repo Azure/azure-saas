@@ -2,14 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Saas.SignupAdministration.Web.Models;
-using Saas.SignupAdministration.Web.Models.StateMachine;
 using System.Threading.Tasks;
-using System;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using System.Net.Http;
 using Saas.SignupAdministration.Web.Services;
+using Saas.SignupAdministration.Web.Services.StateMachine;
 
 namespace Saas.SignupAdministration.Web.Controllers
 {
@@ -19,24 +17,21 @@ namespace Saas.SignupAdministration.Web.Controllers
         private readonly AppSettings _appSettings;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly OnboardingWorkflowState _workflowState;
+        private readonly OnboardingWorkflow _onboardingWorkflow;
 
-        public OnboardingWorkflowController(ILogger<OnboardingWorkflowController> logger, IOptions<AppSettings> appSettings, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public OnboardingWorkflowController(ILogger<OnboardingWorkflowController> logger, IOptions<AppSettings> appSettings, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, OnboardingWorkflow onboardingWorkflow)
         {
-            _workflowState = new OnboardingWorkflowState();
-
             _logger = logger;
             _appSettings = appSettings.Value;
             _userManager = userManager;
             _signInManager = signInManager;
+            _onboardingWorkflow = onboardingWorkflow;
         }
 
         // Step 1 - Submit the organization name
         [HttpGet]
         public IActionResult OrganizationName()
         {
-            Initialize();
-
             return View();
         }
 
@@ -45,10 +40,8 @@ namespace Saas.SignupAdministration.Web.Controllers
         [HttpPost]
         public IActionResult OrganizationName(string organizationName)
         {
-            var workflowItem = GetOnboardingWorkflowItemFromSession();
-
-            workflowItem.OrganizationName = organizationName;
-            UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnOrganizationNamePosted);
+            _onboardingWorkflow.OnboardingWorkflowItem.OrganizationName = organizationName;
+            UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnOrganizationNamePosted);
 
             return RedirectToAction(SR.OrganizationCategoryAction, SR.OnboardingWorkflowController);
         }
@@ -79,10 +72,8 @@ namespace Saas.SignupAdministration.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult OrganizationCategoryAsync(int categoryId)
         {
-            var workflowItem = GetOnboardingWorkflowItemFromSession();
-
-            workflowItem.CategoryId = categoryId;
-            UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnOrganizationCategoryPosted);
+            _onboardingWorkflow.OnboardingWorkflowItem.CategoryId = categoryId;
+            UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnOrganizationCategoryPosted);
 
             return RedirectToAction(SR.TenantRouteNameAction, SR.OnboardingWorkflowController);
         }
@@ -100,11 +91,8 @@ namespace Saas.SignupAdministration.Web.Controllers
         public IActionResult TenantRouteName(string tenantRouteName)
         {
             // TODO:Need to check whether the route name exists
-
-            var workflowItem = GetOnboardingWorkflowItemFromSession();
-
-            workflowItem.TenantRouteName = tenantRouteName;
-            UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnTenantRouteNamePosted);
+            _onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName = tenantRouteName;
+            UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnTenantRouteNamePosted);
 
             return RedirectToAction(SR.ServicePlansAction, SR.OnboardingWorkflowController);
         }
@@ -121,10 +109,8 @@ namespace Saas.SignupAdministration.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ServicePlans(int productId)
         {
-            var workflowItem = GetOnboardingWorkflowItemFromSession();
-
-            workflowItem.ProductId = productId;
-            UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnServicePlanPosted);
+            _onboardingWorkflow.OnboardingWorkflowItem.ProductId = productId;
+            UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnServicePlanPosted);
 
             return RedirectToAction(SR.ConfirmationAction, SR.OnboardingWorkflowController);
         }
@@ -139,62 +125,19 @@ namespace Saas.SignupAdministration.Web.Controllers
             return View();
         }
 
-        private void Initialize()
-        {
-            // TODO: UserId needs to be replaced with value from SSO
-            // TODO: EmailAddress needs to be replaced with value from SSO
-            OnboardingWorkflowItem workflowItem = new OnboardingWorkflowItem();
-
-            workflowItem.Id = Guid.NewGuid().ToString();
-            workflowItem.OnboardingWorkflowName = SR.OnboardingWorkflowName;
-            workflowItem.UserId = Guid.NewGuid().ToString();
-            workflowItem.EmailAddress = "temp_email@testing.com";
-            workflowItem.IsExistingUser = bool.FalseString;
-            workflowItem.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            workflowItem.Created = DateTime.Now;
-
-            HttpContext.Session.SetObjectAsJson(SR.OnboardingWorkflowItemKey, workflowItem);
-        }
-
         private async Task DeployTenantAsync()
         {
-            HttpClient httpClient = new HttpClient();
-            OnboardingClient onboardingClient = new OnboardingClient(_appSettings.OnboardingApiBaseUrl, httpClient);
+            _onboardingWorkflow.OnboardingWorkflowItem.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(); ;
 
-            var workflowItem = GetOnboardingWorkflowItemFromSession();
+            await _onboardingWorkflow.OnboardTenet();
 
-            Services.Tenant tenant = new Services.Tenant()
-            {
-                Id = Guid.NewGuid(),
-                Name = workflowItem.Id,
-                IsActive = true,
-                IsCancelled = false,
-                IsProvisioned = true,
-                ApiKey = Guid.NewGuid(),
-                CategoryId = workflowItem.CategoryId,
-                ProductId = workflowItem.ProductId,
-                UserId = workflowItem.UserId
-            };
-
-            await onboardingClient.TenantsPOSTAsync(tenant);
-
-            workflowItem.IsComplete = true;
-            workflowItem.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            workflowItem.Created = DateTime.Now;
-
-            UpdateSessionAndTranstionState(workflowItem, OnboardingWorkflowState.Triggers.OnTenantDeploymentSuccessful);
+            UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnTenantDeploymentSuccessful);
         }
 
-        private OnboardingWorkflowItem GetOnboardingWorkflowItemFromSession()
+        private void UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers trigger)
         {
-            return HttpContext.Session.GetObjectFromJson<OnboardingWorkflowItem>(SR.OnboardingWorkflowItemKey);
-        }
-
-        private void UpdateSessionAndTranstionState(OnboardingWorkflowItem workflowItem, OnboardingWorkflowState.Triggers trigger)
-        {
-            _workflowState.CurrentState = workflowItem.CurrentWorkflowState;
-            workflowItem.CurrentWorkflowState = _workflowState.Transition(trigger);
-            HttpContext.Session.SetObjectAsJson(SR.OnboardingWorkflowItemKey, workflowItem);
+            _onboardingWorkflow.TransitionState(trigger);
+            _onboardingWorkflow.PersistToSession();
         }
     }
 }

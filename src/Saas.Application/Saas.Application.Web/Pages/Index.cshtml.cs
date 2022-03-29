@@ -16,7 +16,6 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnGetAsync()
     {
-
         return Page();
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Saas.SignupAdministration.Web.Data;
 using Saas.SignupAdministration.Web.Models;
-using Saas.SignupAdministration.Web.Repositories;
+using Saas.SignupAdministration.Web.Services;
 using System;
 
 namespace Saas.SignupAdministration.Web
@@ -44,22 +45,38 @@ namespace Saas.SignupAdministration.Web
                 options.Password.RequiredUniqueChars = 0;
             });
 
-            services.AddMvc();
-            services.AddDistributedMemoryCache();
-            services.AddControllersWithViews();
-            services.AddScoped<TenantRepository, TenantRepository>();
-            services.AddScoped<CustomerRepository, CustomerRepository>();
-
             var appSettings = Configuration.GetSection(SR.AppSettingsProperty);
 
             services.Configure<AppSettings>(appSettings);
 
+            services.AddMvc();
+            services.AddDistributedMemoryCache();
+            services.AddControllersWithViews();
+            services.AddScoped<OnboardingWorkflow, OnboardingWorkflow>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            //TODO: Replace with your implementation of persistence provider
+            // Session persistence is the default
+            services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>();
+
+            services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
+                .ConfigureHttpClient(client =>
+               client.BaseAddress = new Uri(Configuration[SR.AdminServiceBaseUrl]));
+
+            services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
+                .ConfigureHttpClient(client =>
+               client.BaseAddress = new Uri(Configuration[SR.AdminServiceBaseUrl]));
+
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(1);
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
-            
+
             services.AddApplicationInsightsTelemetry(Configuration[SR.AppInsightsConnectionProperty]);
+
+            services.AddDbContext<SaasSignupAdministrationWebContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SaasSignupAdministrationWebContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,15 +102,20 @@ namespace Saas.SignupAdministration.Web
 
             app.UseEndpoints(endpoints =>
             {
+                var adminRoutes = endpoints.MapControllerRoute(
+                    name: "Admin",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 var routes = endpoints.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
-
                 if (env.IsDevelopment())
                 {
                     routes.WithMetadata(new AllowAnonymousAttribute());
+
                 }
 
                 endpoints.MapRazorPages();
             });
+
+            AppHttpContext.Services = app.ApplicationServices;
         }
     }
 }

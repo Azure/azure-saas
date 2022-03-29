@@ -1,8 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
-namespace Saas.SignupAdministration.Web.Models.StateMachine
+namespace Saas.SignupAdministration.Web.Services.StateMachine
 {
     public class OnboardingWorkflowState
     {
@@ -16,6 +15,7 @@ namespace Saas.SignupAdministration.Web.Models.StateMachine
             TenantDeploymentConfirmation,
             Error
         };
+
         public enum Triggers
         {
             OnOrganizationNamePosted,
@@ -26,6 +26,7 @@ namespace Saas.SignupAdministration.Web.Models.StateMachine
             OnError,
         };
 
+        [JsonProperty(PropertyName = SR.OnboardingWorkflowStateCurrentStateProperty)]
         public States CurrentState { get; internal set; }
 
         public OnboardingWorkflowState(States state = States.OrganizationNameEntry)
@@ -40,7 +41,7 @@ namespace Saas.SignupAdministration.Web.Models.StateMachine
             return CurrentState;
         }
 
-        States ChangeState(States current, Triggers trigger) =>
+        private States ChangeState(States current, Triggers trigger) =>
             CurrentState = ((current, trigger) switch
             {
                 (States.OrganizationNameEntry, Triggers.OnOrganizationNamePosted) => States.OrganizationCategoryEntry,

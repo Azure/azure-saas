@@ -9,5 +9,6 @@
         public string StripeProductPlanSubscriberBasic { get; set; }
         public string StripeProductPlanSubscriberStandard { get; set; }
         public string OnboardingApiBaseUrl { get; set; }
+        public string AdminServiceBaseUrl { get; set; }
     }
 }
