@@ -3,9 +3,9 @@
     public class Permission
     {
         public int Id { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
         public Guid TenantId { get; set; }
-        public string PermissionStr { get; set; }
+        public string PermissionStr { get; set; } = string.Empty;
 
         internal string ToTenantPermissionString()
         {

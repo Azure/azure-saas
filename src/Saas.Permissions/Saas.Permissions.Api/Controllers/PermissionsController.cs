@@ -24,14 +24,14 @@ namespace Saas.Permissions.Api.Controllers
 
         [HttpGet]
         [Route("GetUserPermissionsForTenant")]
-        public async Task<ICollection<string>> GetUserPermissionsForTenant(Guid tenantId, Guid userId)
+        public async Task<ICollection<string>> GetUserPermissionsForTenant(Guid tenantId, string userId)
         {
             return await _permissionsService.GetUserPermissionsForTenantAsync(tenantId, userId);
         }
 
         [HttpPost]
         [Route("AddUserPermissionsToTenant")]
-        public async Task<IActionResult> AddUserPermissionsToTenant(Guid tenantId, Guid userId, string[] permissions)
+        public async Task<IActionResult> AddUserPermissionsToTenant(Guid tenantId, string userId, string[] permissions)
         {
             await _permissionsService.AddUserPermissionsToTenantAsync(tenantId, userId, permissions);
             return Ok();
@@ -39,7 +39,7 @@ namespace Saas.Permissions.Api.Controllers
 
         [HttpDelete]
         [Route("RemoveUserPermissionsFromTenant")]
-        public async Task<IActionResult> RemoveUserPermissionsFromTenant(Guid tenantId, Guid userId, string[] permissions)
+        public async Task<IActionResult> RemoveUserPermissionsFromTenant(Guid tenantId, string userId, string[] permissions)
         {
             await _permissionsService.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
             return Ok();
@@ -47,7 +47,7 @@ namespace Saas.Permissions.Api.Controllers
 
         [HttpGet]
         [Route("GetTenantsForUser")]
-        public async Task<ICollection<Guid>> GetTenantsForUser(Guid userId, string? filter)
+        public async Task<ICollection<Guid>> GetTenantsForUser(string userId, string? filter)
         {
             // filter not currently implemented.
 

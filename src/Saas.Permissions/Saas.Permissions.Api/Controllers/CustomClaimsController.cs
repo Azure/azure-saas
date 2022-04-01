@@ -21,7 +21,7 @@ namespace Saas.Permissions.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> GetCustomClaims(ADB2CRequest aDB2CRequest)
         {
-            var permissions = await _permissionsService.GetPermissionsAsync(aDB2CRequest.ObjectId);
+            var permissions = await _permissionsService.GetPermissionsAsync(aDB2CRequest.EmailAddress);
 
             ADB2CReponse response = new ADB2CReponse()
             {

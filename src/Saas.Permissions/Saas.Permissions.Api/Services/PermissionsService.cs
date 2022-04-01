@@ -12,7 +12,7 @@ namespace Saas.Permissions.Api.Services
             _context = permissionsContext;
         }
 
-        public async Task<ICollection<Permission>> GetPermissionsAsync(Guid userId)
+        public async Task<ICollection<Permission>> GetPermissionsAsync(string userId)
         {
             return await _context.Permissions
                 .Where(x => x.UserId == userId)
@@ -27,7 +27,7 @@ namespace Saas.Permissions.Api.Services
                 .ToListAsync();
         }
 
-        public async Task<ICollection<string>> GetUserPermissionsForTenantAsync(Guid tenantId, Guid userId)
+        public async Task<ICollection<string>> GetUserPermissionsForTenantAsync(Guid tenantId, string userId)
         {
             return await _context.Permissions
                 .Where(x => x.UserId == userId && x.TenantId == tenantId)
@@ -35,7 +35,7 @@ namespace Saas.Permissions.Api.Services
                 .ToListAsync();
         }
 
-        public async Task AddUserPermissionsToTenantAsync(Guid tenantId, Guid userId, string[] permissions)
+        public async Task AddUserPermissionsToTenantAsync(Guid tenantId, string userId, string[] permissions)
         {
             foreach (var permission in permissions)
             {
@@ -45,7 +45,7 @@ namespace Saas.Permissions.Api.Services
             return;
         }
 
-        public async Task RemoveUserPermissionsFromTenantAsync(Guid tenantId, Guid userId, string[] permissions)
+        public async Task RemoveUserPermissionsFromTenantAsync(Guid tenantId, string userId, string[] permissions)
         {
             foreach (var permission in permissions)
             {
@@ -65,7 +65,7 @@ namespace Saas.Permissions.Api.Services
         }
 
         // filter not currently implemented.
-        public async Task<ICollection<Guid>> GetTenantsForUserAsync(Guid userId, string? filter)
+        public async Task<ICollection<Guid>> GetTenantsForUserAsync(string userId, string? filter)
         {
             return await _context.Permissions
                 .Where(x => x.UserId == userId)
