@@ -25,7 +25,7 @@ namespace Saas.Permissions.Api.Controllers
 
             ADB2CReponse response = new ADB2CReponse()
             {
-                Permissions = permissions.Select(x => $"{x.TenantId}.{x.Role}").ToArray()
+                Permissions = permissions.Select(x => x.ToTenantPermissionString()).ToArray()
             };
 
             return Ok(response);
