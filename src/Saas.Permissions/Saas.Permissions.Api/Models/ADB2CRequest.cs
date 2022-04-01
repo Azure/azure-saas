@@ -1,8 +1,10 @@
-﻿namespace Saas.Permissions.Api.Models
+﻿using System.Text.Json.Serialization;
+namespace Saas.Permissions.Api.Models
 {
     public class ADB2CRequest
     {
-        public string Email { get; set; }
-        public string ObjectId { get; set; }
+        [JsonPropertyName("signInNames.emailAddress")]
+        public string EmailAddress { get; set; }
+        public Guid ObjectId { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Saas.Permissions.Api.Data;
+using Saas.Permissions.Api.Interfaces;
 using Saas.Permissions.Api.Models;
 using System.Text.Json;
 
@@ -9,15 +11,24 @@ namespace Saas.Permissions.Api.Controllers
     [ApiController]
     public class CustomClaimsController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult GetCustomClaims(ADB2CRequest aDB2CRequest)
+        private readonly IPermissionsService _permissionsService;
+
+        public CustomClaimsController(IPermissionsService permissionsService)
         {
-            var responseContent = new ResponseContent()
+            _permissionsService = permissionsService; 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetCustomClaims(ADB2CRequest aDB2CRequest)
+        {
+            var permissions = await _permissionsService.GetPermissionsAsync(aDB2CRequest.ObjectId);
+
+            ADB2CReponse response = new ADB2CReponse()
             {
-                extension_CustomClaim = "9183cdfa-c406-42cb-9e86-dee61ca2a324.Admin"
+                Permissions = permissions.Select(x => $"{x.TenantId}.{x.Role}").ToArray()
             };
 
-            return Ok(responseContent);
+            return Ok(response);
         }
     }
 }

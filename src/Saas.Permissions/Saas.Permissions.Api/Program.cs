@@ -1,4 +1,6 @@
 using Saas.Permissions.Api.Data;
+using Saas.Permissions.Api.Interfaces;
+using Saas.Permissions.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,15 +16,15 @@ builder.Services.AddDbContext<PermissionsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PermissionsContext"));
 });
 
+builder.Services.AddScoped<IPermissionsService, PermissionsService>();
+
 var app = builder.Build();
 app.ConfigureDatabase();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
 
 app.UseHttpsRedirection();
 
