@@ -15,21 +15,21 @@ public class PermissionsController : ControllerBase
 
     [HttpGet]
     [Route("GetTenantUsers")]
-    public async Task<ICollection<Guid>> GetTenantUsers(Guid tenantId)
+    public async Task<ICollection<string>> GetTenantUsers(string tenantId)
     {
         return await _permissionsService.GetTenantUsersAsync(tenantId);
     }
 
     [HttpGet]
     [Route("GetUserPermissionsForTenant")]
-    public async Task<ICollection<string>> GetUserPermissionsForTenant(Guid tenantId, string userId)
+    public async Task<ICollection<string>> GetUserPermissionsForTenant(string tenantId, string userId)
     {
         return await _permissionsService.GetUserPermissionsForTenantAsync(tenantId, userId);
     }
 
     [HttpPost]
     [Route("AddUserPermissionsToTenant")]
-    public async Task<IActionResult> AddUserPermissionsToTenant(Guid tenantId, string userId, string[] permissions)
+    public async Task<IActionResult> AddUserPermissionsToTenant(string tenantId, string userId, string[] permissions)
     {
         await _permissionsService.AddUserPermissionsToTenantAsync(tenantId, userId, permissions);
         return Ok();
@@ -37,7 +37,7 @@ public class PermissionsController : ControllerBase
 
     [HttpDelete]
     [Route("RemoveUserPermissionsFromTenant")]
-    public async Task<IActionResult> RemoveUserPermissionsFromTenant(Guid tenantId, string userId, string[] permissions)
+    public async Task<IActionResult> RemoveUserPermissionsFromTenant(string tenantId, string userId, string[] permissions)
     {
         await _permissionsService.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
         return Ok();
@@ -45,7 +45,7 @@ public class PermissionsController : ControllerBase
 
     [HttpGet]
     [Route("GetTenantsForUser")]
-    public async Task<ICollection<Guid>> GetTenantsForUser(string userId, string? filter)
+    public async Task<ICollection<string>> GetTenantsForUser(string userId, string? filter)
     {
         // filter not currently implemented.
 

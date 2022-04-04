@@ -19,7 +19,7 @@ public class PermissionsService : IPermissionsService
             .ToListAsync();
     }
 
-    public async Task<ICollection<Guid>> GetTenantUsersAsync(Guid tenantId)
+    public async Task<ICollection<string>> GetTenantUsersAsync(string tenantId)
     {
         return await _context.Permissions
             .Where(x => x.TenantId == tenantId)
@@ -27,7 +27,7 @@ public class PermissionsService : IPermissionsService
             .ToListAsync();
     }
 
-    public async Task<ICollection<string>> GetUserPermissionsForTenantAsync(Guid tenantId, string userId)
+    public async Task<ICollection<string>> GetUserPermissionsForTenantAsync(string tenantId, string userId)
     {
         return await _context.Permissions
             .Where(x => x.UserId == userId && x.TenantId == tenantId)
@@ -35,7 +35,7 @@ public class PermissionsService : IPermissionsService
             .ToListAsync();
     }
 
-    public async Task AddUserPermissionsToTenantAsync(Guid tenantId, string userId, string[] permissions)
+    public async Task AddUserPermissionsToTenantAsync(string tenantId, string userId, string[] permissions)
     {
         foreach (var permission in permissions)
         {
@@ -45,7 +45,7 @@ public class PermissionsService : IPermissionsService
         return;
     }
 
-    public async Task RemoveUserPermissionsFromTenantAsync(Guid tenantId, string userId, string[] permissions)
+    public async Task RemoveUserPermissionsFromTenantAsync(string tenantId, string userId, string[] permissions)
     {
         foreach (var permission in permissions)
         {
@@ -65,7 +65,7 @@ public class PermissionsService : IPermissionsService
     }
 
     // filter not currently implemented.
-    public async Task<ICollection<Guid>> GetTenantsForUserAsync(string userId, string? filter)
+    public async Task<ICollection<string>> GetTenantsForUserAsync(string userId, string? filter)
     {
         return await _context.Permissions
             .Where(x => x.UserId == userId)
