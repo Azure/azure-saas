@@ -1,12 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Saas.Permissions.Api.Models;
 
-namespace Saas.Permissions.Api.Models
+
+public class ADB2CReponse
 {
-
-
-    public class ADB2CReponse
-    {
-        public string[] Permissions { get; set; } = new string[0];
-    }
-
+    public string[] Permissions { get; set; } = new string[0];
 }
+

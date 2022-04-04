@@ -1,34 +1,30 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Saas.Permissions.Api.Data;
-using Saas.Permissions.Api.Interfaces;
+﻿using Saas.Permissions.Api.Interfaces;
 using Saas.Permissions.Api.Models;
-using System.Text.Json;
 
-namespace Saas.Permissions.Api.Controllers
+namespace Saas.Permissions.Api.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CustomClaimsController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CustomClaimsController : ControllerBase
+    private readonly IPermissionsService _permissionsService;
+
+    public CustomClaimsController(IPermissionsService permissionsService)
     {
-        private readonly IPermissionsService _permissionsService;
+        _permissionsService = permissionsService;
+    }
 
-        public CustomClaimsController(IPermissionsService permissionsService)
+    [HttpPost]
+    public async Task<IActionResult> GetCustomClaims(ADB2CRequest aDB2CRequest)
+    {
+        var permissions = await _permissionsService.GetPermissionsAsync(aDB2CRequest.EmailAddress);
+
+        ADB2CReponse response = new ADB2CReponse()
         {
-            _permissionsService = permissionsService; 
-        }
+            Permissions = permissions.Select(x => x.ToTenantPermissionString()).ToArray()
+        };
 
-        [HttpPost]
-        public async Task<IActionResult> GetCustomClaims(ADB2CRequest aDB2CRequest)
-        {
-            var permissions = await _permissionsService.GetPermissionsAsync(aDB2CRequest.EmailAddress);
-
-            ADB2CReponse response = new ADB2CReponse()
-            {
-                Permissions = permissions.Select(x => x.ToTenantPermissionString()).ToArray()
-            };
-
-            return Ok(response);
-        }
+        return Ok(response);
     }
 }
+
