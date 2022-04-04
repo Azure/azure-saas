@@ -4,6 +4,7 @@ using Saas.Permissions.Api.Models;
 namespace Saas.Permissions.Api.Controllers;
 
 [Route("api/[controller]")]
+
 [ApiController]
 public class CustomClaimsController : ControllerBase
 {
@@ -15,6 +16,11 @@ public class CustomClaimsController : ControllerBase
     }
 
     [HttpPost]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ADB2CReponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCustomClaims(ADB2CRequest aDB2CRequest)
     {
         var permissions = await _permissionsService.GetPermissionsAsync(aDB2CRequest.EmailAddress);

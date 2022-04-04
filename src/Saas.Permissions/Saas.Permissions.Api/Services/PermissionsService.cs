@@ -39,6 +39,11 @@ public class PermissionsService : IPermissionsService
     {
         foreach (var permission in permissions)
         {
+            if (await GetPermissionExistsAsync(tenantId, userId, permission))
+            {
+                throw new ItemAlreadyExistsException($"User: {userId} has already been granted {permission} on tenant: {tenantId}");
+            }
+
             _context.Permissions.Add(new Permission { TenantId = tenantId, UserId = userId, PermissionStr = permission });
         }
         await _context.SaveChangesAsync();
@@ -71,6 +76,14 @@ public class PermissionsService : IPermissionsService
             .Where(x => x.UserId == userId)
             .Select(x => x.TenantId)
             .ToListAsync();
+    }
+
+    private async Task<bool> GetPermissionExistsAsync(string tenantId, string userId, string permission)
+    {
+        return await _context.Permissions.AnyAsync(x =>
+        x.UserId == userId &&
+        x.TenantId == tenantId &&
+        x.PermissionStr == permission);
     }
 
 }

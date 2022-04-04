@@ -10,4 +10,9 @@ public class PermissionsContext : DbContext
 
     public DbSet<Permission> Permissions => Set<Permission>();
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        new PermissionEntityTypeConfiguration().Configure(modelBuilder.Entity<Permission>());
+    }
+
 }
