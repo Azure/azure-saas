@@ -5,8 +5,8 @@ namespace Saas.SignupAdministration.Web.Services
 {
     public class OnboardingWorkflow
     {
-        private IAdminServiceClient _adminServiceClient;
-        private IPersistenceProvider _persistenceProvider;
+        private readonly IAdminServiceClient _adminServiceClient;
+        private readonly IPersistenceProvider _persistenceProvider;
 
         public OnboardingWorkflowItem OnboardingWorkflowItem { get; internal set; }
         public OnboardingWorkflowState OnboardingWorkflowState { get; internal set; }
@@ -25,13 +25,11 @@ namespace Saas.SignupAdministration.Web.Services
             _adminServiceClient = adminServiceClient;
             _persistenceProvider = persistenceProvider;
 
-            var session = AppHttpContext.Current.Session;
-
             OnboardingWorkflowItem item = _persistenceProvider.Retrieve<OnboardingWorkflowItem>(SR.OnboardingWorkflowItemKey);
             OnboardingWorkflowState state = _persistenceProvider.Retrieve<OnboardingWorkflowState>(SR.OnboardingWorkflowStateKey);
 
-            OnboardingWorkflowItem = (item == null) ? new() : item;
-            OnboardingWorkflowState = (state == null) ? new() : state;
+            OnboardingWorkflowItem = (item is null) ? new() : item;
+            OnboardingWorkflowState = (state is null) ? new() : state;
         }
 
         public void TransitionState(OnboardingWorkflowState.Triggers trigger)
@@ -43,16 +41,15 @@ namespace Saas.SignupAdministration.Web.Services
         {
             NewTenantRequest tenantRequest = new()
             {
-                //Id = Guid.NewGuid(),
-                Name = OnboardingWorkflowItem.TenantName,
-                RoutePrefix = OnboardingWorkflowItem.TenantRouteName
-                //IsActive = true,
-                //IsCancelled = false,
-                //IsProvisioned = true,
-                //ApiKey = Guid.NewGuid(),
+                //Id = OnboardingWorkflowItem.Id,
+                Name = OnboardingWorkflowItem.OrganizationName,
+                RoutePrefix = OnboardingWorkflowItem.TenantRouteName,
+                //IsActive = OnboardingWorkflowItem.IsActive,
+                //IsCancelled = OnboardingWorkflowItem.IsCancelled,
+                //IsProvisioned = OnboardingWorkflowItem.IsProvisioned,
                 //CategoryId = OnboardingWorkflowItem.CategoryId,
                 //ProductId = OnboardingWorkflowItem.ProductId,
-               // UserId = OnboardingWorkflowItem.UserId
+                //UserId = OnboardingWorkflowItem.UserId
             };
 
             //TODO: Call new Admin API

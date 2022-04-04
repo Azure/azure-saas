@@ -1,16 +1,7 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Saas.SignupAdministration.Web.Data;
-using Saas.SignupAdministration.Web.Models;
-using Saas.SignupAdministration.Web.Services;
-using System;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.UI;
+using Microsoft.IdentityModel.Logging;
 
 namespace Saas.SignupAdministration.Web
 {
@@ -26,24 +17,35 @@ namespace Saas.SignupAdministration.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString(SR.IdentityDbConnectionProperty)));
+            //services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString(SR.IdentityDbConnectionProperty)));
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.Configure<IdentityOptions>(options =>
-            {
-                // Default SignIn settings.
-                options.SignIn.RequireConfirmedEmail = false;
-                options.SignIn.RequireConfirmedPhoneNumber = false;
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    // Default SignIn settings.
+            //    options.SignIn.RequireConfirmedEmail = false;
+            //    options.SignIn.RequireConfirmedPhoneNumber = false;
 
-                // Default Password settings.
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 0;
-            });
+            //    // Default Password settings.
+            //    options.Password.RequireDigit = false;
+            //    options.Password.RequireLowercase = false;
+            //    options.Password.RequireNonAlphanumeric = false;
+            //    options.Password.RequireUppercase = false;
+            //    options.Password.RequiredLength = 6;
+            //    options.Password.RequiredUniqueChars = 0;
+            //});
+
+            // Configuration to sign-in users with Azure AD B2C
+            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C);
+
+            services.AddControllersWithViews().AddMicrosoftIdentityUI();
+
+            services.AddRazorPages();
+
+            //Configuring appsettings section AzureAdB2C, into IOptions
+            services.AddOptions();
+            services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));
 
             var appSettings = Configuration.GetSection(SR.AppSettingsProperty);
 
@@ -56,13 +58,9 @@ namespace Saas.SignupAdministration.Web
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            //TODO: Replace with your implementation of persistence provider
+            // TODO: Replace with your implementation of persistence provider
             // Session persistence is the default
             services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>();
-
-            services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
-                .ConfigureHttpClient(client =>
-               client.BaseAddress = new Uri(Configuration[SR.AdminServiceBaseUrl]));
 
             services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
                 .ConfigureHttpClient(client =>
@@ -85,6 +83,7 @@ namespace Saas.SignupAdministration.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                IdentityModelEventSource.ShowPII = true;
             }
             else
             {

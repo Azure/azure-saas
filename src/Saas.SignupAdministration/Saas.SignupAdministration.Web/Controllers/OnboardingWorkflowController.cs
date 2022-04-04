@@ -14,17 +14,11 @@ namespace Saas.SignupAdministration.Web.Controllers
     public class OnboardingWorkflowController : Controller
     {
         private readonly ILogger<OnboardingWorkflowController> _logger;
-        private readonly AppSettings _appSettings;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly OnboardingWorkflow _onboardingWorkflow;
 
-        public OnboardingWorkflowController(ILogger<OnboardingWorkflowController> logger, IOptions<AppSettings> appSettings, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, OnboardingWorkflow onboardingWorkflow)
+        public OnboardingWorkflowController(ILogger<OnboardingWorkflowController> logger, OnboardingWorkflow onboardingWorkflow)
         {
             _logger = logger;
-            _appSettings = appSettings.Value;
-            _userManager = userManager;
-            _signInManager = signInManager;
             _onboardingWorkflow = onboardingWorkflow;
         }
 
@@ -52,17 +46,18 @@ namespace Saas.SignupAdministration.Web.Controllers
         public IActionResult OrganizationCategory()
         {
             // Populate Categories dropdown list
-            List<Category> categories = new List<Category>();
-
-            categories.Add(new Category { Id = 1, Name = SR.AutomotiveMobilityAndTransportationPrompt });
-            categories.Add(new Category { Id = 2, Name = SR.EnergyAndSustainabilityPrompt });
-            categories.Add(new Category { Id = 3, Name = SR.FinancialServicesPrompt });
-            categories.Add(new Category { Id = 4, Name = SR.HealthcareAndLifeSciencesPrompt });
-            categories.Add(new Category { Id = 5, Name = SR.ManufacturingAndSupplyChainPrompt });
-            categories.Add(new Category { Id = 6, Name = SR.MediaAndCommunicationsPrompt });
-            categories.Add(new Category { Id = 7, Name = SR.PublicSectorPrompt });
-            categories.Add(new Category { Id = 8, Name = SR.RetailAndConsumerGoodsPrompt });
-            categories.Add(new Category { Id = 9, Name = SR.SoftwarePrompt });
+            List<Category> categories = new()
+            {
+                new Category { Id = 1, Name = SR.AutomotiveMobilityAndTransportationPrompt },
+                new Category { Id = 2, Name = SR.EnergyAndSustainabilityPrompt },
+                new Category { Id = 3, Name = SR.FinancialServicesPrompt },
+                new Category { Id = 4, Name = SR.HealthcareAndLifeSciencesPrompt },
+                new Category { Id = 5, Name = SR.ManufacturingAndSupplyChainPrompt },
+                new Category { Id = 6, Name = SR.MediaAndCommunicationsPrompt },
+                new Category { Id = 7, Name = SR.PublicSectorPrompt },
+                new Category { Id = 8, Name = SR.RetailAndConsumerGoodsPrompt },
+                new Category { Id = 9, Name = SR.SoftwarePrompt }
+            };
 
             return View(categories);
         }
@@ -127,8 +122,6 @@ namespace Saas.SignupAdministration.Web.Controllers
 
         private async Task DeployTenantAsync()
         {
-            _onboardingWorkflow.OnboardingWorkflowItem.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(); ;
-
             await _onboardingWorkflow.OnboardTenet();
 
             UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnTenantDeploymentSuccessful);
