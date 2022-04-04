@@ -1,4 +1,6 @@
-﻿namespace Saas.Permissions.Api.Data;
+﻿using System.Runtime.CompilerServices;
+
+namespace Saas.Permissions.Api.Data;
 
 public class Permission
 {
@@ -7,6 +9,7 @@ public class Permission
     public string TenantId { get; set; } = string.Empty;
     public string PermissionStr { get; set; } = string.Empty;
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal string ToTenantPermissionString()
     {
         return $"{TenantId}.{PermissionStr}";
