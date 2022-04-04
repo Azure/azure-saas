@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-namespace Saas.Admin.Service.Data;
+﻿namespace Saas.Admin.Service.Data;
 
 public class TenantsContext : DbContext
 {
@@ -10,7 +8,7 @@ public class TenantsContext : DbContext
 
     }
 
-    public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<Tenant> Tenants => Set<Tenant>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
