@@ -1,39 +1,83 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Azure SaaS Dev Kit Docs – Identity Framework</title><link>http://example.org/components/identity/</link><description>Recent content in Identity Framework on Azure SaaS Dev Kit Docs</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="http://example.org/components/identity/index.xml" rel="self" type="application/rss+xml"/><item><title>Components: Identity Provider</title><link>http://example.org/components/identity/identity-provider/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>http://example.org/components/identity/identity-provider/</guid><description>
-&lt;ul>
-&lt;li>The identity provider default implementation is &lt;a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview">Azure B2C&lt;/a>.&lt;/li>
-&lt;li>If your scenario uses &lt;a href="https://azure.microsoft.com/en-us/services/active-directory/">Azure AAD&lt;/a>, you can swap out the &lt;strong>Identity Provider&lt;/strong> in the diagram below.&lt;/li>
-&lt;li>B2C is offering permissions as a service.&lt;/li>
-&lt;/ul>
-&lt;h2 id="design-considerations">Design Considerations&lt;/h2>
-&lt;pre tabindex="0">&lt;code class="language-mermaid" data-lang="mermaid">graph
-user(&amp;#34;fa:fa-user Contoso Business Admin&amp;#34;)
-adminweb(&amp;#34;Saas.Admin.Web&amp;#34;)
-identityapi(&amp;#34;fa:fa-key &amp;lt;b&amp;gt;Identity Provider&amp;lt;/b&amp;gt;&amp;#34;)
-catalogapi(&amp;#34;Saas.Catalog.Api&amp;#34;)
-catalogsql[(Saas.Catalog.Sql)]
-user-- Bearer Token --&amp;gt;adminweb
-adminweb--&amp;gt;user
-adminweb-- Token --&amp;gt;catalogapi
-catalogapi--&amp;gt;adminweb
-catalogapi--&amp;gt;identityapi
-catalogapi-- EF CRUD --&amp;gt;catalogsql
-&lt;/code>&lt;/pre></description></item><item><title>Components: Identity Flows</title><link>http://example.org/components/identity/identity-flows/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>http://example.org/components/identity/identity-flows/</guid><description>
-&lt;h2 id="sign-up">Sign Up&lt;/h2>
-&lt;pre tabindex="0">&lt;code class="language-mermaid" data-lang="mermaid">sequenceDiagram
-actor user
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Azure SaaS Dev Kit Docs – Identity Framework</title>
+    <link>http://example.org/components/identity/</link>
+    <description>Recent content in Identity Framework on Azure SaaS Dev Kit Docs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	  <atom:link href="http://example.org/components/identity/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Components: Identity Provider</title>
+      <link>http://example.org/components/identity/identity-provider/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/components/identity/identity-provider/</guid>
+      <description>
+        
+        
+        &lt;ul&gt;
+&lt;li&gt;The identity provider default implementation is &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview&#34;&gt;Azure B2C&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;If your scenario uses &lt;a href=&#34;https://azure.microsoft.com/en-us/services/active-directory/&#34;&gt;Azure AAD&lt;/a&gt;, you can swap out the &lt;strong&gt;Identity Provider&lt;/strong&gt; in the diagram below.&lt;/li&gt;
+&lt;li&gt;B2C is offering permissions as a service.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;design-considerations&#34;&gt;Design Considerations&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-mermaid&#34; data-lang=&#34;mermaid&#34;&gt;graph
+	user(&amp;quot;fa:fa-user Contoso Business Admin&amp;quot;)
+	adminweb(&amp;quot;Saas.Admin.Web&amp;quot;)
+	identityapi(&amp;quot;fa:fa-key &amp;lt;b&amp;gt;Identity Provider&amp;lt;/b&amp;gt;&amp;quot;)
+	catalogapi(&amp;quot;Saas.Catalog.Api&amp;quot;)
+	catalogsql[(Saas.Catalog.Sql)]
+
+	user-- Bearer Token --&amp;gt;adminweb
+	adminweb--&amp;gt;user
+
+	adminweb-- Token --&amp;gt;catalogapi
+	catalogapi--&amp;gt;adminweb
+
+	catalogapi--&amp;gt;identityapi
+
+	catalogapi-- EF CRUD --&amp;gt;catalogsql
+&lt;/code&gt;&lt;/pre&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Components: Identity Flows</title>
+      <link>http://example.org/components/identity/identity-flows/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/components/identity/identity-flows/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;sign-up&#34;&gt;Sign Up&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-mermaid&#34; data-lang=&#34;mermaid&#34;&gt;sequenceDiagram  
+actor user 
 participant frontend as Frontend Application
 participant auth as Auth Service (B2C)
+
+
 user-&amp;gt;&amp;gt;frontend : Register Button (/register)
 frontend--&amp;gt;&amp;gt;user : Redirect to B2C Hosted Sign Up Page
 user-&amp;gt;&amp;gt;auth : Sign Up Submitted
 auth-&amp;gt;&amp;gt;auth : Create Account
 auth--&amp;gt;&amp;gt;user : Redirect with JWT
-&lt;/code>&lt;/pre>&lt;h2 id="sign-in">Sign In&lt;/h2>
-&lt;pre tabindex="0">&lt;code class="language-mermaid" data-lang="mermaid">sequenceDiagram
-actor user
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;sign-in&#34;&gt;Sign In&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-mermaid&#34; data-lang=&#34;mermaid&#34;&gt;sequenceDiagram  
+actor user 
 participant frontend as Signup Administration App
 participant auth as Auth Service (B2C)
 participant perm as Permissions API
+
+
 user-&amp;gt;&amp;gt;frontend : Login Button (/login)
 frontend--&amp;gt;&amp;gt;user : Redirect to B2C Hosted Sign In Page
 user-&amp;gt;&amp;gt;auth : Login Submitted
@@ -41,12 +85,13 @@ auth-&amp;gt;&amp;gt;perm : Get Permissions &amp;amp; Roles
 perm--&amp;gt;&amp;gt;auth : Permissions &amp;amp; Roles
 auth-&amp;gt;&amp;gt;auth : Add Custom Claims to JWT
 auth--&amp;gt;&amp;gt;user : Redirect with JWT
-&lt;/code>&lt;/pre>&lt;h2 id="add-permissions-record">Add Permissions Record&lt;/h2>
-&lt;p>This flow is not comprehensive. It only shows the flow from the point of which the Admin API receives a request and forward.&lt;/p>
-&lt;pre tabindex="0">&lt;code class="language-mermaid" data-lang="mermaid">sequenceDiagram
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;add-permissions-record&#34;&gt;Add Permissions Record&lt;/h2&gt;
+&lt;p&gt;This flow is not comprehensive. It only shows the flow from the point of which the Admin API receives a request and forward.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-mermaid&#34; data-lang=&#34;mermaid&#34;&gt;sequenceDiagram
 participant frontend as Frontend Application
 participant admin as Admin API
 participant perm as Permissions API
+
 frontend-&amp;gt;&amp;gt;admin : Add Tenant Permission for User
 admin-&amp;gt;&amp;gt;admin : User Admin of Tenant?
 admin-&amp;gt;&amp;gt;perm : Add Tenant Permission for User
@@ -54,34 +99,66 @@ perm-&amp;gt;&amp;gt;perm : Caller Admin API?
 perm-&amp;gt;&amp;gt;perm : Permission Added in DB
 perm--&amp;gt;&amp;gt;admin : Ok
 admin--&amp;gt;&amp;gt;frontend : Ok
-&lt;/code>&lt;/pre></description></item><item><title>Components: Caveats &amp; Limitations</title><link>http://example.org/components/identity/caveats/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>http://example.org/components/identity/caveats/</guid><description>
-&lt;p>&lt;strong>Caveat&lt;/strong>: ASDK will not provide support for per-tenant “local” users (i.e., all users will be accessing all tenants, there will be no landon@tenant1 vs landon@tenant2, it will be just &lt;a href="mailto:landon@email.com">landon@email.com&lt;/a>).&lt;/p>
-&lt;p>&lt;strong>Caveat&lt;/strong>: Initial version of ASDK will only support “local” users and maybe social identities and will not provide support for configuring federation with other Identity Providers.&lt;/p>
-&lt;p>&lt;strong>Caveat&lt;/strong>: Even if future versions of ASDK provide support for configuring federation with additional Identity Providers (IdP), it will not provide support for “per-tenant federation” (i.e., where each tenant could bring their own IdP).&lt;/p>
-&lt;p>This is primarily due to limitations in Azure AD B2C which make it additional work to manage “per-tenants” users/policies within a directory:&lt;/p>
-&lt;ul>
-&lt;li>Each federation is configured via directory-wide policy and there is a limit of 200 policies on a directory.&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>Caveat&lt;/strong>: If all tenants of ASDK can be assumed to have their own Azure Active Directory (regular B2B), then per-tenant federation could be implemented using Azure AD (multitenant) federation identity provider with “application code” doing the authorization based on specific tenant id claim.&lt;/p>
-&lt;p>However, if each tenant wants to be able to configure their own completely different IdP (e.g., Okta, Ping, Auth0, Cognito), it would require additional work due to policy limits.&lt;/p></description></item><item><title>Components: Permissions Api</title><link>http://example.org/components/identity/permissions-service/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>http://example.org/components/identity/permissions-service/</guid><description>
-&lt;h2 id="running-locally">Running Locally&lt;/h2>
-&lt;!-- raw HTML omitted -->
-&lt;p>Instructions to get this module running on your local dev machine are located here: &lt;a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity">https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity&lt;/a>&lt;/p>
-&lt;p>The permissions service is an API that is responsible for CRUD operations on users permissions.&lt;/p>
-&lt;p>The API uses Entity Framework to manage the SQL Server Connection and Schema.&lt;/p>
-&lt;h2 id="dependancies">Dependancies:&lt;/h2>
-&lt;ul>
-&lt;li>SQL Server Database&lt;/li>
-&lt;/ul>
-&lt;p>This API is restricted and can only be called by the following consumers:&lt;/p>
-&lt;h2 id="consumers">Consumers&lt;/h2>
-&lt;ul>
-&lt;li>Identity Provider (Azure AD B2C)&lt;/li>
-&lt;li>Admin Service&lt;/li>
-&lt;/ul>
-&lt;h2 id="authentication">Authentication&lt;/h2>
-&lt;p>This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary).&lt;/p>
-&lt;h2 id="data-storage">Data Storage&lt;/h2>
-&lt;p>Entity Framework Core is used to manage the database schema and connections.&lt;/p>
-&lt;h2 id="design-considerations">Design Considerations&lt;/h2>
-&lt;p>Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.&lt;/p></description></item></channel></rss>
+
+&lt;/code&gt;&lt;/pre&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Components: Caveats &amp; Limitations</title>
+      <link>http://example.org/components/identity/caveats/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/components/identity/caveats/</guid>
+      <description>
+        
+        
+        &lt;p&gt;&lt;strong&gt;Caveat&lt;/strong&gt;: ASDK will not provide support for per-tenant “local” users (i.e., all users will be accessing all tenants, there will be no landon@tenant1 vs landon@tenant2, it will be just &lt;a href=&#34;mailto:landon@email.com&#34;&gt;landon@email.com&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Caveat&lt;/strong&gt;: Initial version of ASDK will only support “local” users and maybe social identities and will not provide support for configuring federation with other Identity Providers.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Caveat&lt;/strong&gt;: Even if future versions of ASDK provide support for configuring federation with additional Identity Providers (IdP), it will not provide support for “per-tenant federation” (i.e., where each tenant could bring their own IdP).&lt;/p&gt;
+&lt;p&gt;This is primarily due to limitations in Azure AD B2C which make it additional work to manage “per-tenants” users/policies within a directory:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Each federation is configured via directory-wide policy and there is a limit of 200 policies on a directory.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Caveat&lt;/strong&gt;: If all tenants of ASDK can be assumed to have their own Azure Active Directory (regular B2B), then per-tenant federation could be implemented using Azure AD (multitenant) federation identity provider with “application code” doing the authorization based on specific tenant id claim.&lt;/p&gt;
+&lt;p&gt;However, if each tenant wants to be able to configure their own completely different IdP (e.g., Okta, Ping, Auth0, Cognito), it would require additional work due to policy limits.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Components: Permissions Api</title>
+      <link>http://example.org/components/identity/permissions-service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/components/identity/permissions-service/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;running-locally&#34;&gt;Running Locally&lt;/h2&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Instructions to get this module running on your local dev machine are located here: &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity&#34;&gt;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The permissions service is an API that is responsible for CRUD operations on users permissions.&lt;/p&gt;
+&lt;p&gt;The API uses Entity Framework to manage the SQL Server Connection and Schema.&lt;/p&gt;
+&lt;h2 id=&#34;dependancies&#34;&gt;Dependancies:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;SQL Server Database&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This API is restricted and can only be called by the following consumers:&lt;/p&gt;
+&lt;h2 id=&#34;consumers&#34;&gt;Consumers&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Identity Provider (Azure AD B2C)&lt;/li&gt;
+&lt;li&gt;Admin Service&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;authentication&#34;&gt;Authentication&lt;/h2&gt;
+&lt;p&gt;This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary).&lt;/p&gt;
+&lt;h2 id=&#34;data-storage&#34;&gt;Data Storage&lt;/h2&gt;
+&lt;p&gt;Entity Framework Core is used to manage the database schema and connections.&lt;/p&gt;
+&lt;h2 id=&#34;design-considerations&#34;&gt;Design Considerations&lt;/h2&gt;
+&lt;p&gt;Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

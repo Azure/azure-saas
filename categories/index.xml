@@ -1,1 +1,18 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Azure SaaS Dev Kit Docs – Categories</title><link>http://example.org/categories/</link><description>Recent content in Categories on Azure SaaS Dev Kit Docs</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="http://example.org/categories/index.xml" rel="self" type="application/rss+xml"/></channel></rss>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Azure SaaS Dev Kit Docs – Categories</title>
+    <link>http://example.org/categories/</link>
+    <description>Recent content in Categories on Azure SaaS Dev Kit Docs</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	  <atom:link href="http://example.org/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+  </channel>
+</rss>
