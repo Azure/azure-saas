@@ -24,10 +24,11 @@ jobs:
         uses: peaceiris/actions-hugo@v2
         with:
           hugo-version: 'latest'
-          # extended: true
+          extended: true
 
       - name: Build
         run: hugo --minify
+        working-directory: docs/azure-saas-docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
