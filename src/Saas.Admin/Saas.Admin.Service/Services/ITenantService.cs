@@ -1,14 +1,16 @@
-﻿namespace Saas.Admin.Service.Services;
+﻿using Saas.Admin.Service.Controllers;
+
+namespace Saas.Admin.Service.Services;
 
 public interface ITenantService
 {
-    Task<IEnumerable<Tenant>> GetAllTenantsAsync();
+    Task<IList<TenantDTO>> GetAllTenantsAsync();
 
-    Task<Tenant> GetTenantAsync(Guid tenantId);
+    Task<TenantDTO> GetTenantAsync(Guid tenantId);
 
-    Task<Tenant> AddTenantAsync(Tenant tenant);
+    Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest);
 
-    Task<Tenant> UpdateTenantAsync(Tenant tenant);
+    Task<TenantDTO> UpdateTenantAsync(TenantDTO tenant);
 
     Task DeleteTenantAsync(Guid tenantId);
 

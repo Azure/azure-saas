@@ -6,6 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-Saas.Admin.Service-5358E0C3-EA51-44EA-B381-CA2F9D9710D3</UserSecretsId>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
 	</PropertyGroup>
 
 	<ItemGroup>

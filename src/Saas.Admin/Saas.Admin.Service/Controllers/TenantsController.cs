@@ -1,5 +1,7 @@
 ﻿#nullable disable
 
+using System.Net.Mime;
+
 namespace Saas.Admin.Service.Controllers;
 
 [Route("api/[controller]")]
@@ -29,10 +31,23 @@ public class TenantsController : ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<TenantDTO>>> GetAllTenants()
     {
-        IEnumerable<Tenant> allTenants = await _tenantService.GetAllTenantsAsync();
-        return allTenants.Select(s => new TenantDTO(s)).ToList();
+        try
+        {
+            _logger.LogDebug("{UserName} is requesting all tenants.", HttpContext.User.Identity.Name);
+
+            IList<TenantDTO> allTenants = await _tenantService.GetAllTenantsAsync();
+
+            _logger.LogDebug("Returning {ReturnCount} tenants", allTenants.Count);
+            return Ok(allTenants);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Problem retrieving all tenants");
+            throw;
+        }
     }
 
     /// <summary>
@@ -41,23 +56,33 @@ public class TenantsController : ControllerBase
     /// <param name="tenantId">Guid representing the tenant</param>
     /// <returns>Information about the tenant</returns>
     /// <remarks>
-    /// <para><b>Requires:</b> admin.tenant.read  or  {tenantId}.tenant.read</para>
+    /// <para><b>Requires:</b> admin.tenant.read  or  {tenantID}.tenant.read</para>
     /// <para>Will return details of a single tenant, if user has access.</para>
     /// </remarks>
     [HttpGet("{tenantId}")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TenantDTO>> GetTenant(Guid tenantId)
     {
+        _logger.LogDebug("{User} requested tenant with ID {TeanntID}", HttpContext.User.Identity.Name, tenantId);
         try
         {
-            Tenant tenant = await _tenantService.GetTenantAsync(tenantId);
-            return new TenantDTO(tenant);
+            TenantDTO tenant = await _tenantService.GetTenantAsync(tenantId);
+            _logger.LogDebug("Found {TenantName} with {TenantID}", tenant.Name, tenantId);
+
+            return Ok(tenant);
         }
         catch (ItemNotFoundExcepton)
         {
+            _logger.LogDebug("Was not able to find tenant with ID {TeantntID}", tenantId);
             return NotFound();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Problem retrieving tenant with ID {TeantntID}", tenantId);
+            throw;
         }
     }
 
@@ -72,16 +97,31 @@ public class TenantsController : ControllerBase
     /// make the current user the admin (would prevent a third party creating tenants on behalf of user)</para>
     /// </remarks>
     [HttpPost()]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(TenantDTO), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TenantDTO>> PostTenant(NewTenantRequest tenantRequest)
     {
+        try
+        {
+            _logger.LogInformation("Creating a new tenant: {NewTenantName} for {OwnerID}, requested by {User}", tenantRequest.Name, tenantRequest.OwnerId, HttpContext.User.Identity.Name);
+            TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest);
 
-        Tenant tenant = tenantRequest.ToTenant();
-        tenant = await _tenantService.AddTenantAsync(tenant);
-
-        return CreatedAtAction("GetTenant", new { id = tenant.Id }, tenant);
+            _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.RoutePrefix, tenant.Id);
+            return CreatedAtAction(nameof(GetTenant), new { tenantId = tenant.Id }, tenant);
+        }
+        catch (DbUpdateException ex)
+        {
+            return BadRequest((ex.InnerException ?? ex).Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Problem creating tenant with ID {TenantName}", tenantRequest.Name);
+            throw;
+        }
     }
 
     /// <summary>
@@ -91,26 +131,35 @@ public class TenantsController : ControllerBase
     /// <param name="tenantDTO"></param>
     /// <returns></returns>
     /// <remarks>
-    /// <para><b>Requires:</b> admin.tenant.write  or  {tenantId}.tenant.write</para>
+    /// <para><b>Requires:</b> admin.tenant.write  or  {tenantID}.tenant.write</para>
     /// </remarks>
     [HttpPut("{tenantId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> PutTenant(Guid tenantId, TenantDTO tenantDTO)
     {
+        _logger.LogDebug("Updating tenant {TenantID} by {User}", tenantId, HttpContext.User.Identity.Name);
         if (tenantId != tenantDTO.Id)
         {
+            _logger.LogInformation("Requested Id {TenantID} did not match request data {DTOTenantID}", tenantId, tenantDTO.Id);
             return BadRequest();
         }
-
         try
         {
-            await _tenantService.UpdateTenantAsync(tenantDTO.ToTenant());
+            await _tenantService.UpdateTenantAsync(tenantDTO);
+            _logger.LogInformation("Updated tenant {TenantName} with id {TenantID}", tenantDTO.Name, tenantDTO.Id);
         }
-        catch (ItemNotFoundExcepton)
+        catch (ItemNotFoundExcepton ex)
         {
+            _logger.LogWarning(ex, "Unable to find tenant {TenantID}", tenantId);
             return NotFound();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Problem updating tenant {TenantID}", tenantId);
+            throw;
         }
 
         return NoContent();
@@ -122,15 +171,25 @@ public class TenantsController : ControllerBase
     /// <param name="tenantId"></param>
     /// <returns></returns>
     [HttpDelete("{tenantId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteTenant(Guid tenantId)
     {
         try
         {
+            _logger.LogDebug("Deleting tenant {TenantID} by {User}", tenantId, HttpContext.User.Identity.Name);
             await _tenantService.DeleteTenantAsync(tenantId);
         }
-        catch (ItemNotFoundExcepton)
+        catch (ItemNotFoundExcepton ex)
         {
+            _logger.LogWarning(ex, "Unable to find tenant {TenantID}", tenantId);
             return NotFound();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Unable to delete tenant {TeanantID}", tenantId);
+            throw;
         }
 
         return NoContent();
@@ -146,10 +205,25 @@ public class TenantsController : ControllerBase
     /// user info + permissions for the tenant</para>
     /// </remarks>
     [HttpGet("{tenantId}/users")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<string>>> GetTenantUsers(Guid tenantId)
     {
-        IEnumerable<string> users = await _permissionService.GetTenantUsersAsync(tenantId);
-        return users.ToList();
+        try
+        {
+            _logger.LogDebug("Retrieving users for tenant {TenantID} by {User}", tenantId, HttpContext.User.Identity.Name);
+            IEnumerable<string> users = await _permissionService.GetTenantUsersAsync(tenantId);
+            List<string> returnValue = users.ToList();
+
+            _logger.LogDebug("Returning {UserCount} users for tenant {TenantID} to {User}", returnValue.Count, tenantId, HttpContext.User.Identity.Name);
+            return Ok(returnValue);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Problem retrieving users for {TenantID}", tenantId);
+            throw;
+        }
     }
 
     /// <summary>
@@ -160,6 +234,9 @@ public class TenantsController : ControllerBase
     /// <returns></returns>
     /// <remarks>This might be better combined with GetTenantUsers, all usescases seem like they would need both</remarks>
     [HttpGet("{tenantId}/Users/{userId}/permissions")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<string>>> GetUserPermissions(Guid tenantId, string userId)
     {
         IEnumerable<string> permissions = await _permissionService.GetUserPermissionsForTenantAsync(tenantId, userId);
@@ -174,6 +251,9 @@ public class TenantsController : ControllerBase
     /// <param name="permissions"></param>
     /// <returns></returns>
     [HttpPost("{tenantId}/Users/{userId}/permissions")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> PostUserPermissions(Guid tenantId, string userId, [FromBody] string[] permissions)
     {
         await _permissionService.AddUserPermissionsToTenantAsyc(tenantId, userId, permissions);
@@ -188,6 +268,9 @@ public class TenantsController : ControllerBase
     /// <param name="permissions"></param>
     /// <returns></returns>
     [HttpDelete("{tenantId}/Users/{userId}/permissions")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteUserPermissions(Guid tenantId, string userId, [FromBody] string[] permissions)
     {
         await _permissionService.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
@@ -203,10 +286,11 @@ public class TenantsController : ControllerBase
     [HttpGet("user/{userId}/tenants")]
     [Produces("application/json")]
     [ProducesResponseType(200)]
-    //sysadmin or current user
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<Guid>>> UserTenants(string userId, string filter = null)
     {
-        _logger.LogDebug("Geting all tenants for user {userId}", userId);
+        _logger.LogDebug("Geting all tenants for user {userID}", userId);
 
         IEnumerable<Guid> tenants = await _permissionService.GetTenantsForUserAsync(userId, filter);
         return tenants.ToList();

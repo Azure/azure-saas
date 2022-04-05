@@ -47,7 +47,6 @@ public class TenantDTOTests
 
         fromUser.CopyTo(fromDb);
 
-        Assert.Null(fromDb.CreatedTime);
         AssertAdditions.AllPropertiesAreEqual(fromDb, fromUser, nameof(fromDb.ConcurrencyToken), nameof(fromDb.CreatedTime));
     }
 
@@ -82,6 +81,6 @@ public class TenantDTOTests
         Assert.NotEqual(tenant.CreatedTime, dto.CreatedTime);
 
         dto.CopyTo(tenant);
-        Assert.Null(tenant.CreatedTime);
+        Assert.Equal(original, tenant.CreatedTime);
     }
 }
