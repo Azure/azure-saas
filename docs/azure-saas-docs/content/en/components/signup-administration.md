@@ -3,8 +3,14 @@ type: docs
 title: "Signup Administration"
 ---
 
+The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.
 
 ## Design Considerations
+
+- For ease of management, we have chosen to incorporate the global admin functionality into this application. Sometimes, this would be separated into its own application. You may choose to separate this into a different application if you require more administrative functionality than just tenant and user management.
+  
+- 
+
 ## Running Locally
 
 Instructions to get this module running on your local dev machine are located here:

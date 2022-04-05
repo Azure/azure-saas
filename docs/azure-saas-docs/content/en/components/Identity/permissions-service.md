@@ -1,6 +1,7 @@
 ---
 type: docs
-title: "Permissions Api"
+title: "Permissions Service"
+weight: 55
 ---
 
 ## Running Locally
@@ -13,11 +14,14 @@ The permissions service is an API that is responsible for CRUD operations on use
 
 The API uses Entity Framework to manage the SQL Server Connection and Schema. 
 
-## Dependancies:
+## Dependencies:
+
 - SQL Server Database
 
 This API is restricted and can only be called by the following consumers:
+
 ## Consumers
+
 - Identity Provider (Azure AD B2C)
 - Admin Service
 
