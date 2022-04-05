@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-namespace Saas.Admin.Service.Data;
+﻿namespace Saas.Admin.Service.Data;
 
 public class TenantsContext : DbContext
 {
@@ -10,10 +8,11 @@ public class TenantsContext : DbContext
 
     }
 
-    public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<Tenant> Tenants => Set<Tenant>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
         new TenantEntityTypeConfiguration().Configure(modelBuilder.Entity<Tenant>());
     }
 }

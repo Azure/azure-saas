@@ -90,32 +90,17 @@ public class TenantService : ITenantService
         return await _context.Tenants.AnyAsync(e => e.Id == tenantId);
     }
 
-    public async Task<IEnumerable<string>> GetTenantUsersAsync(Guid tenantId)
+    public async Task<bool> CheckPathExists(string path)
     {
-        IEnumerable<string> users = await _permissionService.GetTenantUsersAsync(tenantId);
-        return users;
-    }
-
-    public async Task<IEnumerable<string>> GetUserPermissionsForTenantAsync(Guid tenantId, string userId)
-    {
-        IEnumerable<string> users = await _permissionService.GetUserPermissionsForTenantAsync(tenantId, userId);
-        return users;
-    }
-
-
-    public async Task AddUserPermissionsToTenantAsync(Guid tenantId, string userId, string[] permissions)
-    {
-        await _permissionService.AddUserPermissionsToTenantAsyc(tenantId, userId, permissions);
-    }
-
-    public async Task RemoveUserPermissionsFromTenantAsync(Guid tenantId, string userId, string[] permissions)
-    {
-        await _permissionService.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
-    }
-
-    public async Task<IEnumerable<Guid>> GetTenantsForUserAsync(string userId, string? filter = null)
-    {
-        IEnumerable<Guid> tenants = await _permissionService.GetTenantsForUserAsync(userId, filter);
-        return tenants;
+        try
+        {
+            bool exists = await _context.Tenants.AnyAsync(t => string.Equals(t.Route, path));
+            return exists;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while checking for valid path");
+            throw;
+        }
     }
 }
