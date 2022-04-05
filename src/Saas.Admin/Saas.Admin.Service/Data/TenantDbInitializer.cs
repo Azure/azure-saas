@@ -19,8 +19,8 @@ public static class TenantDbInitializer
         try
         {
             /////////////////////////////////////////////////////////////////////////////////////////
-            // In a production environment use EF tools to apply migrations during deployment
-            // This is here for simplicity of the demo application
+            // In a production environment, use EF tools to apply migrations during deployment
+            // This is here to simplify the demo application
             ////////////////////////////////////////////////////////////////////////////////////////
             tenantsContext.Database.Migrate();
         }
