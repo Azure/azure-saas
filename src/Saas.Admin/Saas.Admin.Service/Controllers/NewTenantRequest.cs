@@ -10,10 +10,8 @@ public class NewTenantRequest
 
     internal Tenant ToTenant()
     {
-        Tenant tenant = new Tenant(Name, RoutePrefix)
+        Tenant tenant = new Tenant()
         {
-            IsCancelled = false,
-            IsProvisioned = false,
             ConcurrencyToken = null,
             CreatedTime = null,
         };

@@ -110,7 +110,7 @@ public class TenantsController : ControllerBase
             _logger.LogInformation("Creating a new tenant: {NewTenantName} for {OwnerID}, requested by {User}", tenantRequest.Name, tenantRequest.OwnerId, HttpContext.User.Identity.Name);
             TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest);
 
-            _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.RoutePrefix, tenant.Id);
+            _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.Route, tenant.Id);
             return CreatedAtAction(nameof(GetTenant), new { tenantId = tenant.Id }, tenant);
         }
         catch (DbUpdateException ex)
