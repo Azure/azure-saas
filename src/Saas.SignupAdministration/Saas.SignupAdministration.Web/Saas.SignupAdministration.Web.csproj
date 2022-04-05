@@ -37,4 +37,8 @@
     <Folder Include="wwwroot\assets\images\favicon\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Saas.Authorization\Saas.AspNetCore.Authorization\Saas.AspNetCore.Authorization.csproj" />
+  </ItemGroup>
+
 </Project>
