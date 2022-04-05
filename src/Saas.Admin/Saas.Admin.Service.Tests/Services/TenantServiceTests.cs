@@ -1,6 +1,7 @@
 namespace Saas.Admin.Service.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using AutoFixture.Xunit2;
@@ -14,7 +15,6 @@ namespace Saas.Admin.Service.Tests
     using TestUtilities;
 
     using Xunit;
-    using Xunit.Sdk;
 
     public class TenantServiceTests
     {
@@ -22,7 +22,7 @@ namespace Saas.Admin.Service.Tests
         [Theory, AutoDataNSubstitute]
         public async Task Will_Not_Return_Null_When_No_Tenants(TenantService tenantService)
         {
-            var result = await tenantService.GetAllTenantsAsync();
+            IList<TenantDTO>? result = await tenantService.GetAllTenantsAsync();
             Assert.NotNull(result);
             Assert.Equal(0, result.Count);
         }
@@ -41,7 +41,7 @@ namespace Saas.Admin.Service.Tests
             await tenantsContext.Tenants.AddRangeAsync(tenants);
 
             Guid id = tenants[^1].Id;
-            var tenant = await tenantService.GetTenantAsync(id);
+            TenantDTO? tenant = await tenantService.GetTenantAsync(id);
 
             AssertAdditions.AllPropertiesAreEqual(tenant, tenants[^1], nameof(tenant.CreatedTime), nameof(tenant.Version));
             await Assert.ThrowsAsync<ItemNotFoundExcepton>(() => tenantService.GetTenantAsync(Guid.NewGuid()));
@@ -53,7 +53,7 @@ namespace Saas.Admin.Service.Tests
             await tenantsContext.Tenants.AddRangeAsync(tenants);
 
             Guid id = tenants[^1].Id;
-            var tenant = await tenantService.GetTenantAsync(id);
+            TenantDTO? tenant = await tenantService.GetTenantAsync(id);
 
             AssertAdditions.AllPropertiesAreEqual(tenant, tenants[^1], nameof(tenant.CreatedTime), nameof(tenant.Version));
         }
@@ -82,13 +82,27 @@ namespace Saas.Admin.Service.Tests
             await tenantsContext.Tenants.AddRangeAsync(originalTenants);
             await tenantsContext.SaveChangesAsync();
 
-            var idToDelete = originalTenants[0].Id;
+            Guid idToDelete = originalTenants[0].Id;
 
             Assert.NotNull(await tenantService.GetTenantAsync(idToDelete));
 
             await tenantService.DeleteTenantAsync(idToDelete);
 
-            await Assert.ThrowsAsync<ItemNotFoundExcepton>(() => tenantService.GetTenantAsync(idToDelete)); 
+            await Assert.ThrowsAsync<ItemNotFoundExcepton>(() => tenantService.GetTenantAsync(idToDelete));
+        }
+
+
+        [Theory, AutoDataNSubstitute]
+        public async Task Check_For_Existing_Route([Frozen] TenantsContext tenantsContext, TenantService tenantService, Tenant[] originalTenants, string notInDBRoute)
+        {
+            await tenantsContext.Tenants.AddRangeAsync(originalTenants);
+            await tenantsContext.SaveChangesAsync();
+
+            bool exists = await tenantService.CheckPathExists(originalTenants[0].Route);
+            Assert.True(exists);
+
+            bool notExists = await tenantService.CheckPathExists(notInDBRoute);
+            Assert.False(notExists);
         }
     }
 }

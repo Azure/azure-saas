@@ -5,17 +5,22 @@ namespace Saas.Admin.Service.Controllers;
 public class NewTenantRequest
 {
     public string Name { get; set; } = string.Empty;
-    public string RoutePrefix { get; set; } = string.Empty;
-    public Guid OwnerId { get; set; }
+    public string Route { get; set; } = string.Empty;
+    public string CreatorEmail { get; set; } = string.Empty;
+    public int ProductTierId { get; set; }
+    public int CategoryId { get; set; }
 
     internal Tenant ToTenant()
     {
-        Tenant tenant = new Tenant(Name, RoutePrefix)
+        Tenant tenant = new Tenant()
         {
-            IsCancelled = false,
-            IsProvisioned = false,
+            Name = Name,
+            Route = Route,
+            CreatorEmail = CreatorEmail,
             ConcurrencyToken = null,
             CreatedTime = null,
+            CategoryId = CategoryId,
+            ProductTierId = ProductTierId,
         };
         return tenant;
     }

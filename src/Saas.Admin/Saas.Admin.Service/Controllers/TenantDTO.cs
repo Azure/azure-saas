@@ -10,31 +10,35 @@ public class TenantDTO
     public TenantDTO()
     {
         Name = string.Empty;
-        RoutePrefix = string.Empty;
+        Route = string.Empty;
         Version = string.Empty;
     }
 
     public TenantDTO(Tenant tenant)
     {
         Id = tenant.Id;
-        IsCancelled = tenant.IsCancelled;
-        IsProvisioned = tenant.IsProvisioned;
 
         CreatedTime = Guard.Argument(tenant.CreatedTime, nameof(tenant.CreatedTime)).NotNull();
 
         Name = Guard.Argument(tenant.Name, nameof(tenant.Name)).NotEmpty();
-        RoutePrefix = Guard.Argument(tenant.RoutePrefix, nameof(tenant.RoutePrefix)).NotEmpty();
+        Route = Guard.Argument(tenant.Route, nameof(tenant.Route)).NotEmpty();
+        CreatorEmail = Guard.Argument(tenant.CreatorEmail, nameof(tenant.CreatorEmail)).NotEmpty();
+        ProductTierId = tenant.ProductTierId;
+        CategoryId = tenant.CategoryId;
 
         Version = tenant.ConcurrencyToken != null ? Convert.ToBase64String(tenant.ConcurrencyToken) : null;
     }
 
     public Tenant ToTenant()
     {
-        Tenant tenant = new Tenant(Name, RoutePrefix)
+        Tenant tenant = new Tenant()
         {
             Id = Id,
-            IsCancelled = IsCancelled,
-            IsProvisioned = IsProvisioned,
+            Name = Name,
+            Route = Route,
+            CreatorEmail = CreatorEmail,
+            ProductTierId = ProductTierId,
+            CategoryId = CategoryId,
             ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null,
             CreatedTime = null,
         };
@@ -45,17 +49,19 @@ public class TenantDTO
     public void CopyTo(Tenant target)
     {
         target.Name = Name;
-        target.IsCancelled = IsCancelled;
-        target.IsProvisioned = IsProvisioned;
-        target.RoutePrefix = RoutePrefix;
+        target.Route = Route;
+        target.CreatorEmail = CreatorEmail;
+        target.CategoryId = CategoryId;
+        target.ProductTierId = ProductTierId;
         target.ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null;
     }
 
     public Guid Id { get; set; }
-    public string Name { get; set; }
-    public bool IsCancelled { get; set; }
-    public bool IsProvisioned { get; set; }
-    public string RoutePrefix { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Route { get; set; } = string.Empty;
+    public int ProductTierId { get; set; }
+    public int CategoryId { get; set; }
+    public string CreatorEmail { get; set; } = string.Empty;
     public DateTime CreatedTime { get; set; }
     public string? Version { get; set; }
 }

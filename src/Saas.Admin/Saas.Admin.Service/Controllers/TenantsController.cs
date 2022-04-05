@@ -107,10 +107,10 @@ public class TenantsController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Creating a new tenant: {NewTenantName} for {OwnerID}, requested by {User}", tenantRequest.Name, tenantRequest.OwnerId, HttpContext.User.Identity.Name);
+            _logger.LogInformation("Creating a new tenant: {NewTenantName} for {OwnerID}, requested by {User}", tenantRequest.Name, tenantRequest.CreatorEmail, HttpContext.User.Identity.Name);
             TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest);
 
-            _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.RoutePrefix, tenant.Id);
+            _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.Route, tenant.Id);
             return CreatedAtAction(nameof(GetTenant), new { tenantId = tenant.Id }, tenant);
         }
         catch (DbUpdateException ex)
@@ -290,9 +290,19 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<Guid>>> UserTenants(string userId, string filter = null)
     {
-        _logger.LogDebug("Geting all tenants for user {userID}", userId);
+        _logger.LogDebug("Getting all tenants for user {userID}", userId);
 
         IEnumerable<Guid> tenants = await _permissionService.GetTenantsForUserAsync(userId, filter);
         return tenants.ToList();
+    }
+
+    [HttpGet("IsValidPath/{path}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<bool>> IsValidPath(string path)
+    {
+        _logger.LogDebug("Validating Path {path}", path);
+
+        bool pathExists = await _tenantService.CheckPathExists(path);
+        return !pathExists;
     }
 }
