@@ -90,5 +90,19 @@ namespace Saas.Admin.Service.Tests
 
             await Assert.ThrowsAsync<ItemNotFoundExcepton>(() => tenantService.GetTenantAsync(idToDelete)); 
         }
+
+
+        [Theory, AutoDataNSubstitute]
+        public async Task Check_For_Existing_Route([Frozen] TenantsContext tenantsContext, TenantService tenantService, Tenant[] originalTenants, string notInDBRoute)
+        {
+            await tenantsContext.Tenants.AddRangeAsync(originalTenants);
+            await tenantsContext.SaveChangesAsync();
+
+            bool exists = await tenantService.CheckPathExists(originalTenants[0].Route);
+            Assert.True(exists);
+
+            bool notExists = await tenantService.CheckPathExists(notInDBRoute);
+            Assert.False(notExists);
+        }
     }
 }

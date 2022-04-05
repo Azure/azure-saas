@@ -15,4 +15,5 @@ public interface ITenantService
     Task DeleteTenantAsync(Guid tenantId);
 
     Task<bool> TenantExistsAsync(Guid tenantId);
+    Task<bool> CheckPathExists(string path);
 }
