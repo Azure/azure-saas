@@ -2,71 +2,71 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://example.org/quick-start/</loc>
+    <loc>https://azure.github.io/azure-saas/quick-start/</loc>
     <lastmod>2022-04-01T13:38:15-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/resources/branding-considerations-for-saas/</loc>
+    <loc>https://azure.github.io/azure-saas/resources/branding-considerations-for-saas/</loc>
     <lastmod>2022-03-22T11:15:59-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/resources/saas-resources/</loc>
+    <loc>https://azure.github.io/azure-saas/resources/saas-resources/</loc>
     <lastmod>2022-03-22T11:15:59-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/resources/contoso-badgemeup/</loc>
+    <loc>https://azure.github.io/azure-saas/resources/contoso-badgemeup/</loc>
     <lastmod>2022-03-22T11:15:59-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/resources/contoso-tickets/</loc>
+    <loc>https://azure.github.io/azure-saas/resources/contoso-tickets/</loc>
     <lastmod>2022-03-22T11:15:59-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/components/</loc>
+    <loc>https://azure.github.io/azure-saas/components/</loc>
     <lastmod>2022-03-22T11:15:59-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/components/identity/</loc>
+    <loc>https://azure.github.io/azure-saas/components/identity/</loc>
     <lastmod>2022-03-29T13:39:44-04:00</lastmod>
   </url><url>
-    <loc>http://example.org/resources/design-considerations/</loc>
+    <loc>https://azure.github.io/azure-saas/resources/design-considerations/</loc>
     <lastmod>2022-03-31T11:31:35-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/resources/</loc>
+    <loc>https://azure.github.io/azure-saas/resources/</loc>
     <lastmod>2022-03-22T11:15:59-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/resources/terminology/</loc>
+    <loc>https://azure.github.io/azure-saas/resources/terminology/</loc>
     <lastmod>2022-03-24T12:29:54-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/components/identity/identity-provider/</loc>
+    <loc>https://azure.github.io/azure-saas/components/identity/identity-provider/</loc>
     <lastmod>2022-03-25T14:14:16-04:00</lastmod>
   </url><url>
-    <loc>http://example.org/components/identity/identity-flows/</loc>
+    <loc>https://azure.github.io/azure-saas/components/identity/identity-flows/</loc>
     <lastmod>2022-03-29T15:35:25-04:00</lastmod>
   </url><url>
-    <loc>http://example.org/components/identity/caveats/</loc>
+    <loc>https://azure.github.io/azure-saas/components/identity/caveats/</loc>
     <lastmod>2022-03-24T09:47:39-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/resources/devops/</loc>
+    <loc>https://azure.github.io/azure-saas/resources/devops/</loc>
     <lastmod>2022-03-24T12:29:54-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/faq/</loc>
+    <loc>https://azure.github.io/azure-saas/faq/</loc>
     <lastmod>2022-03-17T16:18:14-05:00</lastmod>
   </url><url>
-    <loc>http://example.org/resources/future-roadmap/</loc>
+    <loc>https://azure.github.io/azure-saas/resources/future-roadmap/</loc>
     <lastmod>2022-03-25T14:14:16-04:00</lastmod>
   </url><url>
-    <loc>http://example.org/components/admin-service/</loc>
+    <loc>https://azure.github.io/azure-saas/components/admin-service/</loc>
     <lastmod>2022-03-25T14:14:16-04:00</lastmod>
   </url><url>
-    <loc>http://example.org/categories/</loc>
+    <loc>https://azure.github.io/azure-saas/categories/</loc>
   </url><url>
-    <loc>http://example.org/</loc>
+    <loc>https://azure.github.io/azure-saas/</loc>
     <lastmod>2022-04-04T22:24:11-04:00</lastmod>
   </url><url>
-    <loc>http://example.org/components/identity/permissions-service/</loc>
+    <loc>https://azure.github.io/azure-saas/components/identity/permissions-service/</loc>
     <lastmod>2022-04-04T11:21:21-04:00</lastmod>
   </url><url>
-    <loc>http://example.org/components/saas-application/</loc>
+    <loc>https://azure.github.io/azure-saas/components/saas-application/</loc>
     <lastmod>2022-03-25T14:14:16-04:00</lastmod>
   </url><url>
-    <loc>http://example.org/components/signup-administration/</loc>
+    <loc>https://azure.github.io/azure-saas/components/signup-administration/</loc>
     <lastmod>2022-03-29T15:35:25-04:00</lastmod>
   </url><url>
-    <loc>http://example.org/tags/</loc>
+    <loc>https://azure.github.io/azure-saas/tags/</loc>
   </url>
 </urlset>

@@ -1,12 +1,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Azure SaaS Dev Kit Docs – Identity Framework</title>
-    <link>http://example.org/components/identity/</link>
+    <link>https://azure.github.io/azure-saas/components/identity/</link>
     <description>Recent content in Identity Framework on Azure SaaS Dev Kit Docs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
-	  <atom:link href="http://example.org/components/identity/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="https://azure.github.io/azure-saas/components/identity/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -16,10 +16,10 @@
     
     <item>
       <title>Components: Identity Provider</title>
-      <link>http://example.org/components/identity/identity-provider/</link>
+      <link>https://azure.github.io/azure-saas/components/identity/identity-provider/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/components/identity/identity-provider/</guid>
+      <guid>https://azure.github.io/azure-saas/components/identity/identity-provider/</guid>
       <description>
         
         
@@ -51,10 +51,10 @@
     
     <item>
       <title>Components: Identity Flows</title>
-      <link>http://example.org/components/identity/identity-flows/</link>
+      <link>https://azure.github.io/azure-saas/components/identity/identity-flows/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/components/identity/identity-flows/</guid>
+      <guid>https://azure.github.io/azure-saas/components/identity/identity-flows/</guid>
       <description>
         
         
@@ -106,10 +106,10 @@ admin--&amp;gt;&amp;gt;frontend : Ok
     
     <item>
       <title>Components: Caveats &amp; Limitations</title>
-      <link>http://example.org/components/identity/caveats/</link>
+      <link>https://azure.github.io/azure-saas/components/identity/caveats/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/components/identity/caveats/</guid>
+      <guid>https://azure.github.io/azure-saas/components/identity/caveats/</guid>
       <description>
         
         
@@ -128,10 +128,10 @@ admin--&amp;gt;&amp;gt;frontend : Ok
     
     <item>
       <title>Components: Permissions Api</title>
-      <link>http://example.org/components/identity/permissions-service/</link>
+      <link>https://azure.github.io/azure-saas/components/identity/permissions-service/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/components/identity/permissions-service/</guid>
+      <guid>https://azure.github.io/azure-saas/components/identity/permissions-service/</guid>
       <description>
         
         

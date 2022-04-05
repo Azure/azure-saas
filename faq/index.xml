@@ -1,12 +1,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Azure SaaS Dev Kit Docs – FAQ</title>
-    <link>http://example.org/faq/</link>
+    <link>https://azure.github.io/azure-saas/faq/</link>
     <description>Recent content in FAQ on Azure SaaS Dev Kit Docs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
-	  <atom:link href="http://example.org/faq/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="https://azure.github.io/azure-saas/faq/index.xml" rel="self" type="application/rss+xml" />
     
     
       
