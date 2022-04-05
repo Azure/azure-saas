@@ -18,35 +18,35 @@
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-144x144.png" sizes="144x144">
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
 
-<title>Permissions Api | Azure SaaS Dev Kit Docs</title>
+<title>Permissions Service | Azure SaaS Dev Kit Docs</title>
 <meta name="description" content="Running Locally
 
 Instructions to get this module running on your local dev machine are located here: …&lt;/!--&gt;">
-<meta property="og:title" content="Permissions Api" />
+<meta property="og:title" content="Permissions Service" />
 <meta property="og:description" content="Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity
 The permissions service is an API that is responsible for CRUD operations on users permissions.
 The API uses Entity Framework to manage the SQL Server Connection and Schema.
-Dependancies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
+Dependencies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
 Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary)." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/permissions-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-04-04T11:21:21-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-05T13:43:10-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
-<meta itemprop="name" content="Permissions Api">
+<meta itemprop="name" content="Permissions Service">
 <meta itemprop="description" content="Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity
 The permissions service is an API that is responsible for CRUD operations on users permissions.
 The API uses Entity Framework to manage the SQL Server Connection and Schema.
-Dependancies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
+Dependencies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
 Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary).">
-<meta itemprop="dateModified" content="2022-04-04T11:21:21-04:00" />
+<meta itemprop="dateModified" content="2022-04-05T13:43:10-04:00" />
 <meta itemprop="wordCount" content="216">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Permissions Api"/>
+<meta name="twitter:title" content="Permissions Service"/>
 <meta name="twitter:description" content="Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity
 The permissions service is an API that is responsible for CRUD operations on users permissions.
 The API uses Entity Framework to manage the SQL Server Connection and Schema.
-Dependancies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
+Dependencies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
 Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary)."/>
 
 
@@ -144,18 +144,18 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
   <ul class="ul-3 foldable">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-provider-li">
   <a href="/azure-saas/components/identity/identity-provider/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-provider"><span class="">Identity Provider</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-azure-saascomponentsidentitypermissions-service-li">
+  <a href="/azure-saas/components/identity/permissions-service/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitypermissions-service"><span class="td-sidebar-nav-active-item">Permissions Service</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-flows-li">
   <a href="/azure-saas/components/identity/identity-flows/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-flows"><span class="">Identity Flows</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitycaveats-li">
   <a href="/azure-saas/components/identity/caveats/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitycaveats"><span class="">Caveats &amp; Limitations</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-azure-saascomponentsidentitypermissions-service-li">
-  <a href="/azure-saas/components/identity/permissions-service/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitypermissions-service"><span class="td-sidebar-nav-active-item">Permissions Api</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsadmin-service-li">
   <a href="/azure-saas/components/admin-service/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsadmin-service"><span class="">Admin API</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssaas-application-li">
-  <a href="/azure-saas/components/saas-application/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-application"><span class="">Saas.Application</span></a>
+  <a href="/azure-saas/components/saas-application/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-application"><span class="">SaaS Application</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssignup-administration-li">
   <a href="/azure-saas/components/signup-administration/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssignup-administration"><span class="">Signup Administration</span></a>
 </li>
@@ -197,7 +197,7 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
 <a href="https://github.com/Azure/azure-saas/tree/main/docs/azure-saas-docs/content/en/components/Identity/permissions-service.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa fa-file-alt fa-fw"></i> View page source</a>
   <a href="https://github.com/Azure/azure-saas/edit/main/docs/azure-saas-docs/content/en/components/Identity/permissions-service.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
   <a href="https://github.com/Azure/azure-saas/new/main/docs/azure-saas-docs/content/en/components/Identity/permissions-service.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Create child page</a>
-  <a href="https://github.com/Azure/azure-saas/issues/new?title=Permissions%20Api" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+  <a href="https://github.com/Azure/azure-saas/issues/new?title=Permissions%20Service" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
   
 </div>
 
@@ -207,7 +207,7 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
     <li><a href="#running-locally">Running Locally</a></li>
-    <li><a href="#dependancies">Dependancies:</a></li>
+    <li><a href="#dependencies">Dependencies:</a></li>
     <li><a href="#consumers">Consumers</a></li>
     <li><a href="#authentication">Authentication</a></li>
     <li><a href="#data-storage">Data Storage</a></li>
@@ -251,13 +251,13 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
     <a href="https://azure.github.io/azure-saas/components/identity/">Identity Framework</a>
   </li>
   <li class="breadcrumb-item active" aria-current="page">
-    <a href="https://azure.github.io/azure-saas/components/identity/permissions-service/">Permissions Api</a>
+    <a href="https://azure.github.io/azure-saas/components/identity/permissions-service/">Permissions Service</a>
   </li>
   </ol>
 </nav>
             
 <div class="td-content">
-	<h1>Permissions Api</h1>
+	<h1>Permissions Service</h1>
 	
 	<header class="article-meta">
 		
@@ -279,7 +279,7 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
 <p>Instructions to get this module running on your local dev machine are located here: <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity">https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity</a></p>
 <p>The permissions service is an API that is responsible for CRUD operations on users permissions.</p>
 <p>The API uses Entity Framework to manage the SQL Server Connection and Schema.</p>
-<h2 id="dependancies">Dependancies:</h2>
+<h2 id="dependencies">Dependencies:</h2>
 <ul>
 <li>SQL Server Database</li>
 </ul>
@@ -299,7 +299,7 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 4, 2022: <a href="https://github.com/Azure/azure-saas/commit/cc284e686fdb8741bb4d9478f4b8f5c01eae1841">brain dump on permissions (cc284e6)</a>
+  Last modified April 5, 2022: <a href="https://github.com/Azure/azure-saas/commit/ed0880242cb2c880c66758e0deda248a698d16d5">docs changes (ed08802)</a>
 </div>
 
 </div>

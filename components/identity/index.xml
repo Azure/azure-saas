@@ -50,6 +50,40 @@
     </item>
     
     <item>
+      <title>Components: Permissions Service</title>
+      <link>https://azure.github.io/azure-saas/components/identity/permissions-service/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://azure.github.io/azure-saas/components/identity/permissions-service/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;running-locally&#34;&gt;Running Locally&lt;/h2&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Instructions to get this module running on your local dev machine are located here: &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity&#34;&gt;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The permissions service is an API that is responsible for CRUD operations on users permissions.&lt;/p&gt;
+&lt;p&gt;The API uses Entity Framework to manage the SQL Server Connection and Schema.&lt;/p&gt;
+&lt;h2 id=&#34;dependencies&#34;&gt;Dependencies:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;SQL Server Database&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This API is restricted and can only be called by the following consumers:&lt;/p&gt;
+&lt;h2 id=&#34;consumers&#34;&gt;Consumers&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Identity Provider (Azure AD B2C)&lt;/li&gt;
+&lt;li&gt;Admin Service&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;authentication&#34;&gt;Authentication&lt;/h2&gt;
+&lt;p&gt;This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary).&lt;/p&gt;
+&lt;h2 id=&#34;data-storage&#34;&gt;Data Storage&lt;/h2&gt;
+&lt;p&gt;Entity Framework Core is used to manage the database schema and connections.&lt;/p&gt;
+&lt;h2 id=&#34;design-considerations&#34;&gt;Design Considerations&lt;/h2&gt;
+&lt;p&gt;Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Components: Identity Flows</title>
       <link>https://azure.github.io/azure-saas/components/identity/identity-flows/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -122,40 +156,6 @@ admin--&amp;gt;&amp;gt;frontend : Ok
 &lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;Caveat&lt;/strong&gt;: If all tenants of ASDK can be assumed to have their own Azure Active Directory (regular B2B), then per-tenant federation could be implemented using Azure AD (multitenant) federation identity provider with “application code” doing the authorization based on specific tenant id claim.&lt;/p&gt;
 &lt;p&gt;However, if each tenant wants to be able to configure their own completely different IdP (e.g., Okta, Ping, Auth0, Cognito), it would require additional work due to policy limits.&lt;/p&gt;
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Components: Permissions Api</title>
-      <link>https://azure.github.io/azure-saas/components/identity/permissions-service/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://azure.github.io/azure-saas/components/identity/permissions-service/</guid>
-      <description>
-        
-        
-        &lt;h2 id=&#34;running-locally&#34;&gt;Running Locally&lt;/h2&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;Instructions to get this module running on your local dev machine are located here: &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity&#34;&gt;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;The permissions service is an API that is responsible for CRUD operations on users permissions.&lt;/p&gt;
-&lt;p&gt;The API uses Entity Framework to manage the SQL Server Connection and Schema.&lt;/p&gt;
-&lt;h2 id=&#34;dependancies&#34;&gt;Dependancies:&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;SQL Server Database&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;This API is restricted and can only be called by the following consumers:&lt;/p&gt;
-&lt;h2 id=&#34;consumers&#34;&gt;Consumers&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Identity Provider (Azure AD B2C)&lt;/li&gt;
-&lt;li&gt;Admin Service&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;authentication&#34;&gt;Authentication&lt;/h2&gt;
-&lt;p&gt;This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary).&lt;/p&gt;
-&lt;h2 id=&#34;data-storage&#34;&gt;Data Storage&lt;/h2&gt;
-&lt;p&gt;Entity Framework Core is used to manage the database schema and connections.&lt;/p&gt;
-&lt;h2 id=&#34;design-considerations&#34;&gt;Design Considerations&lt;/h2&gt;
-&lt;p&gt;Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.&lt;/p&gt;
 
       </description>
     </item>

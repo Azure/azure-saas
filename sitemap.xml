@@ -35,6 +35,9 @@
     <loc>https://azure.github.io/azure-saas/components/identity/identity-provider/</loc>
     <lastmod>2022-03-25T14:14:16-04:00</lastmod>
   </url><url>
+    <loc>https://azure.github.io/azure-saas/components/identity/permissions-service/</loc>
+    <lastmod>2022-04-05T13:43:10-04:00</lastmod>
+  </url><url>
     <loc>https://azure.github.io/azure-saas/components/identity/identity-flows/</loc>
     <lastmod>2022-03-29T15:35:25-04:00</lastmod>
   </url><url>
@@ -56,16 +59,13 @@
     <loc>https://azure.github.io/azure-saas/categories/</loc>
   </url><url>
     <loc>https://azure.github.io/azure-saas/</loc>
-    <lastmod>2022-04-04T22:24:11-04:00</lastmod>
-  </url><url>
-    <loc>https://azure.github.io/azure-saas/components/identity/permissions-service/</loc>
-    <lastmod>2022-04-04T11:21:21-04:00</lastmod>
-  </url><url>
-    <loc>https://azure.github.io/azure-saas/components/saas-application/</loc>
     <lastmod>2022-03-25T14:14:16-04:00</lastmod>
   </url><url>
+    <loc>https://azure.github.io/azure-saas/components/saas-application/</loc>
+    <lastmod>2022-04-05T13:43:10-04:00</lastmod>
+  </url><url>
     <loc>https://azure.github.io/azure-saas/components/signup-administration/</loc>
-    <lastmod>2022-03-29T15:35:25-04:00</lastmod>
+    <lastmod>2022-04-05T13:43:10-04:00</lastmod>
   </url><url>
     <loc>https://azure.github.io/azure-saas/tags/</loc>
   </url>

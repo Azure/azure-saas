@@ -19,26 +19,24 @@
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
 
 <title>Signup Administration | Azure SaaS Dev Kit Docs</title>
-<meta name="description" content="Design Considerations
-Running Locally
-Instructions to get this module running on your local dev machine are located here: …">
+<meta name="description" content="The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign …">
 <meta property="og:title" content="Signup Administration" />
-<meta property="og:description" content="Design Considerations Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration
-Signup Administration Flows Sign In Onboarding Flow sequenceDiagram actor user participant signup as Signup App participant admin as Admin Api participant auth as Auth Service participant perm as Permissions Api participant email as Email Logic App user-&gt;&gt;signup: Sign Up Button Clicked signup-&gt;&gt;signup: User Signed In/Token Exists? signup--&gt;&gt;user: No, Redirect to /login user-&gt;&gt;auth : Sign in or Sign Up auth--&gt;&gt;user : JWT user-&gt;&gt;signup: Sign Up Button Clicked signup-&gt;&gt;signup: Token Exists?" />
+<meta property="og:description" content="The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.
+Design Considerations   For ease of management, we have chosen to incorporate the global admin functionality into this application." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/signup-administration/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-03-29T15:35:25-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-05T13:43:10-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Signup Administration">
-<meta itemprop="description" content="Design Considerations Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration
-Signup Administration Flows Sign In Onboarding Flow sequenceDiagram actor user participant signup as Signup App participant admin as Admin Api participant auth as Auth Service participant perm as Permissions Api participant email as Email Logic App user-&gt;&gt;signup: Sign Up Button Clicked signup-&gt;&gt;signup: User Signed In/Token Exists? signup--&gt;&gt;user: No, Redirect to /login user-&gt;&gt;auth : Sign in or Sign Up auth--&gt;&gt;user : JWT user-&gt;&gt;signup: Sign Up Button Clicked signup-&gt;&gt;signup: Token Exists?">
-<meta itemprop="dateModified" content="2022-03-29T15:35:25-04:00" />
-<meta itemprop="wordCount" content="400">
+<meta itemprop="description" content="The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.
+Design Considerations   For ease of management, we have chosen to incorporate the global admin functionality into this application.">
+<meta itemprop="dateModified" content="2022-04-05T13:43:10-04:00" />
+<meta itemprop="wordCount" content="510">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Signup Administration"/>
-<meta name="twitter:description" content="Design Considerations Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration
-Signup Administration Flows Sign In Onboarding Flow sequenceDiagram actor user participant signup as Signup App participant admin as Admin Api participant auth as Auth Service participant perm as Permissions Api participant email as Email Logic App user-&gt;&gt;signup: Sign Up Button Clicked signup-&gt;&gt;signup: User Signed In/Token Exists? signup--&gt;&gt;user: No, Redirect to /login user-&gt;&gt;auth : Sign in or Sign Up auth--&gt;&gt;user : JWT user-&gt;&gt;signup: Sign Up Button Clicked signup-&gt;&gt;signup: Token Exists?"/>
+<meta name="twitter:description" content="The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.
+Design Considerations   For ease of management, we have chosen to incorporate the global admin functionality into this application."/>
 
 
 
@@ -135,18 +133,18 @@ Signup Administration Flows Sign In Onboarding Flow sequenceDiagram actor user p
   <ul class="ul-3 foldable">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-provider-li">
   <a href="/azure-saas/components/identity/identity-provider/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-provider"><span class="">Identity Provider</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitypermissions-service-li">
+  <a href="/azure-saas/components/identity/permissions-service/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitypermissions-service"><span class="">Permissions Service</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-flows-li">
   <a href="/azure-saas/components/identity/identity-flows/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-flows"><span class="">Identity Flows</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitycaveats-li">
   <a href="/azure-saas/components/identity/caveats/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitycaveats"><span class="">Caveats &amp; Limitations</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitypermissions-service-li">
-  <a href="/azure-saas/components/identity/permissions-service/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitypermissions-service"><span class="">Permissions Api</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsadmin-service-li">
   <a href="/azure-saas/components/admin-service/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsadmin-service"><span class="">Admin API</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssaas-application-li">
-  <a href="/azure-saas/components/saas-application/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-application"><span class="">Saas.Application</span></a>
+  <a href="/azure-saas/components/saas-application/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-application"><span class="">SaaS Application</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-azure-saascomponentssignup-administration-li">
   <a href="/azure-saas/components/signup-administration/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssignup-administration"><span class="td-sidebar-nav-active-item">Signup Administration</span></a>
 </li>
@@ -263,7 +261,14 @@ Signup Administration Flows Sign In Onboarding Flow sequenceDiagram actor user p
 
 		
 	</header>    
-	<h2 id="design-considerations">Design Considerations</h2>
+	<p>The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.</p>
+<h2 id="design-considerations">Design Considerations</h2>
+<ul>
+<li>
+<p>For ease of management, we have chosen to incorporate the global admin functionality into this application. Sometimes, this would be separated into its own application. You may choose to separate this into a different application if you require more administrative functionality than just tenant and user management.</p>
+</li>
+<li></li>
+</ul>
 <h2 id="running-locally">Running Locally</h2>
 <p>Instructions to get this module running on your local dev machine are located here:
 <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration</a></p>
@@ -351,7 +356,7 @@ signup--&gt;&gt;user : Error, User does not exist                   bb
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified March 29, 2022: <a href="https://github.com/Azure/azure-saas/commit/7b7f8324c42e37dd06135c12a33d3d9f40e4648b">identity and signup admin flow changes (7b7f832)</a>
+  Last modified April 5, 2022: <a href="https://github.com/Azure/azure-saas/commit/ed0880242cb2c880c66758e0deda248a698d16d5">docs changes (ed08802)</a>
 </div>
 
 </div>
