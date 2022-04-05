@@ -97,7 +97,7 @@ public class TenantService : ITenantService
             bool exists = await _context.Tenants.AnyAsync(t => string.Equals(t.Route, path));
             return exists;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Error while checking for valid path");
             throw;

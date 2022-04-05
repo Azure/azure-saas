@@ -1,6 +1,5 @@
 namespace Saas.Admin.Service.Tests
 {
-    using System;
     using Xunit;
 
     public class NewTenantRequestTests

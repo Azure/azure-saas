@@ -6,7 +6,7 @@ public class NewTenantRequest
 {
     public string Name { get; set; } = string.Empty;
     public string Route { get; set; } = string.Empty;
-    public string CreatorEmail { get; set; } = String.Empty;
+    public string CreatorEmail { get; set; } = string.Empty;
     public int ProductTierId { get; set; }
     public int CategoryId { get; set; }
 
@@ -20,7 +20,7 @@ public class NewTenantRequest
             ConcurrencyToken = null,
             CreatedTime = null,
             CategoryId = CategoryId,
-            ProductTierId=ProductTierId,
+            ProductTierId = ProductTierId,
         };
         return tenant;
     }
