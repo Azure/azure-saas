@@ -1,4 +1,4 @@
-name: Hugo Docs Build
+name: Hugo Docs Build - GH Pages
 
 on:
   push:
@@ -10,50 +10,31 @@ on:
       - '**.md'
       - '**.png'
       - '**.svg'
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - docs-updates
-    paths:
-      - '.github/**'
-      - 'docs/**'
-      - '**.md'
-      - '**.png'
-      - '**.svg'
 
 jobs:
-  build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: ubuntu-latest
-    name: Build and Deploy Job
+  deploy:
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
-          submodules: recursive
-      - name: Setup Docsy
-        run:  git submodule update --init --recursive && sudo npm install -D --save autoprefixer && sudo npm install -D --save postcss-cli
-      - name: Build And Deploy
-        id: builddeploy
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GRAY_PEBBLE_0A877460F }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
-          action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_build_command: hugo
-          app_location: "/docs/azure-saas-docs" # App source code path
-          output_location: "public" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
+          submodules: recursive  # Fetch the Docsy theme
+          fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
 
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-    steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GRAY_PEBBLE_0A877460F }}
-          action: "close"
+          hugo-version: '0.91.2'
+          extended: true
+
+      - name: Setup Docsy
+        run:  git submodule update --init --recursive && npm install -D --save autoprefixer && npm install -D --save postcss-cli && npm install -D --save postcss
+
+      - run: hugo
+        working-directory: ./docs/azure-saas-docs
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/docs-updates' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/azure-saas-docs/public

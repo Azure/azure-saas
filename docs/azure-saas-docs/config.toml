@@ -1,4 +1,4 @@
-baseURL = 'http://example.org/'
+baseURL = 'https://azure.github.io/azure-saas'
 title = 'Azure Saas Dev Kit(ASDK)'
 theme = "docsy"
 
