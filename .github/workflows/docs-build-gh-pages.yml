@@ -14,8 +14,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-20.04
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -28,27 +26,15 @@ jobs:
           hugo-version: '0.91.2'
           extended: true
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
+      - name: Setup Docsy
+        run:  git submodule update --init --recursive && npm install -D --save autoprefixer && npm install -D --save postcss-cli && npm install -D --save postcss
 
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - run: npm ci
-        working-directory: ./docs/azure-saas-docs
-      - run: hugo --minify
+      - run: hugo
         working-directory: ./docs/azure-saas-docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/docs-updates' }}
+        if: ${{ github.ref == 'refs/heads/docs-updates-ci' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/azure-saas-docs/public
