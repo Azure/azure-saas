@@ -14,27 +14,41 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
-          submodules: recursive  # Fetch Hugo themes (true OR recursive)
+          submodules: recursive  # Fetch the Docsy theme
+          fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: 'latest'
-          #extended: true
+          hugo-version: '0.91.2'
+          extended: true
 
-      - name: Setup Docsy
-        run:  git submodule update --init --recursive && npm install -D --save autoprefixer && npm install -D --save postcss-cli
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
 
-      - name: Build
-        run: hugo
-        working-directory: docs/azure-saas-docs
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - run: npm ci
+        working-directory: ./docs/azure-saas-docs
+      - run: hugo --minify
+        working-directory: ./docs/azure-saas-docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: github.ref == 'refs/heads/docs-updates'
+        if: ${{ github.ref == 'refs/heads/docs-updates' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/azure-saas-docs/public
