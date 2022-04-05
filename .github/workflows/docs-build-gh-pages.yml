@@ -38,4 +38,4 @@ jobs:
         if: github.ref == 'refs/heads/docs-updates'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          publish_dir: ./docs/azure-saas-docs/public
