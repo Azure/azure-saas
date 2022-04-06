@@ -27,6 +27,12 @@ namespace Saas.SignupAdministration.Web.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Index(string x)
+        {
+            return View();
+        }
+
         [HttpGet]
         public IActionResult Pricing()
         {

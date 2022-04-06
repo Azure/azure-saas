@@ -38,7 +38,6 @@ namespace Saas.SignupAdministration.Web
 
             // Configuration to sign-in users with Azure AD B2C
             services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C);
-
             services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
             services.AddRazorPages();
@@ -53,7 +52,6 @@ namespace Saas.SignupAdministration.Web
 
             services.AddMvc();
             services.AddDistributedMemoryCache();
-            services.AddControllersWithViews();
             services.AddScoped<OnboardingWorkflow, OnboardingWorkflow>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
