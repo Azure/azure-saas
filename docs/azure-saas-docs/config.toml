@@ -32,7 +32,7 @@ languageCode = "en-us"
 [params]
 
 # Algolia
-algolia_docsearch = true
+algolia_docsearch = false
 offlineSearch = false
 
 # GitHub Information
