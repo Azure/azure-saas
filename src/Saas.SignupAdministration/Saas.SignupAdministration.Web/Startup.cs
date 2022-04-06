@@ -96,15 +96,18 @@ namespace Saas.SignupAdministration.Web
 
             app.UseEndpoints(endpoints =>
             {
-                var adminRoutes = endpoints.MapControllerRoute(
+                // admin
+                endpoints.MapControllerRoute(
                     name: "Admin",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                var routes = endpoints.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
-                if (env.IsDevelopment())
-                {
-                    routes.WithMetadata(new AllowAnonymousAttribute());
+                
+                // default
+                endpoints.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
+                //if (env.IsDevelopment())
+                //{
+                //    routes.WithMetadata(new AllowAnonymousAttribute());
 
-                }
+                //}
 
                 endpoints.MapRazorPages();
             });
