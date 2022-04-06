@@ -1,16 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Saas.SignupAdministration.Web.Models;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Saas.SignupAdministration.Web.Services;
-using Saas.SignupAdministration.Web.Services.StateMachine;
+﻿using Saas.SignupAdministration.Web.Services.StateMachine;
 
 namespace Saas.SignupAdministration.Web.Controllers
 {
+    [Authorize()]
     public class OnboardingWorkflowController : Controller
     {
         private readonly ILogger<OnboardingWorkflowController> _logger;

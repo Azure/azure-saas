@@ -36,19 +36,9 @@ namespace Saas.SignupAdministration.Web
             //    options.Password.RequiredUniqueChars = 0;
             //});
 
-            // Configuration to sign-in users with Azure AD B2C
-            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C);
-            services.AddControllersWithViews().AddMicrosoftIdentityUI();
-
             services.AddRazorPages();
 
-            //Configuring appsettings section AzureAdB2C, into IOptions
-            services.AddOptions();
-            services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));
-
-            var appSettings = Configuration.GetSection(SR.AppSettingsProperty);
-
-            services.Configure<AppSettings>(appSettings);
+            services.Configure<AppSettings>(Configuration.GetSection(SR.AppSettingsProperty));
 
             services.AddMvc();
             services.AddDistributedMemoryCache();
@@ -73,6 +63,13 @@ namespace Saas.SignupAdministration.Web
 
             services.AddDbContext<SaasSignupAdministrationWebContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SaasSignupAdministrationWebContext")));
+
+            // Configuration to sign-in users with Azure AD B2C
+            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C);
+            services.AddControllersWithViews().AddMicrosoftIdentityUI();
+            // Configuring appsettings section AzureAdB2C, into IOptions
+            services.AddOptions();
+            services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
