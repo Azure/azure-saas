@@ -31,7 +31,7 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/permissions-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-04-05T13:43:10-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-06T13:39:15-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Permissions Service">
 <meta itemprop="description" content="Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity
@@ -39,7 +39,7 @@ The permissions service is an API that is responsible for CRUD operations on use
 The API uses Entity Framework to manage the SQL Server Connection and Schema.
 Dependencies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
 Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary).">
-<meta itemprop="dateModified" content="2022-04-05T13:43:10-04:00" />
+<meta itemprop="dateModified" content="2022-04-06T13:39:15-04:00" />
 <meta itemprop="wordCount" content="216">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Permissions Service"/>
@@ -290,12 +290,14 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
 <h2 id="data-storage">Data Storage</h2>
 <p>Entity Framework Core is used to manage the database schema and connections.</p>
 <h2 id="design-considerations">Design Considerations</h2>
-<p>Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.</p>
+<ul>
+<li>Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.</li>
+</ul>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 5, 2022: <a href="https://github.com/Azure/azure-saas/commit/ed0880242cb2c880c66758e0deda248a698d16d5">docs changes (ed08802)</a>
+  Last modified April 6, 2022: <a href="https://github.com/Azure/azure-saas/commit/f8b8bde5129f2c1ae6f11fef56a4da5c37dc47e1">update docs (f8b8bde)</a>
 </div>
 
 </div>

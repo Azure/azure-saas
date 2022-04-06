@@ -28,7 +28,13 @@
 &lt;li&gt;If your scenario uses &lt;a href=&#34;https://azure.microsoft.com/en-us/services/active-directory/&#34;&gt;Azure AAD&lt;/a&gt;, you can swap out the &lt;strong&gt;Identity Provider&lt;/strong&gt; in the diagram below.&lt;/li&gt;
 &lt;li&gt;B2C is offering permissions as a service.&lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;What does B2C Give Us?&lt;/p&gt;
 &lt;h2 id=&#34;design-considerations&#34;&gt;Design Considerations&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Why did we choose b2c?&lt;/li&gt;
+&lt;li&gt;Why did we choose custom policies over user flows?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- raw HTML omitted --&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-mermaid&#34; data-lang=&#34;mermaid&#34;&gt;graph
 	user(&amp;quot;fa:fa-user Contoso Business Admin&amp;quot;)
 	adminweb(&amp;quot;Saas.Admin.Web&amp;quot;)
@@ -78,7 +84,9 @@
 &lt;h2 id=&#34;data-storage&#34;&gt;Data Storage&lt;/h2&gt;
 &lt;p&gt;Entity Framework Core is used to manage the database schema and connections.&lt;/p&gt;
 &lt;h2 id=&#34;design-considerations&#34;&gt;Design Considerations&lt;/h2&gt;
-&lt;p&gt;Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.&lt;/li&gt;
+&lt;/ul&gt;
 
       </description>
     </item>

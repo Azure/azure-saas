@@ -23,19 +23,22 @@
 The identity provider default implementation is Azure B2C.
 If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram …">
 <meta property="og:title" content="Identity Provider" />
-<meta property="og:description" content=" The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  Design Considerations graph user(&quot;fa:fa-user Contoso Business Admin&quot;) adminweb(&quot;Saas.Admin.Web&quot;) identityapi(&quot;fa:fa-key &lt;b&gt;Identity Provider&lt;/b&gt;&quot;) catalogapi(&quot;Saas.Catalog.Api&quot;) catalogsql[(Saas.Catalog.Sql)] user-- Bearer Token --&gt;adminweb adminweb--&gt;user adminweb-- Token --&gt;catalogapi catalogapi--&gt;adminweb catalogapi--&gt;identityapi catalogapi-- EF CRUD --&gt;catalogsql " />
+<meta property="og:description" content=" The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us?
+Design Considerations  Why did we choose b2c? Why did we choose custom policies over user flows?  graph user(&quot;fa:fa-user Contoso Business Admin&quot;) adminweb(&quot;Saas.Admin.Web&quot;) identityapi(&quot;fa:fa-key &lt;b&gt;Identity Provider&lt;/b&gt;&quot;) catalogapi(&quot;Saas.Catalog.Api&quot;) catalogsql[(Saas.Catalog.Sql)] user-- Bearer Token --&gt;adminweb adminweb--&gt;user adminweb-- Token --&gt;catalogapi catalogapi--&gt;adminweb catalogapi--&gt;identityapi catalogapi-- EF CRUD --&gt;catalogsql " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/identity-provider/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-03-25T14:14:16-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-06T13:39:15-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Identity Provider">
-<meta itemprop="description" content=" The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  Design Considerations graph user(&quot;fa:fa-user Contoso Business Admin&quot;) adminweb(&quot;Saas.Admin.Web&quot;) identityapi(&quot;fa:fa-key &lt;b&gt;Identity Provider&lt;/b&gt;&quot;) catalogapi(&quot;Saas.Catalog.Api&quot;) catalogsql[(Saas.Catalog.Sql)] user-- Bearer Token --&gt;adminweb adminweb--&gt;user adminweb-- Token --&gt;catalogapi catalogapi--&gt;adminweb catalogapi--&gt;identityapi catalogapi-- EF CRUD --&gt;catalogsql ">
-<meta itemprop="dateModified" content="2022-03-25T14:14:16-04:00" />
-<meta itemprop="wordCount" content="59">
+<meta itemprop="description" content=" The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us?
+Design Considerations  Why did we choose b2c? Why did we choose custom policies over user flows?  graph user(&quot;fa:fa-user Contoso Business Admin&quot;) adminweb(&quot;Saas.Admin.Web&quot;) identityapi(&quot;fa:fa-key &lt;b&gt;Identity Provider&lt;/b&gt;&quot;) catalogapi(&quot;Saas.Catalog.Api&quot;) catalogsql[(Saas.Catalog.Sql)] user-- Bearer Token --&gt;adminweb adminweb--&gt;user adminweb-- Token --&gt;catalogapi catalogapi--&gt;adminweb catalogapi--&gt;identityapi catalogapi-- EF CRUD --&gt;catalogsql ">
+<meta itemprop="dateModified" content="2022-04-06T13:39:15-04:00" />
+<meta itemprop="wordCount" content="78">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Identity Provider"/>
-<meta name="twitter:description" content=" The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  Design Considerations graph user(&quot;fa:fa-user Contoso Business Admin&quot;) adminweb(&quot;Saas.Admin.Web&quot;) identityapi(&quot;fa:fa-key &lt;b&gt;Identity Provider&lt;/b&gt;&quot;) catalogapi(&quot;Saas.Catalog.Api&quot;) catalogsql[(Saas.Catalog.Sql)] user-- Bearer Token --&gt;adminweb adminweb--&gt;user adminweb-- Token --&gt;catalogapi catalogapi--&gt;adminweb catalogapi--&gt;identityapi catalogapi-- EF CRUD --&gt;catalogsql "/>
+<meta name="twitter:description" content=" The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us?
+Design Considerations  Why did we choose b2c? Why did we choose custom policies over user flows?  graph user(&quot;fa:fa-user Contoso Business Admin&quot;) adminweb(&quot;Saas.Admin.Web&quot;) identityapi(&quot;fa:fa-key &lt;b&gt;Identity Provider&lt;/b&gt;&quot;) catalogapi(&quot;Saas.Catalog.Api&quot;) catalogsql[(Saas.Catalog.Sql)] user-- Bearer Token --&gt;adminweb adminweb--&gt;user adminweb-- Token --&gt;catalogapi catalogapi--&gt;adminweb catalogapi--&gt;identityapi catalogapi-- EF CRUD --&gt;catalogsql "/>
 
 
 
@@ -252,7 +255,13 @@ If your scenario uses Azure AAD, you can swap out the Identity Provider in the d
 <li>If your scenario uses <a href="https://azure.microsoft.com/en-us/services/active-directory/">Azure AAD</a>, you can swap out the <strong>Identity Provider</strong> in the diagram below.</li>
 <li>B2C is offering permissions as a service.</li>
 </ul>
+<p>What does B2C Give Us?</p>
 <h2 id="design-considerations">Design Considerations</h2>
+<ul>
+<li>Why did we choose b2c?</li>
+<li>Why did we choose custom policies over user flows?</li>
+</ul>
+<!-- raw HTML omitted -->
 <pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">graph
 	user(&quot;fa:fa-user Contoso Business Admin&quot;)
 	adminweb(&quot;Saas.Admin.Web&quot;)
@@ -273,7 +282,7 @@ If your scenario uses Azure AAD, you can swap out the Identity Provider in the d
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified March 25, 2022: <a href="https://github.com/Azure/azure-saas/commit/20f322c2086a2fb60c8d192e78e8a9fd54ca88e5">scratch notes/ideas from call with labrina (20f322c)</a>
+  Last modified April 6, 2022: <a href="https://github.com/Azure/azure-saas/commit/f8b8bde5129f2c1ae6f11fef56a4da5c37dc47e1">update docs (f8b8bde)</a>
 </div>
 
 </div>
