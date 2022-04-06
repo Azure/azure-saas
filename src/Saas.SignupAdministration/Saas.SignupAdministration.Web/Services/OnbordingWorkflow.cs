@@ -37,19 +37,17 @@ namespace Saas.SignupAdministration.Web.Services
             OnboardingWorkflowState.CurrentState = OnboardingWorkflowState.Transition(trigger);
         }
 
-        public async Task OnboardTenet()
+        public async Task OnboardTenant()
         {
             NewTenantRequest tenantRequest = new()
             {
-                //Id = OnboardingWorkflowItem.Id,
                 Name = OnboardingWorkflowItem.OrganizationName,
-                RoutePrefix = OnboardingWorkflowItem.TenantRouteName,
-                //IsActive = OnboardingWorkflowItem.IsActive,
-                //IsCancelled = OnboardingWorkflowItem.IsCancelled,
-                //IsProvisioned = OnboardingWorkflowItem.IsProvisioned,
-                //CategoryId = OnboardingWorkflowItem.CategoryId,
-                //ProductId = OnboardingWorkflowItem.ProductId,
-                //UserId = OnboardingWorkflowItem.UserId
+                Route = OnboardingWorkflowItem.TenantRouteName,
+                // TODO : Add Email with info from logged in user
+                CreatorEmail = "test@email.com",
+                ProductTierId = OnboardingWorkflowItem.ProductId,
+                CategoryId = OnboardingWorkflowItem.CategoryId
+                
             };
 
             //TODO: Call new Admin API
@@ -63,6 +61,11 @@ namespace Saas.SignupAdministration.Web.Services
         {
             _persistenceProvider.Persist(SR.OnboardingWorkflowStateKey, OnboardingWorkflowState);
             _persistenceProvider.Persist(SR.OnboardingWorkflowItemKey, OnboardingWorkflowItem);
+        }
+
+        public async Task<bool> GetRouteExistsAsync(string route)
+        {
+            return !await _adminServiceClient.IsValidPathAsync(route);
         }
     }
 }
