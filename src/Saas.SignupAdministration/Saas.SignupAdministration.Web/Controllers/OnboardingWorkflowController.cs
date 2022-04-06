@@ -122,7 +122,7 @@ namespace Saas.SignupAdministration.Web.Controllers
 
         private async Task DeployTenantAsync()
         {
-            await _onboardingWorkflow.OnboardTenet();
+            await _onboardingWorkflow.OnboardTenant();
 
             UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnTenantDeploymentSuccessful);
         }
