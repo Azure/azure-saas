@@ -77,15 +77,23 @@ namespace Saas.SignupAdministration.Web.Controllers
         [HttpGet]
         public IActionResult TenantRouteName()
         {
+
             return View();
         }
 
         // Step 3 Submitted - Tenant Route Name
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult TenantRouteName(string tenantRouteName)
+        public async Task<IActionResult> TenantRouteName(string tenantRouteName)
         {
             // TODO:Need to check whether the route name exists
+            if (await _onboardingWorkflow.GetRouteExistsAsync(tenantRouteName))
+            {
+                ViewBag.TenantRouteExists = true;
+                ViewBag.TenantNameEntered = tenantRouteName;
+                return View();
+            }
+
             _onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName = tenantRouteName;
             UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnTenantRouteNamePosted);
 

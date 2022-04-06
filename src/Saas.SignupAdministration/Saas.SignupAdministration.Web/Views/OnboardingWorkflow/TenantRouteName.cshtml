@@ -20,10 +20,10 @@
    <div style="margin-top: 1rem; margin-bottom: 1rem;">
 	<input type="text" name="tenantRouteName" class="form-control" placeholder="Start typing..." required minlength="2" maxlength="44" pattern="[a-zA-Z0-9_' ]*$" />
    </div>
-			@if (Context.Request.Query["tenantReouteNameExists"] == "True")
+			@if (ViewBag.TenantRouteExists ?? false)
 			{
 	   <div>
-		<p style="color:#dc3545!important;"> Subscriber name '@Context.Request.Query["tenatRouteName"]' is already taken.</p>
+		<p style="color:#dc3545!important;"> Tenant Route '@ViewBag.TenantNameEntered' is already taken.</p>
 	   </div>
 			}
    <div>

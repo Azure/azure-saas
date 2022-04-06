@@ -62,5 +62,10 @@ namespace Saas.SignupAdministration.Web.Services
             _persistenceProvider.Persist(SR.OnboardingWorkflowStateKey, OnboardingWorkflowState);
             _persistenceProvider.Persist(SR.OnboardingWorkflowItemKey, OnboardingWorkflowItem);
         }
+
+        public async Task<bool> GetRouteExistsAsync(string route)
+        {
+            return !await _adminServiceClient.IsValidPathAsync(route);
+        }
     }
 }
