@@ -9,7 +9,7 @@ The Signup Administration site is an application meant to faciliate self service
 
 - For ease of management, we have chosen to incorporate the global admin functionality into this application. Sometimes, this would be separated into its own application. You may choose to separate this into a different application if you require more administrative functionality than just tenant and user management.
   
-- 
+- We chose to use NSwag to generate our client implementation for the Admin Service. This provides us ready to use HTTP client without having to write much boilerplate. Read more about using NSwag on ASP.NET projects [here](https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&tabs=visual-studio)
 
 ## Running Locally
 

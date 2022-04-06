@@ -33,3 +33,5 @@ https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotne
 Migrations tutorial: https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations?view=aspnetcore-6.0
 
 ## Design Considerations
+
+- The API uses [Swashbuckle](https://www.nuget.org/packages/Swashbuckle) to generate the OpenAPI definition and a UI for testing. This definition is also consumed by the Signup Administration site to generate their client implementation for interfacing with this API. Read more about it [here](https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-6.0&tabs=visual-studio)
