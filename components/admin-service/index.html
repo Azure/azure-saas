@@ -30,14 +30,14 @@ Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Sa
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/admin-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-04-05T19:17:04-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-06T11:37:15-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Admin API">
 <meta itemprop="description" content="The Admin Service has two main responsibilities:
  Preforming CRUD operations on tenants Serving as a broker to assign roles and permissions to tenants.  Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin
 Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Saas.Application.Web  Claims authorization is preformed at the Admin API using middleware. When the service receives a request to add user roles to a particular tenant, the admin service is first responsible for ensuring the user has a claim to that tenant before forwarding the request to the Identity API.">
-<meta itemprop="dateModified" content="2022-04-05T19:17:04-05:00" />
-<meta itemprop="wordCount" content="126">
+<meta itemprop="dateModified" content="2022-04-06T11:37:15-04:00" />
+<meta itemprop="wordCount" content="165">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Admin API"/>
 <meta name="twitter:description" content="The Admin Service has two main responsibilities:
@@ -286,11 +286,14 @@ before forwarding the request to the Identity API.</p>
 <a href="https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli">https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli</a></p>
 <p>Migrations tutorial: <a href="https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations?view=aspnetcore-6.0">https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations?view=aspnetcore-6.0</a></p>
 <h2 id="design-considerations">Design Considerations</h2>
+<ul>
+<li>The API uses <a href="https://www.nuget.org/packages/Swashbuckle">Swashbuckle</a> to generate the OpenAPI definition and a UI for testing. This definition is also consumed by the Signup Administration site to generate their client implementation for interfacing with this API. Read more about it <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-6.0&amp;tabs=visual-studio">here</a></li>
+</ul>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 5, 2022: <a href="https://github.com/Azure/azure-saas/commit/8c19e2458d43e62ee77d83c67686ae08bb57ef13">Entity frameworks migrations stub (8c19e24)</a>
+  Last modified April 6, 2022: <a href="https://github.com/Azure/azure-saas/commit/270746b841d1761a6ffd3e452a87f90317752b73">add swashbuckle and nswag references (270746b)</a>
 </div>
 
 </div>

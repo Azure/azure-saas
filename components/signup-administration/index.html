@@ -26,13 +26,13 @@ Design Considerations   For ease of management, we have chosen to incorporate th
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/signup-administration/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-04-05T13:43:10-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-06T11:37:15-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Signup Administration">
 <meta itemprop="description" content="The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.
 Design Considerations   For ease of management, we have chosen to incorporate the global admin functionality into this application.">
-<meta itemprop="dateModified" content="2022-04-05T13:43:10-04:00" />
-<meta itemprop="wordCount" content="510">
+<meta itemprop="dateModified" content="2022-04-06T11:37:15-04:00" />
+<meta itemprop="wordCount" content="547">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Signup Administration"/>
 <meta name="twitter:description" content="The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.
@@ -263,7 +263,9 @@ Design Considerations   For ease of management, we have chosen to incorporate th
 <li>
 <p>For ease of management, we have chosen to incorporate the global admin functionality into this application. Sometimes, this would be separated into its own application. You may choose to separate this into a different application if you require more administrative functionality than just tenant and user management.</p>
 </li>
-<li></li>
+<li>
+<p>We chose to use NSwag to generate our client implementation for the Admin Service. This provides us ready to use HTTP client without having to write much boilerplate. Read more about using NSwag on ASP.NET projects <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&amp;tabs=visual-studio">here</a></p>
+</li>
 </ul>
 <h2 id="running-locally">Running Locally</h2>
 <p>Instructions to get this module running on your local dev machine are located here:
@@ -352,7 +354,7 @@ signup--&gt;&gt;user : Error, User does not exist                   bb
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 5, 2022: <a href="https://github.com/Azure/azure-saas/commit/ed0880242cb2c880c66758e0deda248a698d16d5">docs changes (ed08802)</a>
+  Last modified April 6, 2022: <a href="https://github.com/Azure/azure-saas/commit/270746b841d1761a6ffd3e452a87f90317752b73">add swashbuckle and nswag references (270746b)</a>
 </div>
 
 </div>
