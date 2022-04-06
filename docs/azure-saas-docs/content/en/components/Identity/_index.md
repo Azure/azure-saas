@@ -14,6 +14,9 @@ The goal of our identity and authorization strategy is to enable us to easily au
 
 ## Overview
 
+## Architecture Diagram
+Diagram of just how auth works
+
 ## Sign Up
 
 Upon clicking the signup button in either the SignupAdministration site or the end user application, the user is redirected to an Azure B2C hosted signup page. After providing the neccesary information and submitting the signup form, Azure B2C will create the account and redirect the user back to the originating application with a JWT token. 

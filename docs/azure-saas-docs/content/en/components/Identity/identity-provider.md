@@ -8,9 +8,14 @@ weight: 50
 - If your scenario uses [Azure AAD](https://azure.microsoft.com/en-us/services/active-directory/), you can swap out the **Identity Provider** in the diagram below.
 - B2C is offering permissions as a service.
 
+What does B2C Give Us?
 
 ## Design Considerations
 
+- Why did we choose b2c?
+- Why did we choose custom policies over user flows?
+
+<!-- TODO : Update this to new architecture -->
 ```mermaid
 graph
 	user("fa:fa-user Contoso Business Admin")

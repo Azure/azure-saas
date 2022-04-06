@@ -25,7 +25,6 @@ This API is restricted and can only be called by the following consumers:
 - Identity Provider (Azure AD B2C)
 - Admin Service
 
-
 ## Authentication
 This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary).
 
@@ -33,4 +32,4 @@ This API supports two methods of authentication: Certificate based authenticatio
 Entity Framework Core is used to manage the database schema and connections.
 ## Design Considerations
 
-Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned. 
+- Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.
