@@ -30,14 +30,14 @@ Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Sa
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/admin-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-03-25T14:14:16-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-05T19:17:04-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Admin API">
 <meta itemprop="description" content="The Admin Service has two main responsibilities:
  Preforming CRUD operations on tenants Serving as a broker to assign roles and permissions to tenants.  Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin
 Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Saas.Application.Web  Claims authorization is preformed at the Admin API using middleware. When the service receives a request to add user roles to a particular tenant, the admin service is first responsible for ensuring the user has a claim to that tenant before forwarding the request to the Identity API.">
-<meta itemprop="dateModified" content="2022-03-25T14:14:16-04:00" />
-<meta itemprop="wordCount" content="95">
+<meta itemprop="dateModified" content="2022-04-05T19:17:04-05:00" />
+<meta itemprop="wordCount" content="126">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Admin API"/>
 <meta name="twitter:description" content="The Admin Service has two main responsibilities:
@@ -204,6 +204,7 @@ Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Sa
     <li><a href="#running-locally">Running Locally</a></li>
     <li><a href="#dependencies">Dependencies</a></li>
     <li><a href="#consumers">Consumers</a></li>
+    <li><a href="#entity-framework">Entity Framework</a></li>
     <li><a href="#design-considerations">Design Considerations</a></li>
   </ul>
 </nav></div>
@@ -281,13 +282,19 @@ Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Sa
 <li>Saas.Application.Web</li>
 </ul>
 <p>Claims authorization is preformed at the Admin API using middleware.
-When the service receives a request to add user roles to a particular tenant, the admin service is first responsible for ensuring the user has a claim to that tenant before forwarding the request to the Identity API.</p>
+When the service receives a request to add user roles to a particular tenant, the admin service is first responsible for ensuring the user has a claim to that tenant
+before forwarding the request to the Identity API.</p>
+<h2 id="entity-framework">Entity Framework</h2>
+<p>This project uses Entity Framework migrations to manage the database schema and changes that occur between versions while in developoment.</p>
+<p>To learn more about migrations:
+<a href="https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli">https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli</a></p>
+<p>Migrations tutorial: <a href="https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations?view=aspnetcore-6.0">https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations?view=aspnetcore-6.0</a></p>
 <h2 id="design-considerations">Design Considerations</h2>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified March 25, 2022: <a href="https://github.com/Azure/azure-saas/commit/20f322c2086a2fb60c8d192e78e8a9fd54ca88e5">scratch notes/ideas from call with labrina (20f322c)</a>
+  Last modified April 5, 2022: <a href="https://github.com/Azure/azure-saas/commit/8c19e2458d43e62ee77d83c67686ae08bb57ef13">Entity frameworks migrations stub (8c19e24)</a>
 </div>
 
 </div>
