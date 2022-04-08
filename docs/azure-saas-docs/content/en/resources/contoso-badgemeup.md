@@ -14,7 +14,7 @@ Contoso BadgeMeUp is a SaaS B2B application that Contoso sells to companies that
 
 Lucerne Publishing has recently purchased Contoso BadgeMeUp. They're currently using Azure Active Directory and want their employees to be able to Single Sign-on to BadgeMeUp.
 
-> Note: Contoso IT has configured their B2C instance for an external authentication provider. Additional documentation is available [here]([Set up sign-in for multi-tenant Azure AD by custom policies - Azure AD B2C | Microsoft Docs](https://docs.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-azure-ad-multi-tenant?pivots=b2c-user-flow)).
+> Note: Contoso IT has configured their B2C instance for an external authentication provider. Additional documentation is available [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-azure-ad-multi-tenant?pivots=b2c-user-flow).
 
 ### Onboarding
 

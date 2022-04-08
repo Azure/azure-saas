@@ -20,11 +20,11 @@ Whether you're modernizing an existing application, building a new application, 
 
 ![](futurestate.drawio.png)
 
-- [**B2C Authentication Service**](/services/b2c-auth-service/) - Provides a flexible identity solution.
-- [**Core App**](/services/core-app/)
+- [**Identity Provider (B2C)**](components/identity/identity-provider/) - Provides a flexible identity solution.
+- [**Signup / Administration**](components/signup-administration/)
 	- A web app where your customers to view plans and onboard to your solution.
 	- Provides you with tenant administration capabilities. (modify/remove/etc.)
-- [**SaaS.Application**](/services/saas-application/) - A sample application that you can extend or replace with your own code.
+- [**SaaS.Application**](components/saas-application/) - A sample application that you can extend or replace with your own code.
 
 ## Product SaaS Reference
 
@@ -34,7 +34,7 @@ It's a real production site that allows users to easily build their Email and SM
 
 ## Ready to get started?
 
-Check out the [getting started page](/overview/getting-started/).
+Check out the [quick start page](quick-start/).
 
 ## Additional Recommended Resources
 
