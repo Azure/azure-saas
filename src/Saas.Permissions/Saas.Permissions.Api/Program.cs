@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
 using Saas.Permissions.Api.Data;
 using Saas.Permissions.Api.Interfaces;
 using Saas.Permissions.Api.Services;
@@ -18,6 +20,14 @@ builder.Services.AddDbContext<PermissionsContext>(options =>
 
 builder.Services.AddScoped<IPermissionsService, PermissionsService>();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(options =>
+    {
+        builder.Configuration.Bind("AzureAdB2C", options);
+        options.TokenValidationParameters.NameClaimType = "name";
+    },
+    options => { builder.Configuration.Bind("AzureAdB2C", options); });
+
 var app = builder.Build();
 app.ConfigureDatabase();
 
@@ -28,6 +38,7 @@ app.ConfigureDatabase();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

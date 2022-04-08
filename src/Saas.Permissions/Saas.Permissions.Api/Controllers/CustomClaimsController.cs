@@ -1,4 +1,5 @@
-﻿using Saas.Permissions.Api.Interfaces;
+﻿using Microsoft.AspNetCore.Authorization;
+using Saas.Permissions.Api.Interfaces;
 using Saas.Permissions.Api.Models;
 
 namespace Saas.Permissions.Api.Controllers;
@@ -6,6 +7,7 @@ namespace Saas.Permissions.Api.Controllers;
 [Route("api/[controller]")]
 
 [ApiController]
+[Authorize]
 public class CustomClaimsController : ControllerBase
 {
     private readonly IPermissionsService _permissionsService;
