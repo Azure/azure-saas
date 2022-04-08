@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Saas.AspNetCore.Authorization.ClaimTransformers;
-using Saas.SignupAdministration.Web.Models;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Saas.SignupAdministration.Web.Controllers
 {

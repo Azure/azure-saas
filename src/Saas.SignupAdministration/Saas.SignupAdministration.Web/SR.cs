@@ -113,8 +113,18 @@ namespace Saas.SignupAdministration.Web
         public const string KeyProperty = "Key";
         public const string CosmosNamePartitionKey = "/name";
         public const string AdminServiceBaseUrl = "AppSettings:AdminServiceBaseUrl";
+        public const string EmailOptionsProperty = "EmailOptions";
 
         // Error Codes
         public const string DuplicateUserNameErrorCode = "DuplicateUserName";
+
+        // Claim Types
+        public const string EmailAddressClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
+        public const string NameIdentifierClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+        public const string AuthenticationClassReferenceClaimType = "http://schemas.microsoft.com/claims/authnclassreference";
+        public const string AuthenticationTimeClaimType = "auth_time";
+        public const string GivenNamClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname";
+        public const string SurnameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname";
+        public const string TenantIdClaimType = "http://schemas.microsoft.com/identity/claims/tenantid";
     }
 }

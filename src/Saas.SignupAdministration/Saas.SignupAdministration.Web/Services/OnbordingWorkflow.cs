@@ -7,6 +7,8 @@ namespace Saas.SignupAdministration.Web.Services
     {
         private readonly IAdminServiceClient _adminServiceClient;
         private readonly IPersistenceProvider _persistenceProvider;
+        private readonly IApplicationUser _applicationUser;
+        private readonly IEmail _email;
 
         public OnboardingWorkflowItem OnboardingWorkflowItem { get; internal set; }
         public OnboardingWorkflowState OnboardingWorkflowState { get; internal set; }
@@ -20,10 +22,12 @@ namespace Saas.SignupAdministration.Web.Services
             }
         }
 
-        public OnboardingWorkflow(IAdminServiceClient adminServiceClient, IPersistenceProvider persistenceProvider)
+        public OnboardingWorkflow(IApplicationUser applicationUser, IAdminServiceClient adminServiceClient, IPersistenceProvider persistenceProvider, IEmail email)
         {
+            _applicationUser = applicationUser;
             _adminServiceClient = adminServiceClient;
             _persistenceProvider = persistenceProvider;
+            _email = email;
 
             OnboardingWorkflowItem item = _persistenceProvider.Retrieve<OnboardingWorkflowItem>(SR.OnboardingWorkflowItemKey);
             OnboardingWorkflowState state = _persistenceProvider.Retrieve<OnboardingWorkflowState>(SR.OnboardingWorkflowStateKey);
@@ -43,18 +47,19 @@ namespace Saas.SignupAdministration.Web.Services
             {
                 Name = OnboardingWorkflowItem.OrganizationName,
                 Route = OnboardingWorkflowItem.TenantRouteName,
-                // TODO : Add Email with info from logged in user
-                CreatorEmail = "test@email.com",
+                CreatorEmail = _applicationUser.EmailAddress,
                 ProductTierId = OnboardingWorkflowItem.ProductId,
                 CategoryId = OnboardingWorkflowItem.CategoryId
-                
             };
 
-            //TODO: Call new Admin API
+            // Call new Admin API
             await _adminServiceClient.TenantsPOSTAsync(tenantRequest);
 
             OnboardingWorkflowItem.IsComplete = true;
             OnboardingWorkflowItem.Created = DateTime.Now;
+            
+            // TODO: Need to configure with real creds
+            //_email.Send(_applicationUser.EmailAddress);
         }
 
         public void PersistToSession()

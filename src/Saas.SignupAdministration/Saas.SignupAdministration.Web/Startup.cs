@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using Microsoft.IdentityModel.Logging;
@@ -17,38 +18,34 @@ namespace Saas.SignupAdministration.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString(SR.IdentityDbConnectionProperty)));
             services.AddDatabaseDeveloperPageExceptionFilter();
-            //services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
-
-            //services.Configure<IdentityOptions>(options =>
-            //{
-            //    // Default SignIn settings.
-            //    options.SignIn.RequireConfirmedEmail = false;
-            //    options.SignIn.RequireConfirmedPhoneNumber = false;
-
-            //    // Default Password settings.
-            //    options.Password.RequireDigit = false;
-            //    options.Password.RequireLowercase = false;
-            //    options.Password.RequireNonAlphanumeric = false;
-            //    options.Password.RequireUppercase = false;
-            //    options.Password.RequiredLength = 6;
-            //    options.Password.RequiredUniqueChars = 0;
-            //});
 
             services.AddRazorPages();
 
+            // Load the app settings
             services.Configure<AppSettings>(Configuration.GetSection(SR.AppSettingsProperty));
+
+            // Load the email settings 
+            services.Configure<EmailOptions>(Configuration.GetSection(SR.EmailOptionsProperty));
 
             services.AddMvc();
             services.AddDistributedMemoryCache();
+
+            // Add the workflow object
             services.AddScoped<OnboardingWorkflow, OnboardingWorkflow>();
 
+            // Add this to allow for context to be shared outside of requests
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            // Add the email object
+            services.AddScoped<IEmail, Email>();
 
             // TODO: Replace with your implementation of persistence provider
             // Session persistence is the default
             services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>();
+
+            // Add the user details that come back from B2C
+            services.AddScoped<IApplicationUser, ApplicationUser>();
 
             services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
                 .ConfigureHttpClient(client =>
