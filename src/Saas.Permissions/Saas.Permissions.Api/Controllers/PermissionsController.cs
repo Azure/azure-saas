@@ -1,4 +1,6 @@
-﻿using Saas.Permissions.Api.Exceptions;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Web.Resource;
+using Saas.Permissions.Api.Exceptions;
 using Saas.Permissions.Api.Interfaces;
 using System.Net;
 
@@ -6,6 +8,8 @@ namespace Saas.Permissions.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
+[RequiredScope("access_as_user_via_admin_api")]
 public class PermissionsController : ControllerBase
 {
     private readonly IPermissionsService _permissionsService;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Certificate;
+using Microsoft.AspNetCore.Authorization;
 using Saas.Permissions.Api.Interfaces;
 using Saas.Permissions.Api.Models;
 
@@ -7,7 +8,8 @@ namespace Saas.Permissions.Api.Controllers;
 [Route("api/[controller]")]
 
 [ApiController]
-[Authorize]
+// Specify that this controller should use Certificate Based Auth. Certificate auth is required for fetching custom claims from B2C. 
+[Authorize(AuthenticationSchemes = CertificateAuthenticationDefaults.AuthenticationScheme)]
 public class CustomClaimsController : ControllerBase
 {
     private readonly IPermissionsService _permissionsService;
