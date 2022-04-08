@@ -8,7 +8,9 @@ namespace Saas.SignupAdministration.Web
         public static bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
+            {
                 return false;
+            }
 
             try
             {

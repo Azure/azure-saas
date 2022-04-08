@@ -29,7 +29,6 @@ namespace Saas.SignupAdministration.Web
             services.Configure<EmailOptions>(Configuration.GetSection(SR.EmailOptionsProperty));
 
             services.AddMvc();
-            services.AddDistributedMemoryCache();
 
             // Add the workflow object
             services.AddScoped<OnboardingWorkflow, OnboardingWorkflow>();
@@ -40,6 +39,10 @@ namespace Saas.SignupAdministration.Web
             // Add the email object
             services.AddScoped<IEmail, Email>();
 
+            // Required for the JsonPersistenceProvider
+            // Should be replaced based on the persistence scheme
+            services.AddDistributedMemoryCache();
+            
             // TODO: Replace with your implementation of persistence provider
             // Session persistence is the default
             services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>();
@@ -64,6 +67,7 @@ namespace Saas.SignupAdministration.Web
             // Configuration to sign-in users with Azure AD B2C
             services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C);
             services.AddControllersWithViews().AddMicrosoftIdentityUI();
+
             // Configuring appsettings section AzureAdB2C, into IOptions
             services.AddOptions();
             services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));
