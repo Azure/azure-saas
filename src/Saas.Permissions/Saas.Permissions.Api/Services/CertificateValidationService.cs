@@ -12,8 +12,11 @@ public class CertificateValidationService : ICertificateValidationService
     }
     public bool ValidateCertificate(X509Certificate2 clientCertificate)
     {
-        // Don't hardcode passwords in production code.
-        // Use a certificate thumbprint or Azure Key Vault.
+        // Insert any other custom certificate validation logic here
+
+
+        // Do not check your certificate thumbprint into your git repository.
+        // Another option would be to load in your certificate thumbprint from azure keyvault.
         var expectedCertificateThumbPrint = _config.GetValue<string>("SelfSignedCertThumbprint");
 
         return clientCertificate.Thumbprint == expectedCertificateThumbPrint;
