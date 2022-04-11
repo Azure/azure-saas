@@ -3,11 +3,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Saas.Permissions.Api.Data;
 using Saas.Permissions.Api.Interfaces;
+using Saas.Permissions.Api.Models.AppSettings;
 using Saas.Permissions.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+// Add options using options pattern : https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();

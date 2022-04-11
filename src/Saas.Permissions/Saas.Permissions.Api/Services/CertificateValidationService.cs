@@ -1,14 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Saas.Permissions.Api.Interfaces;
+using Saas.Permissions.Api.Models.AppSettings;
 using System.Security.Cryptography.X509Certificates;
 namespace Saas.Permissions.Api.Services;
 
 public class CertificateValidationService : ICertificateValidationService
 {
-    private readonly IConfiguration _config;
-    public CertificateValidationService(IConfiguration config)
+    private readonly AppSettings _appSettings;
+    public CertificateValidationService(IOptions<AppSettings> appSettings)
     {
-        _config = config;
+        _appSettings = appSettings.Value;
     }
     public bool ValidateCertificate(X509Certificate2 clientCertificate)
     {
@@ -17,7 +19,7 @@ public class CertificateValidationService : ICertificateValidationService
 
         // Do not check your certificate thumbprint into your git repository.
         // Another option would be to load in your certificate thumbprint from azure keyvault.
-        var expectedCertificateThumbPrint = _config.GetValue<string>("SelfSignedCertThumbprint");
+        var expectedCertificateThumbPrint = _appSettings.SelfSignedCertThumbprint;
 
         return clientCertificate.Thumbprint == expectedCertificateThumbPrint;
     }
