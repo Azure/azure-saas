@@ -18,14 +18,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th>
+@*            <th>
                 @Html.DisplayNameFor(model => model.IsCancelled)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IsProvisioned)
-            </th>
+            </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.RoutePrefix)
+                @Html.DisplayNameFor(model => model.Route)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedTime)
@@ -45,14 +45,14 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
+@*            <td>
                 @Html.DisplayFor(modelItem => item.IsCancelled)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsProvisioned)
-            </td>
+            </td>*@
             <td>
-                @Html.DisplayFor(modelItem => item.RoutePrefix)
+                @Html.DisplayFor(modelItem => item.Route)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedTime)
