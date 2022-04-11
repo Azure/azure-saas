@@ -25,7 +25,8 @@
                         <option value="">Select an Industry</option>
                         @foreach (var item in Model)
                             {
-                        <option value="@item.Id">
+                                var isSelectd = item.Id == ViewBag.CategoryId; 
+                        <option value="@item.Id" selected="@isSelectd">
                             @item.Name
                         </option>
                             }
@@ -36,7 +37,8 @@
                     <input type="hidden" name="UserId" value="@ViewBag.UserId" />
                     <input type="hidden" name="IsExistingUser" value="@ViewBag.IsExistingUser" />
                     <input type="hidden" name="Name" value="@ViewBag.Name" />
-                    <input type="submit" class="btn btn-primary" style="width:100%;" value="NEXT" />
+                    <input type="submit" class="btn btn-primary" style="width:44%;" value="BACK" name="back" formaction="OrganizationCategoryBack"  />
+                    <input type="submit" class="btn btn-primary" style="width:44%;" value="NEXT" />
                 </div>
             </form>
         </div>
