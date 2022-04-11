@@ -1,4 +1,4 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+﻿
 
 @{
 	ViewData["Title"] = "Create your Subscriber - Give your Subscriber a Name";
@@ -18,7 +18,7 @@
   </div>
   <form method="post">
    <div style="margin-top: 1rem; margin-bottom: 1rem;">
-	<input type="text" name="tenantRouteName" class="form-control" placeholder="Start typing..." required minlength="2" maxlength="44" pattern="[a-zA-Z0-9_' ]*$" />
+	<input type="text" name="tenantRouteName" class="form-control" placeholder="Start typing..." value="@ViewBag.TenantRouteName" required minlength="2" maxlength="44" pattern="[a-zA-Z0-9_' ]*$" />
    </div>
 			@if (ViewBag.TenantRouteExists ?? false)
 			{
@@ -33,7 +33,9 @@
 	<input type="hidden" name="Id" value="@ViewBag.Id" />
 	<input type="hidden" name="UserId" value="@ViewBag.UserId" />
 	<input type="hidden" name="IsExistingUser" value="@ViewBag.IsExistingUser" />
-	<input type="submit" class="btn btn-primary" style="width:100%;" value="NEXT" />
+	<input type="submit" class="btn btn-primary" style="width:32%;" value="BACK" formaction="TenantRouteNameBack" />
+	<input type="submit" class="btn btn-primary" style="width:32%;" value="NEXT" />
+	<input type="submit" class="btn btn-primary" style="width:32%;" value="LAST ACTION" formaction="LastAction" />
    </div>
   </form>
  </div>

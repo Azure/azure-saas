@@ -1,13 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Saas.SignupAdministration.Web.Models;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Saas.SignupAdministration.Web.Services;
-using Saas.SignupAdministration.Web.Services.StateMachine;
+﻿using Saas.SignupAdministration.Web.Services.StateMachine;
 
 namespace Saas.SignupAdministration.Web.Controllers
 {
@@ -26,7 +17,8 @@ namespace Saas.SignupAdministration.Web.Controllers
         [HttpGet]
         public IActionResult OrganizationName()
         {
-            return View();
+                ViewBag.OrganizationName = _onboardingWorkflow.OnboardingWorkflowItem.OrganizationName;
+                return View();
         }
 
         // Step 1 - Submit the organization name
@@ -36,7 +28,7 @@ namespace Saas.SignupAdministration.Web.Controllers
         {
             _onboardingWorkflow.OnboardingWorkflowItem.OrganizationName = organizationName;
             UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnOrganizationNamePosted);
-
+            
             return RedirectToAction(SR.OrganizationCategoryAction, SR.OnboardingWorkflowController);
         }
 
@@ -58,7 +50,7 @@ namespace Saas.SignupAdministration.Web.Controllers
                 new Category { Id = 8, Name = SR.RetailAndConsumerGoodsPrompt },
                 new Category { Id = 9, Name = SR.SoftwarePrompt }
             };
-
+            ViewBag.CategoryId = _onboardingWorkflow.OnboardingWorkflowItem.CategoryId; 
             return View(categories);
         }
 
@@ -73,11 +65,18 @@ namespace Saas.SignupAdministration.Web.Controllers
             return RedirectToAction(SR.TenantRouteNameAction, SR.OnboardingWorkflowController);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult OrganizationCategoryBack(int categoryId)
+        {
+            return RedirectToAction(SR.OrganizationNameAction, SR.OnboardingWorkflowController);
+        }
+
         // Step 3 - Tenant Route Name
         [HttpGet]
         public IActionResult TenantRouteName()
         {
-
+            ViewBag.TenantRouteName = _onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName; 
             return View();
         }
 
@@ -100,6 +99,13 @@ namespace Saas.SignupAdministration.Web.Controllers
             return RedirectToAction(SR.ServicePlansAction, SR.OnboardingWorkflowController);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult TenantRouteNameBack(string tenantRouteName)
+        {
+            return RedirectToAction(SR.OrganizationCategoryAction, SR.OnboardingWorkflowController);
+        }
+
         // Step 4 - Service Plan
         [HttpGet]
         public IActionResult ServicePlans()
@@ -118,14 +124,28 @@ namespace Saas.SignupAdministration.Web.Controllers
             return RedirectToAction(SR.ConfirmationAction, SR.OnboardingWorkflowController);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ServicePlansBack()
+        {
+            return RedirectToAction(SR.TenantRouteNameAction, SR.OnboardingWorkflowController);
+        }
+
         // Step 5 - Tenant Created Confirmation
         [HttpGet]
         public async Task<IActionResult> Confirmation()
         {
             // Deploy the Tenant
             await DeployTenantAsync();
-
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult LastAction(int categoryId)
+        {
+            var action = GetAction();
+            return RedirectToAction(action, SR.OnboardingWorkflowController);
         }
 
         private async Task DeployTenantAsync()
@@ -139,6 +159,18 @@ namespace Saas.SignupAdministration.Web.Controllers
         {
             _onboardingWorkflow.TransitionState(trigger);
             _onboardingWorkflow.PersistToSession();
+        }
+
+        private string GetAction()
+        {
+            var action = SR.OrganizationNameAction;
+
+            if (!String.IsNullOrEmpty(_onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName))
+                action = SR.ServicePlansAction;
+            else if (_onboardingWorkflow.OnboardingWorkflowItem.CategoryId > 0)
+                action = SR.TenantRouteNameAction;
+
+            return action;
         }
     }
 }
