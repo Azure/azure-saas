@@ -1,4 +1,6 @@
-﻿using Saas.Permissions.Api.Exceptions;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.Identity.Web.Resource;
+using Saas.Permissions.Api.Exceptions;
 using Saas.Permissions.Api.Interfaces;
 using System.Net;
 
@@ -6,6 +8,7 @@ namespace Saas.Permissions.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class PermissionsController : ControllerBase
 {
     private readonly IPermissionsService _permissionsService;
@@ -21,6 +24,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [RequiredScope(new[] { "permissions.read", "permissions.write" })]
     [Route("GetTenantUsers")]
     public async Task<ICollection<string>> GetTenantUsers(string tenantId)
     {
@@ -32,6 +36,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [RequiredScope(new[] { "permissions.read", "permissions.write" })]
     [Route("GetUserPermissionsForTenant")]
     public async Task<ICollection<string>> GetUserPermissionsForTenant(string tenantId, string userId)
     {
@@ -44,6 +49,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [RequiredScope("permissions.write")]
     [Route("AddUserPermissionsToTenant")]
     public async Task<IActionResult> AddUserPermissionsToTenant(string tenantId, string userId, string[] permissions)
     {
@@ -65,6 +71,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [RequiredScope("permissions.write")]
     [Route("RemoveUserPermissionsFromTenant")]
     public async Task<IActionResult> RemoveUserPermissionsFromTenant(string tenantId, string userId, string[] permissions)
     {
@@ -84,6 +91,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [RequiredScope(new[] { "permissions.read", "permissions.write" })]
     [Route("GetTenantsForUser")]
     public async Task<ICollection<string>> GetTenantsForUser(string userId, string? filter)
     {
