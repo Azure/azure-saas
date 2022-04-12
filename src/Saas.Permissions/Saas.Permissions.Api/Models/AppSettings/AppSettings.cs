@@ -2,5 +2,5 @@
 
 public class AppSettings
 {
-    public string SelfSignedCertThumbprint { get; set; }
+    public string SelfSignedCertThumbprint { get; set; } = string.Empty;
 }
