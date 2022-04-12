@@ -24,7 +24,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [RequiredScope(new[] { "read_via_admin_api", "write_via_admin_api" })]
+    [RequiredScope(new[] { "permissions.read", "permissions.write" })]
     [Route("GetTenantUsers")]
     public async Task<ICollection<string>> GetTenantUsers(string tenantId)
     {
@@ -36,7 +36,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [RequiredScope(new[] { "read_via_admin_api", "write_via_admin_api" })]
+    [RequiredScope(new[] { "permissions.read", "permissions.write" })]
     [Route("GetUserPermissionsForTenant")]
     public async Task<ICollection<string>> GetUserPermissionsForTenant(string tenantId, string userId)
     {
@@ -49,7 +49,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [RequiredScope("write_via_admin_api")]
+    [RequiredScope("permissions.write")]
     [Route("AddUserPermissionsToTenant")]
     public async Task<IActionResult> AddUserPermissionsToTenant(string tenantId, string userId, string[] permissions)
     {
@@ -71,7 +71,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [RequiredScope("write_via_admin_api")]
+    [RequiredScope("permissions.write")]
     [Route("RemoveUserPermissionsFromTenant")]
     public async Task<IActionResult> RemoveUserPermissionsFromTenant(string tenantId, string userId, string[] permissions)
     {
@@ -91,7 +91,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [RequiredScope(new[] { "read_via_admin_api", "write_via_admin_api" })]
+    [RequiredScope(new[] { "permissions.read", "permissions.write" })]
     [Route("GetTenantsForUser")]
     public async Task<ICollection<string>> GetTenantsForUser(string userId, string? filter)
     {
