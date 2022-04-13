@@ -2,8 +2,15 @@
 
 public class PermissionService : IPermissionService
 {
-    public Task AddUserPermissionsToTenantAsyc(Guid tenantId, string userId, string[] permissions)
+    private readonly IPermissionServiceClient _permissionsServiceClient;
+
+    public PermissionService(IPermissionServiceClient permissionServiceClient)
     {
+        _permissionsServiceClient = permissionServiceClient;
+    }
+
+    public Task AddUserPermissionsToTenantAsyc(Guid tenantId, string userId, string[] permissions)
+    {        
         throw new NotImplementedException();
     }
 
@@ -12,9 +19,10 @@ public class PermissionService : IPermissionService
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<string>> GetTenantUsersAsync(Guid tenantId)
+    public async Task<IEnumerable<string>> GetTenantUsersAsync(Guid tenantId)
     {
-        throw new NotImplementedException();
+        var response = await _permissionsServiceClient.GetTenantUsersAsync(tenantId.ToString());
+        return response;
     }
 
     public Task<IEnumerable<string>> GetUserPermissionsForTenantAsync(Guid tenantId, string userId)

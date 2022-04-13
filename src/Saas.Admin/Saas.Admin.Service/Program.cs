@@ -1,20 +1,29 @@
 using Saas.Admin.Service.Data;
+using Microsoft.Identity.Web;
+using Saas.Admin.Service.Data.AppSettings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TenantsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TenantsContext")));
 
+// Add options using options pattern : https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0
+builder.Services.Configure<PermissionsApiOptions>(builder.Configuration.GetSection("PermissionsApi"));
+
 // Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd")).EnableTokenAcquisitionToCallDownstreamApi()
-            .AddDownstreamWebApi("DownstreamApi", builder.Configuration.GetSection("DownstreamApi"))
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"))
+            .EnableTokenAcquisitionToCallDownstreamApi()
+            .AddDownstreamWebApi("DownstreamApi", builder.Configuration.GetSection("PermissionsApi"))
             .AddInMemoryTokenCaches();
 
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
+
+builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient>()
+    .ConfigureHttpClient(options => options.BaseAddress = new Uri(builder.Configuration["PermissionsApi:BaseUrl"]) );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
