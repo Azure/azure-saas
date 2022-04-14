@@ -2,7 +2,7 @@
 
 namespace Saas.SignupAdministration.Web.Models
 {
-    public partial class IdNameReferenceItem
+    public record IdNameReferenceItem
     {
         public int Id { get; set; }
         public string Name { get; set; }
