@@ -20,6 +20,12 @@ namespace Saas.SignupAdministration.Web
         public const string EmailPrompt = "Email";
         public const string PasswordPrompt = "Password";
 
+        // Service Plans
+
+        public const string FreePlan = "Free";
+        public const string BasicPlan = "Basic";
+        public const string StandardPlan = "Standard";
+
         // API Route Template
         public const string ApiRouteTemplate = "api/[controller]";
 
