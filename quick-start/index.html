@@ -25,12 +25,12 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/quick-start/" /><meta property="article:section" content="" />
 
-<meta property="article:modified_time" content="2022-04-08T11:12:59-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-14T11:59:19-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Quick Start">
 <meta itemprop="description" content="Getting Started with the Azure SaaS Dev Kit">
-<meta itemprop="dateModified" content="2022-04-08T11:12:59-05:00" />
-<meta itemprop="wordCount" content="184">
+<meta itemprop="dateModified" content="2022-04-14T11:59:19-05:00" />
+<meta itemprop="wordCount" content="452">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Quick Start"/>
 <meta name="twitter:description" content="Getting Started with the Azure SaaS Dev Kit"/>
@@ -189,8 +189,13 @@
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
     <li><a href="#running-the-dev-kit-in-your-local-dev-environment">Running the Dev Kit in your local dev environment</a></li>
-    <li><a href="#integrating-your-application">Integrating your application</a></li>
+    <li><a href="#app-settings">App Settings</a></li>
     <li><a href="#deploying-to-azure">Deploying to Azure</a></li>
+    <li><a href="#integrating-your-application">Integrating your application</a>
+      <ul>
+        <li><a href="#how-does-this-work">How does this work?</a></li>
+      </ul>
+    </li>
     <li><a href="#learn-more-about-saas">Learn more about SaaS</a></li>
   </ul>
 </nav></div>
@@ -248,7 +253,7 @@
 
 		
 	</header>    
-	<p>On this page, you will find instructions to run the dev kit in your local environment, where to put your application code, and how to deploy the solution to Azure.</p>
+	<p>On this page, you will find instructions to run the dev kit in your local environment, how to deploy the solution to Azure, and where to put your application code to customize the solution.</p>
 <blockquote>
 <p>Tip: If you&rsquo;re new here and want to learn what this is, check out the <a href="..">welcome page</a></p>
 </blockquote>
@@ -262,23 +267,37 @@
 <blockquote>
 <p>Note: See <a href="../resources/design-considerations/">Design Considerations</a> for recommendations around using <a href="https://azure.microsoft.com/en-us/services/key-vault/">Azure Key Vault</a>.</p>
 </blockquote>
-<pre><code>App Settings:
-    Saas.Admin.Service
-        Uses local DB
-    Saas.SignupAdministration.Web
-        connectionString
-    Saas.Application.Web
-        AdminServiceUrl
+<h2 id="app-settings">App Settings</h2>
+<p>You can build the code without configuring your application settings, but you won&rsquo;t be able to run the projects without a few key configuration settings.</p>
+<pre><code>Saas.SignupAdministration.Web
+    connectionString
+Saas.Application.Web
+    AdminServiceUrl
 </code></pre>
-<h2 id="integrating-your-application">Integrating your application</h2>
+<p>Note: <code>Saas.Admin.Service</code> uses a local database instance and is automatically populated using Entity Framework.</p>
 <h2 id="deploying-to-azure">Deploying to Azure</h2>
+<p>Deploying to Azure is easy thanks to an ARM (Azure Resource Manager) template.</p>
+<p>This button will take you to the Azure portal, passing it the template. You&rsquo;ll be asked a few questions, and then the solution will be up and running in just a few minutes.</p>
+<p><a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2FcreateUiDefinition.json"><img src="https://www.azuresaas.net/assets/images/deploy-to-azure.svg" alt="Deploy to Azure"></a></p>
+<h2 id="integrating-your-application">Integrating your application</h2>
+<p>Now that you&rsquo;ve seen how to build and run the code locally, and you have a way to deploy your code to Azure in a repeatable and code-first way, you can integrate your own code into the solution.</p>
+<p>We&rsquo;ve included a basic application within the <code>Saas.Application.Web</code> project that demonstrates a SaaS solution called &ldquo;BadgeMeUp&rdquo;. BadgeMeUp is simply a badge sharing site that <em>Contoso</em> (representing your company) can sell to end customers.</p>
+<blockquote>
+<p>SaaS solutions come in many shapes as sizes. We picked &ldquo;BadgeMeUp&rdquo;, because it&rsquo;s a fairly simple scenario to understand. <a href="../resources/contoso-badgemeup/">You can read more about this particular SaaS scenario here</a>.</p>
+</blockquote>
+<h3 id="how-does-this-work">How does this work?</h3>
+<p>This solution uses a Bicep template which is checked into source control. Whenever changes are detected, a GitHub pipeline compiles the template into an ARM template.</p>
+<blockquote>
+<p>What is Bicep?
+Bicep is a domain-specific language (DSL) that uses declarative syntax to deploy Azure resources. In a Bicep file, you define the infrastructure you want to deploy to Azure, and then use that file throughout the development lifecycle to repeatedly deploy your infrastructure. Your resources are deployed in a consistent manner.</p>
+</blockquote>
 <h2 id="learn-more-about-saas">Learn more about SaaS</h2>
 <p>There are a plethora of resources to help you on your SaaS journey. They&rsquo;re available in the <a href="../resources/saas-resources/">SaaS Resources section</a>.</p>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 8, 2022: <a href="https://github.com/Azure/azure-saas/commit/d0b7fffb31c66a0bd06939998ecaff209d8b4839">Fixed all broken links (d0b7fff)</a>
+  Last modified April 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/c96bc820b44bd0f4a48eddf1e069710ad0f50416">Doc cleanup, mostly on quick start (c96bc82)</a>
 </div>
 
 </div>
