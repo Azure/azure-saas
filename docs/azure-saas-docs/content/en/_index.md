@@ -8,17 +8,17 @@ weight: 0
 
 [Software as a Service (SaaS)](https://azure.microsoft.com/en-us/overview/what-is-saas/) doesn’t need to be complex and time consuming.
 
-The Azure SaaS Development Kit is a reference implementation of pre-built modular resources to help you launch your SaaS offering faster:
+The Azure SaaS Development Kit is a reference implementation of pre-built resources to help you launch your SaaS offering faster:
 
-* Standard SaaS components deployable individually or mix-and-match
-* [Open-source code](https://github.com/Azure/azure-saas), allowing engineers to build by example or modify/extend to be purpose-built
-* Fully documented code allows for self-serve usage
+* There are standard SaaS components that implement features such as identity, onboarding, and tenant management.
+* 100% [Open-source code](https://github.com/Azure/azure-saas), allowing developers to build by example or modify/extend to be purpose-built for your particular scenario.
+* Fully documented code makes it clear how the code functions, and how key decisions were made.
 
 Whether you're modernizing an existing application, building a new application, or migrating your application, the SaaS dev kit can help you.
 
 ## Modules & Architecture
 
-![](futurestate.drawio.png)
+![](architecture.drawio.png)
 
 - [**Identity Provider (B2C)**](components/identity/identity-provider/) - Provides a flexible identity solution.
 - [**Signup / Administration**](components/signup-administration/)
@@ -42,5 +42,3 @@ Check out the [quick start page](quick-start/).
 * [ISV Considerations for Azure landing zones](https://aka.ms/isv-landing-zones)
 * [Azure Well-Architected Framework](https://docs.microsoft.com/en-us/azure/architecture/framework/)
 * [WingTips Tickets SaaS Application](https://docs.microsoft.com/en-us/azure/azure-sql/database/saas-tenancy-welcome-wingtip-tickets-app) - Provides details into tradeoffs with various tenancy models within the database layer.
-
-## Next Steps

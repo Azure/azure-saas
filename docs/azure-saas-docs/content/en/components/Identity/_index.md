@@ -3,7 +3,6 @@ type: docs
 title: "Identity Framework"
 linkTitle: "Identity Framework"
 weight: 30
-description: "Overview of identity and authorization."
 ---
 
 The goal of our identity and authorization strategy is to enable us to easily authenticate users and provide basic RBAC for entities created within the application.
