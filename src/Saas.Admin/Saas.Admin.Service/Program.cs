@@ -1,6 +1,7 @@
 using Saas.Admin.Service.Data;
 using Microsoft.Identity.Web;
 using Saas.Admin.Service.Data.AppSettings;
+using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,12 +11,23 @@ builder.Services.AddDbContext<TenantsContext>(options =>
 // Add options using options pattern : https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0
 builder.Services.Configure<PermissionsApiOptions>(builder.Configuration.GetSection("PermissionsApi"));
 
-// Add services to the container.
+
+// Add authentication for incoming requests
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"))
-            .EnableTokenAcquisitionToCallDownstreamApi()
-            .AddDownstreamWebApi("DownstreamApi", builder.Configuration.GetSection("PermissionsApi"))
-            .AddInMemoryTokenCaches();
+        .AddMicrosoftIdentityWebApi(options =>
+        {
+            builder.Configuration.Bind("AzureAd", options);
+
+            options.TokenValidationParameters.NameClaimType = "name";
+        },
+        options => { builder.Configuration.Bind("AzureAd", options); })
+        // Inject token acquisition service to allow for token requests for permissions api
+        .EnableTokenAcquisitionToCallDownstreamApi(options => {})
+        .AddDownstreamWebApi("PermissionsApi", builder.Configuration.GetSection("PermissionsApi"))
+        .AddInMemoryTokenCaches();
+
+builder.Services.AddAuthorization(options => { });
+
 
 builder.Services.AddControllers();
 
