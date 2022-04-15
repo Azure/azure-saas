@@ -3,6 +3,8 @@ using Microsoft.IdentityModel.Logging;
 using System.Security.Cryptography.X509Certificates;
 using Azure.Security.KeyVault.Certificates;
 using Azure.Identity;
+using Saas.AspNetCore.Authorization.ClaimTransformers;
+using Saas.AspNetCore.Authorization.PolicyRequirements;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +19,16 @@ builder.Services.Configure<PermissionsApiOptions>(builder.Configuration.GetSecti
 builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, "AzureAdB2C");
 
 
-builder.Services.AddAuthorization(options => { });
+
+builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTransformer");
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("TenantAdminOnly", policyBuilder =>
+    {
+        policyBuilder.Requirements.Add(new RouteBasedPolicyRequirement("tenantId", "TenantAdmin"));
+    });
+});
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddRouteBasedPolicy();
 
 
 builder.Services.AddControllers();
@@ -26,7 +37,7 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 // Use azure keyvault SDK to download certificate to be used to authenticate with permissions api
-CertificateClient certificateClient = new CertificateClient(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential());
+CertificateClient certificateClient = new CertificateClient(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential(new DefaultAzureCredentialOptions() { }));
 X509Certificate2 certificate = certificateClient.DownloadCertificate(builder.Configuration["KeyVault:PermissionsApiCertName"]).Value;
 
 builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient>()

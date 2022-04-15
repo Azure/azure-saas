@@ -41,10 +41,12 @@ This compnent allows you to write policies that can understand context based rol
 
 For example given the following policy for a subscription with ID ```subscription_1```:
 ```C#
+builder.Services.AddAuthorization(options => {
     options.AddPolicy("SubscriptionAdminOnly", policyBuilder =>
     {
         policyBuilder.Requirements.Add(new RouteBasedPolicyRequirement("subscriptionId", "SubscriptionAdmin"));
     });
+});
 ```  
 And this action method:
 ```C#
