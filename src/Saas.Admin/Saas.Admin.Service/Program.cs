@@ -13,17 +13,9 @@ builder.Services.AddDbContext<TenantsContext>(options =>
 builder.Services.Configure<PermissionsApiOptions>(builder.Configuration.GetSection("PermissionsApi"));
 
 
+// Add authentication for incoming requests
 builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, "AzureAdB2C");
 
-// Add authentication for incoming requests
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//        .AddMicrosoftIdentityWebApi(options =>
-//        {
-//            builder.Configuration.Bind("AzureAdB2C", options);
-
-//            options.TokenValidationParameters.NameClaimType = "name";
-//        },
-//        options => { builder.Configuration.Bind("AzureAdB2C", options); });
 
 builder.Services.AddAuthorization(options => { });
 
