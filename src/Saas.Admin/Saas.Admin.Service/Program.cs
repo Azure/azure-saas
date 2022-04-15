@@ -1,7 +1,8 @@
 using Saas.Admin.Service.Data;
-using Microsoft.Identity.Web;
-using Saas.Admin.Service.Data.AppSettings;
 using Microsoft.IdentityModel.Logging;
+using System.Security.Cryptography.X509Certificates;
+using Azure.Security.KeyVault.Certificates;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,19 +13,17 @@ builder.Services.AddDbContext<TenantsContext>(options =>
 builder.Services.Configure<PermissionsApiOptions>(builder.Configuration.GetSection("PermissionsApi"));
 
 
-// Add authentication for incoming requests
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddMicrosoftIdentityWebApi(options =>
-        {
-            builder.Configuration.Bind("AzureAd", options);
+builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, "AzureAdB2C");
 
-            options.TokenValidationParameters.NameClaimType = "name";
-        },
-        options => { builder.Configuration.Bind("AzureAd", options); })
-        // Inject token acquisition service to allow for token requests for permissions api
-        .EnableTokenAcquisitionToCallDownstreamApi(options => {})
-        .AddDownstreamWebApi("PermissionsApi", builder.Configuration.GetSection("PermissionsApi"))
-        .AddInMemoryTokenCaches();
+// Add authentication for incoming requests
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//        .AddMicrosoftIdentityWebApi(options =>
+//        {
+//            builder.Configuration.Bind("AzureAdB2C", options);
+
+//            options.TokenValidationParameters.NameClaimType = "name";
+//        },
+//        options => { builder.Configuration.Bind("AzureAdB2C", options); });
 
 builder.Services.AddAuthorization(options => { });
 
@@ -34,8 +33,29 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 
+// Use azure keyvault SDK to download certificate to be used to authenticate with permissions api
+CertificateClient certificateClient = new CertificateClient(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential());
+X509Certificate2 certificate = certificateClient.DownloadCertificate(builder.Configuration["KeyVault:PermissionsApiCertName"]).Value;
+
 builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient>()
-    .ConfigureHttpClient(options => options.BaseAddress = new Uri(builder.Configuration["PermissionsApi:BaseUrl"]) );
+    // Configure outgoing HTTP requests to include certificate for permissions API
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        HttpClientHandler handler = new HttpClientHandler();
+        handler.ClientCertificates.Add( certificate );
+        return handler;
+    })
+    .ConfigureHttpClient(options => {
+        options.BaseAddress = new Uri(builder.Configuration["PermissionsApi:BaseUrl"]);
+
+        if (builder.Environment.IsDevelopment())
+        {
+            // The permissions API expects the certificate to be provided to the application layer by the web server after the TLS handshake
+            // Since this doesn't happen locally, we need to do it ourselves
+            var certData = Convert.ToBase64String(certificate.GetRawCertData());
+            options.DefaultRequestHeaders.Add("X-ARR-ClientCert", certData);
+        }
+        });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -56,6 +76,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    // Show identity debug information during development. This should be kept off in production to comply with GDPR standards
+    IdentityModelEventSource.ShowPII = true;
 }
 
 app.UseHttpsRedirection();
