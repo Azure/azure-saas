@@ -29,9 +29,12 @@ public class CustomClaimsController : ControllerBase
     {
         var permissions = await _permissionsService.GetPermissionsAsync(aDB2CRequest.EmailAddress);
 
+        string[] tenantPermissionStrings = permissions.Select(x => x.ToTenantPermissionString())
+                                                     .Append($"{aDB2CRequest.ObjectId}.Self")
+                                                     .ToArray();
         ADB2CReponse response = new ADB2CReponse()
         {
-            Permissions = permissions.Select(x => x.ToTenantPermissionString()).ToArray()
+            Permissions = tenantPermissionStrings
         };
 
         return Ok(response);
