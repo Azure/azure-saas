@@ -1,5 +1,4 @@
 using Saas.Admin.Service.Data;
-using Microsoft.IdentityModel.Logging;
 using System.Security.Cryptography.X509Certificates;
 using Azure.Security.KeyVault.Certificates;
 using Azure.Identity;
