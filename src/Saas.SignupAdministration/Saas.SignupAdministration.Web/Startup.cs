@@ -65,7 +65,9 @@ namespace Saas.SignupAdministration.Web
                     options.UseSqlServer(Configuration.GetConnectionString("SaasSignupAdministrationWebContext")));
 
             // Configuration to sign-in users with Azure AD B2C
-            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C);
+            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C)
+                .EnableTokenAcquisitionToCallDownstreamApi(Configuration.GetSection("AppSettings")["AdminServiceScopes"].Split(" "))
+                .AddInMemoryTokenCaches();
             services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
             // Configuring appsettings section AzureAdB2C, into IOptions
