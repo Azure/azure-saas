@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Saas.SignupAdministration.Web.Models;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Saas.SignupAdministration.Web.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -22,13 +19,8 @@ namespace Saas.SignupAdministration.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         [HttpPost]
-        public IActionResult Index(string x)
+        public IActionResult Index()
         {
             return View();
         }

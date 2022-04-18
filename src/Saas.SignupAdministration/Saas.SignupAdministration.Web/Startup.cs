@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using Microsoft.IdentityModel.Logging;
@@ -17,48 +18,37 @@ namespace Saas.SignupAdministration.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString(SR.IdentityDbConnectionProperty)));
             services.AddDatabaseDeveloperPageExceptionFilter();
-            //services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
-
-            //services.Configure<IdentityOptions>(options =>
-            //{
-            //    // Default SignIn settings.
-            //    options.SignIn.RequireConfirmedEmail = false;
-            //    options.SignIn.RequireConfirmedPhoneNumber = false;
-
-            //    // Default Password settings.
-            //    options.Password.RequireDigit = false;
-            //    options.Password.RequireLowercase = false;
-            //    options.Password.RequireNonAlphanumeric = false;
-            //    options.Password.RequireUppercase = false;
-            //    options.Password.RequiredLength = 6;
-            //    options.Password.RequiredUniqueChars = 0;
-            //});
-
-            // Configuration to sign-in users with Azure AD B2C
-            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C);
-            services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
             services.AddRazorPages();
 
-            //Configuring appsettings section AzureAdB2C, into IOptions
-            services.AddOptions();
-            services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));
+            // Load the app settings
+            services.Configure<AppSettings>(Configuration.GetSection(SR.AppSettingsProperty));
 
-            var appSettings = Configuration.GetSection(SR.AppSettingsProperty);
-
-            services.Configure<AppSettings>(appSettings);
+            // Load the email settings 
+            services.Configure<EmailOptions>(Configuration.GetSection(SR.EmailOptionsProperty));
 
             services.AddMvc();
-            services.AddDistributedMemoryCache();
+
+            // Add the workflow object
             services.AddScoped<OnboardingWorkflow, OnboardingWorkflow>();
 
+            // Add this to allow for context to be shared outside of requests
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            // Add the email object
+            services.AddScoped<IEmail, Email>();
+
+            // Required for the JsonPersistenceProvider
+            // Should be replaced based on the persistence scheme
+            services.AddDistributedMemoryCache();
+            
             // TODO: Replace with your implementation of persistence provider
             // Session persistence is the default
             services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>();
+
+            // Add the user details that come back from B2C
+            services.AddScoped<IApplicationUser, ApplicationUser>();
 
             services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
                 .ConfigureHttpClient(client =>
@@ -73,6 +63,14 @@ namespace Saas.SignupAdministration.Web
 
             services.AddDbContext<SaasSignupAdministrationWebContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SaasSignupAdministrationWebContext")));
+
+            // Configuration to sign-in users with Azure AD B2C
+            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C);
+            services.AddControllersWithViews().AddMicrosoftIdentityUI();
+
+            // Configuring appsettings section AzureAdB2C, into IOptions
+            services.AddOptions();
+            services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,15 +97,18 @@ namespace Saas.SignupAdministration.Web
 
             app.UseEndpoints(endpoints =>
             {
-                var adminRoutes = endpoints.MapControllerRoute(
+                // admin
+                endpoints.MapControllerRoute(
                     name: "Admin",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                var routes = endpoints.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
-                if (env.IsDevelopment())
-                {
-                    routes.WithMetadata(new AllowAnonymousAttribute());
+                
+                // default
+                endpoints.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
+                //if (env.IsDevelopment())
+                //{
+                //    routes.WithMetadata(new AllowAnonymousAttribute());
 
-                }
+                //}
 
                 endpoints.MapRazorPages();
             });

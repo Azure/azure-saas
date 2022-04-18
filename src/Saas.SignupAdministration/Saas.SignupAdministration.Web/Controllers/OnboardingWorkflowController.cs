@@ -2,6 +2,7 @@
 
 namespace Saas.SignupAdministration.Web.Controllers
 {
+    [Authorize()]
     public class OnboardingWorkflowController : Controller
     {
         private readonly ILogger<OnboardingWorkflowController> _logger;
@@ -85,7 +86,7 @@ namespace Saas.SignupAdministration.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> TenantRouteName(string tenantRouteName)
         {
-            // TODO:Need to check whether the route name exists
+            // Need to check whether the route name exists
             if (await _onboardingWorkflow.GetRouteExistsAsync(tenantRouteName))
             {
                 ViewBag.TenantRouteExists = true;
