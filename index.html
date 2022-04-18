@@ -116,6 +116,8 @@ The Azure SaaS Development Kit is a …">
   <ul class="ul-1">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasquick-start-li">
   <a href="/azure-saas/quick-start/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasquick-start"><span class="">Quick Start</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasdesign-li">
+  <a href="/azure-saas/design/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasdesign"><span class="">Design</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-azure-saascomponents-li">
   <a href="/azure-saas/components/" title="Azure SaaS Dev Kit Components" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-azure-saascomponents"><span class="">Components</span></a>
   <ul class="ul-2 foldable">
@@ -145,20 +147,16 @@ The Azure SaaS Development Kit is a …">
   <ul class="ul-2 foldable">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesbranding-considerations-for-saas-li">
   <a href="/azure-saas/resources/branding-considerations-for-saas/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesbranding-considerations-for-saas"><span class="">SaaS Branding Considerations</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcessaas-resources-li">
-  <a href="/azure-saas/resources/saas-resources/" title="Azure SaaS Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcessaas-resources"><span class="">Additional SaaS Resources</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-badgemeup-li">
   <a href="/azure-saas/resources/contoso-badgemeup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-badgemeup"><span class="">Contoso BadgeMeUp</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-tickets-li">
   <a href="/azure-saas/resources/contoso-tickets/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-tickets"><span class="">Contoso Tickets</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdesign-considerations-li">
-  <a href="/azure-saas/resources/design-considerations/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesdesign-considerations"><span class="">Design Considerations</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesterminology-li">
   <a href="/azure-saas/resources/terminology/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesterminology"><span class="">Terminology</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdevops-li">
   <a href="/azure-saas/resources/devops/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesdevops"><span class="">DevOps Workflows</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesfuture-roadmap-li">
-  <a href="/azure-saas/resources/future-roadmap/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesfuture-roadmap"><span class="">Potential Future Roadmap Items</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesadditional-recommended-resources-li">
+  <a href="/azure-saas/resources/additional-recommended-resources/" title="Azure Recommended Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesadditional-recommended-resources"><span class="">Additional Recommended Resources</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasfaq-li">
@@ -186,8 +184,7 @@ The Azure SaaS Development Kit is a …">
 
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
-    <li><a href="#modules--architecture">Modules &amp; Architecture</a></li>
-    <li><a href="#product-saas-reference">Product SaaS Reference</a></li>
+    <li><a href="#modular-architecture">Modular Architecture</a></li>
     <li><a href="#ready-to-get-started">Ready to get started?</a></li>
     <li><a href="#additional-recommended-resources">Additional Recommended Resources</a></li>
   </ul>
@@ -255,8 +252,8 @@ The Azure SaaS Development Kit is a …">
 <li>Fully documented code makes it clear how the code functions, and how key decisions were made.</li>
 </ul>
 <p>Whether you&rsquo;re modernizing an existing application, building a new application, or migrating your application, the SaaS dev kit can help you.</p>
-<h2 id="modules--architecture">Modules &amp; Architecture</h2>
-<p><img src="architecture.drawio.png" alt=""></p>
+<h2 id="modular-architecture">Modular Architecture</h2>
+<p>This kit uses a <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/microservices-architecture">microservices architecture</a> so that each module is self-contained and can be used idependantly.</p>
 <ul>
 <li><a href="components/identity/identity-provider/"><strong>Identity Provider (B2C)</strong></a> - Provides a flexible identity solution.</li>
 <li><a href="components/signup-administration/"><strong>Signup / Administration</strong></a>
@@ -265,11 +262,15 @@ The Azure SaaS Development Kit is a …">
 <li>Provides you with tenant administration capabilities. (modify/remove/etc.)</li>
 </ul>
 </li>
-<li><a href="components/saas-application/"><strong>SaaS.Application</strong></a> - A sample application that you can extend or replace with your own code.</li>
+<li><a href="components/admin-service"><strong>Admin Service</strong></a> - An extensible API to programatically manage CRUD operations on tenants.</li>
+<li><a href="components/identity/permissions-service"><strong>Permissions Service</strong></a> - An API that manages all user permissions and serves to enrich the user tokens returned from the identity provider.</li>
+<li><a href="components/saas-application/"><strong>SaaS.Application</strong></a> - A sample end user application that you can extend or replace with your own code.</li>
 </ul>
-<h2 id="product-saas-reference">Product SaaS Reference</h2>
-<p><a href="https://www.onsubscriber.com/">OnSubscriber</a> is a live production SaaS solution built entirely on the Azure SaaS Development Kit.</p>
-<p>It&rsquo;s a real production site that allows users to easily build their Email and SMS lists using social login with Facebook, Google, Apple, Email and SMS. In addition, users can add profile pictures, bios, external links and social accounts to their tenants.</p>
+<blockquote>
+<p>The Dev Kit uses a <a href="https://docs.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models#fully-multitenant-deployments"><strong>fully multitenant depoyment</strong></a>. Multitenancy is a complex topic with many facets, and there is no <em>one size fits all</em> approach.</p>
+<p>Read more about multitenant architectures and considerations on Azure <a href="http://aka.ms/multitenancy">here</a>.</p>
+</blockquote>
+<p><img src="architecture.drawio.png" alt=""></p>
 <h2 id="ready-to-get-started">Ready to get started?</h2>
 <p>Check out the <a href="quick-start/">quick start page</a>.</p>
 <h2 id="additional-recommended-resources">Additional Recommended Resources</h2>
@@ -299,13 +300,21 @@ The Azure SaaS Development Kit is a …">
                 <p>Getting Started with the Azure SaaS Dev Kit</p>
             </div>
         
+            
+            <div class="entry">
+                <h5>
+                    <a href="/azure-saas/design/">Design</a>
+                </h5>
+                <p>Getting Started with the Azure SaaS Dev Kit</p>
+            </div>
+        
     
 </div>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/c96bc820b44bd0f4a48eddf1e069710ad0f50416">Doc cleanup, mostly on quick start (c96bc82)</a>
+  Last modified April 18, 2022: <a href="https://github.com/Azure/azure-saas/commit/4fdc4f6b2c772e5e57cfacc21891d524240ada01">Jason &#43; Landon jam session (4fdc4f6)</a>
 </div>
 
 </div>

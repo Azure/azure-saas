@@ -21,26 +21,23 @@
 <title>Identity Flows | Azure SaaS Dev Kit Docs</title>
 <meta name="description" content="Sign Up
 sequenceDiagram  
-actor user 
+actor user as User 
 participant frontend as Frontend Application
-participant auth as Auth Service (B2C)
-
-
-user-&gt;&gt;frontend : …">
+participant auth as Auth Service (B2C) …">
 <meta property="og:title" content="Identity Flows" />
-<meta property="og:description" content="Sign Up sequenceDiagram actor user participant frontend as Frontend Application participant auth as Auth Service (B2C) user-&gt;&gt;frontend : Register Button (/register) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign Up Page user-&gt;&gt;auth : Sign Up Submitted auth-&gt;&gt;auth : Create Account auth--&gt;&gt;user : Redirect with JWT Sign In sequenceDiagram actor user participant frontend as Signup Administration App participant auth as Auth Service (B2C) participant perm as Permissions API user-&gt;&gt;frontend : Login Button (/login) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign In Page user-&gt;&gt;auth : Login Submitted auth-&gt;&gt;perm : Get Permissions &amp; Roles perm--&gt;&gt;auth : Permissions &amp; Roles auth-&gt;&gt;auth : Add Custom Claims to JWT auth--&gt;&gt;user : Redirect with JWT Add Permissions Record This flow is not comprehensive." />
+<meta property="og:description" content="Sign Up sequenceDiagram actor user as User participant frontend as Frontend Application participant auth as Auth Service (B2C) user-&gt;&gt;frontend : Register (/register) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign Up Page user-&gt;&gt;auth : Sign Up Submitted auth-&gt;&gt;auth : Create Account auth--&gt;&gt;user : Redirect with JWT Sign In sequenceDiagram actor user as User participant frontend as Frontend Application participant auth as Auth Service (B2C) participant perm as Permissions API user-&gt;&gt;frontend : Login (/login) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign In Page user-&gt;&gt;auth : Login Submitted auth-&gt;&gt;perm : Get Permissions &amp; Roles perm--&gt;&gt;auth : Permissions &amp; Roles auth-&gt;&gt;auth : Add Custom Claims to JWT auth--&gt;&gt;user : Redirect with JWT Add Permissions Record (Generic) sequenceDiagram participant frontend as Frontend Application participant admin as Admin API participant perm as Permissions API frontend-&gt;&gt;admin : Add Tenant Permission for User admin-&gt;&gt;admin : Is Requestor Admin of Tenant?" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/identity-flows/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-03-29T15:35:25-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-18T14:56:51-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Identity Flows">
-<meta itemprop="description" content="Sign Up sequenceDiagram actor user participant frontend as Frontend Application participant auth as Auth Service (B2C) user-&gt;&gt;frontend : Register Button (/register) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign Up Page user-&gt;&gt;auth : Sign Up Submitted auth-&gt;&gt;auth : Create Account auth--&gt;&gt;user : Redirect with JWT Sign In sequenceDiagram actor user participant frontend as Signup Administration App participant auth as Auth Service (B2C) participant perm as Permissions API user-&gt;&gt;frontend : Login Button (/login) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign In Page user-&gt;&gt;auth : Login Submitted auth-&gt;&gt;perm : Get Permissions &amp; Roles perm--&gt;&gt;auth : Permissions &amp; Roles auth-&gt;&gt;auth : Add Custom Claims to JWT auth--&gt;&gt;user : Redirect with JWT Add Permissions Record This flow is not comprehensive.">
-<meta itemprop="dateModified" content="2022-03-29T15:35:25-04:00" />
-<meta itemprop="wordCount" content="186">
+<meta itemprop="description" content="Sign Up sequenceDiagram actor user as User participant frontend as Frontend Application participant auth as Auth Service (B2C) user-&gt;&gt;frontend : Register (/register) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign Up Page user-&gt;&gt;auth : Sign Up Submitted auth-&gt;&gt;auth : Create Account auth--&gt;&gt;user : Redirect with JWT Sign In sequenceDiagram actor user as User participant frontend as Frontend Application participant auth as Auth Service (B2C) participant perm as Permissions API user-&gt;&gt;frontend : Login (/login) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign In Page user-&gt;&gt;auth : Login Submitted auth-&gt;&gt;perm : Get Permissions &amp; Roles perm--&gt;&gt;auth : Permissions &amp; Roles auth-&gt;&gt;auth : Add Custom Claims to JWT auth--&gt;&gt;user : Redirect with JWT Add Permissions Record (Generic) sequenceDiagram participant frontend as Frontend Application participant admin as Admin API participant perm as Permissions API frontend-&gt;&gt;admin : Add Tenant Permission for User admin-&gt;&gt;admin : Is Requestor Admin of Tenant?">
+<meta itemprop="dateModified" content="2022-04-18T14:56:51-05:00" />
+<meta itemprop="wordCount" content="161">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Identity Flows"/>
-<meta name="twitter:description" content="Sign Up sequenceDiagram actor user participant frontend as Frontend Application participant auth as Auth Service (B2C) user-&gt;&gt;frontend : Register Button (/register) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign Up Page user-&gt;&gt;auth : Sign Up Submitted auth-&gt;&gt;auth : Create Account auth--&gt;&gt;user : Redirect with JWT Sign In sequenceDiagram actor user participant frontend as Signup Administration App participant auth as Auth Service (B2C) participant perm as Permissions API user-&gt;&gt;frontend : Login Button (/login) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign In Page user-&gt;&gt;auth : Login Submitted auth-&gt;&gt;perm : Get Permissions &amp; Roles perm--&gt;&gt;auth : Permissions &amp; Roles auth-&gt;&gt;auth : Add Custom Claims to JWT auth--&gt;&gt;user : Redirect with JWT Add Permissions Record This flow is not comprehensive."/>
+<meta name="twitter:description" content="Sign Up sequenceDiagram actor user as User participant frontend as Frontend Application participant auth as Auth Service (B2C) user-&gt;&gt;frontend : Register (/register) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign Up Page user-&gt;&gt;auth : Sign Up Submitted auth-&gt;&gt;auth : Create Account auth--&gt;&gt;user : Redirect with JWT Sign In sequenceDiagram actor user as User participant frontend as Frontend Application participant auth as Auth Service (B2C) participant perm as Permissions API user-&gt;&gt;frontend : Login (/login) frontend--&gt;&gt;user : Redirect to B2C Hosted Sign In Page user-&gt;&gt;auth : Login Submitted auth-&gt;&gt;perm : Get Permissions &amp; Roles perm--&gt;&gt;auth : Permissions &amp; Roles auth-&gt;&gt;auth : Add Custom Claims to JWT auth--&gt;&gt;user : Redirect with JWT Add Permissions Record (Generic) sequenceDiagram participant frontend as Frontend Application participant admin as Admin API participant perm as Permissions API frontend-&gt;&gt;admin : Add Tenant Permission for User admin-&gt;&gt;admin : Is Requestor Admin of Tenant?"/>
 
 
 
@@ -125,6 +122,8 @@ user-&gt;&gt;frontend : …">
   <ul class="ul-1">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasquick-start-li">
   <a href="/azure-saas/quick-start/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasquick-start"><span class="">Quick Start</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasdesign-li">
+  <a href="/azure-saas/design/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasdesign"><span class="">Design</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-azure-saascomponents-li">
   <a href="/azure-saas/components/" title="Azure SaaS Dev Kit Components" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-azure-saascomponents"><span class="">Components</span></a>
   <ul class="ul-2 foldable">
@@ -154,20 +153,16 @@ user-&gt;&gt;frontend : …">
   <ul class="ul-2 foldable">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesbranding-considerations-for-saas-li">
   <a href="/azure-saas/resources/branding-considerations-for-saas/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesbranding-considerations-for-saas"><span class="">SaaS Branding Considerations</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcessaas-resources-li">
-  <a href="/azure-saas/resources/saas-resources/" title="Azure SaaS Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcessaas-resources"><span class="">Additional SaaS Resources</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-badgemeup-li">
   <a href="/azure-saas/resources/contoso-badgemeup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-badgemeup"><span class="">Contoso BadgeMeUp</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-tickets-li">
   <a href="/azure-saas/resources/contoso-tickets/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-tickets"><span class="">Contoso Tickets</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdesign-considerations-li">
-  <a href="/azure-saas/resources/design-considerations/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesdesign-considerations"><span class="">Design Considerations</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesterminology-li">
   <a href="/azure-saas/resources/terminology/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesterminology"><span class="">Terminology</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdevops-li">
   <a href="/azure-saas/resources/devops/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesdevops"><span class="">DevOps Workflows</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesfuture-roadmap-li">
-  <a href="/azure-saas/resources/future-roadmap/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesfuture-roadmap"><span class="">Potential Future Roadmap Items</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesadditional-recommended-resources-li">
+  <a href="/azure-saas/resources/additional-recommended-resources/" title="Azure Recommended Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesadditional-recommended-resources"><span class="">Additional Recommended Resources</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasfaq-li">
@@ -197,7 +192,7 @@ user-&gt;&gt;frontend : …">
   <ul>
     <li><a href="#sign-up">Sign Up</a></li>
     <li><a href="#sign-in">Sign In</a></li>
-    <li><a href="#add-permissions-record">Add Permissions Record</a></li>
+    <li><a href="#add-permissions-record-generic">Add Permissions Record (Generic)</a></li>
   </ul>
 </nav></div>
 
@@ -262,42 +257,40 @@ user-&gt;&gt;frontend : …">
 	</header>    
 	<h2 id="sign-up">Sign Up</h2>
 <pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">sequenceDiagram  
-actor user 
+actor user as User 
 participant frontend as Frontend Application
 participant auth as Auth Service (B2C)
 
 
-user-&gt;&gt;frontend : Register Button (/register)
+user-&gt;&gt;frontend : Register (/register)
 frontend--&gt;&gt;user : Redirect to B2C Hosted Sign Up Page
 user-&gt;&gt;auth : Sign Up Submitted
 auth-&gt;&gt;auth : Create Account
 auth--&gt;&gt;user : Redirect with JWT
 </code></pre><h2 id="sign-in">Sign In</h2>
 <pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">sequenceDiagram  
-actor user 
-participant frontend as Signup Administration App
+actor user as User
+participant frontend as Frontend Application
 participant auth as Auth Service (B2C)
 participant perm as Permissions API
 
 
-user-&gt;&gt;frontend : Login Button (/login)
+user-&gt;&gt;frontend : Login (/login)
 frontend--&gt;&gt;user : Redirect to B2C Hosted Sign In Page
 user-&gt;&gt;auth : Login Submitted
 auth-&gt;&gt;perm : Get Permissions &amp; Roles
 perm--&gt;&gt;auth : Permissions &amp; Roles
 auth-&gt;&gt;auth : Add Custom Claims to JWT
 auth--&gt;&gt;user : Redirect with JWT
-</code></pre><h2 id="add-permissions-record">Add Permissions Record</h2>
-<p>This flow is not comprehensive. It only shows the flow from the point of which the Admin API receives a request and forward.</p>
+</code></pre><h2 id="add-permissions-record-generic">Add Permissions Record (Generic)</h2>
 <pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">sequenceDiagram
 participant frontend as Frontend Application
 participant admin as Admin API
 participant perm as Permissions API
 
 frontend-&gt;&gt;admin : Add Tenant Permission for User
-admin-&gt;&gt;admin : User Admin of Tenant?
+admin-&gt;&gt;admin : Is Requestor Admin of Tenant?
 admin-&gt;&gt;perm : Add Tenant Permission for User
-perm-&gt;&gt;perm : Caller Admin API?
 perm-&gt;&gt;perm : Permission Added in DB
 perm--&gt;&gt;admin : Ok
 admin--&gt;&gt;frontend : Ok
@@ -306,7 +299,7 @@ admin--&gt;&gt;frontend : Ok
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified March 29, 2022: <a href="https://github.com/Azure/azure-saas/commit/7b7f8324c42e37dd06135c12a33d3d9f40e4648b">identity and signup admin flow changes (7b7f832)</a>
+  Last modified April 18, 2022: <a href="https://github.com/Azure/azure-saas/commit/4fdc4f6b2c772e5e57cfacc21891d524240ada01">Jason &#43; Landon jam session (4fdc4f6)</a>
 </div>
 
 </div>

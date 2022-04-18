@@ -27,27 +27,27 @@ Instructions to get this module running on your local dev machine are located he
 The permissions service is an API that is responsible for CRUD operations on users permissions.
 The API uses Entity Framework to manage the SQL Server Connection and Schema.
 Dependencies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
-Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary)." />
+Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API is secured with" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/permissions-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-04-06T13:39:15-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-18T14:56:51-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Permissions Service">
 <meta itemprop="description" content="Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity
 The permissions service is an API that is responsible for CRUD operations on users permissions.
 The API uses Entity Framework to manage the SQL Server Connection and Schema.
 Dependencies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
-Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary).">
-<meta itemprop="dateModified" content="2022-04-06T13:39:15-04:00" />
-<meta itemprop="wordCount" content="216">
+Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API is secured with">
+<meta itemprop="dateModified" content="2022-04-18T14:56:51-05:00" />
+<meta itemprop="wordCount" content="190">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Permissions Service"/>
 <meta name="twitter:description" content="Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity
 The permissions service is an API that is responsible for CRUD operations on users permissions.
 The API uses Entity Framework to manage the SQL Server Connection and Schema.
 Dependencies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
-Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary)."/>
+Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API is secured with"/>
 
 
 
@@ -132,6 +132,8 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
   <ul class="ul-1">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasquick-start-li">
   <a href="/azure-saas/quick-start/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasquick-start"><span class="">Quick Start</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasdesign-li">
+  <a href="/azure-saas/design/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasdesign"><span class="">Design</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-azure-saascomponents-li">
   <a href="/azure-saas/components/" title="Azure SaaS Dev Kit Components" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-azure-saascomponents"><span class="">Components</span></a>
   <ul class="ul-2 foldable">
@@ -161,20 +163,16 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
   <ul class="ul-2 foldable">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesbranding-considerations-for-saas-li">
   <a href="/azure-saas/resources/branding-considerations-for-saas/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesbranding-considerations-for-saas"><span class="">SaaS Branding Considerations</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcessaas-resources-li">
-  <a href="/azure-saas/resources/saas-resources/" title="Azure SaaS Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcessaas-resources"><span class="">Additional SaaS Resources</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-badgemeup-li">
   <a href="/azure-saas/resources/contoso-badgemeup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-badgemeup"><span class="">Contoso BadgeMeUp</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-tickets-li">
   <a href="/azure-saas/resources/contoso-tickets/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-tickets"><span class="">Contoso Tickets</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdesign-considerations-li">
-  <a href="/azure-saas/resources/design-considerations/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesdesign-considerations"><span class="">Design Considerations</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesterminology-li">
   <a href="/azure-saas/resources/terminology/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesterminology"><span class="">Terminology</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdevops-li">
   <a href="/azure-saas/resources/devops/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesdevops"><span class="">DevOps Workflows</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesfuture-roadmap-li">
-  <a href="/azure-saas/resources/future-roadmap/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesfuture-roadmap"><span class="">Potential Future Roadmap Items</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesadditional-recommended-resources-li">
+  <a href="/azure-saas/resources/additional-recommended-resources/" title="Azure Recommended Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesadditional-recommended-resources"><span class="">Additional Recommended Resources</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasfaq-li">
@@ -286,7 +284,8 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
 <li>Admin Service</li>
 </ul>
 <h2 id="authentication">Authentication</h2>
-<p>This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary).</p>
+<p>This API is secured with</p>
+<p><a href="https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations">https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations</a></p>
 <h2 id="data-storage">Data Storage</h2>
 <p>Entity Framework Core is used to manage the database schema and connections.</p>
 <h2 id="design-considerations">Design Considerations</h2>
@@ -297,7 +296,7 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 6, 2022: <a href="https://github.com/Azure/azure-saas/commit/f8b8bde5129f2c1ae6f11fef56a4da5c37dc47e1">update docs (f8b8bde)</a>
+  Last modified April 18, 2022: <a href="https://github.com/Azure/azure-saas/commit/4fdc4f6b2c772e5e57cfacc21891d524240ada01">Jason &#43; Landon jam session (4fdc4f6)</a>
 </div>
 
 </div>

@@ -25,12 +25,12 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/quick-start/" /><meta property="article:section" content="" />
 
-<meta property="article:modified_time" content="2022-04-14T11:59:19-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-18T14:56:51-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Quick Start">
 <meta itemprop="description" content="Getting Started with the Azure SaaS Dev Kit">
-<meta itemprop="dateModified" content="2022-04-14T11:59:19-05:00" />
-<meta itemprop="wordCount" content="452">
+<meta itemprop="dateModified" content="2022-04-18T14:56:51-05:00" />
+<meta itemprop="wordCount" content="498">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Quick Start"/>
 <meta name="twitter:description" content="Getting Started with the Azure SaaS Dev Kit"/>
@@ -118,6 +118,8 @@
   <ul class="ul-1">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-azure-saasquick-start-li">
   <a href="/azure-saas/quick-start/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-azure-saasquick-start"><span class="td-sidebar-nav-active-item">Quick Start</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasdesign-li">
+  <a href="/azure-saas/design/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasdesign"><span class="">Design</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-azure-saascomponents-li">
   <a href="/azure-saas/components/" title="Azure SaaS Dev Kit Components" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-azure-saascomponents"><span class="">Components</span></a>
   <ul class="ul-2 foldable">
@@ -147,20 +149,16 @@
   <ul class="ul-2 foldable">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesbranding-considerations-for-saas-li">
   <a href="/azure-saas/resources/branding-considerations-for-saas/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesbranding-considerations-for-saas"><span class="">SaaS Branding Considerations</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcessaas-resources-li">
-  <a href="/azure-saas/resources/saas-resources/" title="Azure SaaS Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcessaas-resources"><span class="">Additional SaaS Resources</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-badgemeup-li">
   <a href="/azure-saas/resources/contoso-badgemeup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-badgemeup"><span class="">Contoso BadgeMeUp</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-tickets-li">
   <a href="/azure-saas/resources/contoso-tickets/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-tickets"><span class="">Contoso Tickets</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdesign-considerations-li">
-  <a href="/azure-saas/resources/design-considerations/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesdesign-considerations"><span class="">Design Considerations</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesterminology-li">
   <a href="/azure-saas/resources/terminology/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesterminology"><span class="">Terminology</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdevops-li">
   <a href="/azure-saas/resources/devops/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesdevops"><span class="">DevOps Workflows</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesfuture-roadmap-li">
-  <a href="/azure-saas/resources/future-roadmap/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesfuture-roadmap"><span class="">Potential Future Roadmap Items</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesadditional-recommended-resources-li">
+  <a href="/azure-saas/resources/additional-recommended-resources/" title="Azure Recommended Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesadditional-recommended-resources"><span class="">Additional Recommended Resources</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasfaq-li">
@@ -274,7 +272,12 @@
 Saas.Application.Web
     AdminServiceUrl
 </code></pre>
+<blockquote>
 <p>Note: <code>Saas.Admin.Service</code> uses a local database instance and is automatically populated using Entity Framework.</p>
+</blockquote>
+<blockquote>
+<p>This solution uses various <code>appsettings.json</code> and <code>appsettings.development.json</code> to manage deployment settings and other configuration settings. In a true production deployment, you should configure <a href="https://azure.microsoft.com/en-us/services/key-vault/">Azure Key Vault</a> to provide a secure and centralized key storage location. This allows applications to not have direct access to confidential keys.</p>
+</blockquote>
 <h2 id="deploying-to-azure">Deploying to Azure</h2>
 <p>Deploying to Azure is easy thanks to an ARM (Azure Resource Manager) template.</p>
 <p>This button will take you to the Azure portal, passing it the template. You&rsquo;ll be asked a few questions, and then the solution will be up and running in just a few minutes.</p>
@@ -297,7 +300,7 @@ Bicep is a domain-specific language (DSL) that uses declarative syntax to deploy
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/c96bc820b44bd0f4a48eddf1e069710ad0f50416">Doc cleanup, mostly on quick start (c96bc82)</a>
+  Last modified April 18, 2022: <a href="https://github.com/Azure/azure-saas/commit/4fdc4f6b2c772e5e57cfacc21891d524240ada01">Jason &#43; Landon jam session (4fdc4f6)</a>
 </div>
 
 </div>

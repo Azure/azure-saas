@@ -19,24 +19,29 @@
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
 
 <title>Signup Administration | Azure SaaS Dev Kit Docs</title>
-<meta name="description" content="The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign …">
+<meta name="description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
+
+Sign …">
 <meta property="og:title" content="Signup Administration" />
-<meta property="og:description" content="The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.
-Design Considerations   For ease of management, we have chosen to incorporate the global admin functionality into this application." />
+<meta property="og:description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
+ Sign up for an account Go through an onboarding flow to create a new tenant Manage their existing tenants.  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.
+Design Considerations For ease of management, we have chosen to incorporate the global administrative functionality into this application." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/signup-administration/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-04-06T11:37:15-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-18T14:56:51-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Signup Administration">
-<meta itemprop="description" content="The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.
-Design Considerations   For ease of management, we have chosen to incorporate the global admin functionality into this application.">
-<meta itemprop="dateModified" content="2022-04-06T11:37:15-04:00" />
-<meta itemprop="wordCount" content="547">
+<meta itemprop="description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
+ Sign up for an account Go through an onboarding flow to create a new tenant Manage their existing tenants.  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.
+Design Considerations For ease of management, we have chosen to incorporate the global administrative functionality into this application.">
+<meta itemprop="dateModified" content="2022-04-18T14:56:51-05:00" />
+<meta itemprop="wordCount" content="572">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Signup Administration"/>
-<meta name="twitter:description" content="The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.
-Design Considerations   For ease of management, we have chosen to incorporate the global admin functionality into this application."/>
+<meta name="twitter:description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
+ Sign up for an account Go through an onboarding flow to create a new tenant Manage their existing tenants.  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.
+Design Considerations For ease of management, we have chosen to incorporate the global administrative functionality into this application."/>
 
 
 
@@ -121,6 +126,8 @@ Design Considerations   For ease of management, we have chosen to incorporate th
   <ul class="ul-1">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasquick-start-li">
   <a href="/azure-saas/quick-start/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasquick-start"><span class="">Quick Start</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasdesign-li">
+  <a href="/azure-saas/design/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasdesign"><span class="">Design</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-azure-saascomponents-li">
   <a href="/azure-saas/components/" title="Azure SaaS Dev Kit Components" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-azure-saascomponents"><span class="">Components</span></a>
   <ul class="ul-2 foldable">
@@ -150,20 +157,16 @@ Design Considerations   For ease of management, we have chosen to incorporate th
   <ul class="ul-2 foldable">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesbranding-considerations-for-saas-li">
   <a href="/azure-saas/resources/branding-considerations-for-saas/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesbranding-considerations-for-saas"><span class="">SaaS Branding Considerations</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcessaas-resources-li">
-  <a href="/azure-saas/resources/saas-resources/" title="Azure SaaS Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcessaas-resources"><span class="">Additional SaaS Resources</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-badgemeup-li">
   <a href="/azure-saas/resources/contoso-badgemeup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-badgemeup"><span class="">Contoso BadgeMeUp</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-tickets-li">
   <a href="/azure-saas/resources/contoso-tickets/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-tickets"><span class="">Contoso Tickets</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdesign-considerations-li">
-  <a href="/azure-saas/resources/design-considerations/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesdesign-considerations"><span class="">Design Considerations</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesterminology-li">
   <a href="/azure-saas/resources/terminology/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesterminology"><span class="">Terminology</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdevops-li">
   <a href="/azure-saas/resources/devops/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesdevops"><span class="">DevOps Workflows</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesfuture-roadmap-li">
-  <a href="/azure-saas/resources/future-roadmap/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesfuture-roadmap"><span class="">Potential Future Roadmap Items</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesadditional-recommended-resources-li">
+  <a href="/azure-saas/resources/additional-recommended-resources/" title="Azure Recommended Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesadditional-recommended-resources"><span class="">Additional Recommended Resources</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasfaq-li">
@@ -257,24 +260,27 @@ Design Considerations   For ease of management, we have chosen to incorporate th
 
 		
 	</header>    
-	<p>The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.</p>
-<h2 id="design-considerations">Design Considerations</h2>
+	<p>The <em>Signup/Administration</em> site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:</p>
 <ul>
-<li>
-<p>For ease of management, we have chosen to incorporate the global admin functionality into this application. Sometimes, this would be separated into its own application. You may choose to separate this into a different application if you require more administrative functionality than just tenant and user management.</p>
-</li>
-<li>
-<p>We chose to use NSwag to generate our client implementation for the Admin Service. This provides us ready to use HTTP client without having to write much boilerplate. Read more about using NSwag on ASP.NET projects <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&amp;tabs=visual-studio">here</a></p>
-</li>
+<li>Sign up for an account</li>
+<li>Go through an onboarding flow to create a new tenant</li>
+<li>Manage their existing tenants.</li>
 </ul>
+<p>This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.</p>
+<h2 id="design-considerations">Design Considerations</h2>
+<p>For ease of management, we have chosen to incorporate the global administrative functionality into this application. You may choose to separate this functionality into a different application if you require more administrative functionality than just tenant and user management.</p>
+<blockquote>
+<p>We chose to use NSwag to generate our client implementation for the Admin Service. The NSwag project provides tools to generate OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI specifications. This provides us a ready-to-use HTTP client without having to write much boilerplate. Read more about <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&amp;tabs=visual-studio">using NSwag on ASP.NET projects</a></p>
+</blockquote>
 <h2 id="running-locally">Running Locally</h2>
 <p>Instructions to get this module running on your local dev machine are located here:
 <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration</a></p>
 <h2 id="signup-administration-flows">Signup Administration Flows</h2>
 <h2 id="sign-in">Sign In</h2>
+<p>See the <a href="./Identity/identity-flows.md##Sign-In">Sign-In Flow</a> in Identity Flows.</p>
 <h2 id="onboarding-flow">Onboarding Flow</h2>
 <pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">sequenceDiagram  
-actor user 
+actor user as Tenant Admin
 participant signup as Signup App
 participant admin as Admin Api
 participant auth as Auth Service
@@ -309,7 +315,7 @@ admin--&gt;&gt;signup : Tenant Created
 admin--&gt;&gt;user : Tenant Created Confirmation Page
 </code></pre><h2 id="add-new-tenant-admin---existing-user">Add New Tenant Admin - Existing User</h2>
 <pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">sequenceDiagram
-actor user
+actor user as Tenant Admin
 participant signup as SignupAdministration Site
 participant admin as Admin API
 participant perm as Permissions API
@@ -331,7 +337,7 @@ admin--&gt;&gt;signup : Ok
 signup--&gt;&gt;user : Ok
 </code></pre><h2 id="add-new-tenant-admin---user-does-not-exist">Add New Tenant Admin - User Does Not Exist</h2>
 <pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">sequenceDiagram
-actor user
+actor user as Tenant Admin
 participant signup as SignupAdministration Site
 participant admin as Admin API
 participant perm as Permissions API
@@ -349,12 +355,12 @@ perm-&gt;&gt;auth : User exists?
 auth--&gt;&gt;perm : User does not exist
 perm--&gt;&gt;admin : Error, User does not exist
 admin--&gt;&gt;signup : Error, User does not exist
-signup--&gt;&gt;user : Error, User does not exist                   bb    
+signup--&gt;&gt;user : Error, User does not exist    
 </code></pre>
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 6, 2022: <a href="https://github.com/Azure/azure-saas/commit/270746b841d1761a6ffd3e452a87f90317752b73">add swashbuckle and nswag references (270746b)</a>
+  Last modified April 18, 2022: <a href="https://github.com/Azure/azure-saas/commit/4fdc4f6b2c772e5e57cfacc21891d524240ada01">Jason &#43; Landon jam session (4fdc4f6)</a>
 </div>
 
 </div>

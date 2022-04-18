@@ -80,7 +80,8 @@
 &lt;li&gt;Admin Service&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;authentication&#34;&gt;Authentication&lt;/h2&gt;
-&lt;p&gt;This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary).&lt;/p&gt;
+&lt;p&gt;This API is secured with&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations&#34;&gt;https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;data-storage&#34;&gt;Data Storage&lt;/h2&gt;
 &lt;p&gt;Entity Framework Core is used to manage the database schema and connections.&lt;/p&gt;
 &lt;h2 id=&#34;design-considerations&#34;&gt;Design Considerations&lt;/h2&gt;
@@ -102,42 +103,40 @@
         
         &lt;h2 id=&#34;sign-up&#34;&gt;Sign Up&lt;/h2&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-mermaid&#34; data-lang=&#34;mermaid&#34;&gt;sequenceDiagram  
-actor user 
+actor user as User 
 participant frontend as Frontend Application
 participant auth as Auth Service (B2C)
 
 
-user-&amp;gt;&amp;gt;frontend : Register Button (/register)
+user-&amp;gt;&amp;gt;frontend : Register (/register)
 frontend--&amp;gt;&amp;gt;user : Redirect to B2C Hosted Sign Up Page
 user-&amp;gt;&amp;gt;auth : Sign Up Submitted
 auth-&amp;gt;&amp;gt;auth : Create Account
 auth--&amp;gt;&amp;gt;user : Redirect with JWT
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;sign-in&#34;&gt;Sign In&lt;/h2&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-mermaid&#34; data-lang=&#34;mermaid&#34;&gt;sequenceDiagram  
-actor user 
-participant frontend as Signup Administration App
+actor user as User
+participant frontend as Frontend Application
 participant auth as Auth Service (B2C)
 participant perm as Permissions API
 
 
-user-&amp;gt;&amp;gt;frontend : Login Button (/login)
+user-&amp;gt;&amp;gt;frontend : Login (/login)
 frontend--&amp;gt;&amp;gt;user : Redirect to B2C Hosted Sign In Page
 user-&amp;gt;&amp;gt;auth : Login Submitted
 auth-&amp;gt;&amp;gt;perm : Get Permissions &amp;amp; Roles
 perm--&amp;gt;&amp;gt;auth : Permissions &amp;amp; Roles
 auth-&amp;gt;&amp;gt;auth : Add Custom Claims to JWT
 auth--&amp;gt;&amp;gt;user : Redirect with JWT
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;add-permissions-record&#34;&gt;Add Permissions Record&lt;/h2&gt;
-&lt;p&gt;This flow is not comprehensive. It only shows the flow from the point of which the Admin API receives a request and forward.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;add-permissions-record-generic&#34;&gt;Add Permissions Record (Generic)&lt;/h2&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-mermaid&#34; data-lang=&#34;mermaid&#34;&gt;sequenceDiagram
 participant frontend as Frontend Application
 participant admin as Admin API
 participant perm as Permissions API
 
 frontend-&amp;gt;&amp;gt;admin : Add Tenant Permission for User
-admin-&amp;gt;&amp;gt;admin : User Admin of Tenant?
+admin-&amp;gt;&amp;gt;admin : Is Requestor Admin of Tenant?
 admin-&amp;gt;&amp;gt;perm : Add Tenant Permission for User
-perm-&amp;gt;&amp;gt;perm : Caller Admin API?
 perm-&amp;gt;&amp;gt;perm : Permission Added in DB
 perm--&amp;gt;&amp;gt;admin : Ok
 admin--&amp;gt;&amp;gt;frontend : Ok
