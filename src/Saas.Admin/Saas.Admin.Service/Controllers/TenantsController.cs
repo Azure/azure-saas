@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Identity.Web.Resource;
 using System.Net.Mime;
 

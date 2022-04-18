@@ -10,6 +10,7 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Identity.Web;
 global using Microsoft.Extensions.Options;
+global using Microsoft.AspNetCore.Authorization;
 
 global using Saas.Admin.Service.Exceptions;
 global using Saas.Admin.Service.Services;

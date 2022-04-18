@@ -68,9 +68,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    // Show identity debug information during development. This should be kept off in production to comply with GDPR standards
-    IdentityModelEventSource.ShowPII = true;
 }
 
 app.UseHttpsRedirection();
