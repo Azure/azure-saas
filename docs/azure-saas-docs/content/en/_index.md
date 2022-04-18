@@ -16,21 +16,23 @@ The Azure SaaS Development Kit is a reference implementation of pre-built resour
 
 Whether you're modernizing an existing application, building a new application, or migrating your application, the SaaS dev kit can help you.
 
-## Modules & Architecture
+## Modular Architecture
 
-![](architecture.drawio.png)
+This kit uses a [microservices architecture](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/microservices-architecture) so that each module is self-contained and can be used idependantly.
 
 - [**Identity Provider (B2C)**](components/identity/identity-provider/) - Provides a flexible identity solution.
 - [**Signup / Administration**](components/signup-administration/)
 	- A web app where your customers to view plans and onboard to your solution.
 	- Provides you with tenant administration capabilities. (modify/remove/etc.)
-- [**SaaS.Application**](components/saas-application/) - A sample application that you can extend or replace with your own code.
+- [**Admin Service**](components/admin-service) - An extensible API to programatically manage CRUD operations on tenants. 
+- [**Permissions Service**](components/identity/permissions-service) - An API that manages all user permissions and serves to enrich the user tokens returned from the identity provider.
+- [**SaaS.Application**](components/saas-application/) - A sample end user application that you can extend or replace with your own code.
 
-## Product SaaS Reference
+> The Dev Kit uses a [**fully multitenant depoyment**](https://docs.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models#fully-multitenant-deployments). Multitenancy is a complex topic with many facets, and there is no *one size fits all* approach.
+>
+> Read more about multitenant architectures and considerations on Azure [here](http://aka.ms/multitenancy).
 
-[OnSubscriber](https://www.onsubscriber.com/) is a live production SaaS solution built entirely on the Azure SaaS Development Kit.
-
-It's a real production site that allows users to easily build their Email and SMS lists using social login with Facebook, Google, Apple, Email and SMS. In addition, users can add profile pictures, bios, external links and social accounts to their tenants.
+![](architecture.drawio.png)
 
 ## Ready to get started?
 

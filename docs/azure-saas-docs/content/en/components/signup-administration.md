@@ -3,13 +3,18 @@ type: docs
 title: "Signup Administration"
 ---
 
-The Signup Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to Sign Up for an account, go through an onboarding flow to create a new tenant, and manage their existing tenants. This site also supports admin functionality for global administrators to view and manage all tenants and users of the application.
+The *Signup/Administration* site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
+- Sign up for an account
+- Go through an onboarding flow to create a new tenant
+- Manage their existing tenants.
+
+This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.
 
 ## Design Considerations
 
-- For ease of management, we have chosen to incorporate the global admin functionality into this application. Sometimes, this would be separated into its own application. You may choose to separate this into a different application if you require more administrative functionality than just tenant and user management.
-  
-- We chose to use NSwag to generate our client implementation for the Admin Service. This provides us ready to use HTTP client without having to write much boilerplate. Read more about using NSwag on ASP.NET projects [here](https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&tabs=visual-studio)
+For ease of management, we have chosen to incorporate the global administrative functionality into this application. You may choose to separate this functionality into a different application if you require more administrative functionality than just tenant and user management.
+
+> We chose to use NSwag to generate our client implementation for the Admin Service. The NSwag project provides tools to generate OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI specifications. This provides us a ready-to-use HTTP client without having to write much boilerplate. Read more about [using NSwag on ASP.NET projects](https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&tabs=visual-studio)
 
 ## Running Locally
 
@@ -23,11 +28,13 @@ https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration
 
 ## Sign In
 
+See the [Sign-In Flow](./Identity/identity-flows.md##Sign-In) in Identity Flows.
+
 ## Onboarding Flow
 
 ```mermaid
 sequenceDiagram  
-actor user 
+actor user as Tenant Admin
 participant signup as Signup App
 participant admin as Admin Api
 participant auth as Auth Service
@@ -66,7 +73,7 @@ admin-->>user : Tenant Created Confirmation Page
 
 ```mermaid
 sequenceDiagram
-actor user
+actor user as Tenant Admin
 participant signup as SignupAdministration Site
 participant admin as Admin API
 participant perm as Permissions API
@@ -92,7 +99,7 @@ signup-->>user : Ok
 
 ```mermaid
 sequenceDiagram
-actor user
+actor user as Tenant Admin
 participant signup as SignupAdministration Site
 participant admin as Admin API
 participant perm as Permissions API
@@ -110,5 +117,5 @@ perm->>auth : User exists?
 auth-->>perm : User does not exist
 perm-->>admin : Error, User does not exist
 admin-->>signup : Error, User does not exist
-signup-->>user : Error, User does not exist                   bb    
+signup-->>user : Error, User does not exist    
 ```

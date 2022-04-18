@@ -8,12 +8,12 @@ weight: 60
 
 ```mermaid
 sequenceDiagram  
-actor user 
+actor user as User 
 participant frontend as Frontend Application
 participant auth as Auth Service (B2C)
 
 
-user->>frontend : Register Button (/register)
+user->>frontend : Register (/register)
 frontend-->>user : Redirect to B2C Hosted Sign Up Page
 user->>auth : Sign Up Submitted
 auth->>auth : Create Account
@@ -24,13 +24,13 @@ auth-->>user : Redirect with JWT
 
 ```mermaid
 sequenceDiagram  
-actor user 
-participant frontend as Signup Administration App
+actor user as User
+participant frontend as Frontend Application
 participant auth as Auth Service (B2C)
 participant perm as Permissions API
 
 
-user->>frontend : Login Button (/login)
+user->>frontend : Login (/login)
 frontend-->>user : Redirect to B2C Hosted Sign In Page
 user->>auth : Login Submitted
 auth->>perm : Get Permissions & Roles
@@ -39,9 +39,9 @@ auth->>auth : Add Custom Claims to JWT
 auth-->>user : Redirect with JWT
 ```
 
-## Add Permissions Record
+## Add Permissions Record (Generic)
 
-This flow is not comprehensive. It only shows the flow from the point of which the Admin API receives a request and forward.
+
 
 ```mermaid
 sequenceDiagram
@@ -50,9 +50,8 @@ participant admin as Admin API
 participant perm as Permissions API
 
 frontend->>admin : Add Tenant Permission for User
-admin->>admin : User Admin of Tenant?
+admin->>admin : Is Requestor Admin of Tenant?
 admin->>perm : Add Tenant Permission for User
-perm->>perm : Caller Admin API?
 perm->>perm : Permission Added in DB
 perm-->>admin : Ok
 admin-->>frontend : Ok

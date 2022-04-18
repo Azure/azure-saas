@@ -26,7 +26,12 @@ This API is restricted and can only be called by the following consumers:
 - Admin Service
 
 ## Authentication
-This API supports two methods of authentication: Certificate based authentication (for use from Azure AD B2C) and On-Behalf-Of authentication using the users existing token (to support CRUD operations on permissions when neccesary).
+
+This API is secured with 
+
+
+https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations
+
 
 ## Data Storage
 Entity Framework Core is used to manage the database schema and connections.
