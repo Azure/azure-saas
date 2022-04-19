@@ -102,7 +102,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> UsersAsync(System.Guid tenantId);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> UsersAsync(string tenantId);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -110,14 +110,14 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> UsersAsync(System.Guid tenantId, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> UsersAsync(string tenantId, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Get all permissions a user has in a tenant
         /// </summary>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> PermissionsAllAsync(System.Guid tenantId, string userId);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> PermissionsAllAsync(string tenantId, string userId);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -125,14 +125,14 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> PermissionsAllAsync(System.Guid tenantId, string userId, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> PermissionsAllAsync(string tenantId, string userId, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Add a set of permissions for a user on a tenant
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task PermissionsPOSTAsync(System.Guid tenantId, string userId, System.Collections.Generic.IEnumerable<string> body);
+        System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -140,14 +140,14 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task PermissionsPOSTAsync(System.Guid tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Delete a set of permissions for a user on a tenant
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task PermissionsDELETEAsync(System.Guid tenantId, string userId, System.Collections.Generic.IEnumerable<string> body);
+        System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -155,7 +155,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task PermissionsDELETEAsync(System.Guid tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Get all tenant IDs that a user has access to
@@ -163,7 +163,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// <param name="filter">Optionally filter by access type</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<System.Guid>> TenantsAsync(string userId, string filter);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> TenantsAsync(string userId, string filter);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -172,7 +172,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// <param name="filter">Optionally filter by access type</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<System.Guid>> TenantsAsync(string userId, string filter, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> TenantsAsync(string userId, string filter, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -186,12 +186,12 @@ namespace Saas.SignupAdministration.Web.Services
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AdminServiceClient : IAdminServiceClient
+    public partial class AdminServiceClient : OAuthBaseClient, IAdminServiceClient
     {
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<System.Text.Json.JsonSerializerOptions> _settings;
 
-        public AdminServiceClient(System.Net.Http.HttpClient httpClient)
+        public AdminServiceClient(IOptions<AppSettings> configuration, ITokenAcquisition tokenAcquisition, System.Net.Http.HttpClient httpClient) : base(tokenAcquisition, configuration)
         {
             _httpClient = httpClient;
             _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings);
@@ -231,13 +231,13 @@ namespace Saas.SignupAdministration.Web.Services
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAllAsync(System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("/api/Tenants");
+            urlBuilder_.Append("api/Tenants");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
             {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
@@ -327,13 +327,13 @@ namespace Saas.SignupAdministration.Web.Services
         public virtual async System.Threading.Tasks.Task<TenantDTO> TenantsPOSTAsync(NewTenantRequest body, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("/api/Tenants");
+            urlBuilder_.Append("api/Tenants");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
             {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var content_ = new System.Net.Http.StringContent(System.Text.Json.JsonSerializer.Serialize(body, _settings.Value));
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
@@ -441,14 +441,14 @@ namespace Saas.SignupAdministration.Web.Services
                 throw new System.ArgumentNullException("tenantId");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("/api/Tenants/{tenantId}");
+            urlBuilder_.Append("api/Tenants/{tenantId}");
             urlBuilder_.Replace("{tenantId}", System.Uri.EscapeDataString(ConvertToString(tenantId, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
             {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
@@ -545,14 +545,14 @@ namespace Saas.SignupAdministration.Web.Services
                 throw new System.ArgumentNullException("tenantId");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("/api/Tenants/{tenantId}");
+            urlBuilder_.Append("api/Tenants/{tenantId}");
             urlBuilder_.Replace("{tenantId}", System.Uri.EscapeDataString(ConvertToString(tenantId, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
             {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var content_ = new System.Net.Http.StringContent(System.Text.Json.JsonSerializer.Serialize(body, _settings.Value));
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
@@ -656,14 +656,14 @@ namespace Saas.SignupAdministration.Web.Services
                 throw new System.ArgumentNullException("tenantId");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("/api/Tenants/{tenantId}");
+            urlBuilder_.Append("api/Tenants/{tenantId}");
             urlBuilder_.Replace("{tenantId}", System.Uri.EscapeDataString(ConvertToString(tenantId, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
             {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     request_.Method = new System.Net.Http.HttpMethod("DELETE");
 
@@ -737,7 +737,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> UsersAsync(System.Guid tenantId)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> UsersAsync(string tenantId)
         {
             return UsersAsync(tenantId, System.Threading.CancellationToken.None);
         }
@@ -748,20 +748,20 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> UsersAsync(System.Guid tenantId, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> UsersAsync(string tenantId, System.Threading.CancellationToken cancellationToken)
         {
             if (tenantId == null)
                 throw new System.ArgumentNullException("tenantId");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("/api/Tenants/{tenantId}/users");
+            urlBuilder_.Append("api/Tenants/{tenantId}/users");
             urlBuilder_.Replace("{tenantId}", System.Uri.EscapeDataString(ConvertToString(tenantId, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
             {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
@@ -841,7 +841,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> PermissionsAllAsync(System.Guid tenantId, string userId)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> PermissionsAllAsync(string tenantId, string userId)
         {
             return PermissionsAllAsync(tenantId, userId, System.Threading.CancellationToken.None);
         }
@@ -852,7 +852,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> PermissionsAllAsync(System.Guid tenantId, string userId, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> PermissionsAllAsync(string tenantId, string userId, System.Threading.CancellationToken cancellationToken)
         {
             if (tenantId == null)
                 throw new System.ArgumentNullException("tenantId");
@@ -861,7 +861,7 @@ namespace Saas.SignupAdministration.Web.Services
                 throw new System.ArgumentNullException("userId");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("/api/Tenants/{tenantId}/Users/{userId}/permissions");
+            urlBuilder_.Append("api/Tenants/{tenantId}/Users/{userId}/permissions");
             urlBuilder_.Replace("{tenantId}", System.Uri.EscapeDataString(ConvertToString(tenantId, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Replace("{userId}", System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture)));
 
@@ -869,7 +869,7 @@ namespace Saas.SignupAdministration.Web.Services
             var disposeClient_ = false;
             try
             {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
@@ -949,7 +949,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task PermissionsPOSTAsync(System.Guid tenantId, string userId, System.Collections.Generic.IEnumerable<string> body)
+        public virtual System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body)
         {
             return PermissionsPOSTAsync(tenantId, userId, body, System.Threading.CancellationToken.None);
         }
@@ -960,7 +960,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task PermissionsPOSTAsync(System.Guid tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken)
         {
             if (tenantId == null)
                 throw new System.ArgumentNullException("tenantId");
@@ -969,7 +969,7 @@ namespace Saas.SignupAdministration.Web.Services
                 throw new System.ArgumentNullException("userId");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("/api/Tenants/{tenantId}/Users/{userId}/permissions");
+            urlBuilder_.Append("api/Tenants/{tenantId}/Users/{userId}/permissions");
             urlBuilder_.Replace("{tenantId}", System.Uri.EscapeDataString(ConvertToString(tenantId, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Replace("{userId}", System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture)));
 
@@ -977,7 +977,7 @@ namespace Saas.SignupAdministration.Web.Services
             var disposeClient_ = false;
             try
             {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var content_ = new System.Net.Http.StringContent(System.Text.Json.JsonSerializer.Serialize(body, _settings.Value));
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
@@ -1054,7 +1054,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task PermissionsDELETEAsync(System.Guid tenantId, string userId, System.Collections.Generic.IEnumerable<string> body)
+        public virtual System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body)
         {
             return PermissionsDELETEAsync(tenantId, userId, body, System.Threading.CancellationToken.None);
         }
@@ -1065,7 +1065,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task PermissionsDELETEAsync(System.Guid tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken)
         {
             if (tenantId == null)
                 throw new System.ArgumentNullException("tenantId");
@@ -1074,7 +1074,7 @@ namespace Saas.SignupAdministration.Web.Services
                 throw new System.ArgumentNullException("userId");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("/api/Tenants/{tenantId}/Users/{userId}/permissions");
+            urlBuilder_.Append("api/Tenants/{tenantId}/Users/{userId}/permissions");
             urlBuilder_.Replace("{tenantId}", System.Uri.EscapeDataString(ConvertToString(tenantId, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Replace("{userId}", System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture)));
 
@@ -1082,7 +1082,7 @@ namespace Saas.SignupAdministration.Web.Services
             var disposeClient_ = false;
             try
             {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var content_ = new System.Net.Http.StringContent(System.Text.Json.JsonSerializer.Serialize(body, _settings.Value));
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
@@ -1160,7 +1160,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// <param name="filter">Optionally filter by access type</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<System.Guid>> TenantsAsync(string userId, string filter)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> TenantsAsync(string userId, string filter)
         {
             return TenantsAsync(userId, filter, System.Threading.CancellationToken.None);
         }
@@ -1172,13 +1172,13 @@ namespace Saas.SignupAdministration.Web.Services
         /// <param name="filter">Optionally filter by access type</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<System.Guid>> TenantsAsync(string userId, string filter, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> TenantsAsync(string userId, string filter, System.Threading.CancellationToken cancellationToken)
         {
             if (userId == null)
                 throw new System.ArgumentNullException("userId");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("/api/Tenants/user/{userId}/tenants?");
+            urlBuilder_.Append("api/Tenants/user/{userId}/tenants?");
             urlBuilder_.Replace("{userId}", System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture)));
             if (filter != null)
             {
@@ -1190,7 +1190,7 @@ namespace Saas.SignupAdministration.Web.Services
             var disposeClient_ = false;
             try
             {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
@@ -1218,7 +1218,7 @@ namespace Saas.SignupAdministration.Web.Services
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<System.Guid>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<string>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1281,14 +1281,14 @@ namespace Saas.SignupAdministration.Web.Services
                 throw new System.ArgumentNullException("path");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("/api/Tenants/IsValidPath/{path}");
+            urlBuilder_.Append("api/Tenants/IsValidPath/{path}");
             urlBuilder_.Replace("{path}", System.Uri.EscapeDataString(ConvertToString(path, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             var disposeClient_ = false;
             try
             {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
