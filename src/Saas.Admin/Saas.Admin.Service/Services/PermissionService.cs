@@ -2,28 +2,37 @@
 
 public class PermissionService : IPermissionService
 {
-    public Task AddUserPermissionsToTenantAsyc(Guid tenantId, string userId, string[] permissions)
+    private readonly IPermissionServiceClient _permissionsServiceClient;
+
+    public PermissionService(IPermissionServiceClient permissionServiceClient)
     {
-        throw new NotImplementedException();
+        _permissionsServiceClient = permissionServiceClient;
     }
 
-    public Task<IEnumerable<Guid>> GetTenantsForUserAsync(string userId, string? filter)
+    public async Task AddUserPermissionsToTenantAsync(string tenantId, string userId, string[] permissions)
     {
-        throw new NotImplementedException();
+        await _permissionsServiceClient.AddUserPermissionsToTenantAsync(tenantId, userId, permissions);
+        return;
     }
 
-    public Task<IEnumerable<string>> GetTenantUsersAsync(Guid tenantId)
+    public async Task<IEnumerable<string>> GetTenantsForUserAsync(string userId, string? filter)
     {
-        throw new NotImplementedException();
+        return await _permissionsServiceClient.GetTenantsForUserAsync(userId, filter);
     }
 
-    public Task<IEnumerable<string>> GetUserPermissionsForTenantAsync(Guid tenantId, string userId)
+    public async Task<IEnumerable<string>> GetTenantUsersAsync(string tenantId)
     {
-        throw new NotImplementedException();
+        return await _permissionsServiceClient.GetTenantUsersAsync(tenantId);
     }
 
-    public Task RemoveUserPermissionsFromTenantAsync(Guid tenantId, string userId, string[] permissions)
+    public async Task<IEnumerable<string>> GetUserPermissionsForTenantAsync(string tenantId, string userId)
     {
-        throw new NotImplementedException();
+        return await _permissionsServiceClient.GetUserPermissionsForTenantAsync(tenantId, userId);
+    }
+
+    public async Task RemoveUserPermissionsFromTenantAsync(string tenantId, string userId, string[] permissions)
+    {
+        await _permissionsServiceClient.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
+        return;
     }
 }
