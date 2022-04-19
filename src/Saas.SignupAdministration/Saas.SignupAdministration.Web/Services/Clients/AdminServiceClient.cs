@@ -191,7 +191,7 @@ namespace Saas.SignupAdministration.Web.Services
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<System.Text.Json.JsonSerializerOptions> _settings;
 
-        public AdminServiceClient(ITokenAcquisition tokenAcquisition, AppSettings configuration, System.Net.Http.HttpClient httpClient) : base(tokenAcquisition,configuration)
+        public AdminServiceClient(IOptions<AppSettings> configuration, ITokenAcquisition tokenAcquisition, System.Net.Http.HttpClient httpClient) : base(tokenAcquisition, configuration)
         {
             _httpClient = httpClient;
             _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings);

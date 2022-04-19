@@ -11,9 +11,9 @@ public abstract class OAuthBaseClient
 
     private readonly AppSettings _appSettings;
 
-    public OAuthBaseClient(ITokenAcquisition tokenAcquisition, AppSettings appSettings)
+    public OAuthBaseClient(ITokenAcquisition tokenAcquisition, IOptions<AppSettings> appSettings)
     {
-        _appSettings = appSettings;
+        _appSettings = appSettings.Value;
         _tokenAcquisition = tokenAcquisition;
     }
 

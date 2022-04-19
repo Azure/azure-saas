@@ -66,7 +66,7 @@ namespace Saas.SignupAdministration.Web
 
             // Configuration to sign-in users with Azure AD B2C
             services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C)
-                .EnableTokenAcquisitionToCallDownstreamApi(Configuration.GetSection("AppSettings")["AdminServiceScopes"].Split(" "))
+                .EnableTokenAcquisitionToCallDownstreamApi(Configuration["AppSettings:AdminServiceScopes"].Split(" "))
                 .AddInMemoryTokenCaches();
             services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
