@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Saas.SignupAdministration.Web.Areas.Admin.Data.TenantViewModel>
+﻿@using Saas.SignupAdministration.Web
+@model IEnumerable<Saas.SignupAdministration.Web.Areas.Admin.Data.TenantViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,7 +8,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="@SR.OrganizationNameAction" asp-controller="@SR.OnboardingWorkflowController" asp-area="">Create New</a>
 </p>
 <table class="table">
     <thead>

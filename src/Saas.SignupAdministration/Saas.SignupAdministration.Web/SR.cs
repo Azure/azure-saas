@@ -2,7 +2,7 @@
 
 namespace Saas.SignupAdministration.Web
 {
-    internal static class SR
+    public static class SR
     {
         // Internal Data Names
         public const string OnboardingWorkflowName = "Onboarding Workflow";

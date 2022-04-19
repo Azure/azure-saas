@@ -40,7 +40,7 @@ public class TenantsController : Controller
     // GET: Admin/Tenants/Create
     public IActionResult Create()
     {
-        return View();
+        return RedirectToAction(SR.OrganizationNameAction, SR.OnboardingWorkflowController, new { Area = "" });
     }
 
     // POST: Admin/Tenants/Create
@@ -96,7 +96,7 @@ public class TenantsController : Controller
             {
                 await _adminServiceClient.TenantsPUTAsync(guid, tenant);
             }
-            catch (ApiException ex)
+            catch (ApiException)
             {
                 return NotFound();
             }
