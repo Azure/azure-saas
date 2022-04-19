@@ -17,7 +17,6 @@ on:
 
 name: Swap PR slot into production and delete slot.
 
-
 jobs:
   swap-slot:
     # We will skip this job if the pull request was closed without merging.
