@@ -55,20 +55,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 if (validationService.ValidateCertificate(context.ClientCertificate))
                 {
                     context.Success();
-                } else
+                }
+                else
                 {
                     context.Fail("Cert Thumbprint is Invalid");
                 }
                 return Task.CompletedTask;
             }
         };
-    })
-    .AddMicrosoftIdentityWebApi(options =>
-    {
-        builder.Configuration.Bind("AzureAdB2C", options);
-        options.TokenValidationParameters.NameClaimType = "name";
-    },
-    options => { builder.Configuration.Bind("AzureAdB2C", options); });
+    });
 
 builder.Services.AddAuthorization(options =>
 {
