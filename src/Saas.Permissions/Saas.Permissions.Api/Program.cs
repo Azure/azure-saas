@@ -1,12 +1,20 @@
 using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using Azure.Identity;
 using Saas.Permissions.Api.Data;
 using Saas.Permissions.Api.Interfaces;
 using Saas.Permissions.Api.Models.AppSettings;
 using Saas.Permissions.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.IsProduction())
+{
+    // Get Secrets From Azure Key Vault if in production. If not in production, secrets are automatically loaded in from the .NET secrets manager
+    // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0
+    builder.Configuration.AddAzureKeyVault(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential());
+}
 
 // Add options using options pattern : https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
