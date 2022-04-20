@@ -1,16 +1,6 @@
 # SaaS.Permissions.Service
 
-The SaaS Admin Service is an API that is reponsible for tenant management operations. Within this folder, you will find 3 sections:
-
-1. Saas.Admin.Service - The .NET Web API project containing the code for the API
-
-2. Saas.Admin.Service.Deployment - The bicep module for deploying the infrastructure required to host the API in Azure
-
-3. Saas.Admin.Service.Tests - Unit tests for the service
-
 ## Project Overview
-
-For more information on this module, please see the admin service page on our documentation site [here](https://azure.github.io/azure-saas/components/admin-service/).
 
 ## How to Run Locally
 
