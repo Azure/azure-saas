@@ -1,4 +1,4 @@
-﻿@model Saas.SignupAdministration.Web.Services.TenantDTO
+﻿@model Saas.SignupAdministration.Web.Areas.Admin.Data.TenantViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -22,23 +22,29 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-@*        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsCancelled)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsCancelled)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsProvisioned)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsProvisioned)
-        </dd>*@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Route)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Route)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ProductName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CategoryName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CategoryName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatorEmail)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CreatorEmail)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedTime)

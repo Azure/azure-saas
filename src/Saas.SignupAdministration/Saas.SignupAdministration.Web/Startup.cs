@@ -18,8 +18,6 @@ namespace Saas.SignupAdministration.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDatabaseDeveloperPageExceptionFilter();
-
             services.AddRazorPages();
 
             // Load the app settings
@@ -60,9 +58,6 @@ namespace Saas.SignupAdministration.Web
             });
 
             services.AddApplicationInsightsTelemetry(Configuration[SR.AppInsightsConnectionProperty]);
-
-            services.AddDbContext<SaasSignupAdministrationWebContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("SaasSignupAdministrationWebContext")));
 
             // Configuration to sign-in users with Azure AD B2C
             services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C)
