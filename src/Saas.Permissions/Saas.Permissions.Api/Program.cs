@@ -27,7 +27,7 @@ builder.Services.AddDbContext<PermissionsContext>(options =>
 builder.Services.AddScoped<IPermissionsService, PermissionsService>();
 builder.Services.AddSingleton<ICertificateValidationService, CertificateValidationService>();
 
-
+// Look for certificate forwarded by the web server on X-Arr-Client-Cert
 builder.Services.AddCertificateForwarding(options => { options.CertificateHeader = "X-ARR-ClientCert"; });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

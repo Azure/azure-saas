@@ -60,7 +60,9 @@ namespace Saas.SignupAdministration.Web
             services.AddApplicationInsightsTelemetry(Configuration[SR.AppInsightsConnectionProperty]);
 
             // Configuration to sign-in users with Azure AD B2C
-            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C);
+            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, Constants.AzureAdB2C)
+                .EnableTokenAcquisitionToCallDownstreamApi(Configuration["AppSettings:AdminServiceScopes"].Split(" "))
+                .AddInMemoryTokenCaches();
             services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
             // Configuring appsettings section AzureAdB2C, into IOptions
