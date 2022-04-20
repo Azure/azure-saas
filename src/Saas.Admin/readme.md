@@ -36,21 +36,22 @@ In order to run the project locally, the App Settings marked as `secret: true` m
 
 Default values for non secret app settings can be found in [appsettings.json](Saas.Admin.Service/appsettings.json)
 
-| AppSetting Key |  Description | Secret | Required (Production) | Required (Locally) |
-| ---  | --- | --- | --- | --- |
-| AzureAdB2C:Instance | | true | true | true | 
-| AzureAdB2C:Domain | | true | true | true |
-| AzureAdB2C:ClientId | | true | true | true |
-| AzureAdB2C:TenantId | | true | true | true |
-| AzureAdB2C:SignedOutCallbackPath | | false | true | true |
-| AzureAdB2C:SignUpSignInPolicyId | | false | true | true |
-| KeyVault:Url | URL to pull secret values from in production | false | true | false |
-| KeyVault:PermissionsApiCertName | URL to pull secret values from in production | false | true | false |
-| PermissionsApi:BaseUrl | URL for downstream [Permissions API](../Saas.Permissions/readme.md) | false | true | true
-| ConnectionStrings:TenantsContext | Connection String to SQL server database used to store tenants data | true | true | true |
-| AllowedHosts | | false | false | false |
-| Logging:LogLevel:Default | | false | false | false |
-| Logging:LogLevel:Microsoft.AspNetCore | | false | false | false |
+| AppSetting Key |  Description | Secret | Default Value |
+| ---  | --- | --- | --- |
+| AzureAdB2C:Instance | | true |  |
+| AzureAdB2C:Domain | | true |  |
+| AzureAdB2C:ClientId | | true |  |
+| AzureAdB2C:TenantId | | true |  |
+| AzureAdB2C:SignedOutCallbackPath | | false | /signout/B2C_1A_SIGNUP_SIGNIN |
+| AzureAdB2C:SignUpSignInPolicyId | | false | B2C_1A_SIGNUP_SIGNIN |
+| KeyVault:Url | KeyVault URL to pull secret values from in production | false |  |
+| KeyVault:PermissionsApiCertName | Certificate name in Key Vault to use for authentication to permissions API | false |  |
+| PermissionsApi:BaseUrl | URL for downstream [Permissions API](../Saas.Permissions/readme.md) | false | |
+| PermissionsApi:LocalCertificate | A Base64 encoded certificate (.CER) used to authenticate with the permissions API. Only used for local development. | true | |
+| ConnectionStrings:TenantsContext | Connection String to SQL server database used to store tenants data. If using local db for development, this connection string is fine to commit to your repo as it does not contain any secrets. | true | (local db connection string) |
+| AllowedHosts | | false |  * |
+| Logging:LogLevel:Default | | false | Information  |
+| Logging:LogLevel:Microsoft.AspNetCore | | false | Warning  |
 
 ### Starting the App
 

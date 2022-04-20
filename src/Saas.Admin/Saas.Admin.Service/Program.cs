@@ -5,6 +5,25 @@ using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
+X509Certificate2 permissionsApiCertificate;
+
+if (builder.Environment.IsProduction())
+{
+    // Get Secrets From Azure Key Vault if in production. If not in production, secrets are automatically loaded in from the .NET secrets manager
+    // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0
+    builder.Configuration.AddAzureKeyVault(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential());
+
+    // Use azure keyvault SDK to download certificate to be used to authenticate with permissions api
+    CertificateClient certificateClient = new CertificateClient(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential());
+    permissionsApiCertificate = certificateClient.DownloadCertificate(builder.Configuration["KeyVault:PermissionsApiCertName"]).Value;
+}
+else 
+{
+    // If running locally, you must first set the certificate as a base 64 encoded string in your .NET secrets manager.
+    var certString = builder.Configuration["PermissionsApi:LocalCertificate"];
+    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(certString));
+}
+
 builder.Services.AddDbContext<TenantsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TenantsContext")));
 
@@ -24,16 +43,13 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 
-// Use azure keyvault SDK to download certificate to be used to authenticate with permissions api
-CertificateClient certificateClient = new CertificateClient(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential());
-X509Certificate2 certificate = certificateClient.DownloadCertificate(builder.Configuration["KeyVault:PermissionsApiCertName"]).Value;
 
 builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient>()
     // Configure outgoing HTTP requests to include certificate for permissions API
     .ConfigurePrimaryHttpMessageHandler(() =>
     {
         HttpClientHandler handler = new HttpClientHandler();
-        handler.ClientCertificates.Add( certificate );
+        handler.ClientCertificates.Add(permissionsApiCertificate);
         return handler;
     })
     .ConfigureHttpClient(options => {
@@ -43,8 +59,8 @@ builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient
         {
             // The permissions API expects the certificate to be provided to the application layer by the web server after the TLS handshake
             // Since this doesn't happen locally, we need to do it ourselves
-            var certData = Convert.ToBase64String(certificate.GetRawCertData());
-            options.DefaultRequestHeaders.Add("X-ARR-ClientCert", certData);
+            
+            options.DefaultRequestHeaders.Add("X-ARR-ClientCert", Convert.ToBase64String(permissionsApiCertificate.GetRawCertData()));
         }
         });
 
