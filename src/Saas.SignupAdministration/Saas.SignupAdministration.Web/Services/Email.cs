@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http;
 using System.Net.Mail;
 
 namespace Saas.SignupAdministration.Web.Services
@@ -6,47 +7,27 @@ namespace Saas.SignupAdministration.Web.Services
     public class Email : IEmail
     {
         private readonly EmailOptions _options;
+        private readonly IHttpClientFactory _client; 
 
-        public Email(IOptions<EmailOptions> options)
+        public Email(IOptions<EmailOptions> options, IHttpClientFactory client)
         {
             _options = options.Value;
+            _client = client; 
         }
 
-        public bool Send(string recipientAddress)
+        public async void Send(string recipientAddress)
         {
-           if(!int.TryParse(_options.Port, out int port))
-            {
-                throw new InvalidCastException($"The value of {port} could not be cast to an integer");
-            }
 
-            using SmtpClient client = new(_options.Host, port);
+            var client = _client.CreateClient(_options.EndPoint);
+            JSONEmail email = new JSONEmail();
+            email.HTML = _options.Body;
+            email.subject = _options.Subject;
+            email.emailFrom = _options.FromAddress;
+            email.emailTo = recipientAddress;
+            email.emailToName = recipientAddress; 
 
-            // TODO: Should update this to use a secure string
-            // These credentails are not secure and will be passed in plain text in this example
-            client.Credentials = new NetworkCredential(_options.Username, _options.Password);
-            MailAddress fromAddress = new(_options.FromAddress);
-            MailAddress toAddress = new(recipientAddress);
-            MailMessage message = new(fromAddress, toAddress);
-
-            message.Subject = _options.Subject;
-            message.Body = _options.Body;
-
-            try
-            {
-                client.Send(message);
-            }
-            catch
-            {
-                // TODO: Need to add robust error handling here
-                return false;
-            }
-            finally
-            {
-                message.Dispose();
-                client.Dispose();
-            }
-
-            return true;
+            StringContent content = new StringContent(email.ToString(), Encoding.UTF8, "application/json");
+            var result = client.PostAsync(_options.EndPoint, content).Result;
         }
     }
 }
