@@ -34,3 +34,7 @@ The onboarding flow of the SaaS Provider Web App is a series of steps which pers
 Upon entry of the first step of the onboarding flow (enter email address), the CreateController logic checks if an account exists with the given user name (email address).  If an account does not exist with the email address, an Identity account is created with just a user name.  Storing the email address allows for subsequent communication with the user in the case that they do not complete the onboarding flow.
 
 If the user does complete the onboarding flow, the final confirmation step will include a field to enter a password to complete their account creation.  
+
+## Sending conformation email 
+You can configure your own email endpoint to send your conformation email in the appsettings.json. Below is a demo email portal you can use wile testing BadgeMeUp.  
+https://prod-41.eastus.logic.azure.com:443/workflows/25da82afd76541f6a8ffc4dca2d84be4/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=c6ucAcoH18cWjUPjv4Rj5pZJJp9OyVbnurTxb0b_-wY"
