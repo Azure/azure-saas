@@ -6,15 +6,18 @@ namespace Saas.SignupAdministration.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IEmail _email; 
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IEmail email)
         {
             _logger = logger;
+            _email = email; 
         }
 
         [HttpGet]
         public IActionResult Help()
         {
+            _email.Send("jason.berg@thespurgroup.com"); 
             return View();
         }
 
