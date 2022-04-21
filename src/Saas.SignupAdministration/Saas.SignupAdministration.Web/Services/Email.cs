@@ -30,7 +30,7 @@ namespace Saas.SignupAdministration.Web.Services
 
             var json = JsonSerializer.Serialize(email);
             StringContent content = new StringContent(json, Encoding.UTF8, "application/json");  
-            var result = client.PostAsync(_options.EndPoint, content).Result;
+            await client.PostAsync(_options.EndPoint, content);
         }
     }
 }
