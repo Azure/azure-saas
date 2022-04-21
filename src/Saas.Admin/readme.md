@@ -1,6 +1,16 @@
-# SaaS.SignupAdministration.Web
+# SaaS.Admin.Service
+
+The SaaS Admin Service is an API that is reponsible for tenant management operations. Within this folder, you will find 3 sections:
+
+1. Saas.Admin.Service - The .NET Web API project containing the code for the API
+
+2. Saas.Admin.Service.Deployment - The bicep module for deploying the infrastructure required to host the API in Azure
+
+3. Saas.Admin.Service.Tests - Unit tests for the service
 
 ## Project Overview
+
+For more information on this module, please see the admin service page on our documentation site [here](https://azure.github.io/azure-saas/components/admin-service/).
 
 ## How to Run Locally
 
@@ -26,22 +36,22 @@ In order to run the project locally, the App Settings marked as `secret: true` m
 
 Default values for non secret app settings can be found in [appsettings.json](Saas.Admin.Service/appsettings.json)
 
-|   | AppSetting Key                        | Description                                           | Secret | Default Value                 |   |
-|---|---------------------------------------|-------------------------------------------------------|--------|-------------------------------|---|
-|   | ---                                   | ---                                                   | ---    | ---                           |   |
-|   | AppSettings:AdminServiceBaseUrl       | URL for downstream admin service                      | false  | https://localhost:7041/       |   |
-|   | AppSettings:AdminServiceScopes        | Scopes to authorize user for on the admin service     | false  |                               |   |
-|   | AzureAdB2C:Instance                   |                                                       | true   |                               |   |
-|   | AzureAdB2C:Domain                     |                                                       | true   |                               |   |
-|   | AzureAdB2C:ClientId                   |                                                       | true   |                               |   |
-|   | AzureAdB2C:ClientSecret               |                                                       | true   |                               |   |
-|   | AzureAdB2C:TenantId                   |                                                       | true   |                               |   |
-|   | AzureAdB2C:SignedOutCallbackPath      |                                                       | false  | /signout/B2C_1A_SIGNUP_SIGNIN |   |
-|   | AzureAdB2C:SignUpSignInPolicyId       |                                                       | false  | B2C_1A_SIGNUP_SIGNIN          |   |
-|   | KeyVault:Url                          | KeyVault URL to pull secret values from in production | false  |                               |   |
-|   | AllowedHosts                          |                                                       | false  | *                             |   |
-|   | Logging:LogLevel:Default              |                                                       | false  | Information                   |   |
-|   | Logging:LogLevel:Microsoft.AspNetCore |                                                       | false  | Warning                       |   |
+| AppSetting Key |  Description | Secret | Default Value |
+| ---  | --- | --- | --- |
+| AzureAdB2C:Instance | | true |  |
+| AzureAdB2C:Domain | | true |  |
+| AzureAdB2C:ClientId | | true |  |
+| AzureAdB2C:TenantId | | true |  |
+| AzureAdB2C:SignedOutCallbackPath | | false | /signout/B2C_1A_SIGNUP_SIGNIN |
+| AzureAdB2C:SignUpSignInPolicyId | | false | B2C_1A_SIGNUP_SIGNIN |
+| KeyVault:Url | KeyVault URL to pull secret values from in production | false |  |
+| KeyVault:PermissionsApiCertName | Certificate name in Key Vault to use for authentication to permissions API | false |  |
+| PermissionsApi:BaseUrl | URL for downstream [Permissions API](../Saas.Permissions/readme.md) | false | |
+| PermissionsApi:LocalCertificate | A Base64 encoded certificate (.CER) used to authenticate with the permissions API. Only used for local development. | true | |
+| ConnectionStrings:TenantsContext | Connection String to SQL server database used to store tenants data. If using local db for development, this connection string is fine to commit to your repo as it does not contain any secrets. | true | (local db connection string) |
+| AllowedHosts | | false |  * |
+| Logging:LogLevel:Default | | false | Information  |
+| Logging:LogLevel:Microsoft.AspNetCore | | false | Warning  |
 
 ### Starting the App
 

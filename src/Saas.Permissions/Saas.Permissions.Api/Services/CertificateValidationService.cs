@@ -19,7 +19,7 @@ public class CertificateValidationService : ICertificateValidationService
 
         // Do not check your certificate thumbprint into your git repository.
         // Another option would be to load in your certificate thumbprint from azure keyvault.
-        var expectedCertificateThumbPrint = _appSettings.SelfSignedCertThumbprint;
+        var expectedCertificateThumbPrint = _appSettings.SSLCertThumbprint;
 
         return clientCertificate.Thumbprint == expectedCertificateThumbPrint;
     }
