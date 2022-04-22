@@ -1,6 +1,7 @@
 ---
 type: docs
-title: "Signup Administration"
+title: "SaaS.SignupAdministration.Web"
+weight: 80
 ---
 
 The *Signup/Administration* site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:

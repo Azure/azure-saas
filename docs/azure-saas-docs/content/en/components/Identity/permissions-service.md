@@ -1,6 +1,6 @@
 ---
 type: docs
-title: "Permissions Service"
+title: "SaaS.Permissions.Service"
 weight: 55
 ---
 

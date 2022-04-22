@@ -1,6 +1,7 @@
 ---
 type: docs
-title: "Admin API"
+title: "SaaS.Admin.Service"
+weight: 50
 ---
 
 The Admin Service has two main responsibilities: 

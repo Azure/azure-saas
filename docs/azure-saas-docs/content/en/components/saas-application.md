@@ -1,6 +1,7 @@
 ---
 type: docs
-title: "SaaS Application"
+title: "SaaS.Application.Web"
+weight: 90
 ---
 The SaaS application is a stub application demonstrating where users of the ASDK project would insert their code. It is the end user application that the SaaS solution is designed around.
 
