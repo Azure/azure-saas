@@ -10,33 +10,40 @@ On this page, you will find instructions to run the dev kit in your local enviro
 
 > Tip: If you're new here and want to learn what this is, check out the [welcome page](..)
 
-## Running the Dev Kit in your local dev environment
+## 1. Setup Azure AD B2C
+
+This project uses [Azure Active Directory B2C](https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview) for an IDP (Identity Provider). The first step in setting up this project is to configure a new B2C instance to house our local user accounts. If you'd like to use an IDP other than Azure AD B2C, see our document on how to achieve that here **NEED TO WRITE STILL**.
+
+(need to refine steps here)
+1. Create new b2c instance
+2. Run our script
+3. Gather output values
+4. Save for later
+
+
+After finishing the IDP setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
+## 2.a. Running the Dev Kit in your local dev environment
 
 - Install the latest version of [Visual Studio 2022](https://visualstudio.microsoft.com/vs/). You may also use Visual Studio Code, but the solution and projects are targetted at VS2022.
 - Clone the repository `https://github.com/Azure/azure-saas.git` on to your dev machine.
 - Open the `.sln` in the root of the repository. This solution includes all of the modules.
-- Depending on which project you want to launch, you'll likely need to configure the `appsettings.json` configuration. Be careful to not check in keys to your source control system.
+- Depending on the project you wish to run, you'll need to set some secrets to properly setup authentication with B2C. See the [App Settings](#app-settings) section below
 
-> Note: See [Design Considerations](../resources/design-considerations/) for recommendations around using [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/).
+### App Settings
+When running the project locally, you will need to set some app settings & secrets manually using the [.NET secrets manager](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment). When deployed to azure (below), these secrets are automatically configured for you and stored in Azure Key Vault.
 
-## App Settings
+View the readme files in each project's directory for a description of the app settings & secrets you'll need to set in order to run the respective project:
 
-You can build the code without configuring your application settings, but you won't be able to run the projects without a few key configuration settings.
+- [SaaS.Admin.Service Readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin)
+- [SaaS.Permissions.Service Readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.Permissions)
+- [SaaS.SignupAdministration.Web Readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration)
+- [SaaS.Application Readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.Application)
 
-    Saas.SignupAdministration.Web
-        connectionString
-    Saas.Application.Web
-        AdminServiceUrl
+## 2.b. Deploying to Azure
 
-> Note: `Saas.Admin.Service` uses a local database instance and is automatically populated using Entity Framework.
+Deploying to Azure is easy thanks to our pre-configured ARM (Azure Resource Manager) templates.
 
-> This solution uses various `appsettings.json` and `appsettings.development.json` to manage deployment settings and other configuration settings. In a true production deployment, you should configure [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/) to provide a secure and centralized key storage location. This allows applications to not have direct access to confidential keys.
-
-## Deploying to Azure
-
-Deploying to Azure is easy thanks to an ARM (Azure Resource Manager) template.
-
-This button will take you to the Azure portal, passing it the template. You'll be asked a few questions, and then the solution will be up and running in just a few minutes.
+This button will take you to the Azure portal, passing it the template. You'll be asked a few questions, and then the solution will be up and running in just a few minutes. You will need your B2C configuration values and secrets from step 1. 
 
 [![Deploy to Azure](https://www.azuresaas.net/assets/images/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2FcreateUiDefinition.json)
 
