@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Options;
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Options;
 
 namespace Saas.AspNetCore.Authorization.ClaimTransformers
 {
     /// <summary>
     /// Transforms a custom claim in space delimited format to roles
-    /// The user pricipal will factor in the custom roles when IsInRole is called
+    /// The user principal will factor in the custom roles when IsInRole is called
     /// </summary>
     public class ClaimToRoleTransformer : IClaimsTransformation
     {
@@ -39,8 +39,8 @@ namespace Saas.AspNetCore.Authorization.ClaimTransformers
 
         public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
         {
-            var customClaims = principal.Claims.Where(c => _sourceClaimType.Equals(c.Type, StringComparison.OrdinalIgnoreCase));
-            var roleClaims = customClaims.SelectMany(c =>
+            System.Collections.Generic.IEnumerable<Claim> customClaims = principal.Claims.Where(c => _sourceClaimType.Equals(c.Type, StringComparison.OrdinalIgnoreCase));
+            System.Collections.Generic.IEnumerable<Claim> roleClaims = customClaims.SelectMany(c =>
             {
                 return c.Value.Split(' ').Select(s => new Claim(_roleType, s));
             });
