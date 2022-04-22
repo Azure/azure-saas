@@ -4,7 +4,8 @@ using System.Security.Cryptography.X509Certificates;
 using Azure.Security.KeyVault.Certificates;
 using Azure.Identity;
 using Saas.AspNetCore.Authorization.ClaimTransformers;
-using Saas.AspNetCore.Authorization.PolicyRequirements;
+using Saas.AspNetCore.Authorization.AuthHandlers;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,14 +22,16 @@ builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration,
 
 
 builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTransformer");
+builder.Services.AddRouteBasedRoleHandler("tenantId");
+
 builder.Services.AddAuthorization(options => {
     options.AddPolicy("TenantAdminOnly", policyBuilder =>
-    {
-        policyBuilder.Requirements.Add(new RouteBasedPolicyRequirement("tenantId", "TenantAdmin"));
+{
+        policyBuilder.Requirements.Add(new RolesAuthorizationRequirement(new string[] { "TenantAdmin" }));
     });
 });
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddRouteBasedPolicy();
+
+
 
 
 builder.Services.AddControllers();

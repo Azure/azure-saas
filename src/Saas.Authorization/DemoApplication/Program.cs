@@ -1,13 +1,12 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 
-using Saas.AspNetCore.Authorization.ClaimTransformers;
 using Saas.AspNetCore.Authorization.AuthHandlers;
-using Saas.AspNetCore.Authorization.PolicyRequirements;
+using Saas.AspNetCore.Authorization.ClaimTransformers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +19,6 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTransformer");
 builder.Services.AddRouteBasedRoleHandler("subscriptionId");
-builder.Services.AddRouteBasedPolicy();
 
 
 builder.Services.AddAuthorization(options =>
@@ -29,22 +27,22 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("AdminsOnlyPolicy", policyBuilder =>
     {
-        policyBuilder.Requirements.Add(new RouteBasedPolicyRequirement("subscriptionId", "SubscriptionAdmin", "SystemAdmin"));
+        policyBuilder.Requirements.Add(new RolesAuthorizationRequirement(new string[] { "SubscriptionAdmin", "SystemAdmin" }));
     });
 
     options.AddPolicy("SubscriptionAdminOnly", policyBuilder =>
     {
-        policyBuilder.Requirements.Add(new RouteBasedPolicyRequirement("subscriptionId", "SubscriptionAdmin"));
+        policyBuilder.Requirements.Add(new RolesAuthorizationRequirement(new string[] { "SubscriptionAdmin" }));
     });
 
     options.AddPolicy("SuperAdminOnly", policyBuilder =>
     {
-        policyBuilder.Requirements.Add(new RouteBasedPolicyRequirement("subscriptionId", "SuperAdmin"));
+        policyBuilder.Requirements.Add(new RolesAuthorizationRequirement(new string[] { "SuperAdmin" }));
     });
 
     options.AddPolicy("SubscriptionUsersOnly", policyBuilder =>
     {
-        policyBuilder.Requirements.Add(new RouteBasedPolicyRequirement("subscriptionId", "SubscriptionUser"));
+        policyBuilder.Requirements.Add(new RolesAuthorizationRequirement(new string[] { "SubscriptionUser" }));
     });
 });
 
