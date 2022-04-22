@@ -1,4 +1,4 @@
-# SaaS.SignupAdministration.Web
+# SaaS.Permissions.Service
 
 ## Project Overview
 
@@ -26,22 +26,14 @@ In order to run the project locally, the App Settings marked as `secret: true` m
 
 Default values for non secret app settings can be found in [appsettings.json](Saas.Admin.Service/appsettings.json)
 
-|   | AppSetting Key                        | Description                                           | Secret | Default Value                 |   |
-|---|---------------------------------------|-------------------------------------------------------|--------|-------------------------------|---|
-|   | ---                                   | ---                                                   | ---    | ---                           |   |
-|   | AppSettings:AdminServiceBaseUrl       | URL for downstream admin service                      | false  | https://localhost:7041/       |   |
-|   | AppSettings:AdminServiceScopes        | Scopes to authorize user for on the admin service     | false  |                               |   |
-|   | AzureAdB2C:Instance                   |                                                       | true   |                               |   |
-|   | AzureAdB2C:Domain                     |                                                       | true   |                               |   |
-|   | AzureAdB2C:ClientId                   |                                                       | true   |                               |   |
-|   | AzureAdB2C:ClientSecret               |                                                       | true   |                               |   |
-|   | AzureAdB2C:TenantId                   |                                                       | true   |                               |   |
-|   | AzureAdB2C:SignedOutCallbackPath      |                                                       | false  | /signout/B2C_1A_SIGNUP_SIGNIN |   |
-|   | AzureAdB2C:SignUpSignInPolicyId       |                                                       | false  | B2C_1A_SIGNUP_SIGNIN          |   |
-|   | KeyVault:Url                          | KeyVault URL to pull secret values from in production | false  |                               |   |
-|   | AllowedHosts                          |                                                       | false  | *                             |   |
-|   | Logging:LogLevel:Default              |                                                       | false  | Information                   |   |
-|   | Logging:LogLevel:Microsoft.AspNetCore |                                                       | false  | Warning                       |   |
+| AppSetting Key |  Description | Secret | Default Value |
+| ---  | --- | --- | --- |
+| AppSettings:SSLCertThumbprint | The certificate thumbprint used to validate the certificate forwarded to the application via the web server. | true | |
+| KeyVault:Url | KeyVault URL to pull secret values from in production | false |  |
+| ConnectionStrings:PermissionsContext | Connection String to SQL server database used to store permission data. If using local db for development, this connection string is fine to commit to your repo as it does not contain any secrets. | true | (local db connection string) |
+| AllowedHosts | | false |  * |
+| Logging:LogLevel:Default | | false | Information  |
+| Logging:LogLevel:Microsoft.AspNetCore | | false | Warning  |
 
 ### Starting the App
 

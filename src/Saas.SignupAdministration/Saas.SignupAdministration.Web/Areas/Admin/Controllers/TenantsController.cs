@@ -1,4 +1,6 @@
-﻿namespace Saas.SignupAdministration.Web.Areas.Admin.Controllers;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Saas.SignupAdministration.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
 public class TenantsController : Controller
@@ -13,7 +15,8 @@ public class TenantsController : Controller
     // GET: Admin/Tenants
     public async Task<IActionResult> Index()
     {
-        return View(await _adminServiceClient.TenantsAllAsync());
+        var items = await _adminServiceClient.TenantsAllAsync();
+        return View(items.Select(x=>new TenantViewModel(x, ReferenceData.TenantCategories, ReferenceData.ProductServicePlans)));
     }
 
     // GET: Admin/Tenants/Details/5
@@ -31,13 +34,13 @@ public class TenantsController : Controller
             return NotFound();
         }
 
-        return View(tenant);
+        return View(new TenantViewModel(tenant, ReferenceData.TenantCategories, ReferenceData.ProductServicePlans));
     }
 
     // GET: Admin/Tenants/Create
     public IActionResult Create()
     {
-        return View();
+        return RedirectToAction(SR.OrganizationNameAction, SR.OnboardingWorkflowController, new { Area = "" });
     }
 
     // POST: Admin/Tenants/Create
@@ -69,7 +72,9 @@ public class TenantsController : Controller
         {
             return NotFound();
         }
-        return View(tenant);
+        ViewBag.ProductOptions = ReferenceData.ProductServicePlans.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+        ViewBag.CategoryOptions = ReferenceData.TenantCategories.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+        return View(new TenantViewModel(tenant, ReferenceData.TenantCategories, ReferenceData.ProductServicePlans));
     }
 
     // POST: Admin/Tenants/Edit/5
@@ -77,7 +82,7 @@ public class TenantsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(string id, [Bind("Id,Name,IsCancelled,IsProvisioned,RoutePrefix")] TenantDTO tenant)
+    public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Route,ProductTierId,CategoryId,CreatorEmail")] TenantDTO tenant)
     {
         Guid guid = new Guid();
         if (!Guid.TryParse(id, out guid) || guid != tenant.Id)
@@ -91,7 +96,7 @@ public class TenantsController : Controller
             {
                 await _adminServiceClient.TenantsPUTAsync(guid, tenant);
             }
-            catch (ApiException ex)
+            catch (ApiException)
             {
                 return NotFound();
             }
