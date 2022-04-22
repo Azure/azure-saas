@@ -50,16 +50,10 @@ builder.Services.AddAuthorization(options => {
 });
 
 
-
-
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
-
-// Use azure keyvault SDK to download certificate to be used to authenticate with permissions api
-CertificateClient certificateClient = new CertificateClient(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential(new DefaultAzureCredentialOptions() { }));
-X509Certificate2 certificate = certificateClient.DownloadCertificate(builder.Configuration["KeyVault:PermissionsApiCertName"]).Value;
 
 builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient>()
     // Configure outgoing HTTP requests to include certificate for permissions API
