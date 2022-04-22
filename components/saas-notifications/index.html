@@ -18,30 +18,23 @@
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-144x144.png" sizes="144x144">
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
 
-<title>SaaS.SignupAdministration.Web | Azure SaaS Dev Kit Docs</title>
-<meta name="description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
-
-Sign …">
-<meta property="og:title" content="SaaS.SignupAdministration.Web" />
-<meta property="og:description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
- Sign up for an account Go through an onboarding flow to create a new tenant Manage their existing tenants.  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.
-Design Considerations For ease of management, we have chosen to incorporate the global administrative functionality into this application." />
+<title>SaaS.Notifications | Azure SaaS Dev Kit Docs</title>
+<meta name="description" content="Steps to configure email provider of choice here
+">
+<meta property="og:title" content="SaaS.Notifications" />
+<meta property="og:description" content="Steps to configure email provider of choice here " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://azure.github.io/azure-saas/components/signup-administration/" /><meta property="article:section" content="components" />
+<meta property="og:url" content="https://azure.github.io/azure-saas/components/saas-notifications/" /><meta property="article:section" content="components" />
 
 <meta property="article:modified_time" content="2022-04-22T16:35:43-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
-<meta itemprop="name" content="SaaS.SignupAdministration.Web">
-<meta itemprop="description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
- Sign up for an account Go through an onboarding flow to create a new tenant Manage their existing tenants.  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.
-Design Considerations For ease of management, we have chosen to incorporate the global administrative functionality into this application.">
+<meta itemprop="name" content="SaaS.Notifications">
+<meta itemprop="description" content="Steps to configure email provider of choice here ">
 <meta itemprop="dateModified" content="2022-04-22T16:35:43-04:00" />
-<meta itemprop="wordCount" content="572">
+<meta itemprop="wordCount" content="8">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="SaaS.SignupAdministration.Web"/>
-<meta name="twitter:description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
- Sign up for an account Go through an onboarding flow to create a new tenant Manage their existing tenants.  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.
-Design Considerations For ease of management, we have chosen to incorporate the global administrative functionality into this application."/>
+<meta name="twitter:title" content="SaaS.Notifications"/>
+<meta name="twitter:description" content="Steps to configure email provider of choice here "/>
 
 
 
@@ -146,12 +139,12 @@ Design Considerations For ease of management, we have chosen to incorporate the 
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsadmin-service-li">
   <a href="/azure-saas/components/admin-service/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsadmin-service"><span class="">SaaS.Admin.Service</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-azure-saascomponentssignup-administration-li">
-  <a href="/azure-saas/components/signup-administration/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssignup-administration"><span class="td-sidebar-nav-active-item">SaaS.SignupAdministration.Web</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssignup-administration-li">
+  <a href="/azure-saas/components/signup-administration/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssignup-administration"><span class="">SaaS.SignupAdministration.Web</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssaas-application-li">
   <a href="/azure-saas/components/saas-application/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-application"><span class="">SaaS.Application.Web</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssaas-notifications-li">
-  <a href="/azure-saas/components/saas-notifications/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-notifications"><span class="">SaaS.Notifications</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-azure-saascomponentssaas-notifications-li">
+  <a href="/azure-saas/components/saas-notifications/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-notifications"><span class="td-sidebar-nav-active-item">SaaS.Notifications</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-azure-saasresources-li">
@@ -184,27 +177,15 @@ Design Considerations For ease of management, we have chosen to incorporate the 
           <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
             
 <div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
-<a href="https://github.com/Azure/azure-saas/tree/main/docs/azure-saas-docs/content/en/components/signup-administration.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa fa-file-alt fa-fw"></i> View page source</a>
-  <a href="https://github.com/Azure/azure-saas/edit/main/docs/azure-saas-docs/content/en/components/signup-administration.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-  <a href="https://github.com/Azure/azure-saas/new/main/docs/azure-saas-docs/content/en/components/signup-administration.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Create child page</a>
-  <a href="https://github.com/Azure/azure-saas/issues/new?title=SaaS.SignupAdministration.Web" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+<a href="https://github.com/Azure/azure-saas/tree/main/docs/azure-saas-docs/content/en/components/saas-notifications.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa fa-file-alt fa-fw"></i> View page source</a>
+  <a href="https://github.com/Azure/azure-saas/edit/main/docs/azure-saas-docs/content/en/components/saas-notifications.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/Azure/azure-saas/new/main/docs/azure-saas-docs/content/en/components/saas-notifications.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Create child page</a>
+  <a href="https://github.com/Azure/azure-saas/issues/new?title=SaaS.Notifications" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
   
 </div>
 
             
 
-
-<div class="td-toc"><nav id="TableOfContents">
-  <ul>
-    <li><a href="#design-considerations">Design Considerations</a></li>
-    <li><a href="#running-locally">Running Locally</a></li>
-    <li><a href="#signup-administration-flows">Signup Administration Flows</a></li>
-    <li><a href="#sign-in">Sign In</a></li>
-    <li><a href="#onboarding-flow">Onboarding Flow</a></li>
-    <li><a href="#add-new-tenant-admin---existing-user">Add New Tenant Admin - Existing User</a></li>
-    <li><a href="#add-new-tenant-admin---user-does-not-exist">Add New Tenant Admin - User Does Not Exist</a></li>
-  </ul>
-</nav></div>
 
 
 
@@ -239,13 +220,13 @@ Design Considerations For ease of management, we have chosen to incorporate the 
     <a href="https://azure.github.io/azure-saas/components/">Components</a>
   </li>
   <li class="breadcrumb-item active" aria-current="page">
-    <a href="https://azure.github.io/azure-saas/components/signup-administration/">SaaS.SignupAdministration.Web</a>
+    <a href="https://azure.github.io/azure-saas/components/saas-notifications/">SaaS.Notifications</a>
   </li>
   </ol>
 </nav>
             
 <div class="td-content">
-	<h1>SaaS.SignupAdministration.Web</h1>
+	<h1>SaaS.Notifications</h1>
 	
 	<header class="article-meta">
 		
@@ -262,103 +243,8 @@ Design Considerations For ease of management, we have chosen to incorporate the 
 
 		
 	</header>    
-	<p>The <em>Signup/Administration</em> site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:</p>
-<ul>
-<li>Sign up for an account</li>
-<li>Go through an onboarding flow to create a new tenant</li>
-<li>Manage their existing tenants.</li>
-</ul>
-<p>This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.</p>
-<h2 id="design-considerations">Design Considerations</h2>
-<p>For ease of management, we have chosen to incorporate the global administrative functionality into this application. You may choose to separate this functionality into a different application if you require more administrative functionality than just tenant and user management.</p>
-<blockquote>
-<p>We chose to use NSwag to generate our client implementation for the Admin Service. The NSwag project provides tools to generate OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI specifications. This provides us a ready-to-use HTTP client without having to write much boilerplate. Read more about <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&amp;tabs=visual-studio">using NSwag on ASP.NET projects</a></p>
-</blockquote>
-<h2 id="running-locally">Running Locally</h2>
-<p>Instructions to get this module running on your local dev machine are located here:
-<a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration</a></p>
-<h2 id="signup-administration-flows">Signup Administration Flows</h2>
-<h2 id="sign-in">Sign In</h2>
-<p>See the <a href="./Identity/identity-flows.md##Sign-In">Sign-In Flow</a> in Identity Flows.</p>
-<h2 id="onboarding-flow">Onboarding Flow</h2>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">sequenceDiagram  
-actor user as Tenant Admin
-participant signup as Signup App
-participant admin as Admin Api
-participant auth as Auth Service
-participant perm as Permissions Api
-participant email as Email Logic App
+	<h1 id="steps-to-configure-email-provider-of-choice-here">Steps to configure email provider of choice here</h1>
 
-user-&gt;&gt;signup: Sign Up Button Clicked
-
-signup-&gt;&gt;signup: User Signed In/Token Exists?
-signup--&gt;&gt;user: No, Redirect to /login
-user-&gt;&gt;auth : Sign in or Sign Up
-auth--&gt;&gt;user : JWT
-user-&gt;&gt;signup: Sign Up Button Clicked
-signup-&gt;&gt;signup: Token Exists?
-signup-&gt;&gt;user : Yes, Start Onboarding Flow -- Org Name Page
-user-&gt;&gt;signup: Org Name Provided
-signup--&gt;&gt;user : Category Select
-user-&gt;&gt;signup: Select Category
-signup--&gt;&gt;user : Route Name Page
-signup-&gt;&gt;user: Enter Route Name
-signup-&gt;&gt;admin: Check if Route Exists
-admin-&gt;&gt;signup: Route does not exist
-signup--&gt;&gt;user : Validation Page
-user-&gt;&gt;signup : Submit
-signup-&gt;&gt;admin : Create Tenant
-admin-&gt;&gt;admin : Create Tenant
-admin-&gt;&gt;perm : Add Admin Permission for Tenant
-perm--&gt;&gt;admin : Permission Added
-admin-&gt;&gt;email : Send Tenant Created Confirmation Email
-email--&gt;&gt;admin : Sent
-admin--&gt;&gt;signup : Tenant Created
-admin--&gt;&gt;user : Tenant Created Confirmation Page
-</code></pre><h2 id="add-new-tenant-admin---existing-user">Add New Tenant Admin - Existing User</h2>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">sequenceDiagram
-actor user as Tenant Admin
-participant signup as SignupAdministration Site
-participant admin as Admin API
-participant perm as Permissions API
-participant auth as Auth Service (B2C)
-
-user-&gt;&gt;signup : Get list of tenants
-signup-&gt;&gt;admin : Get list of tenants for user
-admin--&gt;&gt;signup : List of tenants for user
-signup--&gt;&gt;user : List of tenants
-user-&gt;&gt;signup : Add user to tenant by email
-signup-&gt;&gt;admin : POST: Add user to tenant by email
-admin-&gt;&gt;admin : Claim({tenantId}.users.write)
-admin-&gt;&gt;perm : Add user to tenant by email
-perm-&gt;&gt;auth : User exists?
-auth--&gt;&gt;perm : User exists
-perm-&gt;&gt;perm : Add Permissions Record
-perm--&gt;&gt;admin : Ok
-admin--&gt;&gt;signup : Ok
-signup--&gt;&gt;user : Ok
-</code></pre><h2 id="add-new-tenant-admin---user-does-not-exist">Add New Tenant Admin - User Does Not Exist</h2>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">sequenceDiagram
-actor user as Tenant Admin
-participant signup as SignupAdministration Site
-participant admin as Admin API
-participant perm as Permissions API
-participant auth as Auth Service (B2C)
-
-user-&gt;&gt;signup : Get list of tenants
-signup-&gt;&gt;admin : Get list of tenants for user
-admin--&gt;&gt;signup : List of tenants for user
-signup--&gt;&gt;user : List of tenants
-user-&gt;&gt;signup : Add user to tenant by email
-signup-&gt;&gt;admin : POST: Add user to tenant by email
-admin-&gt;&gt;admin : Claim({tenantId}.users.write)
-admin-&gt;&gt;perm : Add user to tenant by email
-perm-&gt;&gt;auth : User exists?
-auth--&gt;&gt;perm : User does not exist
-perm--&gt;&gt;admin : Error, User does not exist
-admin--&gt;&gt;signup : Error, User does not exist
-signup--&gt;&gt;user : Error, User does not exist    
-</code></pre>
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">

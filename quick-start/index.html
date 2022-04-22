@@ -25,12 +25,12 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/quick-start/" /><meta property="article:section" content="" />
 
-<meta property="article:modified_time" content="2022-04-22T15:18:16-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-22T16:35:43-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Quick Start">
 <meta itemprop="description" content="Getting Started with the Azure SaaS Dev Kit">
-<meta itemprop="dateModified" content="2022-04-22T15:18:16-04:00" />
-<meta itemprop="wordCount" content="589">
+<meta itemprop="dateModified" content="2022-04-22T16:35:43-04:00" />
+<meta itemprop="wordCount" content="829">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Quick Start"/>
 <meta name="twitter:description" content="Getting Started with the Azure SaaS Dev Kit"/>
@@ -129,7 +129,7 @@
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-provider-li">
   <a href="/azure-saas/components/identity/identity-provider/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-provider"><span class="">Identity Provider</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitypermissions-service-li">
-  <a href="/azure-saas/components/identity/permissions-service/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitypermissions-service"><span class="">Permissions Service</span></a>
+  <a href="/azure-saas/components/identity/permissions-service/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitypermissions-service"><span class="">SaaS.Permissions.Service</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-flows-li">
   <a href="/azure-saas/components/identity/identity-flows/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-flows"><span class="">Identity Flows</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitycaveats-li">
@@ -137,11 +137,13 @@
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsadmin-service-li">
-  <a href="/azure-saas/components/admin-service/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsadmin-service"><span class="">Admin API</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssaas-application-li">
-  <a href="/azure-saas/components/saas-application/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-application"><span class="">SaaS Application</span></a>
+  <a href="/azure-saas/components/admin-service/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsadmin-service"><span class="">SaaS.Admin.Service</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssignup-administration-li">
-  <a href="/azure-saas/components/signup-administration/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssignup-administration"><span class="">Signup Administration</span></a>
+  <a href="/azure-saas/components/signup-administration/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssignup-administration"><span class="">SaaS.SignupAdministration.Web</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssaas-application-li">
+  <a href="/azure-saas/components/saas-application/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-application"><span class="">SaaS.Application.Web</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssaas-notifications-li">
+  <a href="/azure-saas/components/saas-notifications/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-notifications"><span class="">SaaS.Notifications</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-azure-saasresources-li">
@@ -186,18 +188,21 @@
 
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
-    <li><a href="#1-setup-azure-ad-b2c">1. Setup Azure AD B2C</a></li>
+    <li><a href="#1-setup-identity-framework">1. Setup Identity Framework</a></li>
     <li><a href="#2a-running-the-dev-kit-in-your-local-dev-environment">2.a. Running the Dev Kit in your local dev environment</a>
       <ul>
         <li><a href="#app-settings">App Settings</a></li>
       </ul>
     </li>
-    <li><a href="#2b-deploying-to-azure">2.b. Deploying to Azure</a></li>
+    <li><a href="#2b-deploying-to-azure---entire-solution">2.b. Deploying to Azure - Entire Solution</a></li>
+    <li><a href="#2c-advanced-deploying-to-azure---single-module">2.c. (Advanced) Deploying to Azure - Single Module</a></li>
+    <li><a href="#3-optional-configure-email-provider">3. (Optional) Configure Email Provider</a></li>
     <li><a href="#integrating-your-application">Integrating your application</a>
       <ul>
         <li><a href="#how-does-this-work">How does this work?</a></li>
       </ul>
     </li>
+    <li><a href="#more-info">More Info</a></li>
     <li><a href="#learn-more-about-saas">Learn more about SaaS</a></li>
   </ul>
 </nav></div>
@@ -259,8 +264,8 @@
 <blockquote>
 <p>Tip: If you&rsquo;re new here and want to learn what this is, check out the <a href="..">welcome page</a></p>
 </blockquote>
-<h2 id="1-setup-azure-ad-b2c">1. Setup Azure AD B2C</h2>
-<p>This project uses <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview">Azure Active Directory B2C</a> for an IDP (Identity Provider). The first step in setting up this project is to configure a new B2C instance to house our local user accounts. If you&rsquo;d like to use an IDP other than Azure AD B2C, see our document on how to achieve that here <strong>NEED TO WRITE STILL</strong>.</p>
+<h2 id="1-setup-identity-framework">1. Setup Identity Framework</h2>
+<p>This project uses <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview">Azure Active Directory B2C</a> for an IDP (Identity Provider). The first step in setting up this project is to configure a new B2C instance to house your local user accounts. You will also need to deploy the <a href="../components/identity/permissions-service">Permissions API</a>, as B2C will have a dependancy on it.</p>
 <p>(need to refine steps here)</p>
 <ol>
 <li>Create new b2c instance</li>
@@ -278,17 +283,15 @@
 </ul>
 <h3 id="app-settings">App Settings</h3>
 <p>When running the project locally, you will need to set some app settings &amp; secrets manually using the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment">.NET secrets manager</a>. When deployed to azure (below), these secrets are automatically configured for you and stored in Azure Key Vault.</p>
-<p>View the readme files in each project&rsquo;s directory for a description of the app settings &amp; secrets you&rsquo;ll need to set in order to run the respective project:</p>
-<ul>
-<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin">SaaS.Admin.Service Readme</a></li>
-<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Permissions">SaaS.Permissions.Service Readme</a></li>
-<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">SaaS.SignupAdministration.Web Readme</a></li>
-<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Application">SaaS.Application Readme</a></li>
-</ul>
-<h2 id="2b-deploying-to-azure">2.b. Deploying to Azure</h2>
+<p>Make sure you check out the <a href="#more-info">readme files</a> in each project&rsquo;s directory for a description of the app settings &amp; secrets you&rsquo;ll need to set in order to run the respective project.</p>
+<h2 id="2b-deploying-to-azure---entire-solution">2.b. Deploying to Azure - Entire Solution</h2>
 <p>Deploying to Azure is easy thanks to our pre-configured ARM (Azure Resource Manager) templates.</p>
 <p>This button will take you to the Azure portal, passing it the template. You&rsquo;ll be asked a few questions, and then the solution will be up and running in just a few minutes. You will need your B2C configuration values and secrets from step 1.</p>
 <p><a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2FcreateUiDefinition.json"><img src="https://www.azuresaas.net/assets/images/deploy-to-azure.svg" alt="Deploy to Azure"></a></p>
+<h2 id="2c-advanced-deploying-to-azure---single-module">2.c. (Advanced) Deploying to Azure - Single Module</h2>
+<p>If you&rsquo;d like to use just one (or more) module from the project, we&rsquo;ve provided bicep templates to do that as well. In each project directory, you&rsquo;ll find a folder named <code>{ModuleName}.Deployment</code> that contains all the bicep code you&rsquo;ll need to deploy just that Module. Please be advised that there are certain dependencies that each module requires in order for it to deploy properly. You may find that you need to edit the bicep templates to match your use case. You will find instructions and a list of dependencies for each module within the <a href="#more-info">module&rsquo;s readme</a>.</p>
+<h2 id="3-optional-configure-email-provider">3. (Optional) Configure Email Provider</h2>
+<p>If you choose to deploy the entire solution to Azure, one of the things that gets deployed is the SaaS.Notifications module <strong>need page and link</strong>, an Azure Logic App. This logic app has a simple HTTP trigger that the SaaS.SignupAdministration site is configured to make a POST request to in order to send emails (ie, at the end of the tenant creation process). By default, there is no email provider configured and the emails do not actually get sent. If you&rsquo;d like to enable email sending, you will need to manually configure your email provider connector of choice inside the Logic App. See the instructions <a href="components/saas-notifications.md">here</a> to get started.</p>
 <h2 id="integrating-your-application">Integrating your application</h2>
 <p>Now that you&rsquo;ve seen how to build and run the code locally, and you have a way to deploy your code to Azure in a repeatable and code-first way, you can integrate your own code into the solution.</p>
 <p>We&rsquo;ve included a basic application within the <code>Saas.Application.Web</code> project that demonstrates a SaaS solution called &ldquo;BadgeMeUp&rdquo;. BadgeMeUp is simply a badge sharing site that <em>Contoso</em> (representing your company) can sell to end customers.</p>
@@ -301,13 +304,21 @@
 <p>What is Bicep?
 Bicep is a domain-specific language (DSL) that uses declarative syntax to deploy Azure resources. In a Bicep file, you define the infrastructure you want to deploy to Azure, and then use that file throughout the development lifecycle to repeatedly deploy your infrastructure. Your resources are deployed in a consistent manner.</p>
 </blockquote>
+<h2 id="more-info">More Info</h2>
+<p>For more information, including deployment instructions, an outline of dependencies, app settings, and more, check out the readme files for each module:</p>
+<ul>
+<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin">SaaS.Admin.Service Readme</a></li>
+<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Permissions">SaaS.Permissions.Service Readme</a></li>
+<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">SaaS.SignupAdministration.Web Readme</a></li>
+<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Application">SaaS.Application Readme</a></li>
+</ul>
 <h2 id="learn-more-about-saas">Learn more about SaaS</h2>
 <p>There are a plethora of resources to help you on your SaaS journey. They&rsquo;re available in the <a href="../resources/saas-resources/">SaaS Resources section</a>.</p>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/7fc82fea71aa60647e9c1e4d7ce6414b8e8cd1e3">some work on quickstart -- not finished (7fc82fe)</a>
+  Last modified April 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/510330d795963d97a6b3400356a020b7da9fda2c">some more work on quick start and rename some modules (510330d)</a>
 </div>
 
 </div>
