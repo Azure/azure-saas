@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Saas.SignupAdministration.Web.Services.TenantDTO>
+﻿@using Saas.SignupAdministration.Web
+@model IEnumerable<Saas.SignupAdministration.Web.Areas.Admin.Data.TenantViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,65 +8,60 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="@SR.OrganizationNameAction" asp-controller="@SR.OnboardingWorkflowController" asp-area="">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsCancelled)
+                @Html.DisplayNameFor(model => model.Route)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsProvisioned)
+                @Html.DisplayNameFor(model => model.ProductName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoutePrefix)
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatorEmail)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Version)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsCancelled)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsProvisioned)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RoutePrefix)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Version)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new {area = "Admin", id=item.Id} ) | 
-                @Html.ActionLink("Details", "Details", new { area = "Admin", id=item.Id}) |
-                @Html.ActionLink("Delete", "Delete", new { area = "Admin", id=item.Id})
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Name, "Details", new { area = "Admin", id=item.Id})
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Route)
+                </td>
+                <th>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.CreatorEmail)
+                </th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedTime.Date)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new {area = "Admin", id=item.Id} ) |
+                    @Html.ActionLink("Details", "Details", new { area = "Admin", id=item.Id}) |
+                    @Html.ActionLink("Delete", "Delete", new { area = "Admin", id=item.Id})
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

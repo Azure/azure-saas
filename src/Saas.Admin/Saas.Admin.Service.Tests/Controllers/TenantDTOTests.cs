@@ -20,7 +20,7 @@ public class TenantDTOTests
 
         AssertAdditions.AllPropertiesAreEqual(dto, tenant, nameof(dto.Version), nameof(dto.CreatedTime));
         Assert.NotNull(tenant.CreatedTime);
-        
+
         if (tenant.CreatedTime != null)
         {
             Assert.Equal(tenant.CreatedTime.Value, dto.CreatedTime);
@@ -75,8 +75,10 @@ public class TenantDTOTests
 
         tenant.CreatedTime = original;
 
-        TenantDTO dto = new TenantDTO(tenant);
-        dto.CreatedTime = updated;
+        TenantDTO dto = new TenantDTO(tenant)
+        {
+            CreatedTime = updated
+        };
 
         Assert.NotEqual(tenant.CreatedTime, dto.CreatedTime);
 

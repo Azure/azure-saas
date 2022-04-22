@@ -1,4 +1,6 @@
-﻿using Saas.Permissions.Api.Interfaces;
+﻿using Microsoft.AspNetCore.Authentication.Certificate;
+using Microsoft.AspNetCore.Authorization;
+using Saas.Permissions.Api.Interfaces;
 using Saas.Permissions.Api.Models;
 
 namespace Saas.Permissions.Api.Controllers;
@@ -6,6 +8,8 @@ namespace Saas.Permissions.Api.Controllers;
 [Route("api/[controller]")]
 
 [ApiController]
+// Specify that this controller should use Certificate Based Auth. Certificate auth is required for fetching custom claims from B2C. 
+[Authorize(AuthenticationSchemes = CertificateAuthenticationDefaults.AuthenticationScheme)]
 public class CustomClaimsController : ControllerBase
 {
     private readonly IPermissionsService _permissionsService;
@@ -25,9 +29,13 @@ public class CustomClaimsController : ControllerBase
     {
         var permissions = await _permissionsService.GetPermissionsAsync(aDB2CRequest.EmailAddress);
 
+        string[] permissionStrings = permissions.Select(x => x.ToTenantPermissionString())
+                                                     // Append default permission with the users object ID
+                                                     .Append($"{aDB2CRequest.ObjectId}.Self")
+                                                     .ToArray();
         ADB2CReponse response = new ADB2CReponse()
         {
-            Permissions = permissions.Select(x => x.ToTenantPermissionString()).ToArray()
+            Permissions = permissionStrings
         };
 
         return Ok(response);

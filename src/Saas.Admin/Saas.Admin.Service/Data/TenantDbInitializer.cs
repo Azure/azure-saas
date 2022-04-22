@@ -18,7 +18,11 @@ public static class TenantDbInitializer
     {
         try
         {
-            tenantsContext.Database.EnsureCreated();
+            /////////////////////////////////////////////////////////////////////////////////////////
+            // In a production environment, use EF tools to apply migrations during deployment
+            // This is here to simplify the demo application
+            ////////////////////////////////////////////////////////////////////////////////////////
+            tenantsContext.Database.Migrate();
         }
         catch (Exception ex)
         {
