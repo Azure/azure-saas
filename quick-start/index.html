@@ -25,12 +25,12 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/quick-start/" /><meta property="article:section" content="" />
 
-<meta property="article:modified_time" content="2022-04-18T14:56:51-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-04-22T15:18:16-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Quick Start">
 <meta itemprop="description" content="Getting Started with the Azure SaaS Dev Kit">
-<meta itemprop="dateModified" content="2022-04-18T14:56:51-05:00" />
-<meta itemprop="wordCount" content="498">
+<meta itemprop="dateModified" content="2022-04-22T15:18:16-04:00" />
+<meta itemprop="wordCount" content="589">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Quick Start"/>
 <meta name="twitter:description" content="Getting Started with the Azure SaaS Dev Kit"/>
@@ -186,9 +186,13 @@
 
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
-    <li><a href="#running-the-dev-kit-in-your-local-dev-environment">Running the Dev Kit in your local dev environment</a></li>
-    <li><a href="#app-settings">App Settings</a></li>
-    <li><a href="#deploying-to-azure">Deploying to Azure</a></li>
+    <li><a href="#1-setup-azure-ad-b2c">1. Setup Azure AD B2C</a></li>
+    <li><a href="#2a-running-the-dev-kit-in-your-local-dev-environment">2.a. Running the Dev Kit in your local dev environment</a>
+      <ul>
+        <li><a href="#app-settings">App Settings</a></li>
+      </ul>
+    </li>
+    <li><a href="#2b-deploying-to-azure">2.b. Deploying to Azure</a></li>
     <li><a href="#integrating-your-application">Integrating your application</a>
       <ul>
         <li><a href="#how-does-this-work">How does this work?</a></li>
@@ -255,32 +259,35 @@
 <blockquote>
 <p>Tip: If you&rsquo;re new here and want to learn what this is, check out the <a href="..">welcome page</a></p>
 </blockquote>
-<h2 id="running-the-dev-kit-in-your-local-dev-environment">Running the Dev Kit in your local dev environment</h2>
+<h2 id="1-setup-azure-ad-b2c">1. Setup Azure AD B2C</h2>
+<p>This project uses <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview">Azure Active Directory B2C</a> for an IDP (Identity Provider). The first step in setting up this project is to configure a new B2C instance to house our local user accounts. If you&rsquo;d like to use an IDP other than Azure AD B2C, see our document on how to achieve that here <strong>NEED TO WRITE STILL</strong>.</p>
+<p>(need to refine steps here)</p>
+<ol>
+<li>Create new b2c instance</li>
+<li>Run our script</li>
+<li>Gather output values</li>
+<li>Save for later</li>
+</ol>
+<p>After finishing the IDP setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.</p>
+<h2 id="2a-running-the-dev-kit-in-your-local-dev-environment">2.a. Running the Dev Kit in your local dev environment</h2>
 <ul>
 <li>Install the latest version of <a href="https://visualstudio.microsoft.com/vs/">Visual Studio 2022</a>. You may also use Visual Studio Code, but the solution and projects are targetted at VS2022.</li>
 <li>Clone the repository <code>https://github.com/Azure/azure-saas.git</code> on to your dev machine.</li>
 <li>Open the <code>.sln</code> in the root of the repository. This solution includes all of the modules.</li>
-<li>Depending on which project you want to launch, you&rsquo;ll likely need to configure the <code>appsettings.json</code> configuration. Be careful to not check in keys to your source control system.</li>
+<li>Depending on the project you wish to run, you&rsquo;ll need to set some secrets to properly setup authentication with B2C. See the <a href="#app-settings">App Settings</a> section below</li>
 </ul>
-<blockquote>
-<p>Note: See <a href="../resources/design-considerations/">Design Considerations</a> for recommendations around using <a href="https://azure.microsoft.com/en-us/services/key-vault/">Azure Key Vault</a>.</p>
-</blockquote>
-<h2 id="app-settings">App Settings</h2>
-<p>You can build the code without configuring your application settings, but you won&rsquo;t be able to run the projects without a few key configuration settings.</p>
-<pre><code>Saas.SignupAdministration.Web
-    connectionString
-Saas.Application.Web
-    AdminServiceUrl
-</code></pre>
-<blockquote>
-<p>Note: <code>Saas.Admin.Service</code> uses a local database instance and is automatically populated using Entity Framework.</p>
-</blockquote>
-<blockquote>
-<p>This solution uses various <code>appsettings.json</code> and <code>appsettings.development.json</code> to manage deployment settings and other configuration settings. In a true production deployment, you should configure <a href="https://azure.microsoft.com/en-us/services/key-vault/">Azure Key Vault</a> to provide a secure and centralized key storage location. This allows applications to not have direct access to confidential keys.</p>
-</blockquote>
-<h2 id="deploying-to-azure">Deploying to Azure</h2>
-<p>Deploying to Azure is easy thanks to an ARM (Azure Resource Manager) template.</p>
-<p>This button will take you to the Azure portal, passing it the template. You&rsquo;ll be asked a few questions, and then the solution will be up and running in just a few minutes.</p>
+<h3 id="app-settings">App Settings</h3>
+<p>When running the project locally, you will need to set some app settings &amp; secrets manually using the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment">.NET secrets manager</a>. When deployed to azure (below), these secrets are automatically configured for you and stored in Azure Key Vault.</p>
+<p>View the readme files in each project&rsquo;s directory for a description of the app settings &amp; secrets you&rsquo;ll need to set in order to run the respective project:</p>
+<ul>
+<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin">SaaS.Admin.Service Readme</a></li>
+<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Permissions">SaaS.Permissions.Service Readme</a></li>
+<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">SaaS.SignupAdministration.Web Readme</a></li>
+<li><a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Application">SaaS.Application Readme</a></li>
+</ul>
+<h2 id="2b-deploying-to-azure">2.b. Deploying to Azure</h2>
+<p>Deploying to Azure is easy thanks to our pre-configured ARM (Azure Resource Manager) templates.</p>
+<p>This button will take you to the Azure portal, passing it the template. You&rsquo;ll be asked a few questions, and then the solution will be up and running in just a few minutes. You will need your B2C configuration values and secrets from step 1.</p>
 <p><a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2FcreateUiDefinition.json"><img src="https://www.azuresaas.net/assets/images/deploy-to-azure.svg" alt="Deploy to Azure"></a></p>
 <h2 id="integrating-your-application">Integrating your application</h2>
 <p>Now that you&rsquo;ve seen how to build and run the code locally, and you have a way to deploy your code to Azure in a repeatable and code-first way, you can integrate your own code into the solution.</p>
@@ -300,7 +307,7 @@ Bicep is a domain-specific language (DSL) that uses declarative syntax to deploy
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 18, 2022: <a href="https://github.com/Azure/azure-saas/commit/4fdc4f6b2c772e5e57cfacc21891d524240ada01">Jason &#43; Landon jam session (4fdc4f6)</a>
+  Last modified April 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/7fc82fea71aa60647e9c1e4d7ce6414b8e8cd1e3">some work on quickstart -- not finished (7fc82fe)</a>
 </div>
 
 </div>
