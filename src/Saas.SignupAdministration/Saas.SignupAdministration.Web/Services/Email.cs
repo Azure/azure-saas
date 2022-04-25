@@ -8,11 +8,13 @@ namespace Saas.SignupAdministration.Web.Services
 {
     public class Email : IEmail
     {
+        ILogger<Email> _logger; 
         private readonly EmailOptions _options;
         private readonly IHttpClientFactory _client; 
 
-        public Email(IOptions<EmailOptions> options, IHttpClientFactory client)
+        public Email(ILogger<Email> logger, IOptions<EmailOptions> options, IHttpClientFactory client)
         {
+            _logger = logger;
             _options = options.Value;
             _client = client; 
         }
@@ -29,8 +31,15 @@ namespace Saas.SignupAdministration.Web.Services
             email.EmailToName = recipientAddress; 
 
             var json = JsonSerializer.Serialize(email);
-            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");  
-            await client.PostAsync(_options.EndPoint, content);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            try
+            {
+                await client.PostAsync(_options.EndPoint, content);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Problem emailing tenant");
+            }
         }
     }
 }

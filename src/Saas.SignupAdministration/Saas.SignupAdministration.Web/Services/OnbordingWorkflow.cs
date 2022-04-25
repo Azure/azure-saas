@@ -18,7 +18,6 @@ namespace Saas.SignupAdministration.Web.Services
             get
             {
                 return OnboardingWorkflowState.CurrentState;
-
             }
         }
 
@@ -58,7 +57,6 @@ namespace Saas.SignupAdministration.Web.Services
             OnboardingWorkflowItem.IsComplete = true;
             OnboardingWorkflowItem.Created = DateTime.Now;
             
-            // TODO: Need to configure with real creds
             _email.Send(_applicationUser.EmailAddress);
         }
 
