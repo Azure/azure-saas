@@ -16,7 +16,7 @@ The Azure SaaS Development Kit (ASDK) provides a reference architecture, deploya
 
 ## Reference Architecture
 
-<img src="docs/azure-saas-docs/assets/images/azure-saas-multitenant-architecture.png" width="850">
+<img src="docs/azure-saas-docs/content/en/assets//images/azure-saas-multitenant-architecture.png" width="850">
 
 ## Reference Implementation
 The reference implementation provides an end-to-end SaaS service including all required microservices and their corresponding data stores to power your SaaS service.  Simply [deploy](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2FcreateUiDefinition.json) to your Azure subscription, clone the repo and migrate your business logic.
@@ -26,13 +26,13 @@ The reference implementation provides an end-to-end SaaS service including all r
 ## Deployment
 [Deploy](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2FcreateUiDefinition.json) an instance of the reference implemenation in less than 5 minutes.  Once the deployment completes, you'll have all the resources deployed in your Azure subscription. Please be aware that while the costs are low, you are responsible for any charges incurred.  Deploy the full service or deploy [microservices / componenents](docs/components.md) indivually.
 
-<img src="docs/azure-saas-docs/assets/images/azure-saas-multitenant-deployment.png" width="850">
+<img src="docs/azure-saas-docs/content/en/assets//images/azure-saas-multitenant-deployment.png" width="850">
 
 ## Production SaaS Reference
 
 <a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> is a live production SaaS solution from ISV Modern Appz built entirely on the Azure SaaS Development Kit.</p><p><a href="https://www.onsubscriber.com" target="_blank">Subscriber</a> allows users to easily build their Email and SMS lists using social login with Facebook, Google, Apple, Email and SMS.  In addition, users can add profile pictures, bios, external links and social accounts to their tenants.
 
-<a href="https://www.onsubscriber.com" target="_blank"><img src="docs/azure-saas-docs/assets/images/azure-saas-production-service-subscriber.png" /></a>
+<a href="https://www.onsubscriber.com" target="_blank"><img src="docs/azure-saas-docs/content/en/assets//images/azure-saas-production-service-subscriber.png" /></a>
 
 ## Solution Roadmap
 - Azure Kubernetes Services (AKS) for tenant containerization
