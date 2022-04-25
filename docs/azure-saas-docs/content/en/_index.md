@@ -20,8 +20,8 @@ Whether you're modernizing an existing application, building a new application, 
 
 ![](futurestate.drawio.png)
 
-- [**B2C Authentication Service**](/services/b2c-auth-service/) - Provides a flexible identity solution.
-- [**Core App**](/services/core-app/)
+- [**B2C Authentication Service**](https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview) - Provides a flexible identity solution.
+- [**Core App**](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/azure-apps/?view=aspnetcore-6.0&tabs=visual-studio)
 	- A web app where your customers to view plans and onboard to your solution.
 	- Provides you with tenant administration capabilities. (modify/remove/etc.)
 - [**SaaS.Application**](/services/saas-application/) - A sample application that you can extend or replace with your own code.
