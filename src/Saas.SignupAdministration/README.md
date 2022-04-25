@@ -36,5 +36,4 @@ Upon entry of the first step of the onboarding flow (enter email address), the C
 If the user does complete the onboarding flow, the final confirmation step will include a field to enter a password to complete their account creation.  
 
 ## Sending conformation email 
-You can configure your own email endpoint to send your conformation email in the appsettings.json. Below is a demo email portal you can use wile testing BadgeMeUp.  
-https://prod-41.eastus.logic.azure.com:443/workflows/25da82afd76541f6a8ffc4dca2d84be4/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=c6ucAcoH18cWjUPjv4Rj5pZJJp9OyVbnurTxb0b_-wY"
+You can configure your own email endpoint to send your conformation email in the appsettings.json. Or use the temporary endpoint provided in the README.   
