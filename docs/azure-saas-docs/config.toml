@@ -7,8 +7,6 @@ enableRobotsTXT = true
 enableGitInfo = true
 
 
-staticDir = 'assets'
-
 # Language configuration
 languageCode = "en-us"
 

@@ -11,11 +11,11 @@ description: "Getting Started with the Azure SaaS Dev Kit"
 
 ### Overview & Dependencies
 
-![](./assets/diagrams/overview.drawio.png)
+![](/azure-saas/diagrams/overview.drawio.png)
 
 
 ### Identity Framework
-![](./assets/diagrams/identity-diagram.drawio.png)
+![](/azure-saas/diagrams/identity-diagram.drawio.png)
 
 ### User Types
-![./assets/diagrams/user-types.drawio.png)
+![](/azure-saas/diagrams/user-types.drawio.png)
