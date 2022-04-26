@@ -1,4 +1,4 @@
-﻿namespace Saas.Permissions.Api.Models.AppSettings;
+﻿namespace Saas.Permissions.Service.Models.AppSettings;
 
 public class AppSettings
 {

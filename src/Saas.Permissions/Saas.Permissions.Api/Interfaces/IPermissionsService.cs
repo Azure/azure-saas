@@ -1,6 +1,6 @@
-﻿using Saas.Permissions.Api.Data;
+﻿using Saas.Permissions.Service.Data;
 
-namespace Saas.Permissions.Api.Interfaces;
+namespace Saas.Permissions.Service.Interfaces;
 
 public interface IPermissionsService
 {

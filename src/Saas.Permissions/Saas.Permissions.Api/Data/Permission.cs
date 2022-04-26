@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Saas.Permissions.Api.Data;
+namespace Saas.Permissions.Service.Data;
 
 public class Permission
 {

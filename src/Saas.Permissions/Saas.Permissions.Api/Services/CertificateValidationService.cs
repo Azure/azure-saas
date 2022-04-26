@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Saas.Permissions.Api.Interfaces;
-using Saas.Permissions.Api.Models.AppSettings;
+using Saas.Permissions.Service.Interfaces;
+using Saas.Permissions.Service.Models.AppSettings;
 using System.Security.Cryptography.X509Certificates;
-namespace Saas.Permissions.Api.Services;
+namespace Saas.Permissions.Service.Services;
 
 public class CertificateValidationService : ICertificateValidationService
 {
