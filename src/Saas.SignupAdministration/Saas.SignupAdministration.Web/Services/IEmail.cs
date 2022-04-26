@@ -2,6 +2,6 @@
 {
     public interface IEmail
     {
-        bool Send(string recipientAddress);
+        void SendAsync(string recipientAddress);
     }
 }
