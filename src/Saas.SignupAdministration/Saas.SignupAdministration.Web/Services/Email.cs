@@ -19,8 +19,9 @@ namespace Saas.SignupAdministration.Web.Services
             _client = client; 
         }
 
-        public async void SendAsync(string recipientAddress)
-        {  
+        public async Task<HttpResponseMessage> SendAsync(string recipientAddress)
+        {
+            HttpResponseMessage rtn = new HttpResponseMessage();
             var client = _client.CreateClient(_options.EndPoint);
             JSONEmail email = new JSONEmail();
             email.HTML = _options.Body;
@@ -33,13 +34,14 @@ namespace Saas.SignupAdministration.Web.Services
             StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
             try
             {
-                 await client.PostAsync(_options.EndPoint, content);
+                 rtn = await client.PostAsync(_options.EndPoint, content);
             }
             catch (Exception ex)
             {
                 //Logging any errors but not letting them prevent the processes from moving forward. 
                 _logger.LogWarning(ex, "Problem emailing tenant");
             }
+            return rtn;
         }
     }
 }
