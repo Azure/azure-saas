@@ -1,7 +1,9 @@
-﻿namespace Saas.SignupAdministration.Web.Services
+﻿using System.Net.Http;
+
+namespace Saas.SignupAdministration.Web.Services
 {
     public interface IEmail
     {
-        void SendAsync(string recipientAddress);
+        Task<HttpResponseMessage> SendAsync(string recipientAddress);
     }
 }
