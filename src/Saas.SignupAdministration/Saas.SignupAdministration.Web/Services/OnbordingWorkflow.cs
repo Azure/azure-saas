@@ -57,8 +57,9 @@ namespace Saas.SignupAdministration.Web.Services
 
             OnboardingWorkflowItem.IsComplete = true;
             OnboardingWorkflowItem.Created = DateTime.Now;
-           
-            _email.Send(_applicationUser.EmailAddress);
+            
+            // TODO: Need to configure with real creds
+            // _email.Send(_applicationUser.EmailAddress);
         }
 
         public void PersistToSession()
