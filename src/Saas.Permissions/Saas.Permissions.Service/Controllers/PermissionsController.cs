@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Authorization;
-using Saas.Permissions.Api.Exceptions;
-using Saas.Permissions.Api.Interfaces;
+using Saas.Permissions.Service.Exceptions;
+using Saas.Permissions.Service.Interfaces;
 
-namespace Saas.Permissions.Api.Controllers;
+namespace Saas.Permissions.Service.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

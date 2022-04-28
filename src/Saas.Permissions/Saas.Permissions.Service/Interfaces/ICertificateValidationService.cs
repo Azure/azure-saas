@@ -1,4 +1,4 @@
-﻿namespace Saas.Permissions.Api.Interfaces;
+﻿namespace Saas.Permissions.Service.Interfaces;
 using System.Security.Cryptography.X509Certificates;
 
 public interface ICertificateValidationService

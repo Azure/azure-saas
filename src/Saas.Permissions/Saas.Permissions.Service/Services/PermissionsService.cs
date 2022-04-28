@@ -1,8 +1,8 @@
-﻿using Saas.Permissions.Api.Data;
-using Saas.Permissions.Api.Exceptions;
-using Saas.Permissions.Api.Interfaces;
+﻿using Saas.Permissions.Service.Data;
+using Saas.Permissions.Service.Exceptions;
+using Saas.Permissions.Service.Interfaces;
 
-namespace Saas.Permissions.Api.Services;
+namespace Saas.Permissions.Service.Services;
 
 public class PermissionsService : IPermissionsService
 {

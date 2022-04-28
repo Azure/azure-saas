@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "Saas.Permissions.Api": {
+    "Saas.Permissions.Service": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

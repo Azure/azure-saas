@@ -1,4 +1,4 @@
-﻿namespace Saas.Permissions.Api.Exceptions;
+﻿namespace Saas.Permissions.Service.Exceptions;
 
 public class ItemAlreadyExistsException : Exception
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Saas.Permissions.Api.Data;
+namespace Saas.Permissions.Service.Data;
 
 public class PermissionEntityTypeConfiguration : IEntityTypeConfiguration<Permission>
 {

@@ -1,4 +1,4 @@
-﻿namespace Saas.Permissions.Api.Models;
+﻿namespace Saas.Permissions.Service.Models;
 
 
 public class ADB2CReponse

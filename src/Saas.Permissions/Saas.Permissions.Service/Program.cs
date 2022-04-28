@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Azure.Identity;
-using Saas.Permissions.Api.Data;
-using Saas.Permissions.Api.Interfaces;
-using Saas.Permissions.Api.Models.AppSettings;
-using Saas.Permissions.Api.Services;
+using Saas.Permissions.Service.Data;
+using Saas.Permissions.Service.Interfaces;
+using Saas.Permissions.Service.Models.AppSettings;
+using Saas.Permissions.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
