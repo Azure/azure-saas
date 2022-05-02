@@ -19,7 +19,6 @@ namespace Saas.SignupAdministration.Web.Services
 
         public async void Send(string recipientAddress)
         {
-
             var client = _client.CreateClient(_options.EndPoint);
             JSONEmail email = new JSONEmail();
             email.HTML = _options.Body;
