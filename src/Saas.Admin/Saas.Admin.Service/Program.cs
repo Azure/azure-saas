@@ -5,6 +5,8 @@ using Azure.Identity;
 using Saas.AspNetCore.Authorization.ClaimTransformers;
 using Saas.AspNetCore.Authorization.AuthHandlers;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,10 +45,42 @@ builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTr
 builder.Services.AddRouteBasedRoleHandler("tenantId");
 
 builder.Services.AddAuthorization(options => {
-    options.AddPolicy("TenantAdminOnly", policyBuilder =>
-{
-        policyBuilder.Requirements.Add(new RolesAuthorizationRequirement(new string[] { "TenantAdmin" }));
+
+    options.AddPolicy("Authenticated", policyBuilder =>
+    {
+        policyBuilder.RequireAuthenticatedUser();
+        policyBuilder.RequireRole("GlobalAdmin", "Self");
     });
+
+    options.AddPolicy("Create_Tenant", policyBuilder =>
+    {
+        policyBuilder.RequireAuthenticatedUser();
+    });
+
+    options.AddPolicy("Tenant_Global_Read", policyBuilder =>
+    {
+        policyBuilder.RequireRole("GlobalAdmin");
+        policyBuilder.RequireScope("tenant.global.read");
+    });
+
+    options.AddPolicy("Tenant_Read", policyBuilder =>
+    {
+        policyBuilder.RequireRole("GlobalAdmin", "TenantUser", "TenantAdmin");
+        policyBuilder.RequireScope("tenant.read tenant.global.read");
+    });
+
+    options.AddPolicy("Tenant_Write", policyBuilder =>
+    {
+        policyBuilder.RequireRole("GlobalAdmin", "TenantAmdin");
+        policyBuilder.RequireScope("tenant.write tenant.global.write");
+    });
+
+    options.AddPolicy("Tenant_Delete", policyBuilder =>
+    {
+        policyBuilder.RequireRole("GlobalAdmin", "TenantAdmin");
+        policyBuilder.RequireScope("tenant.delete tenant.global.delete");
+    });
+
 });
 
 
@@ -104,4 +138,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
