@@ -57,7 +57,7 @@ namespace Saas.SignupAdministration.Web.Services
             OnboardingWorkflowItem.IsComplete = true;
             OnboardingWorkflowItem.Created = DateTime.Now;
             
-            _email.Send(_applicationUser.EmailAddress);
+            _email.SendAsync(_applicationUser.EmailAddress);
         }
 
         public void PersistToSession()
