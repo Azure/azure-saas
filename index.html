@@ -20,7 +20,7 @@
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
 
 <title>Azure SaaS Dev Kit Docs</title>
-<meta name="description" content="Welcome to the Azure SaaS Dev Kit
+<meta name="description" content="Welcome to the Azure SaaS Dev Kit!
 Software as a Service (SaaS) doesn’t need to be complex and time consuming.
 The Azure SaaS Development Kit is a …">
 <meta property="og:title" content="" />
@@ -132,6 +132,8 @@ The Azure SaaS Development Kit is a …">
   <a href="/azure-saas/components/identity/identity-flows/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-flows"><span class="">Identity Flows</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitycaveats-li">
   <a href="/azure-saas/components/identity/caveats/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitycaveats"><span class="">Caveats &amp; Limitations</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-setup-li">
+  <a href="/azure-saas/components/identity/identity-setup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-setup"><span class="">Identity Setup Instructions</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsadmin-service-li">
@@ -186,6 +188,8 @@ The Azure SaaS Development Kit is a …">
 
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
+    <li><a href="#who-should-use-this-dev-kit">Who should use this dev kit?</a></li>
+    <li><a href="#how-can-this-dev-kit-be-used">How can this dev kit be used?</a></li>
     <li><a href="#modular-architecture">Modular Architecture</a></li>
     <li><a href="#ready-to-get-started">Ready to get started?</a></li>
     <li><a href="#additional-recommended-resources">Additional Recommended Resources</a></li>
@@ -245,7 +249,7 @@ The Azure SaaS Development Kit is a …">
 
 		
 	</header>
-	<h1 id="welcome-to-the-azure-saas-dev-kit">Welcome to the Azure SaaS Dev Kit</h1>
+	<h1 id="welcome-to-the-azure-saas-dev-kit">Welcome to the Azure SaaS Dev Kit!</h1>
 <p><a href="https://azure.microsoft.com/en-us/overview/what-is-saas/">Software as a Service (SaaS)</a> doesn’t need to be complex and time consuming.</p>
 <p>The Azure SaaS Development Kit is a reference implementation of pre-built resources to help you launch your SaaS offering faster:</p>
 <ul>
@@ -253,26 +257,56 @@ The Azure SaaS Development Kit is a …">
 <li>100% <a href="https://github.com/Azure/azure-saas">Open-source code</a>, allowing developers to build by example or modify/extend to be purpose-built for your particular scenario.</li>
 <li>Fully documented code makes it clear how the code functions, and how key decisions were made.</li>
 </ul>
-<p>Whether you&rsquo;re modernizing an existing application, building a new application, or migrating your application, the SaaS dev kit can help you.</p>
+<h2 id="who-should-use-this-dev-kit">Who should use this dev kit?</h2>
+<p>We think this kit can provide value in some way to a large number of people in a varying degree of situations, but we had the following scenarios especially in mind when building this project:</p>
+<ul>
+<li>Modernizing an existing application to support <a href="https://docs.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models#fully-multitenant-deployments">full multitenancy</a> as part of a shift to a SaaS based business model</li>
+<li>Developing a greenfield SaaS offering for the first time</li>
+<li>Migrating a SaaS offering from another cloud to Azure</li>
+</ul>
+<p>If your company/team does not fit in one of these scenarios, that&rsquo;s okay! Check out the project anyway and you may find something that could be of use to you.</p>
+<h2 id="how-can-this-dev-kit-be-used">How can this dev kit be used?</h2>
+<p>The Azure SaaS Dev Kit is designed to be both a modular deployable reference implementation and also a reference architecture. You are free to use and change the code contained within this project in any way you&rsquo;d like, but we have 3 main ways outlined that we see a team choosing to use this:</p>
+<ol>
+<li>
+<p>Deploy the entire solution to Azure using the bicep templates we provide, make changes to fit your exact use case, and start building your SaaS application in the stub app we provide</p>
+</li>
+<li>
+<p>Deploy one or more of our modules and hook it into your existing SaaS application</p>
+</li>
+<li>
+<p>Reference our code &amp; architecture and build something entirely custom using the best practices we outlined</p>
+</li>
+</ol>
 <h2 id="modular-architecture">Modular Architecture</h2>
 <p>This kit uses a <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/microservices-architecture">microservices architecture</a> so that each module is self-contained and can be used idependantly.</p>
 <ul>
+<li>
+<p><a href="components/identity"><strong>Identity Framework</strong></a></p>
+<ul>
 <li><a href="components/identity/identity-provider/"><strong>Identity Provider (B2C)</strong></a> - Provides a flexible identity solution.</li>
-<li><a href="components/signup-administration/"><strong>Signup / Administration</strong></a>
+<li><a href="components/identity/permissions-service"><strong>Permissions Service</strong></a> - An API that manages all user permissions and serves to enrich the user tokens returned from the identity provider.</li>
+</ul>
+</li>
+<li>
+<p><a href="components/signup-administration/"><strong>Signup / Administration</strong></a></p>
 <ul>
 <li>A web app where your customers to view plans and onboard to your solution.</li>
 <li>Provides you with tenant administration capabilities. (modify/remove/etc.)</li>
 </ul>
 </li>
-<li><a href="components/admin-service"><strong>Admin Service</strong></a> - An extensible API to programatically manage CRUD operations on tenants.</li>
-<li><a href="components/identity/permissions-service"><strong>Permissions Service</strong></a> - An API that manages all user permissions and serves to enrich the user tokens returned from the identity provider.</li>
-<li><a href="components/saas-application/"><strong>SaaS.Application</strong></a> - A sample end user application that you can extend or replace with your own code.</li>
+<li>
+<p><a href="components/admin-service"><strong>Admin Service</strong></a> - An extensible API to programatically manage CRUD operations on tenants.</p>
+</li>
+<li>
+<p><a href="components/saas-application/"><strong>SaaS.Application</strong></a> - A sample end user application that you can extend or replace with your own code.</p>
+</li>
 </ul>
 <blockquote>
 <p>The Dev Kit uses a <a href="https://docs.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models#fully-multitenant-deployments"><strong>fully multitenant depoyment</strong></a>. Multitenancy is a complex topic with many facets, and there is no <em>one size fits all</em> approach.</p>
 <p>Read more about multitenant architectures and considerations on Azure <a href="http://aka.ms/multitenancy">here</a>.</p>
 </blockquote>
-<p><img src="architecture.drawio.png" alt=""></p>
+<p><img src="/azure-saas/diagrams/overview.drawio.png" alt=""></p>
 <h2 id="ready-to-get-started">Ready to get started?</h2>
 <p>Check out the <a href="quick-start/">quick start page</a>.</p>
 <h2 id="additional-recommended-resources">Additional Recommended Resources</h2>
@@ -316,7 +350,7 @@ The Azure SaaS Development Kit is a …">
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 18, 2022: <a href="https://github.com/Azure/azure-saas/commit/4fdc4f6b2c772e5e57cfacc21891d524240ada01">Jason &#43; Landon jam session (4fdc4f6)</a>
+  Last modified May 4, 2022: <a href="https://github.com/Azure/azure-saas/commit/396fbe332d980ec0d2586705c2f51864128c6814">made some changes on the landing page (396fbe3)</a>
 </div>
 
 </div>

@@ -25,12 +25,12 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/quick-start/" /><meta property="article:section" content="" />
 
-<meta property="article:modified_time" content="2022-04-22T16:35:43-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-04T09:42:03-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Quick Start">
 <meta itemprop="description" content="Getting Started with the Azure SaaS Dev Kit">
-<meta itemprop="dateModified" content="2022-04-22T16:35:43-04:00" />
-<meta itemprop="wordCount" content="829">
+<meta itemprop="dateModified" content="2022-05-04T09:42:03-04:00" />
+<meta itemprop="wordCount" content="851">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Quick Start"/>
 <meta name="twitter:description" content="Getting Started with the Azure SaaS Dev Kit"/>
@@ -134,6 +134,8 @@
   <a href="/azure-saas/components/identity/identity-flows/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-flows"><span class="">Identity Flows</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitycaveats-li">
   <a href="/azure-saas/components/identity/caveats/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitycaveats"><span class="">Caveats &amp; Limitations</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-setup-li">
+  <a href="/azure-saas/components/identity/identity-setup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-setup"><span class="">Identity Setup Instructions</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsadmin-service-li">
@@ -266,13 +268,7 @@
 </blockquote>
 <h2 id="1-setup-identity-framework">1. Setup Identity Framework</h2>
 <p>This project uses <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview">Azure Active Directory B2C</a> for an IDP (Identity Provider). The first step in setting up this project is to configure a new B2C instance to house your local user accounts. You will also need to deploy the <a href="../components/identity/permissions-service">Permissions API</a>, as B2C will have a dependancy on it.</p>
-<p>(need to refine steps here)</p>
-<ol>
-<li>Create new b2c instance</li>
-<li>Run our script</li>
-<li>Gather output values</li>
-<li>Save for later</li>
-</ol>
+<p>To setup the Identity Framework, we have provided a powershell script <a href="">here</a> that automates the setup for you. This powershell script will output a parameters file that you&rsquo;ll need to provide when deploying the solution to azure in step 2.b.</p>
 <p>After finishing the IDP setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.</p>
 <h2 id="2a-running-the-dev-kit-in-your-local-dev-environment">2.a. Running the Dev Kit in your local dev environment</h2>
 <ul>
@@ -318,7 +314,7 @@ Bicep is a domain-specific language (DSL) that uses declarative syntax to deploy
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/510330d795963d97a6b3400356a020b7da9fda2c">some more work on quick start and rename some modules (510330d)</a>
+  Last modified May 4, 2022: <a href="https://github.com/Azure/azure-saas/commit/6755c8835d20878e7765e212736aab63ac16e25a">identity docs (6755c88)</a>
 </div>
 
 </div>
