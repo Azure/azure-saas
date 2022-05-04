@@ -14,12 +14,7 @@ On this page, you will find instructions to run the dev kit in your local enviro
 
 This project uses [Azure Active Directory B2C](https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview) for an IDP (Identity Provider). The first step in setting up this project is to configure a new B2C instance to house your local user accounts. You will also need to deploy the [Permissions API](../components/identity/permissions-service), as B2C will have a dependancy on it.
 
-(need to refine steps here)
-1. Create new b2c instance
-2. Run our script
-3. Gather output values
-4. Save for later
-
+To setup the Identity Framework, we have provided a powershell script [here]() that automates the setup for you. This powershell script will output a parameters file that you'll need to provide when deploying the solution to azure in step 2.b.
 
 After finishing the IDP setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
 ## 2.a. Running the Dev Kit in your local dev environment
