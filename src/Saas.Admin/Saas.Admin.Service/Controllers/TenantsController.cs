@@ -207,10 +207,12 @@ public class TenantsController : ControllerBase
     /// <para>Right now only returns user IDs, should consider returning a user object with 
     /// user info + permissions for the tenant</para>
     /// </remarks>
-    [HttpGet("{tenantId}/users")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Authorize(Policy = "TenantAdminOnly")]
+    [Route("{tenantId}/users")]
     public async Task<ActionResult<IEnumerable<string>>> GetTenantUsers(string tenantId)
     {
         try

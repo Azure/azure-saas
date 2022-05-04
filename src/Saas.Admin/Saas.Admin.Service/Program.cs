@@ -2,6 +2,9 @@ using Saas.Admin.Service.Data;
 using System.Security.Cryptography.X509Certificates;
 using Azure.Security.KeyVault.Certificates;
 using Azure.Identity;
+using Saas.AspNetCore.Authorization.ClaimTransformers;
+using Saas.AspNetCore.Authorization.AuthHandlers;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,14 +38,22 @@ builder.Services.Configure<PermissionsApiOptions>(builder.Configuration.GetSecti
 builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, "AzureAdB2C");
 
 
-builder.Services.AddAuthorization(options => { });
+
+builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTransformer");
+builder.Services.AddRouteBasedRoleHandler("tenantId");
+
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("TenantAdminOnly", policyBuilder =>
+{
+        policyBuilder.Requirements.Add(new RolesAuthorizationRequirement(new string[] { "TenantAdmin" }));
+    });
+});
 
 
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
-
 
 builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient>()
     // Configure outgoing HTTP requests to include certificate for permissions API
