@@ -1,52 +1,47 @@
 ﻿using System.Net;
+using System.Net.Http;
 using System.Net.Mail;
+using System.Text.Json;
+using System.Text.Json.Serialization; 
 
 namespace Saas.SignupAdministration.Web.Services
 {
     public class Email : IEmail
     {
+        ILogger<Email> _logger; 
         private readonly EmailOptions _options;
+        private readonly IHttpClientFactory _client; 
 
-        public Email(IOptions<EmailOptions> options)
+        public Email(ILogger<Email> logger, IOptions<EmailOptions> options, IHttpClientFactory client)
         {
+            _logger = logger;
             _options = options.Value;
+            _client = client; 
         }
 
-        public bool Send(string recipientAddress)
+        public async Task<HttpResponseMessage> SendAsync(string recipientAddress)
         {
-           if(!int.TryParse(_options.Port, out int port))
-            {
-                throw new InvalidCastException($"The value of {port} could not be cast to an integer");
-            }
+            HttpResponseMessage rtn = new HttpResponseMessage();
+            var client = _client.CreateClient(_options.EndPoint);
+            JSONEmail email = new JSONEmail();
+            email.HTML = _options.Body;
+            email.Subject = _options.Subject;
+            email.EmailFrom = _options.FromAddress;
+            email.EmailTo = recipientAddress;
+            email.EmailToName = recipientAddress; 
 
-            using SmtpClient client = new(_options.Host, port);
-
-            // TODO: Should update this to use a secure string
-            // These credentails are not secure and will be passed in plain text in this example
-            client.Credentials = new NetworkCredential(_options.Username, _options.Password);
-            MailAddress fromAddress = new(_options.FromAddress);
-            MailAddress toAddress = new(recipientAddress);
-            MailMessage message = new(fromAddress, toAddress);
-
-            message.Subject = _options.Subject;
-            message.Body = _options.Body;
-
+            var json = JsonSerializer.Serialize(email);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
             try
             {
-                client.Send(message);
+                 rtn = await client.PostAsync(_options.EndPoint, content);
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO: Need to add robust error handling here
-                return false;
+                //Logging any errors but not letting them prevent the processes from moving forward. 
+                _logger.LogWarning(ex, "Problem emailing tenant");
             }
-            finally
-            {
-                message.Dispose();
-                client.Dispose();
-            }
-
-            return true;
+            return rtn;
         }
     }
 }

@@ -42,11 +42,21 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 |   | AllowedHosts                          |                                                       | false  | *                             |   |
 |   | Logging:LogLevel:Default              |                                                       | false  | Information                   |   |
 |   | Logging:LogLevel:Microsoft.AspNetCore |                                                       | false  | Warning                       |   |
-
+|   | EmailOptions:EndPoint                 | Service endpoint to send confirmation email           | true   |                               |   |   
+|   | EmailOptions:FromAddresss             |                                                       | false  |                               |   |
+|   | EmailOptions:Subject                  |                                                       | false  |                               |   |
+|   | EmailOptions:Body                     |                                                       | false  |                               |   |
 ### Starting the App
 
-1. Insert secrets marked as required for running locally into your secrets manager using provided script.
-(Instructions for running in visual studio)
+1. Insert secrets marked as required for running locally into your secrets manager.
+2. Set the start projects: 
+    a. Saas.Admin.Service
+    b. Saas.Permissions.Api
+    c. Saas.Application.Web
+        i. This is the BadgeMeUp Website, demo software to sale.  
+    d. Saas.SignupAdministration.Web
+        i. This is the work flow that adds new subscriptions to 
+
 
 ### Running Tests
 
