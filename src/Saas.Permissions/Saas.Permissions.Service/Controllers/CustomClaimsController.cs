@@ -13,29 +13,49 @@ namespace Saas.Permissions.Service.Controllers;
 public class CustomClaimsController : ControllerBase
 {
     private readonly IPermissionsService _permissionsService;
+    private readonly IGraphAPIService _graphAPIService;
 
-    public CustomClaimsController(IPermissionsService permissionsService)
+    public CustomClaimsController(IPermissionsService permissionsService, IGraphAPIService graphAPIService)
     {
         _permissionsService = permissionsService;
+        _graphAPIService = graphAPIService;
     }
 
-    [HttpPost]
+    [HttpPost("permissions")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(PermissionsClaimResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetCustomClaims(ClaimsRequest aDB2CRequest)
+    public async Task<IActionResult> Permissions(ClaimsRequest request)
     {
-        var permissions = await _permissionsService.GetPermissionsAsync(aDB2CRequest.EmailAddress);
+        var permissions = await _permissionsService.GetPermissionsAsync(request.EmailAddress);
 
         string[] permissionStrings = permissions.Select(x => x.ToTenantPermissionString())
                                                      // Append default permission with the users object ID
-                                                     .Append($"{aDB2CRequest.ObjectId}.Self")
+                                                     .Append($"{request.ObjectId}.Self")
                                                      .ToArray();
         PermissionsClaimResponse response = new PermissionsClaimResponse()
         {
             Permissions = permissionStrings
+        };
+
+        return Ok(response);
+    }
+
+    [HttpPost("roles")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(RolesClaimResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Roles(ClaimsRequest request)
+    {
+        var roles = await _graphAPIService.GetAppRolesAsync(request.ObjectId.ToString());
+
+        RolesClaimResponse response = new RolesClaimResponse()
+        {
+            Roles = roles.ToArray()
         };
 
         return Ok(response);
