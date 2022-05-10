@@ -47,6 +47,15 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 
 1. Insert secrets marked as required for running locally into your secrets manager using provided script.
 (Instructions for running in visual studio)
+ 
+### JsonSessionPersistenceProvider 
+The JsonSessionPersistenceProvider maintains the state of the work flow in the Session, and allows for forward and backward movment in the app with 
+access to all of the values of the Tenet. Custom providers can be used as long as they inherit from the IPersistenceProvider interface. 
+The 2 methods are: 
+        public void Persist(string key, object value);
+        public T Retrieve<T>(string key);
+
+In place of the Session you could use an OLDB provider like a MS SQL Percistance Provider. 
 
 ### Running Tests
 
