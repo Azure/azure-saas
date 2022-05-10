@@ -1,12 +1,12 @@
-using Saas.Admin.Service.Data;
 using System.Security.Cryptography.X509Certificates;
-using Azure.Security.KeyVault.Certificates;
-using Azure.Identity;
-using Saas.AspNetCore.Authorization.ClaimTransformers;
-using Saas.AspNetCore.Authorization.AuthHandlers;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.AspNetCore.Authorization;
 
+using Azure.Identity;
+using Azure.Security.KeyVault.Certificates;
+
+using Saas.Admin.Service;
+using Saas.Admin.Service.Data;
+using Saas.AspNetCore.Authorization.AuthHandlers;
+using Saas.AspNetCore.Authorization.ClaimTransformers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +22,7 @@ if (builder.Environment.IsProduction())
     CertificateClient certificateClient = new CertificateClient(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential());
     permissionsApiCertificate = certificateClient.DownloadCertificate(builder.Configuration["KeyVault:PermissionsApiCertName"]).Value;
 }
-else 
+else
 {
     // If running locally, you must first set the certificate as a base 64 encoded string in your .NET secrets manager.
     var certString = builder.Configuration["PermissionsApi:LocalCertificate"];
@@ -44,41 +44,53 @@ builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration,
 builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTransformer");
 builder.Services.AddRouteBasedRoleHandler("tenantId");
 
-builder.Services.AddAuthorization(options => {
+builder.Services.AddAuthorization(options =>
+{
 
-    options.AddPolicy("Authenticated", policyBuilder =>
+    options.AddPolicy(AppConstants.Policies.Authenticated, policyBuilder =>
     {
         policyBuilder.RequireAuthenticatedUser();
-        policyBuilder.RequireRole("GlobalAdmin", "Self");
+        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
+                                  AppConstants.Roles.Self);
     });
 
-    options.AddPolicy("Create_Tenant", policyBuilder =>
+    options.AddPolicy(AppConstants.Policies.CreateTenant, policyBuilder =>
     {
         policyBuilder.RequireAuthenticatedUser();
     });
 
-    options.AddPolicy("Tenant_Global_Read", policyBuilder =>
+    options.AddPolicy(AppConstants.Policies.TenantGlobalRead, policyBuilder =>
     {
-        policyBuilder.RequireRole("GlobalAdmin");
-        policyBuilder.RequireScope("tenant.global.read");
+        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin);
+        policyBuilder.RequireScope(AppConstants.Scopes.GlobalRead);
     });
 
-    options.AddPolicy("Tenant_Read", policyBuilder =>
+    options.AddPolicy(AppConstants.Policies.TenantRead, policyBuilder =>
     {
-        policyBuilder.RequireRole("GlobalAdmin", "TenantUser", "TenantAdmin");
-        policyBuilder.RequireScope("tenant.read tenant.global.read");
+        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
+                                  AppConstants.Roles.TenantUser,
+                                  AppConstants.Roles.TenantAdmin);
+
+        policyBuilder.RequireScope(AppConstants.Scopes.Read,
+                                   AppConstants.Scopes.GlobalRead);
     });
 
-    options.AddPolicy("Tenant_Write", policyBuilder =>
+    options.AddPolicy(AppConstants.Policies.TenantWrite, policyBuilder =>
     {
-        policyBuilder.RequireRole("GlobalAdmin", "TenantAmdin");
-        policyBuilder.RequireScope("tenant.write tenant.global.write");
+        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
+                                  AppConstants.Roles.TenantAdmin);
+
+        policyBuilder.RequireScope(AppConstants.Scopes.GlobalWrite,
+                                   AppConstants.Scopes.Write);
     });
 
-    options.AddPolicy("Tenant_Delete", policyBuilder =>
+    options.AddPolicy(AppConstants.Policies.TenantDelete, policyBuilder =>
     {
-        policyBuilder.RequireRole("GlobalAdmin", "TenantAdmin");
-        policyBuilder.RequireScope("tenant.delete tenant.global.delete");
+        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
+                                  AppConstants.Roles.TenantAdmin);
+
+        policyBuilder.RequireScope(AppConstants.Scopes.GlobalDelete,
+                                   AppConstants.Scopes.Delete);
     });
 
 });
@@ -97,17 +109,18 @@ builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient
         handler.ClientCertificates.Add(permissionsApiCertificate);
         return handler;
     })
-    .ConfigureHttpClient(options => {
+    .ConfigureHttpClient(options =>
+    {
         options.BaseAddress = new Uri(builder.Configuration["PermissionsApi:BaseUrl"]);
 
         if (builder.Environment.IsDevelopment())
         {
             // The permissions API expects the certificate to be provided to the application layer by the web server after the TLS handshake
             // Since this doesn't happen locally, we need to do it ourselves
-            
+
             options.DefaultRequestHeaders.Add("X-ARR-ClientCert", Convert.ToBase64String(permissionsApiCertificate.GetRawCertData()));
         }
-        });
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
