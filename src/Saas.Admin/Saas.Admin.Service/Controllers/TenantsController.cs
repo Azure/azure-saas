@@ -5,7 +5,6 @@ namespace Saas.Admin.Service.Controllers;
 
 [Route("api/[controller]")]
 [Authorize]
-[RequiredScope("test.scope")]
 [ApiController]
 public class TenantsController : ControllerBase
 {
