@@ -7,5 +7,5 @@ public class ClaimsRequest
     public string EmailAddress { get; set; } = string.Empty;
     public Guid ObjectId { get; set; }
     
-    public string ClientId { get; set; }
+    public string ClientId { get; set; } = string.Empty;
 }
