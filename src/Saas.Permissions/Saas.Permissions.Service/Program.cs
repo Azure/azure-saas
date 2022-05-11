@@ -5,6 +5,7 @@ using Saas.Permissions.Service.Data;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models.AppSettings;
 using Saas.Permissions.Service.Services;
+using Saas.Permissions.Service.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,14 @@ if (builder.Environment.IsProduction())
 {
     // Get Secrets From Azure Key Vault if in production. If not in production, secrets are automatically loaded in from the .NET secrets manager
     // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0
-    builder.Configuration.AddAzureKeyVault(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential());
+
+    // We don't want to fetch all the secrets for the other microservices in the app/solution, so we only fetch the ones with the prefix of "permissions-".
+    // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix
+
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(builder.Configuration["KeyVault:Url"]), 
+        new DefaultAzureCredential(), 
+        new CustomPrefixKeyVaultSecretManager("permissions"));
 }
 
 // Add options using options pattern : https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0
