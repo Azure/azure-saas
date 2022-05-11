@@ -13,7 +13,6 @@ jobs:
   build-arm-json:
     name: Build ARM JSON
     runs-on: ubuntu-latest
-
     steps:
       - name: Code checkout
         uses: actions/checkout@v2
@@ -23,15 +22,36 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            mkdir ./out
-            az bicep build --file src/SaaS.IaC/main.bicep --outfile ./out/main.json
-            
+            mkdir ./dist
+            az bicep build --file src/SaaS.IaC/main.bicep --outfile ./dist/main.json
+      - uses: actions/upload-artifact@v2
+        with:
+          name: arm-json
+          path: ./dist/main.json
+
+  build-application:
+    name: Build Application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v2
+
+  create-github-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs:
+      - build-arm-json
+      - build-application
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: arm-json
+          path: ./dist/
       - name: Create Release with Artifacts
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
+          title: "Generated Latest Release"
           files: |
-            ./out/main.json
+            ./dist/**
