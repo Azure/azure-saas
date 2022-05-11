@@ -13,10 +13,12 @@ namespace Saas.Permissions.Service.Controllers;
 public class CustomClaimsController : ControllerBase
 {
     private readonly IPermissionsService _permissionsService;
+    private readonly ILogger _logger;
 
-    public CustomClaimsController(IPermissionsService permissionsService)
+    public CustomClaimsController(IPermissionsService permissionsService, ILogger logger)
     {
         _permissionsService = permissionsService;
+        _logger = logger;
     }
 
     [HttpPost]
@@ -27,6 +29,7 @@ public class CustomClaimsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCustomClaims(ADB2CRequest aDB2CRequest)
     {
+        _logger.LogDebug("Custom claims where requested for email: {EmailAddress}", aDB2CRequest.EmailAddress);
         var permissions = await _permissionsService.GetPermissionsAsync(aDB2CRequest.EmailAddress);
 
         string[] permissionStrings = permissions.Select(x => x.ToTenantPermissionString())

@@ -7,13 +7,16 @@ namespace Saas.Permissions.Service.Services;
 public class PermissionsService : IPermissionsService
 {
     private readonly PermissionsContext _context;
-    public PermissionsService(PermissionsContext permissionsContext)
+    private readonly ILogger _logger;
+    public PermissionsService(PermissionsContext permissionsContext, ILogger logger)
     {
         _context = permissionsContext;
+        _logger = logger;
     }
 
     public async Task<ICollection<Permission>> GetPermissionsAsync(string userId)
     {
+        _logger.LogDebug("User {userId} tried to get permissions", userId);
         return await _context.Permissions
             .Where(x => x.UserId == userId)
             .ToListAsync();
@@ -21,6 +24,7 @@ public class PermissionsService : IPermissionsService
 
     public async Task<ICollection<string>> GetTenantUsersAsync(string tenantId)
     {
+        _logger.LogDebug("Users are requested from {tenantId}", tenantId);
         return await _context.Permissions
             .Where(x => x.TenantId == tenantId)
             .Select(x => x.TenantId)
@@ -29,6 +33,7 @@ public class PermissionsService : IPermissionsService
 
     public async Task<ICollection<string>> GetUserPermissionsForTenantAsync(string tenantId, string userId)
     {
+        _logger.LogDebug("User permissions where requested for {userId} for {tenantId}", userId, tenantId);
         return await _context.Permissions
             .Where(x => x.UserId == userId && x.TenantId == tenantId)
             .Select(x => x.ToTenantPermissionString())
@@ -37,6 +42,7 @@ public class PermissionsService : IPermissionsService
 
     public async Task AddUserPermissionsToTenantAsync(string tenantId, string userId, string[] permissions)
     {
+        _logger.LogDebug("User permissions where requested to be added to {userId} on {tenantId}", userId, tenantId);
         foreach (var permission in permissions)
         {
             if (await GetPermissionExistsAsync(tenantId, userId, permission))
@@ -52,6 +58,7 @@ public class PermissionsService : IPermissionsService
 
     public async Task RemoveUserPermissionsFromTenantAsync(string tenantId, string userId, string[] permissions)
     {
+        _logger.LogDebug("Permissions were requested to be removed for {userId} on {tenantId}", userId, tenantId);
         foreach (var permission in permissions)
         {
             Permission? dbPermission = await _context.Permissions.FirstOrDefaultAsync(x => 
@@ -72,6 +79,7 @@ public class PermissionsService : IPermissionsService
     // filter not currently implemented.
     public async Task<ICollection<string>> GetTenantsForUserAsync(string userId, string? filter)
     {
+        _logger.LogDebug("{userId} has requested tenants", userId);
         return await _context.Permissions
             .Where(x => x.UserId == userId)
             .Select(x => x.TenantId)
@@ -80,6 +88,7 @@ public class PermissionsService : IPermissionsService
 
     private async Task<bool> GetPermissionExistsAsync(string tenantId, string userId, string permission)
     {
+        _logger.LogDebug("{userId} is checking if {permission} exists on {tenantId}", userId, permission, tenantId);
         return await _context.Permissions.AnyAsync(x =>
         x.UserId == userId &&
         x.TenantId == tenantId &&

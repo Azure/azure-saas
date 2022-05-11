@@ -12,10 +12,12 @@ namespace Saas.Permissions.Service.Controllers;
 public class PermissionsController : ControllerBase
 {
     private readonly IPermissionsService _permissionsService;
+    private readonly ILogger _logger;
 
-    public PermissionsController(IPermissionsService permissionsService)
+    public PermissionsController(IPermissionsService permissionsService, ILogger logger)
     {
         _permissionsService = permissionsService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -56,11 +58,11 @@ public class PermissionsController : ControllerBase
         try
         {
             await _permissionsService.AddUserPermissionsToTenantAsync(tenantId, userId, permissions);
-
             return Ok();
         }
         catch (ItemAlreadyExistsException ex)
         {
+            _logger.LogError("Permissions where not able to be added to {userId} on {tenantId}", userId, tenantId);
             return BadRequest(ex.Message);
         }
     }
@@ -82,6 +84,7 @@ public class PermissionsController : ControllerBase
         }
         catch (ItemNotFoundExcepton ex)
         {
+            _logger.LogError("Permissions where not removed from {userId} on {tenantId}", userId, tenantId); 
             return BadRequest(ex.Message);
         }
     }
