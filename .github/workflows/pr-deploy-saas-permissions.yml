@@ -5,11 +5,11 @@ on:
     branches:
       - main
     paths:
-      - "src/Saas.Permissions/**"
+      - "src/Saas.Identity/Saas.Permissions/**"
       - ".github/**"
 
 
-name: Saas.Permissions.Api PR Build
+name: Saas.Permissions.Service PR Build
 
 jobs:
   build-and-deploy:
@@ -20,6 +20,6 @@ jobs:
       artifact_name: ${{github.run_id}} 
       app_service_name: api-permissions-asdk-dev-01
       app_service_resource_group_name: azure-saas-dev
-      project_build_path: src/Saas.Permissions/Saas.Permissions.Api
+      project_build_path: src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}

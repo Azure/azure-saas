@@ -1,0 +1,14 @@
+{
+    "Environments": [
+    {
+      "Name": "Development",
+      "Production": false,
+      "Tenant": "",
+      "PolicySettings" : {
+        "IdentityExperienceFrameworkAppId": "",
+        "ProxyIdentityExperienceFrameworkAppId": "",
+        "PermissionsAPIUrl": "",
+        "RolesAPIUrl": ""
+      }
+    }]
+  }

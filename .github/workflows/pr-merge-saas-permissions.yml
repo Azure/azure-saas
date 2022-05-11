@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "src/Saas.Permissions/**"
+      - "src/Saas.Identity/Saas.Permissions/**"
       - ".github/**"
 
 name: Saas.Permissions.Api Swap Slot

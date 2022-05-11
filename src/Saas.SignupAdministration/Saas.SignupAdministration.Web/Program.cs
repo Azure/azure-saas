@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
@@ -6,6 +7,20 @@ using Microsoft.IdentityModel.Logging;
 using Saas.SignupAdministration.Web;
 
 var builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.IsProduction())
+{
+    // Get Secrets From Azure Key Vault if in production. If not in production, secrets are automatically loaded in from the .NET secrets manager
+    // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0
+
+    // We don't want to fetch all the secrets for the other microservices in the app/solution, so we only fetch the ones with the prefix of "signupadmin-".
+    // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix
+
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(builder.Configuration["KeyVault:Url"]),
+        new DefaultAzureCredential(),
+        new CustomPrefixKeyVaultSecretManager("signupadmin"));
+}
 
 builder.Services.AddRazorPages();
 
@@ -51,7 +66,8 @@ builder.Services.AddApplicationInsightsTelemetry(builder.Configuration[SR.AppIns
 // builder.Configuration to sign-in users with Azure AD B2C
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, Constants.AzureAdB2C)
     .EnableTokenAcquisitionToCallDownstreamApi(builder.Configuration["AppSettings:AdminServiceScopes"].Split(" "))
-    .AddInMemoryTokenCaches();
+    .AddSessionTokenCaches();
+
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
 // Configuring appsettings section AzureAdB2C, into IOptions
