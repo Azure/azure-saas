@@ -35,13 +35,23 @@ public class TenantService : ITenantService
         return returnValue;
     }
 
-    public async Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest)
+    public async Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, string adminId)
     {
         Tenant tenant = newTenantRequest.ToTenant();
         _context.Tenants.Add(tenant);
         await _context.SaveChangesAsync();
 
-        //TODO: Add permissiosn for the user
+        try
+        {
+            await _permissionService.AddUserPermissionsToTenantAsync(tenant.Id.ToString(), adminId, AppConstants.Roles.TenantAdmin);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "Error setting permission for tenant {tenantName}", newTenantRequest.Name);
+            _context.Tenants.Remove(tenant);
+            await _context.SaveChangesAsync();
+            throw;
+        }
 
         TenantDTO? returnValue = new TenantDTO(tenant);
         return returnValue;

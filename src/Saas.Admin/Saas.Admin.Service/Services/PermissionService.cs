@@ -9,7 +9,7 @@ public class PermissionService : IPermissionService
         _permissionsServiceClient = permissionServiceClient;
     }
 
-    public async Task AddUserPermissionsToTenantAsync(string tenantId, string userId, string[] permissions)
+    public async Task AddUserPermissionsToTenantAsync(string tenantId, string userId, params string[] permissions)
     {
         await _permissionsServiceClient.AddUserPermissionsToTenantAsync(tenantId, userId, permissions);
         return;
@@ -30,7 +30,7 @@ public class PermissionService : IPermissionService
         return await _permissionsServiceClient.GetUserPermissionsForTenantAsync(tenantId, userId);
     }
 
-    public async Task RemoveUserPermissionsFromTenantAsync(string tenantId, string userId, string[] permissions)
+    public async Task RemoveUserPermissionsFromTenantAsync(string tenantId, string userId, params string[] permissions)
     {
         await _permissionsServiceClient.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
         return;
