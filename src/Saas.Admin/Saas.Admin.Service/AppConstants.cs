@@ -1,6 +1,6 @@
 ﻿namespace Saas.Admin.Service;
 
-public static class AppConstants {
+public static class AppConstants 
 {
     public static class Policies
     {
