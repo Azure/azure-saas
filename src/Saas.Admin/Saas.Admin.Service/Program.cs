@@ -3,8 +3,9 @@ using System.Security.Cryptography.X509Certificates;
 using Azure.Security.KeyVault.Certificates;
 using Azure.Identity;
 using Saas.AspNetCore.Authorization.ClaimTransformers;
+using Saas.Admin.Service.Utilities;
 using Saas.AspNetCore.Authorization.AuthHandlers;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Azure.Security.KeyVault.Secrets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +15,13 @@ if (builder.Environment.IsProduction())
 {
     // Get Secrets From Azure Key Vault if in production. If not in production, secrets are automatically loaded in from the .NET secrets manager
     // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0
-    builder.Configuration.AddAzureKeyVault(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential());
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(builder.Configuration["KeyVault:Url"]), 
+        new DefaultAzureCredential(), 
+        new CustomPrefixKeyVaultSecretManager("admin"));
 
-    // Use azure keyvault SDK to download certificate to be used to authenticate with permissions api
-    CertificateClient certificateClient = new CertificateClient(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential());
-    permissionsApiCertificate = certificateClient.DownloadCertificate(builder.Configuration["KeyVault:PermissionsApiCertName"]).Value;
+    // Get certificate from secret imported above and parse it into an X509Certificate
+    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(builder.Configuration["KeyVault:PermissionsApiCertName"]));
 }
 else 
 {
@@ -43,10 +46,42 @@ builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTr
 builder.Services.AddRouteBasedRoleHandler("tenantId");
 
 builder.Services.AddAuthorization(options => {
-    options.AddPolicy("TenantAdminOnly", policyBuilder =>
-{
-        policyBuilder.Requirements.Add(new RolesAuthorizationRequirement(new string[] { "TenantAdmin" }));
+
+    options.AddPolicy("Authenticated", policyBuilder =>
+    {
+        policyBuilder.RequireAuthenticatedUser();
+        policyBuilder.RequireRole("GlobalAdmin", "Self");
     });
+
+    options.AddPolicy("Create_Tenant", policyBuilder =>
+    {
+        policyBuilder.RequireAuthenticatedUser();
+    });
+
+    options.AddPolicy("Tenant_Global_Read", policyBuilder =>
+    {
+        policyBuilder.RequireRole("GlobalAdmin");
+        policyBuilder.RequireScope("tenant.global.read");
+    });
+
+    options.AddPolicy("Tenant_Read", policyBuilder =>
+    {
+        policyBuilder.RequireRole("GlobalAdmin", "TenantUser", "TenantAdmin");
+        policyBuilder.RequireScope("tenant.read tenant.global.read");
+    });
+
+    options.AddPolicy("Tenant_Write", policyBuilder =>
+    {
+        policyBuilder.RequireRole("GlobalAdmin", "TenantAmdin");
+        policyBuilder.RequireScope("tenant.write tenant.global.write");
+    });
+
+    options.AddPolicy("Tenant_Delete", policyBuilder =>
+    {
+        policyBuilder.RequireRole("GlobalAdmin", "TenantAdmin");
+        policyBuilder.RequireScope("tenant.delete tenant.global.delete");
+    });
+
 });
 
 
@@ -104,4 +139,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
