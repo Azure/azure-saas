@@ -1,6 +1,7 @@
 ﻿using Saas.Permissions.Service.Data;
 using Saas.Permissions.Service.Exceptions;
 using Saas.Permissions.Service.Interfaces;
+using Saas.Permissions.Service.Models;
 
 namespace Saas.Permissions.Service.Services;
 
@@ -19,11 +20,11 @@ public class PermissionsService : IPermissionsService
             .ToListAsync();
     }
 
-    public async Task<ICollection<string>> GetTenantUsersAsync(string tenantId)
+    public async Task<ICollection<User>> GetTenantUsersAsync(string tenantId)
     {
         return await _context.Permissions
             .Where(x => x.TenantId == tenantId)
-            .Select(x => x.UserId)
+            .Select(x => new User() { UserId = x.UserId, Email = x.Email })
             .ToListAsync();
     }
 

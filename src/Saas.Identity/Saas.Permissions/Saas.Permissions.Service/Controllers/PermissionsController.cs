@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Saas.Permissions.Service.Exceptions;
 using Saas.Permissions.Service.Interfaces;
+using Saas.Permissions.Service.Models;
 
 namespace Saas.Permissions.Service.Controllers;
 
@@ -38,7 +39,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     //[RequiredScope(new[] { "permissions.read", "permissions.write" })]
     [Route("GetUserPermissionsForTenant")]
-    public async Task<ICollection<string>> GetUserPermissionsForTenant(string tenantId, string userId)
+    public async Task<ICollection<User>> GetUserPermissionsForTenant(string tenantId, string userId)
     {
         return await _permissionsService.GetUserPermissionsForTenantAsync(tenantId, userId);
     }
