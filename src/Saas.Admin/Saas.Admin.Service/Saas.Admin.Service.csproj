@@ -31,4 +31,7 @@
 			<_Parameter1>$(AssemblyName).Tests</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Saas.Authorization\Saas.AspNetCore.Authorization\Saas.AspNetCore.Authorization.csproj" />
+	</ItemGroup>
 </Project>
