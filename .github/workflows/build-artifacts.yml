@@ -1,0 +1,35 @@
+name: Build Artifacts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**/*"
+
+jobs:
+  build-arm-json:
+    name: Build ARM JSON
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v2
+
+      - name: Run Bicep Build
+        uses: azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            mkdir ./out
+            az bicep build --file src/SaaS.IaC/main.bicep --outfile ./out/main.json
+            
+      - name: Create Release with Artifacts
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            ./out/main.json
