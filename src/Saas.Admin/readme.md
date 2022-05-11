@@ -46,7 +46,7 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 | AzureAdB2C:SignUpSignInPolicyId | | false | B2C_1A_SIGNUP_SIGNIN |
 | KeyVault:Url | KeyVault URL to pull secret values from in production | false |  |
 | KeyVault:PermissionsApiCertName | Certificate name in Key Vault to use for authentication to permissions API | false |  |
-| PermissionsApi:BaseUrl | URL for downstream [Permissions API](../Saas.Permissions/readme.md) | false | |
+| PermissionsApi:BaseUrl | URL for downstream [Permissions API](../Saas.Identity/Saas.Permissions/readme.md) | false | |
 | PermissionsApi:LocalCertificate | A Base64 encoded certificate (.CER) used to authenticate with the permissions API. Only used for local development. | true | |
 | ConnectionStrings:TenantsContext | Connection String to SQL server database used to store tenants data. If using local db for development, this connection string is fine to commit to your repo as it does not contain any secrets. | true | (local db connection string) |
 | AllowedHosts | | false |  * |
