@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+.DS_Store
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -357,4 +358,4 @@ MigrationBackup/
 .hugo_build.lock
 docs/azure-saas-docs/resources/_gen
 docs/azure-saas-docs/public
-.DS_Store
+/Set-UserSecrets.ps1

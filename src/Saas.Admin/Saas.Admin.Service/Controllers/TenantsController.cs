@@ -1,10 +1,13 @@
 ﻿#nullable disable
 
+using Microsoft.Identity.Web.Resource;
 using System.Net.Mime;
 
 namespace Saas.Admin.Service.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
+[RequiredScope("test.scope")]
 [ApiController]
 public class TenantsController : ControllerBase
 {
@@ -32,6 +35,8 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    
+    [Authorize(Policy = "Tenant_Global_Read")]
     public async Task<ActionResult<IEnumerable<TenantDTO>>> GetAllTenants()
     {
         try
@@ -64,6 +69,8 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    
+    [Authorize(Policy = "Tenant_Read")]
     public async Task<ActionResult<TenantDTO>> GetTenant(Guid tenantId)
     {
         _logger.LogDebug("{User} requested tenant with ID {TeanntID}", HttpContext.User.Identity.Name, tenantId);
@@ -103,14 +110,16 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    
+    [Authorize(Policy = "Create_Tenant")]
     public async Task<ActionResult<TenantDTO>> PostTenant(NewTenantRequest tenantRequest)
     {
         try
         {
-            _logger.LogInformation("Creating a new tenant: {NewTenantName} for {OwnerID}, requested by {User}", tenantRequest.Name, tenantRequest.OwnerId, HttpContext.User.Identity.Name);
+            _logger.LogInformation("Creating a new tenant: {NewTenantName} for {OwnerID}, requested by {User}", tenantRequest.Name, tenantRequest.CreatorEmail, HttpContext.User.Identity.Name);
             TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest);
 
-            _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.RoutePrefix, tenant.Id);
+            _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.Route, tenant.Id);
             return CreatedAtAction(nameof(GetTenant), new { tenantId = tenant.Id }, tenant);
         }
         catch (DbUpdateException ex)
@@ -138,6 +147,8 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    
+    [Authorize(Policy = "Tenant_Write")]
     public async Task<IActionResult> PutTenant(Guid tenantId, TenantDTO tenantDTO)
     {
         _logger.LogDebug("Updating tenant {TenantID} by {User}", tenantId, HttpContext.User.Identity.Name);
@@ -174,6 +185,8 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    
+    [Authorize(Policy = "Tenant_Delete")]
     public async Task<IActionResult> DeleteTenant(Guid tenantId)
     {
         try
@@ -204,11 +217,14 @@ public class TenantsController : ControllerBase
     /// <para>Right now only returns user IDs, should consider returning a user object with 
     /// user info + permissions for the tenant</para>
     /// </remarks>
-    [HttpGet("{tenantId}/users")]
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<string>>> GetTenantUsers(Guid tenantId)
+    
+    [Route("{tenantId}/users")]
+    [Authorize(Policy = "Tenant_Read")]
+    public async Task<ActionResult<IEnumerable<string>>> GetTenantUsers(string tenantId)
     {
         try
         {
@@ -237,7 +253,9 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<string>>> GetUserPermissions(Guid tenantId, string userId)
+
+    [Authorize(Policy = "Tenant_Read")]
+    public async Task<ActionResult<IEnumerable<string>>> GetUserPermissions(string tenantId, string userId)
     {
         IEnumerable<string> permissions = await _permissionService.GetUserPermissionsForTenantAsync(tenantId, userId);
         return permissions.ToList();
@@ -254,9 +272,11 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> PostUserPermissions(Guid tenantId, string userId, [FromBody] string[] permissions)
+    
+    [Authorize(Policy = "Tenant_Write")]
+    public async Task<IActionResult> PostUserPermissions(string tenantId, string userId, [FromBody] string[] permissions)
     {
-        await _permissionService.AddUserPermissionsToTenantAsyc(tenantId, userId, permissions);
+        await _permissionService.AddUserPermissionsToTenantAsync(tenantId, userId, permissions);
         return NoContent();
     }
 
@@ -271,7 +291,9 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteUserPermissions(Guid tenantId, string userId, [FromBody] string[] permissions)
+
+    [Authorize(Policy = "Tenant_Write")]
+    public async Task<IActionResult> DeleteUserPermissions(string tenantId, string userId, [FromBody] string[] permissions)
     {
         await _permissionService.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
         return NoContent();
@@ -288,11 +310,25 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(200)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<Guid>>> UserTenants(string userId, string filter = null)
-    {
-        _logger.LogDebug("Geting all tenants for user {userID}", userId);
 
-        IEnumerable<Guid> tenants = await _permissionService.GetTenantsForUserAsync(userId, filter);
+    [Authorize(Policy = "Authenticated")]
+    public async Task<ActionResult<IEnumerable<string>>> UserTenants(string userId, string filter = null)
+    {
+        _logger.LogDebug("Getting all tenants for user {userID}", userId);
+
+        IEnumerable<string> tenants = await _permissionService.GetTenantsForUserAsync(userId, filter);
         return tenants.ToList();
+    }
+
+    [HttpGet("IsValidPath/{path}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+
+    [Authorize(Policy = "Create_Tenant")]
+    public async Task<ActionResult<bool>> IsValidPath(string path)
+    {
+        _logger.LogDebug("Validating Path {path}", path);
+
+        bool pathExists = await _tenantService.CheckPathExists(path);
+        return !pathExists;
     }
 }

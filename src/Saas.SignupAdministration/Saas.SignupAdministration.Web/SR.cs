@@ -2,7 +2,7 @@
 
 namespace Saas.SignupAdministration.Web
 {
-    internal static class SR
+    public static class SR
     {
         // Internal Data Names
         public const string OnboardingWorkflowName = "Onboarding Workflow";
@@ -19,6 +19,12 @@ namespace Saas.SignupAdministration.Web
         public const string SoftwarePrompt = "Software";
         public const string EmailPrompt = "Email";
         public const string PasswordPrompt = "Password";
+
+        // Service Plans
+
+        public const string FreePlan = "Free";
+        public const string BasicPlan = "Basic";
+        public const string StandardPlan = "Standard";
 
         // API Route Template
         public const string ApiRouteTemplate = "api/[controller]";
@@ -74,6 +80,9 @@ namespace Saas.SignupAdministration.Web
         public const string OnboardingWorkflowOrganizationNameProperty = "organizationName";
         public const string OnboardingWorkflowTenantRouteNameProperty = "tenantRouteName";
         public const string OnboardingWorkflowStateCurrentStateProperty = "currentState";
+        public const string OnboardingWorkflowIsActiveProperty = "isActive";
+        public const string OnboardingWorkflowIsCancelledProperty = "isCancelled";
+        public const string OnboardingWorkflowIsProvisionedProperty = "isProvisioned";
 
         // Session Keys
         public const string OnboardingWorkflowKey = "OnboardingWorkflow";
@@ -110,8 +119,18 @@ namespace Saas.SignupAdministration.Web
         public const string KeyProperty = "Key";
         public const string CosmosNamePartitionKey = "/name";
         public const string AdminServiceBaseUrl = "AppSettings:AdminServiceBaseUrl";
+        public const string EmailOptionsProperty = "EmailOptions";
 
         // Error Codes
         public const string DuplicateUserNameErrorCode = "DuplicateUserName";
+
+        // Claim Types
+        public const string EmailAddressClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
+        public const string NameIdentifierClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+        public const string AuthenticationClassReferenceClaimType = "http://schemas.microsoft.com/claims/authnclassreference";
+        public const string AuthenticationTimeClaimType = "auth_time";
+        public const string GivenNamClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname";
+        public const string SurnameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname";
+        public const string TenantIdClaimType = "http://schemas.microsoft.com/identity/claims/tenantid";
     }
 }

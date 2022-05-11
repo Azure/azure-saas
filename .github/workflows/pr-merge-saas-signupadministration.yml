@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "src/Saas.Provider/**"
+      - "src/Saas.SignupAdministration/**"
       - ".github/**"
     
 name: Saas.SignupAdministration.Web Swap Slot

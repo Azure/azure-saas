@@ -1,4 +1,4 @@
-﻿@model Saas.SignupAdministration.Web.Services.TenantDTO
+﻿@model Saas.SignupAdministration.Web.Areas.Admin.Data.TenantViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,26 +12,31 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsCancelled" /> @Html.DisplayNameFor(model => model.IsCancelled)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsProvisioned" /> @Html.DisplayNameFor(model => model.IsProvisioned)
-                </label>
+            <div class="form-group">
+                <label asp-for="Route" class="control-label"></label>
+                <input asp-for="Route" class="form-control" />
+                <span asp-validation-for="Route" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RoutePrefix" class="control-label"></label>
-                <input asp-for="RoutePrefix" class="form-control" />
-                <span asp-validation-for="RoutePrefix" class="text-danger"></span>
+                <label asp-for="ProductName" class="control-label"></label>
+                <select asp-for="ProductTierId" class="form-control" asp-items="ViewBag.ProductOptions"></select>
+                <span asp-validation-for="ProductTierId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryName" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryOptions"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatorEmail" class="control-label"></label>
+                <input asp-for="CreatorEmail" class="form-control" />
+                <span asp-validation-for="CreatorEmail" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CreatedTime" class="control-label"></label>
@@ -55,5 +60,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }

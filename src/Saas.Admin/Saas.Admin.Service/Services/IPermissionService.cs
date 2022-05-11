@@ -2,9 +2,9 @@
 
 public interface IPermissionService
 {
-    Task<IEnumerable<string>> GetTenantUsersAsync(Guid tenantId);
-    Task<IEnumerable<string>> GetUserPermissionsForTenantAsync(Guid tenantId, string userId);
-    Task AddUserPermissionsToTenantAsyc(Guid tenantId, string userId, string[] permissions);
-    Task RemoveUserPermissionsFromTenantAsync(Guid tenantId, string userId, string[] permissions);
-    Task<IEnumerable<Guid>> GetTenantsForUserAsync(string userId, string? filter);
+    Task<IEnumerable<string>> GetTenantUsersAsync(string tenantId);
+    Task<IEnumerable<string>> GetUserPermissionsForTenantAsync(string tenantId, string userId);
+    Task AddUserPermissionsToTenantAsync(string tenantId, string userId, string[] permissions);
+    Task RemoveUserPermissionsFromTenantAsync(string tenantId, string userId, string[] permissions);
+    Task<IEnumerable<string>> GetTenantsForUserAsync(string userId, string? filter);
 }

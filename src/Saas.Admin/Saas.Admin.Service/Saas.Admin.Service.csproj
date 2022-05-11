@@ -10,6 +10,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2" />
+		<PackageReference Include="Azure.Identity" Version="1.6.0" />
+		<PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.3.0" />
 		<PackageReference Include="Dawn.Guard" Version="1.12.0" />
 				<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.3" />
@@ -27,5 +30,8 @@
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
 			<_Parameter1>$(AssemblyName).Tests</_Parameter1>
 		</AssemblyAttribute>
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Saas.Authorization\Saas.AspNetCore.Authorization\Saas.AspNetCore.Authorization.csproj" />
 	</ItemGroup>
 </Project>
