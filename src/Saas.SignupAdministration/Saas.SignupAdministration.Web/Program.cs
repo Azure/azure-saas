@@ -65,7 +65,10 @@ builder.Services.AddApplicationInsightsTelemetry(builder.Configuration[SR.AppIns
 
 // builder.Configuration to sign-in users with Azure AD B2C
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, Constants.AzureAdB2C)
-    .EnableTokenAcquisitionToCallDownstreamApi(builder.Configuration["AppSettings:AdminServiceScopes"].Split(" "))
+    .EnableTokenAcquisitionToCallDownstreamApi(
+        builder.Configuration["AppSettings:AdminServiceScopes"]
+        .Split(" ")
+        .Select(scope => builder.Configuration["AppSettings:AdminServiceScopeBaseUrl"] + scope ))
     .AddSessionTokenCaches();
 
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
