@@ -5,8 +5,9 @@ on:
     branches:
       - main
       - users/brandonmartinez/**
-    # paths:
-    #   - "src/**/*"
+    paths:
+      - ".github/workflows/**"
+      - "src/**"
 
 jobs:
   build-arm-json:
