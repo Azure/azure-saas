@@ -2,10 +2,11 @@ name: Build Artifacts
 
 on:
   push:
-    # branches:
-    #   - main
-    paths:
-      - "src/**/*"
+    branches:
+      - main
+      - users/brandonmartinez/**
+    # paths:
+    #   - "src/**/*"
 
 jobs:
   build-arm-json:
