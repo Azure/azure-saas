@@ -51,11 +51,11 @@ public class CustomClaimsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Roles(ClaimsRequest request)
     {
-        var roles = await _graphAPIService.GetAppRolesAsync(request.ObjectId.ToString());
+        var roles = await _graphAPIService.GetAppRolesAsync(request);
 
         RolesClaimResponse response = new RolesClaimResponse()
         {
-            Roles = roles.ToArray()
+            Roles = roles
         };
 
         return Ok(response);

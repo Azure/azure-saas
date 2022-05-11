@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Saas.Permissions.Service.Interfaces;
+using Saas.Permissions.Service.Models;
 using Saas.Permissions.Service.Models.AppSettings;
 namespace Saas.Permissions.Service.Services;
 
@@ -21,20 +22,32 @@ public class GraphAPIService : IGraphAPIService
 
 
     }
-    public async Task<ICollection<string>> GetAppRolesAsync(string userId)
+    public async Task<string[]> GetAppRolesAsync(ClaimsRequest request)
     {
-        var appRoleAssignments = await this._graphServiceClient.Users[userId].AppRoleAssignments
-                .Request()
-                .GetAsync();
-        var appRoleIds = appRoleAssignments
-                .Select(a => a.AppRoleId.ToString())
-                .ToArray()
-                .Cast<string>()
-                .ToArray();
+        ServicePrincipal? servicePrincipal = await GetServicePrincipalAsync(request.ClientId);
 
-        return appRoleIds;
-                
+        if(servicePrincipal == null)
+        {
+            throw new ArgumentException($"App role not found for \"{request.ClientId}\".");
+        }
 
+        return await GetAppRoleAssignmentsAsync(servicePrincipal, request.ObjectId.ToString());
+    }
+
+    private async Task<ServicePrincipal?> GetServicePrincipalAsync(string clientId)
+    {
+        var servicePrincipal = await _graphServiceClient.ServicePrincipals.Request()
+            .Filter($"appId eq '{clientId}'")
+            .GetAsync();
+        return servicePrincipal.SingleOrDefault();
+    }
+
+    private async Task<string[]> GetAppRoleAssignmentsAsync(ServicePrincipal servicePrincipal, string userId)
+    {
+        var userAppRoleAssignments = await _graphServiceClient.Users[userId].AppRoleAssignments.Request().Filter($"resourceId eq {servicePrincipal.Id}").GetAsync();
+        var appRoleIds = userAppRoleAssignments.Select(a => a.AppRoleId).ToArray();
+        var appRoles = servicePrincipal.AppRoles.Where(a => appRoleIds.Contains(a.Id)).Select(a => a.Value).ToArray();
+        return appRoles;
     }
 }
 

@@ -6,4 +6,6 @@ public class ClaimsRequest
     [JsonPropertyName("signInNames.emailAddress")]
     public string EmailAddress { get; set; } = string.Empty;
     public Guid ObjectId { get; set; }
+    
+    public string ClientId { get; set; }
 }

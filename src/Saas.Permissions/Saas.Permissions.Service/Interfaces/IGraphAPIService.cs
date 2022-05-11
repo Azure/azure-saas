@@ -1,7 +1,9 @@
-﻿namespace Saas.Permissions.Service.Interfaces;
+﻿using Saas.Permissions.Service.Models;
+
+namespace Saas.Permissions.Service.Interfaces;
 
 public interface IGraphAPIService
 {
-    public Task<ICollection<string>> GetAppRolesAsync(string userId);
+    public Task<string[]> GetAppRolesAsync(ClaimsRequest request);
 
 }
