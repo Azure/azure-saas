@@ -4,8 +4,8 @@ using Microsoft.Graph;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models;
 using Saas.Permissions.Service.Models.AppSettings;
-namespace Saas.Permissions.Service.Services;
 
+namespace Saas.Permissions.Service.Services;
 
 public class GraphAPIService : IGraphAPIService
 {
@@ -18,7 +18,7 @@ public class GraphAPIService : IGraphAPIService
            options.Value.TenantId, options.Value.ClientId, options.Value.ClientSecret);
 
 
-        this._graphServiceClient = new GraphServiceClient(clientSecretCredential);
+        _graphServiceClient = new GraphServiceClient(clientSecretCredential);
 
 
     }
