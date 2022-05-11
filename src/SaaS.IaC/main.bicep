@@ -93,7 +93,7 @@ module logicAppModule 'notifications.bicep' = {
 
 // Module - Permissions SQL Database
 //////////////////////////////////////////////////
-module permissionsSqlModule './permissionsSql.Bicep' = {
+module permissionsSqlModule './permissionsSql.bicep' = {
   name: 'permissionsSqlDeployment'
   params: {
     location: location
@@ -106,7 +106,7 @@ module permissionsSqlModule './permissionsSql.Bicep' = {
 
 // Module - Admin SQL Database
 //////////////////////////////////////////////////
-module adminSqlModule './adminSql.Bicep' = {
+module adminSqlModule './adminSql.bicep' = {
   name: 'adminSqlDeployment'
   params: {
     adminSqlDatabaseName: adminSqlDatabaseName
