@@ -16,7 +16,7 @@ public static class AppConstants
     {
         public const string GlobalAdmin = "GlobalAdmin";
         public const string TenantUser = "TenantUser";
-        public const string TenantAdmin = "TenatnAdmin";
+        public const string TenantAdmin = "TenantAdmin";
         public const string Self = "Self";
     }
 
