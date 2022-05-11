@@ -2,8 +2,8 @@ name: Build Artifacts
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
     paths:
       - "src/**/*"
 
