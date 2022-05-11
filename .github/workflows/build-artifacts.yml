@@ -24,7 +24,8 @@ jobs:
           inlineScript: |
             mkdir ./dist
             az bicep build --file src/SaaS.IaC/main.bicep --outfile ./dist/main.json
-      - uses: actions/upload-artifact@v2
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: arm-json
           path: ./dist/main.json
