@@ -6,6 +6,7 @@ public class Permission
 {
     public int Id { get; set; }
     public string UserId { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
     public string TenantId { get; set; } = string.Empty;
     public string PermissionStr { get; set; } = string.Empty;
 
