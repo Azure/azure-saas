@@ -23,7 +23,7 @@ public class PermissionsService : IPermissionsService
     {
         return await _context.Permissions
             .Where(x => x.TenantId == tenantId)
-            .Select(x => x.TenantId)
+            .Select(x => x.UserId)
             .ToListAsync();
     }
 
