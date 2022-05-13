@@ -24,11 +24,7 @@
         
         
         &lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;The identity provider default implementation is &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview&#34;&gt;Azure B2C&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;If your scenario uses &lt;a href=&#34;https://azure.microsoft.com/en-us/services/active-directory/&#34;&gt;Azure AAD&lt;/a&gt;, you can swap out the &lt;strong&gt;Identity Provider&lt;/strong&gt; in the diagram below.&lt;/li&gt;
-&lt;li&gt;B2C is offering permissions as a service.&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;For the identity framework, we chose to use  &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview&#34;&gt;Azure B2C&lt;/a&gt; as our default identity provider. If you&amp;rsquo;d like to use another identity provider such as Azure AAD or a different 3rd party tool, you can swap it out. We have a default configuration&lt;/p&gt;
 &lt;h3 id=&#34;what-does-b2c-give-us&#34;&gt;What does B2C Give Us?&lt;/h3&gt;
 &lt;p&gt;Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios.&lt;/p&gt;
 &lt;h3 id=&#34;configuration&#34;&gt;Configuration&lt;/h3&gt;
@@ -40,6 +36,42 @@
 &lt;li&gt;Reach out to the &lt;a href=&#34;../permissions-service&#34;&gt;SaaS.Permissions.Service&lt;/a&gt; upon a user signing in to fetch their application permissions and roles&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;You can change/extend the behavior of B2C to do things like collect more information during signup, force users to enroll in Multi-Factor Authentication (MFA), and much more by modifying the custom policies.&lt;/p&gt;
+&lt;h3 id=&#34;app-roles-and-global-admin&#34;&gt;App Roles and Global Admin&lt;/h3&gt;
+&lt;p&gt;We are using &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps&#34;&gt;App Roles&lt;/a&gt; to grant users &amp;ldquo;Global Admin&amp;rdquo; capabilites for the application. This App Role should only be granted to staff users that need it to administrate ALL the tenants across the entire SaaS solution. These roles are stored directly in B2C and are returned in the JWT token claims when the user signs in.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;How do I add a user to the default Global Admin role?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;If you followed our steps in the &lt;a href=&#34;../../quick-start&#34;&gt;Quick Start&lt;/a&gt;, the user that created the B2C tenant will automatically be added to this global admin role. Follow these steps if you&amp;rsquo;d like to add additional users:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Switch to your B2C Tenant in the Azure portal&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Navigate to the Azure Active Directory &lt;a href=&#34;https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview&#34;&gt;menu&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click &amp;ldquo;Enterprise Applications&amp;rdquo;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Under the &amp;ldquo;Application Type&amp;rdquo; dropdown, select &amp;ldquo;All Applications&amp;rdquo; and click &amp;ldquo;Apply&amp;rdquo;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Select the &lt;code&gt;asdk-admin-api&lt;/code&gt; app &lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/aad-enterprise-apps.png&#34; alt=&#34;enterprise apps&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Select &amp;ldquo;Users and Groups&amp;rdquo; from the menu on the left&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click &amp;ldquo;Add user/group&amp;rdquo; &lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/aad-enterprise-apps-users-groups.png&#34; alt=&#34;Add user/groups&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Select the users you&amp;rsquo;d like to add to the app role&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Click &amp;ldquo;Assign&amp;rdquo;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Repeat steps  5-9, but on the &lt;code&gt;asdk-b2c-web&lt;/code&gt; app instead&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
 &lt;h2 id=&#34;design-considerations-and-faq&#34;&gt;Design Considerations and FAQ&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;
@@ -54,25 +86,14 @@
 &lt;li&gt;A: User Flows are predefined and meant for more basic use cases. Custom Policies provide more support for automating the setup and deployment of the B2C configuration, and generally provide greater extensibility in the long term for more complicated scenarios.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Q: Why didn&amp;rsquo;t we use App Roles for all permissions? Why did we choose to put the tenant permissions in a special API?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A: App roles in Azure AD B2C are nice, but too many of them get extremely complicated to manage. You can absolutely achieve the same thing using just app roles, but we wouldn&amp;rsquo;t reccomend it if you are going to have more than just a handful of tenants.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-mermaid&#34; data-lang=&#34;mermaid&#34;&gt;graph
-	user(&amp;quot;fa:fa-user Contoso Business Admin&amp;quot;)
-	adminweb(&amp;quot;Saas.Admin.Web&amp;quot;)
-	identityapi(&amp;quot;fa:fa-key &amp;lt;b&amp;gt;Identity Provider&amp;lt;/b&amp;gt;&amp;quot;)
-	catalogapi(&amp;quot;Saas.Catalog.Api&amp;quot;)
-	catalogsql[(Saas.Catalog.Sql)]
+&lt;/li&gt;
+&lt;/ul&gt;
 
-	user-- Bearer Token --&amp;gt;adminweb
-	adminweb--&amp;gt;user
-
-	adminweb-- Token --&amp;gt;catalogapi
-	catalogapi--&amp;gt;adminweb
-
-	catalogapi--&amp;gt;identityapi
-
-	catalogapi-- EF CRUD --&amp;gt;catalogsql
-&lt;/code&gt;&lt;/pre&gt;
       </description>
     </item>
     

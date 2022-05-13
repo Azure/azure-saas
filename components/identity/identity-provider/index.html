@@ -20,23 +20,24 @@
 
 <title>Identity Provider | Azure SaaS Dev Kit Docs</title>
 <meta name="description" content="Overview
-
-The identity provider default implementation is Azure B2C.
-If your scenario uses Azure AAD, you can swap out the Identity Provider in the â€¦">
+For the identity framework, we chose to use  Azure B2C as our default identity provider. If you&rsquo;d like to use another identity provider â€¦">
 <meta property="og:title" content="Identity Provider" />
-<meta property="og:description" content="Overview  The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us? Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios." />
+<meta property="og:description" content="Overview For the identity framework, we chose to use Azure B2C as our default identity provider. If you&rsquo;d like to use another identity provider such as Azure AAD or a different 3rd party tool, you can swap it out. We have a default configuration
+What does B2C Give Us? Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/identity-provider/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-13T13:50:16-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-13T14:27:55-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Identity Provider">
-<meta itemprop="description" content="Overview  The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us? Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios.">
-<meta itemprop="dateModified" content="2022-05-13T13:50:16-04:00" />
-<meta itemprop="wordCount" content="368">
+<meta itemprop="description" content="Overview For the identity framework, we chose to use Azure B2C as our default identity provider. If you&rsquo;d like to use another identity provider such as Azure AAD or a different 3rd party tool, you can swap it out. We have a default configuration
+What does B2C Give Us? Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios.">
+<meta itemprop="dateModified" content="2022-05-13T14:27:55-04:00" />
+<meta itemprop="wordCount" content="603">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Identity Provider"/>
-<meta name="twitter:description" content="Overview  The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us? Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios."/>
+<meta name="twitter:description" content="Overview For the identity framework, we chose to use Azure B2C as our default identity provider. If you&rsquo;d like to use another identity provider such as Azure AAD or a different 3rd party tool, you can swap it out. We have a default configuration
+What does B2C Give Us? Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios."/>
 
 
 
@@ -197,6 +198,7 @@ If your scenario uses Azure AAD, you can swap out the Identity Provider in the â
       <ul>
         <li><a href="#what-does-b2c-give-us">What does B2C Give Us?</a></li>
         <li><a href="#configuration">Configuration</a></li>
+        <li><a href="#app-roles-and-global-admin">App Roles and Global Admin</a></li>
       </ul>
     </li>
     <li><a href="#design-considerations-and-faq">Design Considerations and FAQ</a></li>
@@ -263,11 +265,7 @@ If your scenario uses Azure AAD, you can swap out the Identity Provider in the â
 		
 	</header>    
 	<h2 id="overview">Overview</h2>
-<ul>
-<li>The identity provider default implementation is <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview">Azure B2C</a>.</li>
-<li>If your scenario uses <a href="https://azure.microsoft.com/en-us/services/active-directory/">Azure AAD</a>, you can swap out the <strong>Identity Provider</strong> in the diagram below.</li>
-<li>B2C is offering permissions as a service.</li>
-</ul>
+<p>For the identity framework, we chose to use  <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview">Azure B2C</a> as our default identity provider. If you&rsquo;d like to use another identity provider such as Azure AAD or a different 3rd party tool, you can swap it out. We have a default configuration</p>
 <h3 id="what-does-b2c-give-us">What does B2C Give Us?</h3>
 <p>Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios.</p>
 <h3 id="configuration">Configuration</h3>
@@ -279,6 +277,42 @@ If your scenario uses Azure AAD, you can swap out the Identity Provider in the â
 <li>Reach out to the <a href="../permissions-service">SaaS.Permissions.Service</a> upon a user signing in to fetch their application permissions and roles</li>
 </ul>
 <p>You can change/extend the behavior of B2C to do things like collect more information during signup, force users to enroll in Multi-Factor Authentication (MFA), and much more by modifying the custom policies.</p>
+<h3 id="app-roles-and-global-admin">App Roles and Global Admin</h3>
+<p>We are using <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps">App Roles</a> to grant users &ldquo;Global Admin&rdquo; capabilites for the application. This App Role should only be granted to staff users that need it to administrate ALL the tenants across the entire SaaS solution. These roles are stored directly in B2C and are returned in the JWT token claims when the user signs in.</p>
+<p><strong>How do I add a user to the default Global Admin role?</strong></p>
+<p>If you followed our steps in the <a href="../../quick-start">Quick Start</a>, the user that created the B2C tenant will automatically be added to this global admin role. Follow these steps if you&rsquo;d like to add additional users:</p>
+<ol>
+<li>
+<p>Switch to your B2C Tenant in the Azure portal</p>
+</li>
+<li>
+<p>Navigate to the Azure Active Directory <a href="https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview">menu</a></p>
+</li>
+<li>
+<p>Click &ldquo;Enterprise Applications&rdquo;</p>
+</li>
+<li>
+<p>Under the &ldquo;Application Type&rdquo; dropdown, select &ldquo;All Applications&rdquo; and click &ldquo;Apply&rdquo;</p>
+</li>
+<li>
+<p>Select the <code>asdk-admin-api</code> app <img src="/azure-saas/images/aad-enterprise-apps.png" alt="enterprise apps"></p>
+</li>
+<li>
+<p>Select &ldquo;Users and Groups&rdquo; from the menu on the left</p>
+</li>
+<li>
+<p>Click &ldquo;Add user/group&rdquo; <img src="/azure-saas/images/aad-enterprise-apps-users-groups.png" alt="Add user/groups"></p>
+</li>
+<li>
+<p>Select the users you&rsquo;d like to add to the app role</p>
+</li>
+<li>
+<p>Click &ldquo;Assign&rdquo;</p>
+</li>
+<li>
+<p>Repeat steps  5-9, but on the <code>asdk-b2c-web</code> app instead</p>
+</li>
+</ol>
 <h2 id="design-considerations-and-faq">Design Considerations and FAQ</h2>
 <ul>
 <li>
@@ -293,29 +327,18 @@ If your scenario uses Azure AAD, you can swap out the Identity Provider in the â
 <li>A: User Flows are predefined and meant for more basic use cases. Custom Policies provide more support for automating the setup and deployment of the B2C configuration, and generally provide greater extensibility in the long term for more complicated scenarios.</li>
 </ul>
 </li>
+<li>
+<p>Q: Why didn&rsquo;t we use App Roles for all permissions? Why did we choose to put the tenant permissions in a special API?</p>
+<ul>
+<li>A: App roles in Azure AD B2C are nice, but too many of them get extremely complicated to manage. You can absolutely achieve the same thing using just app roles, but we wouldn&rsquo;t reccomend it if you are going to have more than just a handful of tenants.</li>
 </ul>
-<!-- raw HTML omitted -->
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">graph
-	user(&quot;fa:fa-user Contoso Business Admin&quot;)
-	adminweb(&quot;Saas.Admin.Web&quot;)
-	identityapi(&quot;fa:fa-key &lt;b&gt;Identity Provider&lt;/b&gt;&quot;)
-	catalogapi(&quot;Saas.Catalog.Api&quot;)
-	catalogsql[(Saas.Catalog.Sql)]
+</li>
+</ul>
 
-	user-- Bearer Token --&gt;adminweb
-	adminweb--&gt;user
-
-	adminweb-- Token --&gt;catalogapi
-	catalogapi--&gt;adminweb
-
-	catalogapi--&gt;identityapi
-
-	catalogapi-- EF CRUD --&gt;catalogsql
-</code></pre>
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 13, 2022: <a href="https://github.com/Azure/azure-saas/commit/43877b27ac71dd960cd3ec1254c3393e0fd857d2">lots of work on identity docs (43877b2)</a>
+  Last modified May 13, 2022: <a href="https://github.com/Azure/azure-saas/commit/1d9434ec168e4da49ffe23bad08c5a6e84186b22">app roles docs (1d9434e)</a>
 </div>
 
 </div>
