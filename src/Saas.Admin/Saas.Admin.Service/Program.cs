@@ -24,7 +24,7 @@ if (builder.Environment.IsProduction())
         new CustomPrefixKeyVaultSecretManager("admin"));
 
     // Get certificate from secret imported above and parse it into an X509Certificate
-    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(builder.Configuration["KeyVault:PermissionsApiCertName"]));
+    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(builder.Configuration["KeyVault:PermissionsApiCert"]));
 }
 else
 {
