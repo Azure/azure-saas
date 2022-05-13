@@ -20,11 +20,11 @@ public class PermissionsService : IPermissionsService
             .ToListAsync();
     }
 
-    public async Task<ICollection<User>> GetTenantUsersAsync(string tenantId)
+    public async Task<ICollection<string>> GetTenantUsersAsync(string tenantId)
     {
         return await _context.Permissions
             .Where(x => x.TenantId == tenantId)
-            .Select(x => new User() { UserId = x.UserId, Email = x.Email })
+            .Select(x => x.UserId)
             .ToListAsync();
     }
 
