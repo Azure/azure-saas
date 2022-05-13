@@ -30,7 +30,8 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 |---|---------------------------------------|-------------------------------------------------------|--------|-------------------------------|---|
 |   | ---                                   | ---                                                   | ---    | ---                           |   |
 |   | AppSettings:AdminServiceBaseUrl       | URL for downstream admin service                      | false  | https://localhost:7041/       |   |
-|   | AppSettings:AdminServiceScopes        | Scopes to authorize user for on the admin service     | false  |                               |   |
+|   | AppSettings:AdminServiceScopeBaseUrl  | The B2C URL for the admin service scope               | false  |                               |   |
+|   | AppSettings:AdminServiceScopes        | List of scopes to authorize user for on the admin service. Space delimited     | false  |                               |   |
 |   | AzureAdB2C:Instance                   |                                                       | true   |                               |   |
 |   | AzureAdB2C:Domain                     |                                                       | true   |                               |   |
 |   | AzureAdB2C:ClientId                   |                                                       | true   |                               |   |
@@ -42,7 +43,7 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 |   | AllowedHosts                          |                                                       | false  | *                             |   |
 |   | Logging:LogLevel:Default              |                                                       | false  | Information                   |   |
 |   | Logging:LogLevel:Microsoft.AspNetCore |                                                       | false  | Warning                       |   |
-|   | EmailOptions:EndPoint                 | Service endpoint to send confirmation email           | true   |                               |   |   
+|   | EmailOptions:EndPoint                 | Service endpoint to send confirmation email           | true   |                               |   | 
 |   | EmailOptions:FromAddresss             |                                                       | false  |                               |   |
 |   | EmailOptions:Subject                  |                                                       | false  |                               |   |
 |   | EmailOptions:Body                     |                                                       | false  |                               |   |
