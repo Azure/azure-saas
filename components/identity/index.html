@@ -259,12 +259,28 @@
 </ul>
 </blockquote>
 <h2 id="overview">Overview</h2>
+<p>Our Identity Framework is comprised of two main pieces:</p>
+<ol>
+<li>
+<p>Identity Provider (IDP) - Preforms user login and authorization and provides a JWT token to the web applications. ASDK comes with Azure AD B2C implemented as the IDP out of the box.</p>
+</li>
+<li>
+<p>Permissions Service - A microservice that tracks what data each user has access to, and serves as an endpoint for the IDP to enrich the user&rsquo;s token with permissions and role claims.</p>
+</li>
+</ol>
+<p>The Identity Framework also has a dependency on the <a href="https://docs.microsoft.com/en-us/graph/overview">Microsoft Graph API</a>, which we use to look up certain user information when needed.</p>
 <h2 id="architecture-diagram">Architecture Diagram</h2>
-<p><img src="../../../../../assets/diagrams/identity-diagram.drawio.png" alt="Identity Diagram"></p>
+<p><img src="/azure-saas/diagrams/identity-diagram.drawio.png" alt="Identity Diagram"></p>
 <h2 id="sign-up">Sign Up</h2>
+<blockquote>
+<p>See the <a href="./identity-flows/#sign-up">Sign Up</a> flow under <em>Identity Flows</em></p>
+</blockquote>
 <p>Upon clicking the signup button in either the SignupAdministration site or the end user application, the user is redirected to an Azure B2C hosted signup page. After providing the neccesary information and submitting the signup form, Azure B2C will create the account and redirect the user back to the originating application with a JWT token.</p>
 <h2 id="sign-in">Sign In</h2>
-<p>Upon clicking the Sign In button in either the SignupAdministration site or the end user application, the user is redirected to an Azure B2C hosted signup page. After successfully authenticating (either with a local or federated account), Azure B2C makes a call to a route on the <a href="permissions-service/">Permissons Service</a> to retreive role information. Upon receiving this data, B2C injects data in the form of custom claims, and redirects the user back to the originating application with a JWT token.</p>
+<blockquote>
+<p>See the <a href="./identity-flows/#sign-in">Sign In</a> flow under <em>Identity Flows</em></p>
+</blockquote>
+<p>Upon clicking the Sign In button in either the SignupAdministration site or the end user application, the user is redirected to an Azure B2C hosted signup page. After successfully authenticating (either with a local or federated account), Azure B2C makes a call to a route on the <a href="permissions-service/">Permissons Service</a> to retreive role and permissions information. Upon receiving this data, B2C injects data in the form of custom claims, and redirects the user back to the originating application with a JWT token.</p>
 <h2 id="more-identity-topics">More Identity Topics</h2>
 
         <div class="section-index">
@@ -324,7 +340,7 @@
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 25, 2022: <a href="https://github.com/Azure/azure-saas/commit/be2164a59551ee61204cf3de18fe18e48dd57429">new diagrams added (be2164a)</a>
+  Last modified May 13, 2022: <a href="https://github.com/Azure/azure-saas/commit/43877b27ac71dd960cd3ec1254c3393e0fd857d2">lots of work on identity docs (43877b2)</a>
 </div>
 
 </div>

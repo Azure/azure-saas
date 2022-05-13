@@ -23,16 +23,37 @@
       <description>
         
         
-        &lt;ul&gt;
+        &lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+&lt;ul&gt;
 &lt;li&gt;The identity provider default implementation is &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview&#34;&gt;Azure B2C&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;If your scenario uses &lt;a href=&#34;https://azure.microsoft.com/en-us/services/active-directory/&#34;&gt;Azure AAD&lt;/a&gt;, you can swap out the &lt;strong&gt;Identity Provider&lt;/strong&gt; in the diagram below.&lt;/li&gt;
 &lt;li&gt;B2C is offering permissions as a service.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;What does B2C Give Us?&lt;/p&gt;
-&lt;h2 id=&#34;design-considerations&#34;&gt;Design Considerations&lt;/h2&gt;
+&lt;h3 id=&#34;what-does-b2c-give-us&#34;&gt;What does B2C Give Us?&lt;/h3&gt;
+&lt;p&gt;Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios.&lt;/p&gt;
+&lt;h3 id=&#34;configuration&#34;&gt;Configuration&lt;/h3&gt;
+&lt;p&gt;B2C has two methods of configuring the business logic that users follow to gain access to your application: &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview&#34;&gt;User Flows and Custom Policies&lt;/a&gt;. User Flows are predefined and are configured directly through the B2C Web Portal. Custom Policies are XML based configuration that is uploaded to the B2C tenant.&lt;/p&gt;
+&lt;p&gt;The ASDK project uses Custom Policies to configure the B2C tenant. The XML configuration that gets deployed can be found under the &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider&#34;&gt;Saas.IdentityProvider&lt;/a&gt; folder within the repo, and you can read more about how to configure custom policies &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;When deploying the B2C Identity Provider via the instructions found in the &lt;a href=&#34;../../quick-start&#34;&gt;Quick Start&lt;/a&gt; guide, B2C is configured to do the following:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Why did we choose b2c?&lt;/li&gt;
-&lt;li&gt;Why did we choose custom policies over user flows?&lt;/li&gt;
+&lt;li&gt;Provide a hosted SignIn and SignUp page that users can be directed to&lt;/li&gt;
+&lt;li&gt;Reach out to the &lt;a href=&#34;../permissions-service&#34;&gt;SaaS.Permissions.Service&lt;/a&gt; upon a user signing in to fetch their application permissions and roles&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can change/extend the behavior of B2C to do things like collect more information during signup, force users to enroll in Multi-Factor Authentication (MFA), and much more by modifying the custom policies.&lt;/p&gt;
+&lt;h2 id=&#34;design-considerations-and-faq&#34;&gt;Design Considerations and FAQ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Q: Why did we choose b2c?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A: We chose B2C because, in additional to authenticating with &amp;ldquo;local&amp;rdquo; accounts, it can be easily extended to support a wide array of other identity providers such as Azure AD, Github, and many more. See the &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-identity-provider&#34;&gt;documentation&lt;/a&gt; for details.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Q: Why did we choose custom policies over user flows?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A: User Flows are predefined and meant for more basic use cases. Custom Policies provide more support for automating the setup and deployment of the B2C configuration, and generally provide greater extensibility in the long term for more complicated scenarios.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-mermaid&#34; data-lang=&#34;mermaid&#34;&gt;graph

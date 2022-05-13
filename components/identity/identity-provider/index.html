@@ -19,26 +19,24 @@
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
 
 <title>Identity Provider | Azure SaaS Dev Kit Docs</title>
-<meta name="description" content="
+<meta name="description" content="Overview
+
 The identity provider default implementation is Azure B2C.
-If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram …">
+If your scenario uses Azure AAD, you can swap out the Identity Provider in the …">
 <meta property="og:title" content="Identity Provider" />
-<meta property="og:description" content=" The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us?
-Design Considerations  Why did we choose b2c? Why did we choose custom policies over user flows?  graph user(&quot;fa:fa-user Contoso Business Admin&quot;) adminweb(&quot;Saas.Admin.Web&quot;) identityapi(&quot;fa:fa-key &lt;b&gt;Identity Provider&lt;/b&gt;&quot;) catalogapi(&quot;Saas.Catalog.Api&quot;) catalogsql[(Saas.Catalog.Sql)] user-- Bearer Token --&gt;adminweb adminweb--&gt;user adminweb-- Token --&gt;catalogapi catalogapi--&gt;adminweb catalogapi--&gt;identityapi catalogapi-- EF CRUD --&gt;catalogsql " />
+<meta property="og:description" content="Overview  The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us? Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/identity-provider/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-04-06T13:39:15-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-13T13:50:16-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Identity Provider">
-<meta itemprop="description" content=" The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us?
-Design Considerations  Why did we choose b2c? Why did we choose custom policies over user flows?  graph user(&quot;fa:fa-user Contoso Business Admin&quot;) adminweb(&quot;Saas.Admin.Web&quot;) identityapi(&quot;fa:fa-key &lt;b&gt;Identity Provider&lt;/b&gt;&quot;) catalogapi(&quot;Saas.Catalog.Api&quot;) catalogsql[(Saas.Catalog.Sql)] user-- Bearer Token --&gt;adminweb adminweb--&gt;user adminweb-- Token --&gt;catalogapi catalogapi--&gt;adminweb catalogapi--&gt;identityapi catalogapi-- EF CRUD --&gt;catalogsql ">
-<meta itemprop="dateModified" content="2022-04-06T13:39:15-04:00" />
-<meta itemprop="wordCount" content="78">
+<meta itemprop="description" content="Overview  The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us? Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios.">
+<meta itemprop="dateModified" content="2022-05-13T13:50:16-04:00" />
+<meta itemprop="wordCount" content="368">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Identity Provider"/>
-<meta name="twitter:description" content=" The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us?
-Design Considerations  Why did we choose b2c? Why did we choose custom policies over user flows?  graph user(&quot;fa:fa-user Contoso Business Admin&quot;) adminweb(&quot;Saas.Admin.Web&quot;) identityapi(&quot;fa:fa-key &lt;b&gt;Identity Provider&lt;/b&gt;&quot;) catalogapi(&quot;Saas.Catalog.Api&quot;) catalogsql[(Saas.Catalog.Sql)] user-- Bearer Token --&gt;adminweb adminweb--&gt;user adminweb-- Token --&gt;catalogapi catalogapi--&gt;adminweb catalogapi--&gt;identityapi catalogapi-- EF CRUD --&gt;catalogsql "/>
+<meta name="twitter:description" content="Overview  The identity provider default implementation is Azure B2C. If your scenario uses Azure AAD, you can swap out the Identity Provider in the diagram below. B2C is offering permissions as a service.  What does B2C Give Us? Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios."/>
 
 
 
@@ -193,6 +191,18 @@ Design Considerations  Why did we choose b2c? Why did we choose custom policies 
             
 
 
+<div class="td-toc"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#overview">Overview</a>
+      <ul>
+        <li><a href="#what-does-b2c-give-us">What does B2C Give Us?</a></li>
+        <li><a href="#configuration">Configuration</a></li>
+      </ul>
+    </li>
+    <li><a href="#design-considerations-and-faq">Design Considerations and FAQ</a></li>
+  </ul>
+</nav></div>
+
 
 
             
@@ -252,16 +262,37 @@ Design Considerations  Why did we choose b2c? Why did we choose custom policies 
 
 		
 	</header>    
-	<ul>
+	<h2 id="overview">Overview</h2>
+<ul>
 <li>The identity provider default implementation is <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/overview">Azure B2C</a>.</li>
 <li>If your scenario uses <a href="https://azure.microsoft.com/en-us/services/active-directory/">Azure AAD</a>, you can swap out the <strong>Identity Provider</strong> in the diagram below.</li>
 <li>B2C is offering permissions as a service.</li>
 </ul>
-<p>What does B2C Give Us?</p>
-<h2 id="design-considerations">Design Considerations</h2>
+<h3 id="what-does-b2c-give-us">What does B2C Give Us?</h3>
+<p>Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios.</p>
+<h3 id="configuration">Configuration</h3>
+<p>B2C has two methods of configuring the business logic that users follow to gain access to your application: <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview">User Flows and Custom Policies</a>. User Flows are predefined and are configured directly through the B2C Web Portal. Custom Policies are XML based configuration that is uploaded to the B2C tenant.</p>
+<p>The ASDK project uses Custom Policies to configure the B2C tenant. The XML configuration that gets deployed can be found under the <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider">Saas.IdentityProvider</a> folder within the repo, and you can read more about how to configure custom policies <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview">here</a>.</p>
+<p>When deploying the B2C Identity Provider via the instructions found in the <a href="../../quick-start">Quick Start</a> guide, B2C is configured to do the following:</p>
 <ul>
-<li>Why did we choose b2c?</li>
-<li>Why did we choose custom policies over user flows?</li>
+<li>Provide a hosted SignIn and SignUp page that users can be directed to</li>
+<li>Reach out to the <a href="../permissions-service">SaaS.Permissions.Service</a> upon a user signing in to fetch their application permissions and roles</li>
+</ul>
+<p>You can change/extend the behavior of B2C to do things like collect more information during signup, force users to enroll in Multi-Factor Authentication (MFA), and much more by modifying the custom policies.</p>
+<h2 id="design-considerations-and-faq">Design Considerations and FAQ</h2>
+<ul>
+<li>
+<p>Q: Why did we choose b2c?</p>
+<ul>
+<li>A: We chose B2C because, in additional to authenticating with &ldquo;local&rdquo; accounts, it can be easily extended to support a wide array of other identity providers such as Azure AD, Github, and many more. See the <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-identity-provider">documentation</a> for details.</li>
+</ul>
+</li>
+<li>
+<p>Q: Why did we choose custom policies over user flows?</p>
+<ul>
+<li>A: User Flows are predefined and meant for more basic use cases. Custom Policies provide more support for automating the setup and deployment of the B2C configuration, and generally provide greater extensibility in the long term for more complicated scenarios.</li>
+</ul>
+</li>
 </ul>
 <!-- raw HTML omitted -->
 <pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">graph
@@ -284,7 +315,7 @@ Design Considerations  Why did we choose b2c? Why did we choose custom policies 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 6, 2022: <a href="https://github.com/Azure/azure-saas/commit/f8b8bde5129f2c1ae6f11fef56a4da5c37dc47e1">update docs (f8b8bde)</a>
+  Last modified May 13, 2022: <a href="https://github.com/Azure/azure-saas/commit/43877b27ac71dd960cd3ec1254c3393e0fd857d2">lots of work on identity docs (43877b2)</a>
 </div>
 
 </div>
