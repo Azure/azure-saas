@@ -52,23 +52,15 @@ public class GraphAPIService : IGraphAPIService
         .Request()
         .Filter(filter.ToString())
         // Selects certain properties from the User object : https://docs.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0#properties
-        // Add any additional fields here and then select them into the user model below
+        // Add any additional fields here and then select them into the user model in ToUserObjects below
         .Select("id, displayName")
         .GetAsync();
-        userList.AddRange(graphUsers.Select(graphUser => new Models.User()
-        {
-            UserId = graphUser.Id,
-            DisplayName = graphUser.DisplayName
-        }));
+        userList.AddRange(ToUserObjects(graphUsers));
 
         while(graphUsers.NextPageRequest != null)
         {
             graphUsers = await graphUsers.NextPageRequest.GetAsync();
-            userList.AddRange(graphUsers.Select(graphUser => new Models.User()
-            {
-                UserId = graphUser.Id,
-                DisplayName = graphUser.DisplayName
-            }));
+            userList.AddRange(ToUserObjects(graphUsers));
         };
 
         return userList;
@@ -88,6 +80,15 @@ public class GraphAPIService : IGraphAPIService
         var appRoleIds = userAppRoleAssignments.Select(a => a.AppRoleId).ToArray();
         var appRoles = servicePrincipal.AppRoles.Where(a => appRoleIds.Contains(a.Id)).Select(a => a.Value).ToArray();
         return appRoles;
+    }
+
+    private IEnumerable<Models.User> ToUserObjects(IGraphServiceUsersCollectionPage graphUsers)
+    {
+        return graphUsers.Select(graphUser => new Models.User()
+        {
+            UserId = graphUser.Id,
+            DisplayName = graphUser.DisplayName
+        });
     }
 
 }
