@@ -18,6 +18,15 @@ public class PermissionsController : ControllerBase
         _permissionsService = permissionsService;
     }
 
+
+    /// <summary>
+    /// Get all users for a tenant 
+    /// </summary>
+    /// <returns>List of all users for a tenant</returns>
+    /// <remarks>
+    /// <para><b>Requires:</b> a valid tenant ID </para>
+    /// <para>This call will return a list of all users in the system</para>
+    /// </remarks>
     [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -31,6 +40,15 @@ public class PermissionsController : ControllerBase
         return await _permissionsService.GetTenantUsersAsync(tenantId);
     }
 
+    /// <summary>
+    /// Get the permissions for a user for a tenant
+    /// </summary>
+    /// <returns>A list of permissions for a given user and tenant</returns>
+    /// <remarks>
+    /// <para><b>Requires:</b> a valid tenant ID </para>
+    /// <para><b>Requires:</b> a valid User ID </para>
+    /// <para>This call will return a list of all permissions a user has in a tenant</para>
+    /// </remarks>
     [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -43,6 +61,16 @@ public class PermissionsController : ControllerBase
         return await _permissionsService.GetUserPermissionsForTenantAsync(tenantId, userId);
     }
 
+    /// <summary>
+    /// Adds a permissions to a user on a given tenant
+    /// </summary>
+    /// <returns>A status code of 200 if successful</returns>
+    /// <remarks>
+    /// <para><b>Requires:</b> a valid tenant ID </para>
+    /// <para><b>Requires:</b> a valid User ID </para>
+    /// <para><b>Requires</b> an array of valid permissions</para>
+    /// <para>This call will return a 200 code if successful</para>
+    /// </remarks>
     [HttpPost]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -65,6 +93,17 @@ public class PermissionsController : ControllerBase
         }
     }
 
+
+    /// <summary>
+    /// Removes the permissions for a user for a tenant
+    /// </summary>
+    /// <returns>Returns a 200 code if successful</returns>
+    /// <remarks>
+    /// <para><b>Requires:</b> a valid tenant ID </para>
+    /// <para><b>Requires:</b> a valid User ID </para>
+    /// <para><b>Requires</b> an array of valid permissions</para>
+    /// <para>Returns a 200 code if successful</para>
+    /// </remarks>
     [HttpDelete]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -86,6 +125,16 @@ public class PermissionsController : ControllerBase
         }
     }
 
+
+    /// <summary>
+    /// Get a list of tenants that a user has access to
+    /// </summary>
+    /// <returns>A list of tenant IDs  that a user has access to</returns>
+    /// <remarks>
+    /// <para><b>Requires:</b> a valid User ID </para>
+    /// <para>Filters will be implemented in the future</para>
+    /// <para>This call will return a list tenant IDs that the user has access to</para>
+    /// </remarks>
     [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
