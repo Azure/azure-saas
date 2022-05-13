@@ -36,7 +36,7 @@ public class GraphAPIService : IGraphAPIService
     }
 
     // Enriches the user object with data from Microsoft Graph. 
-    public async Task<ICollection<Models.User>> GetUsersByIds(ICollection<Guid> userIds)
+    public async Task<IEnumerable<Models.User>> GetUsersByIds(ICollection<Guid> userIds)
     {
         // Build graph query: "id in ('id1', 'id2')"
         // https://docs.microsoft.com/en-us/graph/aad-advanced-queries?tabs=csharp
