@@ -125,7 +125,6 @@ public class PermissionsController : ControllerBase
     [Route("GetUsersByIds")]
     public async Task<IActionResult> GetUsersByIds(string[] userIds)
     {
-        // filter not currently implemented.
         try
         {
             var users = await _graphAPIService.GetUsersByIds(userIds.Select(stringId => Guid.Parse(stringId)).ToList());
