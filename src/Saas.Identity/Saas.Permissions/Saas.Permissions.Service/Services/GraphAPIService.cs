@@ -46,23 +46,30 @@ public class GraphAPIService : IGraphAPIService
         filter.Append(")");
 
         List<Models.User> userList = new List<Models.User>();
-        IGraphServiceUsersCollectionPage? graphUsers;
 
-        do // Look up users at least once. Request again if the data comes back paged.
+
+        var graphUsers = await _graphServiceClient.Users
+        .Request()
+        .Filter(filter.ToString())
+        // Selects certain properties from the User object : https://docs.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0#properties
+        // Add any additional fields here and then select them into the user model below
+        .Select("id, displayName")
+        .GetAsync();
+        userList.AddRange(graphUsers.Select(graphUser => new Models.User()
         {
-            graphUsers = await _graphServiceClient.Users
-            .Request()
-            .Filter(filter.ToString())
-            // Selects certain properties from the User object : https://docs.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0#properties
-            // Add any additional fields here and then select them into the user model below
-            .Select("id, displayName")
-            .GetAsync();
+            UserId = graphUser.Id,
+            DisplayName = graphUser.DisplayName
+        }));
+
+        while(graphUsers.NextPageRequest != null)
+        {
+            graphUsers = await graphUsers.NextPageRequest.GetAsync();
             userList.AddRange(graphUsers.Select(graphUser => new Models.User()
             {
                 UserId = graphUser.Id,
                 DisplayName = graphUser.DisplayName
             }));
-        } while (graphUsers.NextPageRequest != null);
+        };
 
         return userList;
     }
