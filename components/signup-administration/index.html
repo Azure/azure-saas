@@ -19,29 +19,34 @@
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
 
 <title>SaaS.SignupAdministration.Web | Azure SaaS Dev Kit Docs</title>
-<meta name="description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
-
-Sign …">
+<meta name="description" content="Overview
+The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS …">
 <meta property="og:title" content="SaaS.SignupAdministration.Web" />
-<meta property="og:description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
- Sign up for an account Go through an onboarding flow to create a new tenant Manage their existing tenants.  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.
-Authorization using MSAL to auth and get token for admin service" />
+<meta property="og:description" content="Overview The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS solution. End Users/Customers can visit this site to:
+  Sign up for an account
+  Go through an onboarding flow to create a new tenant
+  Manage their existing tenants.
+  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/signup-administration/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-14T16:45:28-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-14T19:25:26-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.SignupAdministration.Web">
-<meta itemprop="description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
- Sign up for an account Go through an onboarding flow to create a new tenant Manage their existing tenants.  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.
-Authorization using MSAL to auth and get token for admin service">
-<meta itemprop="dateModified" content="2022-05-14T16:45:28-04:00" />
-<meta itemprop="wordCount" content="595">
+<meta itemprop="description" content="Overview The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS solution. End Users/Customers can visit this site to:
+  Sign up for an account
+  Go through an onboarding flow to create a new tenant
+  Manage their existing tenants.
+  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.">
+<meta itemprop="dateModified" content="2022-05-14T19:25:26-04:00" />
+<meta itemprop="wordCount" content="748">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.SignupAdministration.Web"/>
-<meta name="twitter:description" content="The Signup/Administration site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:
- Sign up for an account Go through an onboarding flow to create a new tenant Manage their existing tenants.  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.
-Authorization using MSAL to auth and get token for admin service"/>
+<meta name="twitter:description" content="Overview The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS solution. End Users/Customers can visit this site to:
+  Sign up for an account
+  Go through an onboarding flow to create a new tenant
+  Manage their existing tenants.
+  This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application."/>
 
 
 
@@ -196,9 +201,21 @@ Authorization using MSAL to auth and get token for admin service"/>
 
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
-    <li><a href="#authorization">Authorization</a></li>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#how-to-run-locally">How to Run Locally</a>
+      <ul>
+        <li><a href="#configuration-and-secrets">Configuration and Secrets</a></li>
+      </ul>
+    </li>
+    <li><a href="#module-design">Module Design</a>
+      <ul>
+        <li><a href="#dependencies">Dependencies</a></li>
+        <li><a href="#consumers">Consumers</a></li>
+        <li><a href="#authentication">Authentication</a></li>
+        <li><a href="#nswag">NSwag</a></li>
+      </ul>
+    </li>
     <li><a href="#design-considerations">Design Considerations</a></li>
-    <li><a href="#running-locally">Running Locally</a></li>
     <li><a href="#faq-and-design-considerations">FAQ and Design Considerations</a></li>
     <li><a href="#signup-administration-flows">Signup Administration Flows</a></li>
     <li><a href="#sign-in">Sign In</a></li>
@@ -264,23 +281,36 @@ Authorization using MSAL to auth and get token for admin service"/>
 
 		
 	</header>    
-	<p>The <em>Signup/Administration</em> site is an application meant to faciliate self service onboarding to your SaaS solution. Users can visit this site to:</p>
+	<h2 id="overview">Overview</h2>
+<p>The <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">SaaS.SignupAdministration.Web</a> (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS solution. End Users/Customers can visit this site to:</p>
 <ul>
-<li>Sign up for an account</li>
-<li>Go through an onboarding flow to create a new tenant</li>
-<li>Manage their existing tenants.</li>
+<li>
+<p>Sign up for an account</p>
+</li>
+<li>
+<p>Go through an onboarding flow to create a new tenant</p>
+</li>
+<li>
+<p>Manage their existing tenants.</p>
+</li>
 </ul>
 <p>This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.</p>
-<h2 id="authorization">Authorization</h2>
+<h2 id="how-to-run-locally">How to Run Locally</h2>
+<p>Instructions to get this module running on your local dev machine are located in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">readme.md</a>.</p>
+<h3 id="configuration-and-secrets">Configuration and Secrets</h3>
+<p>A list of app settings and secrets can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>. All non-secret values will have a default value in the <code>appsettings.json</code> file. All secret values will need to be set using the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;tabs=windows">.NET secrets manager</a> when running the project locally, as it is not reccomended to have these secret values in your <code>appsettings.json</code> file.</p>
+<p>When deployed to Azure, the application is configured to load in its secrets from <a href="https://docs.microsoft.com/en-us/azure/key-vault/general/overview">Azure Key Vault</a> instead. If you deploy the project using our bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the key vault using a <a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">System Assigned Managed Identity</a>. The SignupAdmin module is also configured with <a href="https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix">key name prefixes</a> to only import secrets with the prefix of <code>signupadmin-</code>, as other modules share the same keyvault.</p>
+<h2 id="module-design">Module Design</h2>
+<h3 id="dependencies">Dependencies</h3>
+<h3 id="consumers">Consumers</h3>
+<h3 id="authentication">Authentication</h3>
 <p>using MSAL to auth and get token for admin service</p>
+<h3 id="nswag">NSwag</h3>
 <h2 id="design-considerations">Design Considerations</h2>
 <p>For ease of management, we have chosen to incorporate the global administrative functionality into this application. You may choose to separate this functionality into a different application if you require more administrative functionality than just tenant and user management.</p>
 <blockquote>
 <p>We chose to use NSwag to generate our client implementation for the Admin Service. The NSwag project provides tools to generate OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI specifications. This provides us a ready-to-use HTTP client without having to write much boilerplate. Read more about <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&amp;tabs=visual-studio">using NSwag on ASP.NET projects</a></p>
 </blockquote>
-<h2 id="running-locally">Running Locally</h2>
-<p>Instructions to get this module running on your local dev machine are located here:
-<a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration</a></p>
 <h2 id="faq-and-design-considerations">FAQ and Design Considerations</h2>
 <ul>
 <li>saas notifications &ndash; current implementation vs eventing system</li>
@@ -370,7 +400,7 @@ signup--&gt;&gt;user : Error, User does not exist
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/6d53cc14c703b4023b77af6853576a25429a0123">work on admin service and permissions service docs (6d53cc1)</a>
+  Last modified May 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/4bcfe210eae9366e4f41e27b21642e5b77195fd3">signupadmin docs (4bcfe21)</a>
 </div>
 
 </div>
