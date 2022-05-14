@@ -20,26 +20,24 @@
 
 <title>SaaS.Permissions.Service | Azure SaaS Dev Kit Docs</title>
 <meta name="description" content="Overview
-The SaaS.Permissions.Service is a component of the Identity Framework. It is an API that serves 2 main functions:
-
-Handles CRUD operations …">
+The SaaS.Permissions.Service (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions: …">
 <meta property="og:title" content="SaaS.Permissions.Service" />
-<meta property="og:description" content="Overview The SaaS.Permissions.Service is a component of the Identity Framework. It is an API that serves 2 main functions:
- Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  Running Locally Instructions to get this module running on your local dev machine are located here: https://github." />
+<meta property="og:description" content="Overview The SaaS.Permissions.Service (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions:
+ Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the project readme." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/permissions-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-14T12:22:37-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-14T16:45:28-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Permissions.Service">
-<meta itemprop="description" content="Overview The SaaS.Permissions.Service is a component of the Identity Framework. It is an API that serves 2 main functions:
- Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  Running Locally Instructions to get this module running on your local dev machine are located here: https://github.">
-<meta itemprop="dateModified" content="2022-05-14T12:22:37-04:00" />
-<meta itemprop="wordCount" content="689">
+<meta itemprop="description" content="Overview The SaaS.Permissions.Service (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions:
+ Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the project readme.">
+<meta itemprop="dateModified" content="2022-05-14T16:45:28-04:00" />
+<meta itemprop="wordCount" content="916">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Permissions.Service"/>
-<meta name="twitter:description" content="Overview The SaaS.Permissions.Service is a component of the Identity Framework. It is an API that serves 2 main functions:
- Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  Running Locally Instructions to get this module running on your local dev machine are located here: https://github."/>
+<meta name="twitter:description" content="Overview The SaaS.Permissions.Service (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions:
+ Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the project readme."/>
 
 
 
@@ -140,8 +138,6 @@ Handles CRUD operations …">
   <a href="/azure-saas/components/identity/identity-flows/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-flows"><span class="">Identity Flows</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitycaveats-li">
   <a href="/azure-saas/components/identity/caveats/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitycaveats"><span class="">Caveats &amp; Limitations</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-setup-li">
-  <a href="/azure-saas/components/identity/identity-setup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-setup"><span class="">Identity Setup Instructions</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsadmin-service-li">
@@ -197,13 +193,22 @@ Handles CRUD operations …">
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
     <li><a href="#overview">Overview</a></li>
-    <li><a href="#running-locally">Running Locally</a></li>
-    <li><a href="#dependencies">Dependencies:</a></li>
-    <li><a href="#consumers">Consumers</a></li>
-    <li><a href="#authentication">Authentication</a></li>
-    <li><a href="#data-storage">Data Storage</a></li>
-    <li><a href="#microsoft-graph-api">Microsoft Graph API</a></li>
-    <li><a href="#design-considerationsfaq">Design Considerations/FAQ</a></li>
+    <li><a href="#how-to-run-locally">How to Run Locally</a>
+      <ul>
+        <li><a href="#configuration-and-secrets">Configuration and Secrets</a></li>
+      </ul>
+    </li>
+    <li><a href="#module-design">Module Design</a>
+      <ul>
+        <li><a href="#dependencies">Dependencies</a></li>
+        <li><a href="#consumers">Consumers</a></li>
+        <li><a href="#authentication">Authentication</a></li>
+        <li><a href="#database">Database</a></li>
+        <li><a href="#microsoft-graph-api">Microsoft Graph API</a></li>
+        <li><a href="#swagger">Swagger</a></li>
+      </ul>
+    </li>
+    <li><a href="#faq-and-design-considerations">FAQ and Design Considerations</a></li>
   </ul>
 </nav></div>
 
@@ -267,42 +272,51 @@ Handles CRUD operations …">
 		
 	</header>    
 	<h2 id="overview">Overview</h2>
-<p>The <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">SaaS.Permissions.Service</a> is a component of the <a href="../">Identity Framework</a>. It is an API that serves 2 main functions:</p>
+<p>The <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">SaaS.Permissions.Service</a> (aka Permissions Service) is a component of the <a href="../">Identity Framework</a>. It is an API that serves 2 main functions:</p>
 <ol>
 <li>Handles CRUD operations from the rest of the solution for permission data</li>
 <li>Serves as an endpoint for the <a href="../identity-provider">Identity Provider</a> to retrieve permission data in order to enrich the user token with claims</li>
 </ol>
-<h2 id="running-locally">Running Locally</h2>
-<!-- raw HTML omitted -->
-<p>Instructions to get this module running on your local dev machine are located here: <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity">https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity</a></p>
-<p>The permissions service is an API that is responsible for CRUD operations on users permissions.</p>
-<p>The API uses Entity Framework to manage the SQL Server Connection and Schema.</p>
-<h2 id="dependencies">Dependencies:</h2>
+<h2 id="how-to-run-locally">How to Run Locally</h2>
+<p>Instructions to get this module running on your local dev machine are located in the project <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>.</p>
+<h3 id="configuration-and-secrets">Configuration and Secrets</h3>
+<p>A list of app settings and secrets can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>. All non-secret values will have a default value in the <code>appsettings.json</code> file. All secret values will need to be set using the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;tabs=windows">.NET secrets manager</a> when running the project locally, as it is not reccomended to have these secret values in your <code>appsettings.json</code> file.</p>
+<p>When deployed to Azure, the application is configured to load in its secrets from <a href="https://docs.microsoft.com/en-us/azure/key-vault/general/overview">Azure Key Vault</a> instead. If you deploy the project using our bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the key vault using a <a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">System Assigned Managed Identity</a>. The Permissions Service module is also configured with <a href="https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix">key name prefixes</a> to only import secrets with the prefix of <code>permissions-</code>, as other modules share the same keyvault.</p>
+<h2 id="module-design">Module Design</h2>
+<h3 id="dependencies">Dependencies</h3>
 <ul>
 <li>SQL Server Database</li>
 <li>Microsoft Graph API</li>
 </ul>
-<h2 id="consumers">Consumers</h2>
+<h3 id="consumers">Consumers</h3>
 <ul>
 <li><a href="../identity-provider">Identity Provider</a> (Azure AD B2C)</li>
 <li><a href="../../components/admin-service">Admin Service</a></li>
 </ul>
-<h2 id="authentication">Authentication</h2>
+<h3 id="authentication">Authentication</h3>
 <p>The Permissions Service is secured using <a href="https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0#configure-certificate-validation">TLS Mutual Authentication</a> (Certificate Authentication). The application layer is configured to verify the authenticity of the certificate by comparing the thumbprint of the certificate against a configuration value. For TLS Mutual Authentication to work properly, the web server must also be configured to forward the certificate to the application layer. This is done for you if you deploy the application following the steps in the <a href="../../quick-start">Quick Start</a> guide, but if you choose to run the code in an environment you provision, you will need to do <a href="https://docs.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth">this configuration</a> yourself.</p>
 <blockquote>
 <p><strong>Important!</strong><br>
 The certificate that gets deployed out of the box by following the Quick Start is a self signed certificate. Self signed certificates are not meant for production use, and it highly reccomended that you replace this certificate with one signed by a Certificate Authority before using this module in production.</p>
 </blockquote>
-<h2 id="data-storage">Data Storage</h2>
-<p><a href="https://docs.microsoft.com/en-us/ef/core/">Entity Framework Core</a> is used to manage the database schema and connections. We are using <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/new-database">Code First Development</a> and, if no data or schema exists in the database on application startup, the application will automatically create the database schema that is defined in our <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Data">model files</a>. If you make any changes to these models, you will need to preform a <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/">migration</a> to upgrade the database schema.</p>
-<h2 id="microsoft-graph-api">Microsoft Graph API</h2>
+<h3 id="database">Database</h3>
+<p><a href="https://docs.microsoft.com/en-us/ef/core/">Entity Framework Core</a> is used to manage the SQL Server Database schema and connections. We are using <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/new-database">Code First Development</a> and, if no data or schema exists in the database on application startup, the application will automatically create the database schema that is defined in our <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Data">model files</a>. If you make any changes to these models, you will need to preform a <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/">migration</a> to upgrade the database schema.</p>
+<h3 id="microsoft-graph-api">Microsoft Graph API</h3>
 <p>The <a href="https://docs.microsoft.com/en-us/graph/overview">Microsoft Graph API</a> is an API that provides a unified experience for accessing data on users within an AAD or AAD B2C tenant. Since we are using Azure AD B2C as our default Identity Provider, we must also use the Graph API when it becomes neccesary to fetch data on our users. If you&rsquo;d like to replace the identity provider with something else, you must also replace the Graph API calls within the permissions service to gather user data. These areas are clearly labeled with comments inline with the code.</p>
-<h2 id="design-considerationsfaq">Design Considerations/FAQ</h2>
+<h3 id="swagger">Swagger</h3>
+<p>The Permissions Service uses <a href="https://www.nuget.org/packages/Swashbuckle">Swashbuckle</a> to generate the OpenAPI definition and a UI for testing. This definition is also consumed by the Admin Service to generate its client implementation for interfacing with this API. Read more about using it <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-6.0&amp;tabs=visual-studio">here</a>.</p>
+<h2 id="faq-and-design-considerations">FAQ and Design Considerations</h2>
 <ul>
 <li>
 <p>Q: Why did we choose to secure the permissions service with certificate authentication over API Keys/JWT Tokens/Another Method?</p>
 <ul>
 <li>A: The communication between Azure AD B2C (our default Identity Provider) and the permissions service must be secured with either <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-api-connector-token-enrichment?pivots=b2c-custom-policy#configure-the-restful-api-technical-profile">Basic or Certificate Auth</a> and it is not considered best practice to use Basic authentication in a production environment.</li>
+</ul>
+</li>
+<li>
+<p>Q: Why did we choose to not give the permissions service it&rsquo;s own key vault?</p>
+<ul>
+<li>A: For simplicity&rsquo;s sake, we decided to use key name prefixes to store keys for each module across the entire application into one keyvault. This is an acceptable scenario, but for tighter security, you may choose to separate the secrets for each module into a dedicated keyvault.</li>
 </ul>
 </li>
 <li>
@@ -320,7 +334,7 @@ The certificate that gets deployed out of the box by following the Quick Start i
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/3048c6dedcc4839fecee6e794f99ed3aae1603ed">more work on identity (3048c6d)</a>
+  Last modified May 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/6d53cc14c703b4023b77af6853576a25429a0123">work on admin service and permissions service docs (6d53cc1)</a>
 </div>
 
 </div>

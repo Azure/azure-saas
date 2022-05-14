@@ -19,30 +19,31 @@
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
 
 <title>SaaS.Admin.Service | Azure SaaS Dev Kit Docs</title>
-<meta name="description" content="The Admin Service has two main responsibilities:
+<meta name="description" content="Overview
+The SaaS.Admin.Service (aka Admin Service) is an API that has two main responsibilities:
 
 Preforming CRUD operations on tenants
-Serving as a broker to assign roles and permissions to …">
+Serving as a …">
 <meta property="og:title" content="SaaS.Admin.Service" />
-<meta property="og:description" content="The Admin Service has two main responsibilities:
- Preforming CRUD operations on tenants Serving as a broker to assign roles and permissions to tenants.  Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin
-Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Saas.Application.Web  Claims authorization is preformed at the Admin API using middleware. When the service receives a request to add user roles to a particular tenant, the admin service is first responsible for ensuring the user has a claim to that tenant before forwarding the request to the Identity API." />
+<meta property="og:description" content="Overview The SaaS.Admin.Service (aka Admin Service) is an API that has two main responsibilities:
+ Preforming CRUD operations on tenants Serving as a broker to the permissions API to assign roles and permissions to tenants  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.md.
+Configuration and Secrets A list of app settings and secrets can be found in the module&rsquo;s readme." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/admin-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-04-22T16:35:43-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-14T16:45:28-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Admin.Service">
-<meta itemprop="description" content="The Admin Service has two main responsibilities:
- Preforming CRUD operations on tenants Serving as a broker to assign roles and permissions to tenants.  Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin
-Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Saas.Application.Web  Claims authorization is preformed at the Admin API using middleware. When the service receives a request to add user roles to a particular tenant, the admin service is first responsible for ensuring the user has a claim to that tenant before forwarding the request to the Identity API.">
-<meta itemprop="dateModified" content="2022-04-22T16:35:43-04:00" />
-<meta itemprop="wordCount" content="165">
+<meta itemprop="description" content="Overview The SaaS.Admin.Service (aka Admin Service) is an API that has two main responsibilities:
+ Preforming CRUD operations on tenants Serving as a broker to the permissions API to assign roles and permissions to tenants  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.md.
+Configuration and Secrets A list of app settings and secrets can be found in the module&rsquo;s readme.">
+<meta itemprop="dateModified" content="2022-05-14T16:45:28-04:00" />
+<meta itemprop="wordCount" content="626">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Admin.Service"/>
-<meta name="twitter:description" content="The Admin Service has two main responsibilities:
- Preforming CRUD operations on tenants Serving as a broker to assign roles and permissions to tenants.  Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin
-Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Saas.Application.Web  Claims authorization is preformed at the Admin API using middleware. When the service receives a request to add user roles to a particular tenant, the admin service is first responsible for ensuring the user has a claim to that tenant before forwarding the request to the Identity API."/>
+<meta name="twitter:description" content="Overview The SaaS.Admin.Service (aka Admin Service) is an API that has two main responsibilities:
+ Preforming CRUD operations on tenants Serving as a broker to the permissions API to assign roles and permissions to tenants  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.md.
+Configuration and Secrets A list of app settings and secrets can be found in the module&rsquo;s readme."/>
 
 
 
@@ -143,8 +144,6 @@ Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Sa
   <a href="/azure-saas/components/identity/identity-flows/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-flows"><span class="">Identity Flows</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitycaveats-li">
   <a href="/azure-saas/components/identity/caveats/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitycaveats"><span class="">Caveats &amp; Limitations</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-setup-li">
-  <a href="/azure-saas/components/identity/identity-setup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-setup"><span class="">Identity Setup Instructions</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-azure-saascomponentsadmin-service-li">
@@ -199,11 +198,22 @@ Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Sa
 
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
-    <li><a href="#running-locally">Running Locally</a></li>
-    <li><a href="#dependencies">Dependencies</a></li>
-    <li><a href="#consumers">Consumers</a></li>
-    <li><a href="#entity-framework">Entity Framework</a></li>
-    <li><a href="#design-considerations">Design Considerations</a></li>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#how-to-run-locally">How to Run Locally</a>
+      <ul>
+        <li><a href="#configuration-and-secrets">Configuration and Secrets</a></li>
+      </ul>
+    </li>
+    <li><a href="#module-design">Module Design</a>
+      <ul>
+        <li><a href="#dependencies">Dependencies</a></li>
+        <li><a href="#consumers">Consumers</a></li>
+        <li><a href="#authentication">Authentication</a></li>
+        <li><a href="#database">Database</a></li>
+        <li><a href="#swagger-and-nswag">Swagger and NSwag</a></li>
+      </ul>
+    </li>
+    <li><a href="#faq-and-design-considerations">FAQ and Design Considerations</a></li>
   </ul>
 </nav></div>
 
@@ -263,39 +273,62 @@ Dependencies  SaaS.Identity.Service  Consumers  SaaS.SignupAdministration.Web Sa
 
 		
 	</header>    
-	<p>The Admin Service has two main responsibilities:</p>
+	<h2 id="overview">Overview</h2>
+<p>The <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin">SaaS.Admin.Service</a> (aka Admin Service) is an API that has two main responsibilities:</p>
 <ol>
 <li>Preforming CRUD operations on tenants</li>
-<li>Serving as a broker to assign roles and permissions to tenants.</li>
+<li>Serving as a broker to the permissions API to assign roles and permissions to tenants</li>
 </ol>
-<h2 id="running-locally">Running Locally</h2>
-<p>Instructions to get this module running on your local dev machine are located here: <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin">https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin</a></p>
-<h2 id="dependencies">Dependencies</h2>
+<h2 id="how-to-run-locally">How to Run Locally</h2>
+<p>Instructions to get this module running on your local dev machine are located in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin">readme.md</a>.</p>
+<h3 id="configuration-and-secrets">Configuration and Secrets</h3>
+<p>A list of app settings and secrets can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>. All non-secret values will have a default value in the <code>appsettings.json</code> file. All secret values will need to be set using the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;tabs=windows">.NET secrets manager</a> when running the project locally, as it is not reccomended to have these secret values in your <code>appsettings.json</code> file.</p>
+<p>When deployed to Azure, the application is configured to load in its secrets from <a href="https://docs.microsoft.com/en-us/azure/key-vault/general/overview">Azure Key Vault</a> instead. If you deploy the project using our bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the key vault using a <a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">System Assigned Managed Identity</a>. The Admin Service module is also configured with <a href="https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix">key name prefixes</a> to only import secrets with the prefix of <code>admin-</code>, as other modules share the same keyvault.</p>
+<h2 id="module-design">Module Design</h2>
+<h3 id="dependencies">Dependencies</h3>
 <ul>
-<li>SaaS.Identity.Service</li>
+<li><a href="../identity/permissions-service">SaaS.Permissions.Service</a>
+<ul>
+<li>Depends on the SaaS.Permissions.Service for CRUD operations on permissions records</li>
 </ul>
-<h2 id="consumers">Consumers</h2>
+</li>
+<li><a href="../identity/identity-provider">Identity Provider</a>
 <ul>
-<li>SaaS.SignupAdministration.Web</li>
-<li>Saas.Application.Web</li>
+<li>Depends on the identity provider to authenticate callers via their JWT token</li>
 </ul>
-<p>Claims authorization is preformed at the Admin API using middleware.
-When the service receives a request to add user roles to a particular tenant, the admin service is first responsible for ensuring the user has a claim to that tenant
-before forwarding the request to the Identity API.</p>
-<h2 id="entity-framework">Entity Framework</h2>
-<p>This project uses Entity Framework migrations to manage the database schema and changes that occur between versions while in developoment.</p>
-<p>To learn more about migrations:
-<a href="https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli">https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli</a></p>
-<p>Migrations tutorial: <a href="https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations?view=aspnetcore-6.0">https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations?view=aspnetcore-6.0</a></p>
-<h2 id="design-considerations">Design Considerations</h2>
+</li>
+</ul>
+<h3 id="consumers">Consumers</h3>
 <ul>
-<li>The API uses <a href="https://www.nuget.org/packages/Swashbuckle">Swashbuckle</a> to generate the OpenAPI definition and a UI for testing. This definition is also consumed by the Signup Administration site to generate their client implementation for interfacing with this API. Read more about it <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-6.0&amp;tabs=visual-studio">here</a></li>
+<li>
+<p><a href="../signup-administration">SaaS.SignupAdministration.Web</a></p>
+</li>
+<li>
+<p><a href="../saas-application">Saas.Application.Web</a></p>
+</li>
+</ul>
+<h3 id="authentication">Authentication</h3>
+<p>The Admin Service is secured using OAuth 2.0 authentication via the Microsoft Identity Platform. Incoming requests must contain a valid JWT Bearer token on the <code>Authorization</code> header. The token must contain a valid scope that the calling application has been authorized to use. To learn more about how this process works and is configured in B2C, we highly reccomend checking out our list of <a href="(../../resources/additional-recommended-resources#identity-focused)">identity resources &amp; documentation</a>.</p>
+<p>For authorization, we have also included middleware on the Admin Service that extracts the user&rsquo;s permission records from the JWT token claims and preforms authorization based on policies applied at the route level. In other words, before preforming any action on a tenant once a request is received, the admin service will first ensure that the user making the request has a claim to that tenant on their token. If there is no claim to that tenant, or their role does not match what they&rsquo;re trying to do, the request will be denied.</p>
+<p>Implementing this in a multitenant fashion is often the most difficult part of starting a SaaS project, so we tried to make it as extensible as possible to support a wide range of scenarios.</p>
+<h3 id="database">Database</h3>
+<p><a href="https://docs.microsoft.com/en-us/ef/core/">Entity Framework Core</a> is used to manage the SQL Server Database schema and connections. We are using <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/new-database">Code First Development</a> and, if no data or schema exists in the database on application startup, the application will automatically create the database schema that is defined in our <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Data">model files</a>. If you make any changes to these models, you will need to preform a <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/">migration</a> to upgrade the database schema.</p>
+<h3 id="swagger-and-nswag">Swagger and NSwag</h3>
+<p>The Admin Service uses <a href="https://www.nuget.org/packages/Swashbuckle">Swashbuckle</a> to generate the OpenAPI definition and a UI for testing. This definition is also consumed by the Signup Administration site to generate its client implementation for interfacing with this API. Read more about using it <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-6.0&amp;tabs=visual-studio">here</a>.</p>
+<p>In addition, it also uses NSwag to consume the OpenAPI definition for the Permissions Service to generate a client implementation for that. Read more about NSwag <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&amp;tabs=visual-studio">here</a>.</p>
+<h2 id="faq-and-design-considerations">FAQ and Design Considerations</h2>
+<ul>
+<li>Q: Why did we choose to use strings to store our IDs and not GUIDs?
+<ul>
+<li>A: The default implementation that we chose is to use GUIDs for IDs, but store them as strings. This decisision was made so that consumers of the ASDK project would not be forced into using GUIDs, should they want to use something else for IDs.</li>
+</ul>
+</li>
 </ul>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/510330d795963d97a6b3400356a020b7da9fda2c">some more work on quick start and rename some modules (510330d)</a>
+  Last modified May 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/6d53cc14c703b4023b77af6853576a25429a0123">work on admin service and permissions service docs (6d53cc1)</a>
 </div>
 
 </div>

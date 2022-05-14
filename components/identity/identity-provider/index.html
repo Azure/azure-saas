@@ -27,13 +27,13 @@ What does B2C Give Us? Azure Active Directory B2C provides business-to-customer 
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/identity-provider/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-13T14:27:55-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-14T16:45:28-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Identity Provider">
 <meta itemprop="description" content="Overview For the identity framework, we chose to use Azure B2C as our default identity provider. If you&rsquo;d like to use another identity provider such as Azure AAD or a different 3rd party tool, you can swap it out. We have a default configuration
 What does B2C Give Us? Azure Active Directory B2C provides business-to-customer identity as a service. It enables easily authenticate users to your application using their preferred identity provider, and is configurable to support a wide array of scenarios.">
-<meta itemprop="dateModified" content="2022-05-13T14:27:55-04:00" />
-<meta itemprop="wordCount" content="603">
+<meta itemprop="dateModified" content="2022-05-14T16:45:28-04:00" />
+<meta itemprop="wordCount" content="610">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Identity Provider"/>
 <meta name="twitter:description" content="Overview For the identity framework, we chose to use Azure B2C as our default identity provider. If you&rsquo;d like to use another identity provider such as Azure AAD or a different 3rd party tool, you can swap it out. We have a default configuration
@@ -138,8 +138,6 @@ What does B2C Give Us? Azure Active Directory B2C provides business-to-customer 
   <a href="/azure-saas/components/identity/identity-flows/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-flows"><span class="">Identity Flows</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitycaveats-li">
   <a href="/azure-saas/components/identity/caveats/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitycaveats"><span class="">Caveats &amp; Limitations</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-setup-li">
-  <a href="/azure-saas/components/identity/identity-setup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-setup"><span class="">Identity Setup Instructions</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsadmin-service-li">
@@ -276,7 +274,7 @@ What does B2C Give Us? Azure Active Directory B2C provides business-to-customer 
 <li>Provide a hosted SignIn and SignUp page that users can be directed to</li>
 <li>Reach out to the <a href="../permissions-service">SaaS.Permissions.Service</a> upon a user signing in to fetch their application permissions and roles</li>
 </ul>
-<p>You can change/extend the behavior of B2C to do things like collect more information during signup, force users to enroll in Multi-Factor Authentication (MFA), and much more by modifying the custom policies.</p>
+<p>You can change/extend the behavior of the B2C tenant that gets deployed with ASDK to do things like collect more information during signup, force users to enroll in Multi-Factor Authentication (MFA), and much more by modifying the custom policies.</p>
 <h3 id="app-roles-and-global-admin">App Roles and Global Admin</h3>
 <p>We are using <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps">App Roles</a> to grant users &ldquo;Global Admin&rdquo; capabilites for the application. This App Role should only be granted to staff users that need it to administrate ALL the tenants across the entire SaaS solution. These roles are stored directly in B2C and are returned in the JWT token claims when the user signs in.</p>
 <p><strong>How do I add a user to the default Global Admin role?</strong></p>
@@ -316,7 +314,7 @@ What does B2C Give Us? Azure Active Directory B2C provides business-to-customer 
 <h2 id="design-considerations-and-faq">Design Considerations and FAQ</h2>
 <ul>
 <li>
-<p>Q: Why did we choose b2c?</p>
+<p>Q: Why did we choose B2C?</p>
 <ul>
 <li>A: We chose B2C because, in additional to authenticating with &ldquo;local&rdquo; accounts, it can be easily extended to support a wide array of other identity providers such as Azure AD, Github, and many more. See the <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-identity-provider">documentation</a> for details.</li>
 </ul>
@@ -338,7 +336,7 @@ What does B2C Give Us? Azure Active Directory B2C provides business-to-customer 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 13, 2022: <a href="https://github.com/Azure/azure-saas/commit/1d9434ec168e4da49ffe23bad08c5a6e84186b22">app roles docs (1d9434e)</a>
+  Last modified May 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/6d53cc14c703b4023b77af6853576a25429a0123">work on admin service and permissions service docs (6d53cc1)</a>
 </div>
 
 </div>

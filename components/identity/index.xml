@@ -35,7 +35,7 @@
 &lt;li&gt;Provide a hosted SignIn and SignUp page that users can be directed to&lt;/li&gt;
 &lt;li&gt;Reach out to the &lt;a href=&#34;../permissions-service&#34;&gt;SaaS.Permissions.Service&lt;/a&gt; upon a user signing in to fetch their application permissions and roles&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;You can change/extend the behavior of B2C to do things like collect more information during signup, force users to enroll in Multi-Factor Authentication (MFA), and much more by modifying the custom policies.&lt;/p&gt;
+&lt;p&gt;You can change/extend the behavior of the B2C tenant that gets deployed with ASDK to do things like collect more information during signup, force users to enroll in Multi-Factor Authentication (MFA), and much more by modifying the custom policies.&lt;/p&gt;
 &lt;h3 id=&#34;app-roles-and-global-admin&#34;&gt;App Roles and Global Admin&lt;/h3&gt;
 &lt;p&gt;We are using &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps&#34;&gt;App Roles&lt;/a&gt; to grant users &amp;ldquo;Global Admin&amp;rdquo; capabilites for the application. This App Role should only be granted to staff users that need it to administrate ALL the tenants across the entire SaaS solution. These roles are stored directly in B2C and are returned in the JWT token claims when the user signs in.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;How do I add a user to the default Global Admin role?&lt;/strong&gt;&lt;/p&gt;
@@ -75,7 +75,7 @@
 &lt;h2 id=&#34;design-considerations-and-faq&#34;&gt;Design Considerations and FAQ&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;Q: Why did we choose b2c?&lt;/p&gt;
+&lt;p&gt;Q: Why did we choose B2C?&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;A: We chose B2C because, in additional to authenticating with &amp;ldquo;local&amp;rdquo; accounts, it can be easily extended to support a wide array of other identity providers such as Azure AD, Github, and many more. See the &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-identity-provider&#34;&gt;documentation&lt;/a&gt; for details.&lt;/li&gt;
 &lt;/ul&gt;
@@ -107,42 +107,51 @@
         
         
         &lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
-&lt;p&gt;The &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions&#34;&gt;SaaS.Permissions.Service&lt;/a&gt; is a component of the &lt;a href=&#34;../&#34;&gt;Identity Framework&lt;/a&gt;. It is an API that serves 2 main functions:&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions&#34;&gt;SaaS.Permissions.Service&lt;/a&gt; (aka Permissions Service) is a component of the &lt;a href=&#34;../&#34;&gt;Identity Framework&lt;/a&gt;. It is an API that serves 2 main functions:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Handles CRUD operations from the rest of the solution for permission data&lt;/li&gt;
 &lt;li&gt;Serves as an endpoint for the &lt;a href=&#34;../identity-provider&#34;&gt;Identity Provider&lt;/a&gt; to retrieve permission data in order to enrich the user token with claims&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h2 id=&#34;running-locally&#34;&gt;Running Locally&lt;/h2&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;Instructions to get this module running on your local dev machine are located here: &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity&#34;&gt;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;The permissions service is an API that is responsible for CRUD operations on users permissions.&lt;/p&gt;
-&lt;p&gt;The API uses Entity Framework to manage the SQL Server Connection and Schema.&lt;/p&gt;
-&lt;h2 id=&#34;dependencies&#34;&gt;Dependencies:&lt;/h2&gt;
+&lt;h2 id=&#34;how-to-run-locally&#34;&gt;How to Run Locally&lt;/h2&gt;
+&lt;p&gt;Instructions to get this module running on your local dev machine are located in the project &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions&#34;&gt;readme.md&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;configuration-and-secrets&#34;&gt;Configuration and Secrets&lt;/h3&gt;
+&lt;p&gt;A list of app settings and secrets can be found in the module&amp;rsquo;s &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions&#34;&gt;readme.md&lt;/a&gt;. All non-secret values will have a default value in the &lt;code&gt;appsettings.json&lt;/code&gt; file. All secret values will need to be set using the &lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;amp;tabs=windows&#34;&gt;.NET secrets manager&lt;/a&gt; when running the project locally, as it is not reccomended to have these secret values in your &lt;code&gt;appsettings.json&lt;/code&gt; file.&lt;/p&gt;
+&lt;p&gt;When deployed to Azure, the application is configured to load in its secrets from &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/key-vault/general/overview&#34;&gt;Azure Key Vault&lt;/a&gt; instead. If you deploy the project using our bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the key vault using a &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview&#34;&gt;System Assigned Managed Identity&lt;/a&gt;. The Permissions Service module is also configured with &lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix&#34;&gt;key name prefixes&lt;/a&gt; to only import secrets with the prefix of &lt;code&gt;permissions-&lt;/code&gt;, as other modules share the same keyvault.&lt;/p&gt;
+&lt;h2 id=&#34;module-design&#34;&gt;Module Design&lt;/h2&gt;
+&lt;h3 id=&#34;dependencies&#34;&gt;Dependencies&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;SQL Server Database&lt;/li&gt;
 &lt;li&gt;Microsoft Graph API&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;consumers&#34;&gt;Consumers&lt;/h2&gt;
+&lt;h3 id=&#34;consumers&#34;&gt;Consumers&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;../identity-provider&#34;&gt;Identity Provider&lt;/a&gt; (Azure AD B2C)&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;../../components/admin-service&#34;&gt;Admin Service&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;authentication&#34;&gt;Authentication&lt;/h2&gt;
+&lt;h3 id=&#34;authentication&#34;&gt;Authentication&lt;/h3&gt;
 &lt;p&gt;The Permissions Service is secured using &lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0#configure-certificate-validation&#34;&gt;TLS Mutual Authentication&lt;/a&gt; (Certificate Authentication). The application layer is configured to verify the authenticity of the certificate by comparing the thumbprint of the certificate against a configuration value. For TLS Mutual Authentication to work properly, the web server must also be configured to forward the certificate to the application layer. This is done for you if you deploy the application following the steps in the &lt;a href=&#34;../../quick-start&#34;&gt;Quick Start&lt;/a&gt; guide, but if you choose to run the code in an environment you provision, you will need to do &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth&#34;&gt;this configuration&lt;/a&gt; yourself.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Important!&lt;/strong&gt;&lt;br&gt;
 The certificate that gets deployed out of the box by following the Quick Start is a self signed certificate. Self signed certificates are not meant for production use, and it highly reccomended that you replace this certificate with one signed by a Certificate Authority before using this module in production.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2 id=&#34;data-storage&#34;&gt;Data Storage&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://docs.microsoft.com/en-us/ef/core/&#34;&gt;Entity Framework Core&lt;/a&gt; is used to manage the database schema and connections. We are using &lt;a href=&#34;https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/new-database&#34;&gt;Code First Development&lt;/a&gt; and, if no data or schema exists in the database on application startup, the application will automatically create the database schema that is defined in our &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Data&#34;&gt;model files&lt;/a&gt;. If you make any changes to these models, you will need to preform a &lt;a href=&#34;https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/&#34;&gt;migration&lt;/a&gt; to upgrade the database schema.&lt;/p&gt;
-&lt;h2 id=&#34;microsoft-graph-api&#34;&gt;Microsoft Graph API&lt;/h2&gt;
+&lt;h3 id=&#34;database&#34;&gt;Database&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.microsoft.com/en-us/ef/core/&#34;&gt;Entity Framework Core&lt;/a&gt; is used to manage the SQL Server Database schema and connections. We are using &lt;a href=&#34;https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/new-database&#34;&gt;Code First Development&lt;/a&gt; and, if no data or schema exists in the database on application startup, the application will automatically create the database schema that is defined in our &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Data&#34;&gt;model files&lt;/a&gt;. If you make any changes to these models, you will need to preform a &lt;a href=&#34;https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/&#34;&gt;migration&lt;/a&gt; to upgrade the database schema.&lt;/p&gt;
+&lt;h3 id=&#34;microsoft-graph-api&#34;&gt;Microsoft Graph API&lt;/h3&gt;
 &lt;p&gt;The &lt;a href=&#34;https://docs.microsoft.com/en-us/graph/overview&#34;&gt;Microsoft Graph API&lt;/a&gt; is an API that provides a unified experience for accessing data on users within an AAD or AAD B2C tenant. Since we are using Azure AD B2C as our default Identity Provider, we must also use the Graph API when it becomes neccesary to fetch data on our users. If you&amp;rsquo;d like to replace the identity provider with something else, you must also replace the Graph API calls within the permissions service to gather user data. These areas are clearly labeled with comments inline with the code.&lt;/p&gt;
-&lt;h2 id=&#34;design-considerationsfaq&#34;&gt;Design Considerations/FAQ&lt;/h2&gt;
+&lt;h3 id=&#34;swagger&#34;&gt;Swagger&lt;/h3&gt;
+&lt;p&gt;The Permissions Service uses &lt;a href=&#34;https://www.nuget.org/packages/Swashbuckle&#34;&gt;Swashbuckle&lt;/a&gt; to generate the OpenAPI definition and a UI for testing. This definition is also consumed by the Admin Service to generate its client implementation for interfacing with this API. Read more about using it &lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-6.0&amp;amp;tabs=visual-studio&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;faq-and-design-considerations&#34;&gt;FAQ and Design Considerations&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;Q: Why did we choose to secure the permissions service with certificate authentication over API Keys/JWT Tokens/Another Method?&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;A: The communication between Azure AD B2C (our default Identity Provider) and the permissions service must be secured with either &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-api-connector-token-enrichment?pivots=b2c-custom-policy#configure-the-restful-api-technical-profile&#34;&gt;Basic or Certificate Auth&lt;/a&gt; and it is not considered best practice to use Basic authentication in a production environment.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Q: Why did we choose to not give the permissions service it&amp;rsquo;s own key vault?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A: For simplicity&amp;rsquo;s sake, we decided to use key name prefixes to store keys for each module across the entire application into one keyvault. This is an acceptable scenario, but for tighter security, you may choose to separate the secrets for each module into a dedicated keyvault.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;
@@ -232,19 +241,6 @@ admin--&amp;gt;&amp;gt;frontend : Ok
 &lt;p&gt;However, if each tenant wants to be able to configure their own completely different IdP (e.g., Okta, Ping, Auth0, Cognito), it would require additional work due to policy limits.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations&#34;&gt;https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations&lt;/a&gt;&lt;/p&gt;
 
-      </description>
-    </item>
-    
-    <item>
-      <title>Components: Identity Setup Instructions</title>
-      <link>https://azure.github.io/azure-saas/components/identity/identity-setup/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://azure.github.io/azure-saas/components/identity/identity-setup/</guid>
-      <description>
-        
-        
-        
       </description>
     </item>
     
