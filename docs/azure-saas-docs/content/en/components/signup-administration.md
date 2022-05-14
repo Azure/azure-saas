@@ -11,6 +11,9 @@ The *Signup/Administration* site is an application meant to faciliate self servi
 
 This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.
 
+## Authorization
+using MSAL to auth and get token for admin service
+
 ## Design Considerations
 
 For ease of management, we have chosen to incorporate the global administrative functionality into this application. You may choose to separate this functionality into a different application if you require more administrative functionality than just tenant and user management.
@@ -22,6 +25,9 @@ For ease of management, we have chosen to incorporate the global administrative 
 Instructions to get this module running on your local dev machine are located here:
 https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration
 
+
+## FAQ and Design Considerations
+- saas notifications -- current implementation vs eventing system
 
 
 ## Signup Administration Flows

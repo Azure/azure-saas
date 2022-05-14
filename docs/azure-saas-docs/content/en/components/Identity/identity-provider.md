@@ -22,7 +22,7 @@ When deploying the B2C Identity Provider via the instructions found in the [Quic
 - Provide a hosted SignIn and SignUp page that users can be directed to
 - Reach out to the [SaaS.Permissions.Service](../permissions-service) upon a user signing in to fetch their application permissions and roles
 
-You can change/extend the behavior of B2C to do things like collect more information during signup, force users to enroll in Multi-Factor Authentication (MFA), and much more by modifying the custom policies.
+You can change/extend the behavior of the B2C tenant that gets deployed with ASDK to do things like collect more information during signup, force users to enroll in Multi-Factor Authentication (MFA), and much more by modifying the custom policies.
 
 ### App Roles and Global Admin
 
@@ -54,7 +54,7 @@ If you followed our steps in the [Quick Start](../../quick-start), the user that
 
 ## Design Considerations and FAQ
 
-- Q: Why did we choose b2c?
+- Q: Why did we choose B2C?
   - A: We chose B2C because, in additional to authenticating with "local" accounts, it can be easily extended to support a wide array of other identity providers such as Azure AD, Github, and many more. See the [documentation](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-identity-provider) for details.
 
 - Q: Why did we choose custom policies over user flows?
