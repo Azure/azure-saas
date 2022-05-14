@@ -6,7 +6,7 @@ weight: 50
 
 ## Overview
 
-The [SaaS.Admin.Service](https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin) (aka Admin Service) is an API that has two main responsibilities:
+The [SaaS.Admin.Service](https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin) module (aka Admin Service) is an API that has two main responsibilities:
 
 1. Preforming CRUD operations on tenants
 2. Serving as a broker to the permissions API to assign roles and permissions to tenants

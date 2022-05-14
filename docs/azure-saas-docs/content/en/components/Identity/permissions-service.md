@@ -6,7 +6,7 @@ weight: 55
 
 ## Overview
 
-The [SaaS.Permissions.Service](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions) (aka Permissions Service) is a component of the [Identity Framework](../). It is an API that serves 2 main functions: 
+The [SaaS.Permissions.Service](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions) module (aka Permissions Service) is a component of the [Identity Framework](../). It is an API that serves 2 main functions: 
 
 1. Handles CRUD operations from the rest of the solution for permission data
 2. Serves as an endpoint for the [Identity Provider](../identity-provider) to retrieve permission data in order to enrich the user token with claims

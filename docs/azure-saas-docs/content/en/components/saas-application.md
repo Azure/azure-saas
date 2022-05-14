@@ -3,9 +3,12 @@ type: docs
 title: "SaaS.Application.Web"
 weight: 90
 ---
-The SaaS application is a stub application demonstrating where users of the ASDK project would insert their code. It is the end user application that the SaaS solution is designed around.
+## Overview
 
-How do I use this application? Different scenarios: greenfield, port application, etc.
+The [SaaS.Application.Web] (https://github.com/Azure/azure-saas/tree/main/src/Saas.Application) module is a stub application demonstrating where users of the ASDK project would insert their code. It is the end user, customer facing application that the SaaS solution is designed around.
+
+## How do I use this application?
+Different scenarios: greenfield, port application, etc.
 
 Need to be very crisp about what users need to do to start using this. 
 
