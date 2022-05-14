@@ -14,3 +14,7 @@ weight: 100
 **Caveat**: If all tenants can be assumed to have their own Azure Active Directory (regular B2B), then per-tenant federation could be implemented using Azure AD (multitenant) federation identity provider with “application code” doing the authorization based on specific tenant id claim.
 
 However, if each tenant wants to be able to configure their own completely different IdP (e.g., Okta, Ping, Auth0, Cognito), it would require additional work due to policy limits.
+
+
+
+https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations
