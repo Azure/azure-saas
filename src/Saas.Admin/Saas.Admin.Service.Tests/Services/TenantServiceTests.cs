@@ -2,6 +2,7 @@ namespace Saas.Admin.Service.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using AutoFixture.Xunit2;
@@ -22,9 +23,9 @@ namespace Saas.Admin.Service.Tests
         [Theory, AutoDataNSubstitute]
         public async Task Will_Not_Return_Null_When_No_Tenants(TenantService tenantService)
         {
-            IList<TenantDTO>? result = await tenantService.GetAllTenantsAsync();
+            IEnumerable<TenantDTO>? result = await tenantService.GetAllTenantsAsync();
             Assert.NotNull(result);
-            Assert.Equal(0, result.Count);
+            Assert.Empty(result.ToList());
         }
 
         [Theory, AutoDataNSubstitute]

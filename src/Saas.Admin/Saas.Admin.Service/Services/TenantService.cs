@@ -16,10 +16,10 @@ public class TenantService : ITenantService
         _logger = logger;
     }
 
-    public async Task<IList<TenantDTO>> GetAllTenantsAsync()
+    public async Task<IEnumerable<TenantDTO>> GetAllTenantsAsync()
     {
         List<Tenant> allTenants = await _context.Tenants.ToListAsync();
-        List<TenantDTO> returnList = allTenants.Select(t => new TenantDTO(t)).ToList();
+        IEnumerable<TenantDTO> returnList = allTenants.Select(t => new TenantDTO(t));
         return returnList;
     }
 
@@ -35,6 +35,14 @@ public class TenantService : ITenantService
         return returnValue;
     }
 
+    public async Task<IEnumerable<TenantDTO>> GetTenantsByIdAsync(IEnumerable<string> ids)
+    {
+        IQueryable<Tenant>? tenants = _context.Tenants.Where(t => ids.Contains(t.Id.ToString()));
+
+        List<TenantDTO>? returnValue = await tenants.Select(t => new TenantDTO(t)).ToListAsync();
+        return returnValue;
+    }
+
     public async Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, string adminId)
     {
         Tenant tenant = newTenantRequest.ToTenant();
@@ -45,7 +53,7 @@ public class TenantService : ITenantService
         {
             await _permissionService.AddUserPermissionsToTenantAsync(tenant.Id.ToString(), adminId, AppConstants.Roles.TenantAdmin);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Error setting permission for tenant {tenantName}", newTenantRequest.Name);
             _context.Tenants.Remove(tenant);
@@ -113,4 +121,6 @@ public class TenantService : ITenantService
             throw;
         }
     }
+
+
 }

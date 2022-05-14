@@ -27,7 +27,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Route("GetTenantUsers")]
-    public async Task<IActionResult> GetTenantUsers(string tenantId)
+    public async Task<ActionResult<IEnumerable<User>>> GetTenantUsers(string tenantId)
     {
         // Get user IDs from database
         ICollection<string> userIds = await _permissionsService.GetTenantUsersAsync(tenantId);

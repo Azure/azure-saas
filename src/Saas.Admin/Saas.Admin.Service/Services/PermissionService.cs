@@ -1,4 +1,6 @@
-﻿namespace Saas.Admin.Service.Services;
+﻿using Saas.Admin.Service.Controllers;
+
+namespace Saas.Admin.Service.Services;
 
 public class PermissionService : IPermissionService
 {
@@ -20,9 +22,12 @@ public class PermissionService : IPermissionService
         return await _permissionsServiceClient.GetTenantsForUserAsync(userId, filter);
     }
 
-    public async Task<IEnumerable<string>> GetTenantUsersAsync(string tenantId)
+    public async Task<IEnumerable<UserDTO>> GetTenantUsersAsync(string tenantId)
     {
-        return await _permissionsServiceClient.GetTenantUsersAsync(tenantId);
+        ICollection<User>? users = await _permissionsServiceClient.GetTenantUsersAsync(tenantId);
+
+        IEnumerable<UserDTO>? retVal = users.Select(u => new UserDTO(u.UserId, u.DisplayName));
+        return retVal;
     }
 
     public async Task<IEnumerable<string>> GetUserPermissionsForTenantAsync(string tenantId, string userId)
