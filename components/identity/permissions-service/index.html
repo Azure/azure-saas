@@ -19,35 +19,27 @@
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
 
 <title>SaaS.Permissions.Service | Azure SaaS Dev Kit Docs</title>
-<meta name="description" content="Running Locally
+<meta name="description" content="Overview
+The SaaS.Permissions.Service is a component of the Identity Framework. It is an API that serves 2 main functions:
 
-Instructions to get this module running on your local dev machine are located here: …&lt;/!--&gt;">
+Handles CRUD operations …">
 <meta property="og:title" content="SaaS.Permissions.Service" />
-<meta property="og:description" content="Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity
-The permissions service is an API that is responsible for CRUD operations on users permissions.
-The API uses Entity Framework to manage the SQL Server Connection and Schema.
-Dependencies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
-Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API is secured with" />
+<meta property="og:description" content="Overview The SaaS.Permissions.Service is a component of the Identity Framework. It is an API that serves 2 main functions:
+ Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  Running Locally Instructions to get this module running on your local dev machine are located here: https://github." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/permissions-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-04-22T16:35:43-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-14T12:22:37-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Permissions.Service">
-<meta itemprop="description" content="Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity
-The permissions service is an API that is responsible for CRUD operations on users permissions.
-The API uses Entity Framework to manage the SQL Server Connection and Schema.
-Dependencies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
-Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API is secured with">
-<meta itemprop="dateModified" content="2022-04-22T16:35:43-04:00" />
-<meta itemprop="wordCount" content="190">
+<meta itemprop="description" content="Overview The SaaS.Permissions.Service is a component of the Identity Framework. It is an API that serves 2 main functions:
+ Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  Running Locally Instructions to get this module running on your local dev machine are located here: https://github.">
+<meta itemprop="dateModified" content="2022-05-14T12:22:37-04:00" />
+<meta itemprop="wordCount" content="689">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Permissions.Service"/>
-<meta name="twitter:description" content="Running Locally Instructions to get this module running on your local dev machine are located here: https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity
-The permissions service is an API that is responsible for CRUD operations on users permissions.
-The API uses Entity Framework to manage the SQL Server Connection and Schema.
-Dependencies:  SQL Server Database  This API is restricted and can only be called by the following consumers:
-Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This API is secured with"/>
+<meta name="twitter:description" content="Overview The SaaS.Permissions.Service is a component of the Identity Framework. It is an API that serves 2 main functions:
+ Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  Running Locally Instructions to get this module running on your local dev machine are located here: https://github."/>
 
 
 
@@ -204,12 +196,14 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
 
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
+    <li><a href="#overview">Overview</a></li>
     <li><a href="#running-locally">Running Locally</a></li>
     <li><a href="#dependencies">Dependencies:</a></li>
     <li><a href="#consumers">Consumers</a></li>
     <li><a href="#authentication">Authentication</a></li>
     <li><a href="#data-storage">Data Storage</a></li>
-    <li><a href="#design-considerations">Design Considerations</a></li>
+    <li><a href="#microsoft-graph-api">Microsoft Graph API</a></li>
+    <li><a href="#design-considerationsfaq">Design Considerations/FAQ</a></li>
   </ul>
 </nav></div>
 
@@ -272,7 +266,13 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
 
 		
 	</header>    
-	<h2 id="running-locally">Running Locally</h2>
+	<h2 id="overview">Overview</h2>
+<p>The <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">SaaS.Permissions.Service</a> is a component of the <a href="../">Identity Framework</a>. It is an API that serves 2 main functions:</p>
+<ol>
+<li>Handles CRUD operations from the rest of the solution for permission data</li>
+<li>Serves as an endpoint for the <a href="../identity-provider">Identity Provider</a> to retrieve permission data in order to enrich the user token with claims</li>
+</ol>
+<h2 id="running-locally">Running Locally</h2>
 <!-- raw HTML omitted -->
 <p>Instructions to get this module running on your local dev machine are located here: <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity">https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity</a></p>
 <p>The permissions service is an API that is responsible for CRUD operations on users permissions.</p>
@@ -280,27 +280,47 @@ Consumers  Identity Provider (Azure AD B2C) Admin Service  Authentication This A
 <h2 id="dependencies">Dependencies:</h2>
 <ul>
 <li>SQL Server Database</li>
+<li>Microsoft Graph API</li>
 </ul>
-<p>This API is restricted and can only be called by the following consumers:</p>
 <h2 id="consumers">Consumers</h2>
 <ul>
-<li>Identity Provider (Azure AD B2C)</li>
-<li>Admin Service</li>
+<li><a href="../identity-provider">Identity Provider</a> (Azure AD B2C)</li>
+<li><a href="../../components/admin-service">Admin Service</a></li>
 </ul>
 <h2 id="authentication">Authentication</h2>
-<p>This API is secured with</p>
-<p><a href="https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations">https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations</a></p>
+<p>The Permissions Service is secured using <a href="https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0#configure-certificate-validation">TLS Mutual Authentication</a> (Certificate Authentication). The application layer is configured to verify the authenticity of the certificate by comparing the thumbprint of the certificate against a configuration value. For TLS Mutual Authentication to work properly, the web server must also be configured to forward the certificate to the application layer. This is done for you if you deploy the application following the steps in the <a href="../../quick-start">Quick Start</a> guide, but if you choose to run the code in an environment you provision, you will need to do <a href="https://docs.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth">this configuration</a> yourself.</p>
+<blockquote>
+<p><strong>Important!</strong><br>
+The certificate that gets deployed out of the box by following the Quick Start is a self signed certificate. Self signed certificates are not meant for production use, and it highly reccomended that you replace this certificate with one signed by a Certificate Authority before using this module in production.</p>
+</blockquote>
 <h2 id="data-storage">Data Storage</h2>
-<p>Entity Framework Core is used to manage the database schema and connections.</p>
-<h2 id="design-considerations">Design Considerations</h2>
+<p><a href="https://docs.microsoft.com/en-us/ef/core/">Entity Framework Core</a> is used to manage the database schema and connections. We are using <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/new-database">Code First Development</a> and, if no data or schema exists in the database on application startup, the application will automatically create the database schema that is defined in our <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Data">model files</a>. If you make any changes to these models, you will need to preform a <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/">migration</a> to upgrade the database schema.</p>
+<h2 id="microsoft-graph-api">Microsoft Graph API</h2>
+<p>The <a href="https://docs.microsoft.com/en-us/graph/overview">Microsoft Graph API</a> is an API that provides a unified experience for accessing data on users within an AAD or AAD B2C tenant. Since we are using Azure AD B2C as our default Identity Provider, we must also use the Graph API when it becomes neccesary to fetch data on our users. If you&rsquo;d like to replace the identity provider with something else, you must also replace the Graph API calls within the permissions service to gather user data. These areas are clearly labeled with comments inline with the code.</p>
+<h2 id="design-considerationsfaq">Design Considerations/FAQ</h2>
 <ul>
-<li>Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.</li>
+<li>
+<p>Q: Why did we choose to secure the permissions service with certificate authentication over API Keys/JWT Tokens/Another Method?</p>
+<ul>
+<li>A: The communication between Azure AD B2C (our default Identity Provider) and the permissions service must be secured with either <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-api-connector-token-enrichment?pivots=b2c-custom-policy#configure-the-restful-api-technical-profile">Basic or Certificate Auth</a> and it is not considered best practice to use Basic authentication in a production environment.</li>
+</ul>
+</li>
+<li>
+<p>Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.</p>
+</li>
+<li>
+<p>We have purposefully chosen to flow all CRUD operations on permissions through the <a href="../admin-service">Admin Service</a>. This is for a number of reasons:</p>
+<ol>
+<li>It removes the burden of authorization from the permissions service. All the permissions service needs to worry about is accepting a valid certificate, which only the identity provider and admin service possess. For higher security applications, you may choose to preform more authorization checks before adding permissions</li>
+<li>It simplifys the architecture. The frontend applications do not need to have any knowledge of the permissions service existing. When a tenant is created, they make 1 call to the admin service, and it handles the subsequent call to update the permissions records.</li>
+</ol>
+</li>
 </ul>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/510330d795963d97a6b3400356a020b7da9fda2c">some more work on quick start and rename some modules (510330d)</a>
+  Last modified May 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/3048c6dedcc4839fecee6e794f99ed3aae1603ed">more work on identity (3048c6d)</a>
 </div>
 
 </div>
