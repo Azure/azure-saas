@@ -9,7 +9,7 @@ public class PermissionsService : IPermissionsService
 {
     private readonly PermissionsContext _context;
     private readonly ILogger _logger;
-    public PermissionsService(PermissionsContext permissionsContext, ILogger logger)
+    public PermissionsService(PermissionsContext permissionsContext, ILogger<PermissionsService> logger)
     {
         _context = permissionsContext;
         _logger = logger;
