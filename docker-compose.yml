@@ -6,6 +6,6 @@ services:
     container_name: asdk-admin
     build:
       context: ./src/
-      dockerfile: ./SaaS.Admin/SaaS.Admin.Service/Dockerfile
+      dockerfile: ./Saas.Admin/Saas.Admin.Service/Dockerfile
     expose:
       - "80"

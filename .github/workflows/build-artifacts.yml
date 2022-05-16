@@ -23,10 +23,10 @@ jobs:
           azcliversion: latest
           inlineScript: |
             mkdir ./dist
-            az bicep build --file src/SaaS.IaC/main.bicep --outfile ./dist/main.json
+            az bicep build --file src/Saas.IaC/main.bicep --outfile ./dist/main.json
       - name: Copy Other Files
         run: |
-          cp src/SaaS.IaC/createUiDefinition.json ./dist/
+          cp src/Saas.IaC/createUiDefinition.json ./dist/
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
