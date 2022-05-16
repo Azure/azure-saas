@@ -16,7 +16,7 @@ public class CustomClaimsController : ControllerBase
     private readonly IGraphAPIService _graphAPIService;
     private readonly ILogger _logger;
 
-    public CustomClaimsController(IPermissionsService permissionsService, IGraphAPIService graphAPIService, ILogger logger)
+    public CustomClaimsController(IPermissionsService permissionsService, IGraphAPIService graphAPIService, ILogger<CustomClaimsController> logger)
     {
         _permissionsService = permissionsService;
         _graphAPIService = graphAPIService;
