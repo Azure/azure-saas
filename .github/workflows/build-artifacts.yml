@@ -24,11 +24,14 @@ jobs:
           inlineScript: |
             mkdir ./dist
             az bicep build --file src/SaaS.IaC/main.bicep --outfile ./dist/main.json
+      - name: Copy Other Files
+        run: |
+          cp src/SaaS.IaC/createUiDefinition.json ./dist/
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: arm-json
-          path: ./dist/main.json
+          path: ./dist/**
 
   build-application:
     name: Build Application
@@ -36,6 +39,9 @@ jobs:
     steps:
       - name: Code checkout
         uses: actions/checkout@v2
+      - name: docker compose build
+        run: |
+          docker-compose build
 
   create-github-release:
     name: Create GitHub Release

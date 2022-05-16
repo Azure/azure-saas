@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  asdk-admin:
+    image: asdk-admin
+    container_name: asdk-admin
+    build:
+      context: ./src/
+      dockerfile: ./SaaS.Admin/SaaS.Admin.Service/Dockerfile
+    expose:
+      - "80"
