@@ -39,8 +39,10 @@ jobs:
     steps:
       - name: Code checkout
         uses: actions/checkout@v2
+
       - name: docker compose build
         run: |
+          ls -la
           docker-compose build
 
   create-github-release:
