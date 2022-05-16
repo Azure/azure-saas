@@ -4,6 +4,7 @@ using Microsoft.Graph;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models;
 using Saas.Permissions.Service.Models.AppSettings;
+using System.Text;
 
 namespace Saas.Permissions.Service.Services;
 
@@ -26,12 +27,43 @@ public class GraphAPIService : IGraphAPIService
     {
         ServicePrincipal? servicePrincipal = await GetServicePrincipalAsync(request.ClientId);
 
-        if(servicePrincipal == null)
+        if (servicePrincipal == null)
         {
             throw new ArgumentException($"App role not found for \"{request.ClientId}\".");
         }
 
         return await GetAppRoleAssignmentsAsync(servicePrincipal, request.ObjectId.ToString());
+    }
+
+    // Enriches the user object with data from Microsoft Graph. 
+    public async Task<IEnumerable<Models.User>> GetUsersByIds(ICollection<Guid> userIds)
+    {
+        // Build graph query: "id in ('id1', 'id2')"
+        // https://docs.microsoft.com/en-us/graph/aad-advanced-queries?tabs=csharp
+        StringBuilder filter = new StringBuilder();
+        filter.Append("id in (");
+        filter.Append(string.Join(",", userIds.Select(id => $"'{id}'")));
+        filter.Append(")");
+
+        List<Models.User> userList = new List<Models.User>();
+
+
+        var graphUsers = await _graphServiceClient.Users
+        .Request()
+        .Filter(filter.ToString())
+        // Selects certain properties from the User object : https://docs.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0#properties
+        // Add any additional fields here and then select them into the user model in ToUserObjects below
+        .Select("id, displayName")
+        .GetAsync();
+        userList.AddRange(ToUserObjects(graphUsers));
+
+        while(graphUsers.NextPageRequest != null)
+        {
+            graphUsers = await graphUsers.NextPageRequest.GetAsync();
+            userList.AddRange(ToUserObjects(graphUsers));
+        };
+
+        return userList;
     }
 
     private async Task<ServicePrincipal?> GetServicePrincipalAsync(string clientId)
@@ -49,5 +81,15 @@ public class GraphAPIService : IGraphAPIService
         var appRoles = servicePrincipal.AppRoles.Where(a => appRoleIds.Contains(a.Id)).Select(a => a.Value).ToArray();
         return appRoles;
     }
+
+    private IEnumerable<Models.User> ToUserObjects(IGraphServiceUsersCollectionPage graphUsers)
+    {
+        return graphUsers.Select(graphUser => new Models.User()
+        {
+            UserId = graphUser.Id,
+            DisplayName = graphUser.DisplayName
+        });
+    }
+
 }
 

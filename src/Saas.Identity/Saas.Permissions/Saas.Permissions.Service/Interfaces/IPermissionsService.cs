@@ -1,4 +1,5 @@
 ﻿using Saas.Permissions.Service.Data;
+using Saas.Permissions.Service.Models;
 
 namespace Saas.Permissions.Service.Interfaces;
 

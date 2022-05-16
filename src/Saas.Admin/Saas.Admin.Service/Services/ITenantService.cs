@@ -4,9 +4,10 @@ namespace Saas.Admin.Service.Services;
 
 public interface ITenantService
 {
-    Task<IList<TenantDTO>> GetAllTenantsAsync();
+    Task<IEnumerable<TenantDTO>> GetAllTenantsAsync();
 
     Task<TenantDTO> GetTenantAsync(Guid tenantId);
+    Task<IEnumerable<TenantDTO>> GetTenantsByIdAsync(IEnumerable<string> ids);
 
     Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, string adminId);
 

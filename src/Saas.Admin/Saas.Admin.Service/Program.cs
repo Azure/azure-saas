@@ -1,14 +1,12 @@
 using System.Security.Cryptography.X509Certificates;
 
 using Azure.Identity;
-using Azure.Security.KeyVault.Certificates;
 
 using Saas.Admin.Service;
 using Saas.Admin.Service.Data;
-using Saas.AspNetCore.Authorization.ClaimTransformers;
 using Saas.Admin.Service.Utilities;
 using Saas.AspNetCore.Authorization.AuthHandlers;
-using Azure.Security.KeyVault.Secrets;
+using Saas.AspNetCore.Authorization.ClaimTransformers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,12 +17,12 @@ if (builder.Environment.IsProduction())
     // Get Secrets From Azure Key Vault if in production. If not in production, secrets are automatically loaded in from the .NET secrets manager
     // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0
     builder.Configuration.AddAzureKeyVault(
-        new Uri(builder.Configuration["KeyVault:Url"]), 
-        new DefaultAzureCredential(), 
+        new Uri(builder.Configuration["KeyVault:Url"]),
+        new DefaultAzureCredential(),
         new CustomPrefixKeyVaultSecretManager("admin"));
 
     // Get certificate from secret imported above and parse it into an X509Certificate
-    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(builder.Configuration["KeyVault:PermissionsApiCertName"]));
+    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(builder.Configuration["KeyVault:PermissionsApiCert"]));
 }
 else
 {
