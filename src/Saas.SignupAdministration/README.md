@@ -1,7 +1,8 @@
 # SaaS.SignupAdministration.Web
 
-## Project Overview
+## Module Overview
 
+For a complete overview, please see the [SaaS.SignupAdministration.Web](https://azure.github.io/azure-saas/components/signup-administration/) page in our documentation site.
 ## How to Run Locally
 
 ### Requirements
