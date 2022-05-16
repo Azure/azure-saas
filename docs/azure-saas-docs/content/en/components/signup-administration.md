@@ -6,7 +6,7 @@ weight: 80
 
 ## Overview
 
-The [SaaS.SignupAdministration.Web](https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration) (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS solution. End Users/Customers can visit this site to:
+The [SaaS.SignupAdministration.Web](https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration) (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS product. End Users/Customers can visit this site to:
 
 - Sign up for an account
 
@@ -30,24 +30,39 @@ When deployed to Azure, the application is configured to load in its secrets fro
 
 ### Dependencies
 
+- [SaaS.Admin.Service](../admin-service)
+  - Depends on the SaaS.Admin.Service for CRUD operations on tenant records, as well as to broker the connection to the SaaS.Permissions.Service for CRUD operations on permissions records.
+- [Identity Provider](../identity/identity-provider)
+  - Depends on the identity provider to authenticate users and receive a JWT token.
+- [SaaS.Notifications](../saas-notifications)
+  - Depends on the SaaS.Notifications logic app to send transactional emails to users
+
 ### Consumers
+
+- End Users/Customers
 
 ### Authentication
 
-using MSAL to auth and get token for admin service
+The SignupAdmin site uses the [Microsoft Authentication Library (MSAL)](https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-overview) to handle the [flow](../identity/identity-flows#sign-in) of signing in and parsing the user token from the Azure B2C. The identity provider must be configured properly for this to work, and you must provide certain configuration values to the SignupAdmin site for it to properly communicate with B2C. These config values can be found in the project's [readme.md](https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration).
+
+For communication with the SaaS.Admin.Service, the SignupAdmin site also uses the MSAL to request an access token, using the signed in users existing token, to use in the Authorization header of all requests. This new token is specific to the SaaS.Admin.Service and will be requested from the Identity Provider with a specific scope. This type of exchange is known as an [OAuth 2.0 On-Belf-Of flow](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow).
 
 ### NSwag
 
+The NSwag project provides tools to generate OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI specifications. This provides us a ready-to-use HTTP client without having to write much boilerplate Read more about [using NSwag on ASP.NET projects](https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&tabs=visual-studio).
 
-## Design Considerations
+<!-- TODO: Add nswag config to project. -->
+<!-- You can also find the nswag configuration file we used to generate the client in this folder. -->
 
-For ease of management, we have chosen to incorporate the global administrative functionality into this application. You may choose to separate this functionality into a different application if you require more administrative functionality than just tenant and user management.
+### Transactional Emails
 
-> We chose to use NSwag to generate our client implementation for the Admin Service. The NSwag project provides tools to generate OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI specifications. This provides us a ready-to-use HTTP client without having to write much boilerplate. Read more about [using NSwag on ASP.NET projects](https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&tabs=visual-studio)
-
+When a new tenant is created, the SignupAdmin site will make a REST call to the [SaaS.Notifications](../saas-notifications) module. This module is an [Azure Logic App](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-overview) that gets deployed with a basic endpoint that accepts an email request. You must configure your email provider in this logic app post deployment before emails will actually send from the SignupAdmin site.
 
 ## FAQ and Design Considerations
-- saas notifications -- current implementation vs eventing system
+
+- For ease of management, we have chosen to incorporate the global administrative functionality into this application. You may choose to separate this functionality into a different module if you require more administrative functionality than just tenant and user management
+
+- A better solution for sending transactional emails might be to emit an event or message from the application, and building a notifications system to subscribe to those events. You could then build other applications to consume those events for other business functions as well. This style of architecture is called an [Event Driven](https://docs.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven) architecture. We decided to not go this route (yet!) with this project to keep it simple, but it is something to be considered when looking at your overall technical landscape.
 
 
 ## Signup Administration Flows

@@ -12,4 +12,7 @@ weight: 200
 
 ## Identity Focused
 
+* [OAuth 2.0 On-Behalf-Of flow](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow)
+  * Please also see the [caveats](../components/identity/caveats) page on this subject
 * [How to secure a .NET Web API using Azure AD B2C](https://github.com/Azure-Samples/active-directory-aspnetcore-webapp-openidconnect-v2/tree/master/4-WebApp-your-API/4-2-B2C)
+* [Permissions, Scope, and Consent in the Microsoft Identity Platform](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent)

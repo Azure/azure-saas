@@ -32,6 +32,8 @@ When deployed to Azure, the application is configured to load in its secrets fro
 
 ### Consumers
 
+Currently, the only consumer of this API is the 2 frontend applications. Every module in the ASDK project was designed to be extensible, so you could also build your own applications that interface directly with this API to fit other use cases that the included frontend applications do not provide.
+
 - [SaaS.SignupAdministration.Web](../signup-administration)
 
 - [Saas.Application.Web](../saas-application)
