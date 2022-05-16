@@ -52,7 +52,8 @@ jobs:
 
       - name: Tag and Push Docker Images
         run: |
-          IMAGES_TO_PUSH=("asdk-admin")
+          # Put all images that need to be pushed here, quoted and space delimited
+          IMAGES_TO_PUSH=("asdk-admin" "asdk-web")
 
           for i in ${IMAGES_TO_PUSH[@]}; do
             # TODO: add version, using latest for now

@@ -9,3 +9,11 @@ services:
       dockerfile: ./Saas.Admin/Saas.Admin.Service/Dockerfile
     expose:
       - "80"
+  asdk-web:
+    image: asdk-web
+    container_name: asdk-web
+    build:
+      context: ./src/
+      dockerfile: ./Saas.Application/Saas.Application.Web/Dockerfile
+    expose:
+      - "80"
