@@ -13,11 +13,13 @@ public class PermissionsController : ControllerBase
 {
     private readonly IPermissionsService _permissionsService;
     private readonly IGraphAPIService _graphAPIService;
+    private readonly ILogger _logger;
 
-    public PermissionsController(IPermissionsService permissionsService, IGraphAPIService graphAPIService)
+    public PermissionsController(IPermissionsService permissionsService, IGraphAPIService graphAPIService, ILogger logger)
     {
         _permissionsService = permissionsService;
         _graphAPIService = graphAPIService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -74,11 +76,11 @@ public class PermissionsController : ControllerBase
         try
         {
             await _permissionsService.AddUserPermissionsToTenantAsync(tenantId, userId, permissions);
-
             return Ok();
         }
         catch (ItemAlreadyExistsException ex)
         {
+            _logger.LogError("Permissions where not able to be added to {userId} on {tenantId}", userId, tenantId);
             return BadRequest(ex.Message);
         }
     }
@@ -99,6 +101,7 @@ public class PermissionsController : ControllerBase
         }
         catch (ItemNotFoundExcepton ex)
         {
+            _logger.LogError("Permissions where not removed from {userId} on {tenantId}", userId, tenantId); 
             return BadRequest(ex.Message);
         }
     }

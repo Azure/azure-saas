@@ -14,11 +14,13 @@ public class CustomClaimsController : ControllerBase
 {
     private readonly IPermissionsService _permissionsService;
     private readonly IGraphAPIService _graphAPIService;
+    private readonly ILogger _logger;
 
-    public CustomClaimsController(IPermissionsService permissionsService, IGraphAPIService graphAPIService)
+    public CustomClaimsController(IPermissionsService permissionsService, IGraphAPIService graphAPIService, ILogger logger)
     {
         _permissionsService = permissionsService;
         _graphAPIService = graphAPIService;
+        _logger = logger;
     }
 
     [HttpPost("permissions")]
@@ -29,6 +31,7 @@ public class CustomClaimsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Permissions(ClaimsRequest request)
     {
+        _logger.LogDebug("Custom claims where requested for email: {EmailAddress}", request.EmailAddress);
         var permissions = await _permissionsService.GetPermissionsAsync(request.EmailAddress);
 
         string[] permissionStrings = permissions.Select(x => x.ToTenantPermissionString())
