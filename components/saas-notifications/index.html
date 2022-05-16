@@ -19,22 +19,25 @@
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
 
 <title>SaaS.Notifications | Azure SaaS Dev Kit Docs</title>
-<meta name="description" content="Steps to configure email provider of choice here
-">
+<meta name="description" content="Overview
+The SaaS.Notifications module is a relatively simple Azure Logic App that gets deployed to enable email sending from the rest of the …">
 <meta property="og:title" content="SaaS.Notifications" />
-<meta property="og:description" content="Steps to configure email provider of choice here " />
+<meta property="og:description" content="Overview The SaaS.Notifications module is a relatively simple Azure Logic App that gets deployed to enable email sending from the rest of the solution. It is deployed with an HTTP trigger that takes in a JSON payload with fields required to send an email.
+Logic App Configuration Input The logic app comes pre-configured with a default JSON schema with some common email data fields. You may edit this to your liking by going to the logic app designer for the logic app that is deployed in your environment." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/saas-notifications/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-04-22T16:35:43-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-16T16:13:47-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Notifications">
-<meta itemprop="description" content="Steps to configure email provider of choice here ">
-<meta itemprop="dateModified" content="2022-04-22T16:35:43-04:00" />
-<meta itemprop="wordCount" content="8">
+<meta itemprop="description" content="Overview The SaaS.Notifications module is a relatively simple Azure Logic App that gets deployed to enable email sending from the rest of the solution. It is deployed with an HTTP trigger that takes in a JSON payload with fields required to send an email.
+Logic App Configuration Input The logic app comes pre-configured with a default JSON schema with some common email data fields. You may edit this to your liking by going to the logic app designer for the logic app that is deployed in your environment.">
+<meta itemprop="dateModified" content="2022-05-16T16:13:47-04:00" />
+<meta itemprop="wordCount" content="332">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Notifications"/>
-<meta name="twitter:description" content="Steps to configure email provider of choice here "/>
+<meta name="twitter:description" content="Overview The SaaS.Notifications module is a relatively simple Azure Logic App that gets deployed to enable email sending from the rest of the solution. It is deployed with an HTTP trigger that takes in a JSON payload with fields required to send an email.
+Logic App Configuration Input The logic app comes pre-configured with a default JSON schema with some common email data fields. You may edit this to your liking by going to the logic app designer for the logic app that is deployed in your environment."/>
 
 
 
@@ -187,6 +190,18 @@
             
 
 
+<div class="td-toc"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#logic-app-configuration">Logic App Configuration</a>
+      <ul>
+        <li><a href="#input">Input</a></li>
+        <li><a href="#email-provider">Email Provider</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+
 
 
             
@@ -243,12 +258,55 @@
 
 		
 	</header>    
-	<h1 id="steps-to-configure-email-provider-of-choice-here">Steps to configure email provider of choice here</h1>
+	<h2 id="overview">Overview</h2>
+<p>The SaaS.Notifications module is a relatively simple <a href="https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-overview">Azure Logic App</a> that gets deployed to enable email sending from the rest of the solution. It is deployed with an HTTP trigger that takes in a JSON payload with fields required to send an email.</p>
+<h2 id="logic-app-configuration">Logic App Configuration</h2>
+<h3 id="input">Input</h3>
+<p>The logic app comes pre-configured with a default JSON schema with some common email data fields. You may edit this to your liking by going to the logic app designer for the logic app that is deployed in your environment. Here is the default JSON schema that gets deployed:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+    <span style="color:#f92672">&#34;properties&#34;</span>: {
+        <span style="color:#f92672">&#34;HTML&#34;</span>: {
+            <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;string&#34;</span>
+        },
+        <span style="color:#f92672">&#34;emailFrom&#34;</span>: {
+            <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;string&#34;</span>
+        },
+        <span style="color:#f92672">&#34;emailTo&#34;</span>: {
+            <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;string&#34;</span>
+        },
+        <span style="color:#f92672">&#34;emailToName&#34;</span>: {
+            <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;string&#34;</span>
+        },
+        <span style="color:#f92672">&#34;subject&#34;</span>: {
+            <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;string&#34;</span>
+        }
+    },
+    <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;object&#34;</span>
+}
+</code></pre></div><h3 id="email-provider">Email Provider</h3>
+<p>By default, the logic app that gets deployed does not come with an email provider configured. If you POST to the endpoint, the logic app will take in the data and simply return a 200 OK response. To enable actual email sending, you must first configure an email provider <a href="https://docs.microsoft.com/en-us/connectors/connector-reference/connector-reference-logicapps-connectors">connector</a>.</p>
+<p>To do this, follow these instructions:</p>
+<ol>
+<li>Navigate to the deployed logic app and click into the &ldquo;Logic app designer&rdquo; menu</li>
+<li>Click the + button underneath the defined HTTP trigger and click &ldquo;Add an action&rdquo;
+<img src="/azure-saas/images/logic-app-1.png" alt=""></li>
+<li>Search for your email connector of choice and choose the action for sending an email (ex, for Office 365 it is &ldquo;Send an Email (V2)&quot;)</li>
+<li>Fill in the required fields with data from the &ldquo;Dynamic content&rdquo; section. This will pass data from the input HTTP trigger to the email connector
+<img src="/azure-saas/images/logic-app-2.png" alt=""></li>
+<li>Click &ldquo;Save&rdquo;</li>
+<li>You may now test using the application, or by clicking &ldquo;Run trigger&rdquo; at the top of the logic app designer</li>
+</ol>
+<p>If you&rsquo;d like more information on how this works, check out some additional reading on this subject here:</p>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/azure/connectors/connectors-create-api-office365-outlook">Connect to Office 365 Outlook using Azure Logic Apps</a></li>
+<li><a href="https://docs.microsoft.com/en-us/azure/connectors/connectors-create-api-office365-outlook">Connect to SendGrid from Azure Logic Apps</a></li>
+<li><a href="https://docs.microsoft.com/en-us/azure/app-service/tutorial-send-email?tabs=dotnet">Tutorial: Send email and invoke other business processes from App Service</a></li>
+</ul>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/510330d795963d97a6b3400356a020b7da9fda2c">some more work on quick start and rename some modules (510330d)</a>
+  Last modified May 16, 2022: <a href="https://github.com/Azure/azure-saas/commit/ea1ac06d76a1a473a8626505bc7c8b51b6ed59bd">saas notifications (ea1ac06)</a>
 </div>
 
 </div>
