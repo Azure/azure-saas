@@ -15,7 +15,7 @@ public class PermissionsController : ControllerBase
     private readonly IGraphAPIService _graphAPIService;
     private readonly ILogger _logger;
 
-    public PermissionsController(IPermissionsService permissionsService, IGraphAPIService graphAPIService, ILogger logger)
+    public PermissionsController(IPermissionsService permissionsService, IGraphAPIService graphAPIService, ILogger<PermissionsController> logger)
     {
         _permissionsService = permissionsService;
         _graphAPIService = graphAPIService;
