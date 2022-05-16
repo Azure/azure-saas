@@ -9,7 +9,7 @@ public class CertificateValidationService : ICertificateValidationService
 {
     private readonly AppSettings _appSettings;
     private readonly ILogger _logger;
-    public CertificateValidationService(IOptions<AppSettings> appSettings, ILogger logger)
+    public CertificateValidationService(IOptions<AppSettings> appSettings, ILogger<CertificateValidationService> logger)
     {
         _appSettings = appSettings.Value;
         _logger = logger;
