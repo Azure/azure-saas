@@ -46,7 +46,9 @@ jobs:
       - name: Build Docker Images
         run: |
           docker-compose build
-          docker images
+          
+          echo "Showing all ASDK images"
+          docker images | grep asdk-
 
       - name: Tag and Push Docker Images
         run: |
