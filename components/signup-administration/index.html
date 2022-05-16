@@ -22,7 +22,7 @@
 <meta name="description" content="Overview
 The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS …">
 <meta property="og:title" content="SaaS.SignupAdministration.Web" />
-<meta property="og:description" content="Overview The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS solution. End Users/Customers can visit this site to:
+<meta property="og:description" content="Overview The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS product. End Users/Customers can visit this site to:
   Sign up for an account
   Go through an onboarding flow to create a new tenant
   Manage their existing tenants.
@@ -30,19 +30,19 @@ The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application 
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/signup-administration/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-14T19:25:26-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-16T15:41:56-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.SignupAdministration.Web">
-<meta itemprop="description" content="Overview The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS solution. End Users/Customers can visit this site to:
+<meta itemprop="description" content="Overview The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS product. End Users/Customers can visit this site to:
   Sign up for an account
   Go through an onboarding flow to create a new tenant
   Manage their existing tenants.
   This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.">
-<meta itemprop="dateModified" content="2022-05-14T19:25:26-04:00" />
-<meta itemprop="wordCount" content="748">
+<meta itemprop="dateModified" content="2022-05-16T15:41:56-04:00" />
+<meta itemprop="wordCount" content="1043">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.SignupAdministration.Web"/>
-<meta name="twitter:description" content="Overview The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS solution. End Users/Customers can visit this site to:
+<meta name="twitter:description" content="Overview The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS product. End Users/Customers can visit this site to:
   Sign up for an account
   Go through an onboarding flow to create a new tenant
   Manage their existing tenants.
@@ -213,9 +213,9 @@ The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application 
         <li><a href="#consumers">Consumers</a></li>
         <li><a href="#authentication">Authentication</a></li>
         <li><a href="#nswag">NSwag</a></li>
+        <li><a href="#transactional-emails">Transactional Emails</a></li>
       </ul>
     </li>
-    <li><a href="#design-considerations">Design Considerations</a></li>
     <li><a href="#faq-and-design-considerations">FAQ and Design Considerations</a></li>
     <li><a href="#signup-administration-flows">Signup Administration Flows</a></li>
     <li><a href="#sign-in">Sign In</a></li>
@@ -282,7 +282,7 @@ The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application 
 		
 	</header>    
 	<h2 id="overview">Overview</h2>
-<p>The <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">SaaS.SignupAdministration.Web</a> (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS solution. End Users/Customers can visit this site to:</p>
+<p>The <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">SaaS.SignupAdministration.Web</a> (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS product. End Users/Customers can visit this site to:</p>
 <ul>
 <li>
 <p>Sign up for an account</p>
@@ -302,18 +302,44 @@ The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application 
 <p>When deployed to Azure, the application is configured to load in its secrets from <a href="https://docs.microsoft.com/en-us/azure/key-vault/general/overview">Azure Key Vault</a> instead. If you deploy the project using our bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the key vault using a <a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">System Assigned Managed Identity</a>. The SignupAdmin module is also configured with <a href="https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix">key name prefixes</a> to only import secrets with the prefix of <code>signupadmin-</code>, as other modules share the same keyvault.</p>
 <h2 id="module-design">Module Design</h2>
 <h3 id="dependencies">Dependencies</h3>
+<ul>
+<li><a href="../admin-service">SaaS.Admin.Service</a>
+<ul>
+<li>Depends on the SaaS.Admin.Service for CRUD operations on tenant records, as well as to broker the connection to the SaaS.Permissions.Service for CRUD operations on permissions records.</li>
+</ul>
+</li>
+<li><a href="../identity/identity-provider">Identity Provider</a>
+<ul>
+<li>Depends on the identity provider to authenticate users and receive a JWT token.</li>
+</ul>
+</li>
+<li><a href="../saas-notifications">SaaS.Notifications</a>
+<ul>
+<li>Depends on the SaaS.Notifications logic app to send transactional emails to users</li>
+</ul>
+</li>
+</ul>
 <h3 id="consumers">Consumers</h3>
+<ul>
+<li>End Users/Customers</li>
+</ul>
 <h3 id="authentication">Authentication</h3>
-<p>using MSAL to auth and get token for admin service</p>
+<p>The SignupAdmin site uses the <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-overview">Microsoft Authentication Library (MSAL)</a> to handle the <a href="../identity/identity-flows#sign-in">flow</a> of signing in and parsing the user token from the Azure B2C. The identity provider must be configured properly for this to work, and you must provide certain configuration values to the SignupAdmin site for it to properly communicate with B2C. These config values can be found in the project&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">readme.md</a>.</p>
+<p>For communication with the SaaS.Admin.Service, the SignupAdmin site also uses the MSAL to request an access token, using the signed in users existing token, to use in the Authorization header of all requests. This new token is specific to the SaaS.Admin.Service and will be requested from the Identity Provider with a specific scope. This type of exchange is known as an <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow">OAuth 2.0 On-Belf-Of flow</a>.</p>
 <h3 id="nswag">NSwag</h3>
-<h2 id="design-considerations">Design Considerations</h2>
-<p>For ease of management, we have chosen to incorporate the global administrative functionality into this application. You may choose to separate this functionality into a different application if you require more administrative functionality than just tenant and user management.</p>
-<blockquote>
-<p>We chose to use NSwag to generate our client implementation for the Admin Service. The NSwag project provides tools to generate OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI specifications. This provides us a ready-to-use HTTP client without having to write much boilerplate. Read more about <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&amp;tabs=visual-studio">using NSwag on ASP.NET projects</a></p>
-</blockquote>
+<p>The NSwag project provides tools to generate OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI specifications. This provides us a ready-to-use HTTP client without having to write much boilerplate Read more about <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&amp;tabs=visual-studio">using NSwag on ASP.NET projects</a>.</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h3 id="transactional-emails">Transactional Emails</h3>
+<p>When a new tenant is created, the SignupAdmin site will make a REST call to the <a href="../saas-notifications">SaaS.Notifications</a> module. This module is an <a href="https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-overview">Azure Logic App</a> that gets deployed with a basic endpoint that accepts an email request. You must configure your email provider in this logic app post deployment before emails will actually send from the SignupAdmin site.</p>
 <h2 id="faq-and-design-considerations">FAQ and Design Considerations</h2>
 <ul>
-<li>saas notifications &ndash; current implementation vs eventing system</li>
+<li>
+<p>For ease of management, we have chosen to incorporate the global administrative functionality into this application. You may choose to separate this functionality into a different module if you require more administrative functionality than just tenant and user management</p>
+</li>
+<li>
+<p>A better solution for sending transactional emails might be to emit an event or message from the application, and building a notifications system to subscribe to those events. You could then build other applications to consume those events for other business functions as well. This style of architecture is called an <a href="https://docs.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven">Event Driven</a> architecture. We decided to not go this route (yet!) with this project to keep it simple, but it is something to be considered when looking at your overall technical landscape.</p>
+</li>
 </ul>
 <h2 id="signup-administration-flows">Signup Administration Flows</h2>
 <h2 id="sign-in">Sign In</h2>
@@ -400,7 +426,7 @@ signup--&gt;&gt;user : Error, User does not exist
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/4bcfe210eae9366e4f41e27b21642e5b77195fd3">signupadmin docs (4bcfe21)</a>
+  Last modified May 16, 2022: <a href="https://github.com/Azure/azure-saas/commit/29c95f71c6481c6987224202caf5877c4204db41">more signupadmin docs (29c95f7)</a>
 </div>
 
 </div>
