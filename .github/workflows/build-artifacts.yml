@@ -24,9 +24,9 @@ jobs:
           inlineScript: |
             mkdir ./dist
             az bicep build --file src/Saas.IaC/main.bicep --outfile ./dist/main.json
-      - name: Copy Other Files
-        run: |
-          cp src/Saas.IaC/createUiDefinition.json ./dist/
+      # - name: Copy Other Files
+      #   run: |
+      #     cp src/Saas.IaC/createUiDefinition.json ./dist/
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -40,10 +40,29 @@ jobs:
       - name: Code checkout
         uses: actions/checkout@v2
 
-      - name: docker compose build
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
+      - name: Build Docker Images
         run: |
-          ls -la
           docker-compose build
+          docker images
+
+      - name: Tag and Push Docker Images
+        run: |
+          IMAGES_TO_PUSH=("asdk-admin")
+
+          for i in ${IMAGES_TO_PUSH[@]}; do
+              GH_TAG=ghcr.io/${{ github.repository_owner }}/$i
+              GH_TAG=$(echo $GH_TAG | tr '[:upper:]' '[:lower:]')
+              # TODO: add version, using latest for now
+
+              echo "Tagging $i with GitHub Container Registry"
+              docker tag $i $GH_TAG
+
+              echo "Pushing $i to GitHub Container Registry"
+              docker push $GH_TAG
+          done
 
   create-github-release:
     name: Create GitHub Release
