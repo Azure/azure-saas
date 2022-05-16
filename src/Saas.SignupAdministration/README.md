@@ -42,11 +42,33 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 |   | AllowedHosts                          |                                                       | false  | *                             |   |
 |   | Logging:LogLevel:Default              |                                                       | false  | Information                   |   |
 |   | Logging:LogLevel:Microsoft.AspNetCore |                                                       | false  | Warning                       |   |
-
+|   | EmailOptions:EndPoint                 | Service endpoint to send confirmation email           | true   |                               |   |   
+|   | EmailOptions:FromAddresss             |                                                       | false  |                               |   |
+|   | EmailOptions:Subject                  |                                                       | false  |                               |   |
+|   | EmailOptions:Body                     |                                                       | false  |                               |   |
 ### Starting the App
 
 1. Insert secrets marked as required for running locally into your secrets manager using provided script.
 (Instructions for running in visual studio)
+ 
+### JsonSessionPersistenceProvider 
+The JsonSessionPersistenceProvider maintains the state of the work flow in the Session, and allows for forward and backward movment in the app with 
+access to all of the values of the Tenet. Custom providers can be used as long as they inherit from the IPersistenceProvider interface. 
+The 2 methods are: 
+        public void Persist(string key, object value);
+        public T Retrieve<T>(string key);
+
+In place of the Session you could use an OLDB provider like a MS SQL Percistance Provider. 
+=======
+1. Insert secrets marked as required for running locally into your secrets manager.
+2. Set the start projects: 
+    a. Saas.Admin.Service
+    b. Saas.Permissions.Api
+    c. Saas.Application.Web
+        i. This is the BadgeMeUp Website, demo software to sale.  
+    d. Saas.SignupAdministration.Web
+        i. This is the work flow that adds new subscriptions to 
+
 
 ### Running Tests
 

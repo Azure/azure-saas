@@ -1,7 +1,7 @@
 ﻿namespace Saas.Permissions.Service.Models;
 
 
-public class ADB2CReponse
+public class PermissionsClaimResponse
 {
     public string[] Permissions { get; set; } = new string[0];
 }
