@@ -1,6 +1,7 @@
 ﻿using Saas.Permissions.Service.Data;
 using Saas.Permissions.Service.Exceptions;
 using Saas.Permissions.Service.Interfaces;
+using Saas.Permissions.Service.Models;
 
 namespace Saas.Permissions.Service.Services;
 
@@ -27,7 +28,7 @@ public class PermissionsService : IPermissionsService
         _logger.LogDebug("Users are requested from {tenantId}", tenantId);
         return await _context.Permissions
             .Where(x => x.TenantId == tenantId)
-            .Select(x => x.TenantId)
+            .Select(x => x.UserId)
             .ToListAsync();
     }
 

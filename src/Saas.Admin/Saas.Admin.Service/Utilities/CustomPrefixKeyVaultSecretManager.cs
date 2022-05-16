@@ -7,14 +7,20 @@ namespace Saas.Admin.Service.Utilities;
 // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix
 public class CustomPrefixKeyVaultSecretManager : KeyVaultSecretManager
 {
-        private readonly string _prefix;
+    private readonly string _prefix;
 
-        public CustomPrefixKeyVaultSecretManager(string prefix)
-            => _prefix = $"{prefix}-";
+    public CustomPrefixKeyVaultSecretManager(string prefix)
+    {
+        _prefix = $"{prefix}-";
+    }
 
-        public override bool Load(SecretProperties properties)
-            => properties.Name.StartsWith(_prefix);
+    public override bool Load(SecretProperties properties)
+    {
+        return properties.Name.StartsWith(_prefix);
+    }
 
-        public override string GetKey(KeyVaultSecret secret)
-            => secret.Name[_prefix.Length..].Replace("--", ConfigurationPath.KeyDelimiter); 
+    public override string GetKey(KeyVaultSecret secret)
+    {
+        return secret.Name[_prefix.Length..].Replace("--", ConfigurationPath.KeyDelimiter);
+    }
 }
