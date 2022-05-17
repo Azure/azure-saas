@@ -4,11 +4,15 @@ title: "Contoso BadgeMeUp"
 weight: 20
 ---
 
+## Intro
+
+For ease of explaining the project and who it might benefit, we created a few example "stories" to help users visualize the components. Contoso BadgeMeUp is one of those example stories.
+
 ## Context
 
 ![BadgeMeUp Screenshot](../badgemeup-screenshot.gif)
 
-Contoso BadgeMeUp is a SaaS B2B application that Contoso sells to companies that want a great tool to improve the culture within their organization.
+Contoso is a SaaS ISV (software vendor) that has a product, Contoso BadgeMeUp. Contoso BadgeMeUp is a SaaS B2B application that Contoso sells to companies that want a great tool to improve the culture within their organization.
 
 > For more information about how this SaaS architecture compares to others, please see *Scenario 1* in [SaaS Branding Considerations](../branding-considerations-for-saas/#scenario-1---pure-b2b).
 
@@ -18,8 +22,9 @@ Lucerne Publishing has recently purchased Contoso BadgeMeUp. They're currently u
 
 ### Onboarding
 
-1. Phil in accounting browsed the plans available at BadgeMeUp.Contoso.com and selected the plan he thought would best fit their companies needs.
-2. Sandy navigates to BadgeMeUp.Contoso.com and is automatically signed on with her companies credentials.
+1. Phil in accounting browsed the plans available at Signup.BadgeMeUp.Contoso.com and selected the plan he thought would best fit their companies needs.
+2. Sandy navigates to BadgeMeUp.Contoso.com/lucernepublishing and signs in using her Active Directory credentials.
+3. After Sandy creates an account, Phil can then go to Signup.BadgeMeUp.Contoso.com/admin to see his previously created tenant and grant Sandy elevation permissions if he wishes. 
 
 ```mermaid
 graph LR
@@ -37,5 +42,3 @@ graph LR
 		isv
 	end
 ```
-
-> Note: Currently, Sandy has to sign up for the service. **How do we simplify?**

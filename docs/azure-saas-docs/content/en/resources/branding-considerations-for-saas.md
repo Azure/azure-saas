@@ -4,13 +4,13 @@ title: "SaaS Branding Considerations"
 weight: 10
 ---
 
-As a SaaS vendor, it's useful to understand where your branding ends, and the vendor branding begins. In other words, how will your software solution be positioned for your customer base.
+As a SaaS vendor, it's useful to understand where your branding ends, and the vendor branding begins. In other words, how will your software solution be positioned for your customer base?
 
 > **Identity** plays a critical role within SaaS solutions. It's an area where extra planning early in your design is recommended.
 
 ## Common Customer Scenarios
 
-These are common scenarios from the perspective of the customer / user. Understanding which scenario best aligns 
+These are common scenarios from the perspective of the customer / user. Understanding which scenario best aligns to you is critical for designing your SaaS application for multitenancy.
 
 ### Scenario 1 - Pure B2B
 

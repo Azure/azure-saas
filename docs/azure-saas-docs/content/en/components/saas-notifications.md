@@ -8,6 +8,14 @@ weight: 100
 
 The SaaS.Notifications module is a relatively simple [Azure Logic App](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-overview) that gets deployed to enable email sending from the rest of the solution. It is deployed with an HTTP trigger that takes in a JSON payload with fields required to send an email.
 
+## Design
+### Dependencies
+
+- Email provider of choice, once configured
+### Consumers
+
+- [SaaS.SignupAdministration.Web](../signup-administration)
+
 ## Logic App Configuration
 
 ### Input

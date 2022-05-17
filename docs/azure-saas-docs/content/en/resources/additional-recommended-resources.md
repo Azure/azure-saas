@@ -9,6 +9,7 @@ weight: 200
 * [ISV Considerations for Azure landing zones](https://aka.ms/isv-landing-zones)
 * [Azure Well-Architected Framework](https://docs.microsoft.com/en-us/azure/architecture/framework/)
 * [WingTips Tickets SaaS Application](https://docs.microsoft.com/en-us/azure/azure-sql/database/saas-tenancy-welcome-wingtip-tickets-app) - Provides details into tradeoffs with various tenancy models within the database layer.
+* [Multitenancy](http://aka.ms/multitenancy)
 
 ## Identity Focused
 
