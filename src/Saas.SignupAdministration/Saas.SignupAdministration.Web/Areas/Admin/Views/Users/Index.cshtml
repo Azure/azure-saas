@@ -8,7 +8,7 @@
 <h1>Users</h1>
 
 <p>
-    <a asp-action="@SR.OrganizationNameAction" asp-controller="@SR.OnboardingWorkflowController" asp-area="">Add User To Tenant</a>
+    @Html.ActionLink("Add User To Tenant", "AddUserToTenant", new { area = "Admin", controller="users", tenantid=@ViewData["tenantid"]})
 </p>
 <table class="table">
     <thead>
