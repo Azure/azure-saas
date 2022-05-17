@@ -1,0 +1,58 @@
+﻿@using Saas.SignupAdministration.Web
+@model IEnumerable<Saas.SignupAdministration.Web.Areas.Admin.Data.TenantViewModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Route)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatorEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Name, "Details", new { area = "Admin", id=item.Id})
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Route)
+                </td>
+                <th>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.CreatorEmail)
+                </th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedTime.Date)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new {area = "Admin", id=item.Id} ) |
+                    @Html.ActionLink("Details", "Details", new { area = "Admin", id=item.Id}) |
+                    @Html.ActionLink("Delete", "Delete", new { area = "Admin", id=item.Id})
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
