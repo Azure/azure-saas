@@ -1,8 +1,8 @@
 ##################################################################
 # Shared Arguments
 ##################################################################
-ARG app_name=Saas.Application
-ARG app_path=Saas.Application/Saas.Application.Web
+ARG app_name=Saas.SignupAdministration.Web
+ARG app_path=Saas.SignupAdministration/Saas.SignupAdministration.Web
 
 ##################################################################
 # Stage 0: Set the Base Primary Image of the App

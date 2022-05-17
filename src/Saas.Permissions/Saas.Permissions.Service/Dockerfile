@@ -1,8 +1,8 @@
 ##################################################################
 # Shared Arguments
 ##################################################################
-ARG app_name=Saas.Application
-ARG app_path=Saas.Application/Saas.Application.Web
+ARG app_name=Saas.Permissions
+ARG app_path=Saas.Permissions/Saas.Permissions.Service
 
 ##################################################################
 # Stage 0: Set the Base Primary Image of the App

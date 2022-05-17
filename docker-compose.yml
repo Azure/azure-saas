@@ -17,3 +17,20 @@ services:
       dockerfile: ./Saas.Application/Saas.Application.Web/Dockerfile
     expose:
       - "80"
+  asdk-signup:
+    image: asdk-signup
+    container_name: asdk-signup
+    build:
+      context: ./src/
+      dockerfile: ./Saas.SignupAdministration/Saas.SignupAdministration.Web/Dockerfile
+    expose:
+      - "80"
+  asdk-permissions:
+    image: asdk-permissions
+    container_name: asdk-permissions
+    build:
+      context: ./src/
+      dockerfile: ./Saas.Permissions/Saas.Permissions.Service/Dockerfile
+    expose:
+      - "80"
+    
