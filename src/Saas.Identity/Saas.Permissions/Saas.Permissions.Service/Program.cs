@@ -1,7 +1,6 @@
+using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
-using Azure.Identity;
 using Saas.Permissions.Service.Data;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models.AppSettings;
@@ -26,6 +25,7 @@ if (builder.Environment.IsProduction())
 
 // Add options using options pattern : https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
+builder.Services.Configure<AzureADB2COptions>(builder.Configuration.GetSection("AzureAdB2C"));
 
 
 // Add services to the container.
@@ -41,6 +41,7 @@ builder.Services.AddDbContext<PermissionsContext>(options =>
 });
 
 builder.Services.AddScoped<IPermissionsService, PermissionsService>();
+builder.Services.AddScoped<IGraphAPIService, GraphAPIService>();
 builder.Services.AddSingleton<ICertificateValidationService, CertificateValidationService>();
 
 // Look for certificate forwarded by the web server on X-Arr-Client-Cert
