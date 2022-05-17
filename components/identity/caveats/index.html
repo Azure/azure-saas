@@ -19,27 +19,27 @@
 <link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
 
 <title>Caveats &amp; Limitations | Azure SaaS Dev Kit Docs</title>
-<meta name="description" content="Caveat: This reference implementation does not provide support for per-tenant “local” users (i.e., all users will be accessing all tenants, there will …">
+<meta name="description" content="There are a few caveats of the identity solution provided within this reference implementation that you should be aware of.
+
+
+This reference …">
 <meta property="og:title" content="Caveats &amp; Limitations" />
-<meta property="og:description" content="Caveat: This reference implementation does not provide support for per-tenant “local” users (i.e., all users will be accessing all tenants, there will be no landon@tenant1 vs landon@tenant2, it will be just landon@email.com).
-Caveat: This version only supports “local” users and social identities and does not provide support for configuring federation with other Identity Providers.
-Caveat: Even if future versions provide support for configuring federation with additional Identity Providers (IdP), it will not provide support for “per-tenant federation” (i." />
+<meta property="og:description" content="There are a few caveats of the identity solution provided within this reference implementation that you should be aware of.
+  This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a singular B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had jill@contoso.com sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same jill@contoso." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/caveats/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-14T12:22:37-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-17T11:13:42-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Caveats &amp; Limitations">
-<meta itemprop="description" content="Caveat: This reference implementation does not provide support for per-tenant “local” users (i.e., all users will be accessing all tenants, there will be no landon@tenant1 vs landon@tenant2, it will be just landon@email.com).
-Caveat: This version only supports “local” users and social identities and does not provide support for configuring federation with other Identity Providers.
-Caveat: Even if future versions provide support for configuring federation with additional Identity Providers (IdP), it will not provide support for “per-tenant federation” (i.">
-<meta itemprop="dateModified" content="2022-05-14T12:22:37-04:00" />
-<meta itemprop="wordCount" content="197">
+<meta itemprop="description" content="There are a few caveats of the identity solution provided within this reference implementation that you should be aware of.
+  This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a singular B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had jill@contoso.com sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same jill@contoso.">
+<meta itemprop="dateModified" content="2022-05-17T11:13:42-04:00" />
+<meta itemprop="wordCount" content="311">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Caveats &amp; Limitations"/>
-<meta name="twitter:description" content="Caveat: This reference implementation does not provide support for per-tenant “local” users (i.e., all users will be accessing all tenants, there will be no landon@tenant1 vs landon@tenant2, it will be just landon@email.com).
-Caveat: This version only supports “local” users and social identities and does not provide support for configuring federation with other Identity Providers.
-Caveat: Even if future versions provide support for configuring federation with additional Identity Providers (IdP), it will not provide support for “per-tenant federation” (i."/>
+<meta name="twitter:description" content="There are a few caveats of the identity solution provided within this reference implementation that you should be aware of.
+  This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a singular B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had jill@contoso.com sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same jill@contoso."/>
 
 
 
@@ -124,8 +124,8 @@ Caveat: Even if future versions provide support for configuring federation with 
   <ul class="ul-1">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasquick-start-li">
   <a href="/azure-saas/quick-start/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasquick-start"><span class="">Quick Start</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasdesign-li">
-  <a href="/azure-saas/design/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasdesign"><span class="">Design</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasdiagrams-li">
+  <a href="/azure-saas/diagrams/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasdiagrams"><span class="">Architecture Diagrams</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-azure-saascomponents-li">
   <a href="/azure-saas/components/" title="Azure SaaS Dev Kit Components" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-azure-saascomponents"><span class="">Components</span></a>
   <ul class="ul-2 foldable">
@@ -159,8 +159,6 @@ Caveat: Even if future versions provide support for configuring federation with 
   <a href="/azure-saas/resources/branding-considerations-for-saas/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesbranding-considerations-for-saas"><span class="">SaaS Branding Considerations</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-badgemeup-li">
   <a href="/azure-saas/resources/contoso-badgemeup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-badgemeup"><span class="">Contoso BadgeMeUp</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-tickets-li">
-  <a href="/azure-saas/resources/contoso-tickets/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-tickets"><span class="">Contoso Tickets</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesterminology-li">
   <a href="/azure-saas/resources/terminology/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesterminology"><span class="">Terminology</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdevops-li">
@@ -251,20 +249,30 @@ Caveat: Even if future versions provide support for configuring federation with 
 
 		
 	</header>    
-	<p><strong>Caveat</strong>: This reference implementation does not provide support for per-tenant “local” users (i.e., all users will be accessing all tenants, there will be no landon@tenant1 vs landon@tenant2, it will be just <a href="mailto:landon@email.com">landon@email.com</a>).</p>
-<p><strong>Caveat</strong>: This version only supports “local” users and social identities and does not provide support for configuring federation with other Identity Providers.</p>
-<p><strong>Caveat</strong>: Even if future versions provide support for configuring federation with additional Identity Providers (IdP), it will not provide support for “per-tenant federation” (i.e., where each tenant could bring their own IdP). This is primarily due to limitations in Azure AD B2C which make it additional work to manage “per-tenants” users/policies within a directory:</p>
+	<p>There are a few caveats of the identity solution provided within this reference implementation that you should be aware of.</p>
 <ul>
-<li>Each federation is configured via directory-wide policy and there is a limit of 200 policies on a directory.</li>
+<li>
+<p>This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a singular B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had <code>jill@contoso.com</code> sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same <code>jill@contoso.com</code> account. You may still control what tenants they have roles under via the permissions that come back in their JWT claims.</p>
+</li>
+<li>
+<p>The current version only supports “local” users and social identities and does not provide support for configuring federation with other Identity Providers.</p>
+</li>
+<li>
+<p>Future versions will likely not provide support for “per-tenant federation” (i.e., where each tenant could bring their own IdP). This is primarily due to limitations in Azure AD B2C which introduce significant overhead when attempting to manage “per-tenants” users &amp; policies within a directory.</p>
+<ul>
+<li>ie. It is possible, but each federation is configured via directory-wide policy and there is a limit of 200 policies on a directory.</li>
+<li>If all tenants can be assumed to have their own Azure Active Directory (regular B2B), then per-tenant federation could be implemented using Azure AD (multitenant) federation identity provider with the application code doing the authorization based on specific tenant id claim. However, if each tenant wants to be able to configure their own completely different IdP (e.g., Okta, Ping, Auth0, Cognito), it would require additional work due to policy limits.</li>
 </ul>
-<p><strong>Caveat</strong>: If all tenants can be assumed to have their own Azure Active Directory (regular B2B), then per-tenant federation could be implemented using Azure AD (multitenant) federation identity provider with “application code” doing the authorization based on specific tenant id claim.</p>
-<p>However, if each tenant wants to be able to configure their own completely different IdP (e.g., Okta, Ping, Auth0, Cognito), it would require additional work due to policy limits.</p>
-<p><a href="https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations">https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations</a></p>
+</li>
+<li>
+<p>Azure AD B2C has a documented limitation preventing API chaining via the OAuth 2.0 On-Behalf-Of flow. You may request a token to call an API via a web app, but not an API via an API. See the <a href="https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations">B2C Limitations</a> page for more information.</p>
+</li>
+</ul>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/3048c6dedcc4839fecee6e794f99ed3aae1603ed">more work on identity (3048c6d)</a>
+  Last modified May 17, 2022: <a href="https://github.com/Azure/azure-saas/commit/ddfadad889b617651ff95fe205e8a797b5278fa8">docs almost done (ddfadad)</a>
 </div>
 
 </div>

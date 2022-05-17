@@ -23,21 +23,21 @@
 The SaaS.Permissions.Service module (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main …">
 <meta property="og:title" content="SaaS.Permissions.Service" />
 <meta property="og:description" content="Overview The SaaS.Permissions.Service module (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions:
- Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the project readme." />
+ Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/permissions-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-14T19:25:26-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-17T11:13:42-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Permissions.Service">
 <meta itemprop="description" content="Overview The SaaS.Permissions.Service module (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions:
- Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the project readme.">
-<meta itemprop="dateModified" content="2022-05-14T19:25:26-04:00" />
+ Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.">
+<meta itemprop="dateModified" content="2022-05-17T11:13:42-04:00" />
 <meta itemprop="wordCount" content="917">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Permissions.Service"/>
 <meta name="twitter:description" content="Overview The SaaS.Permissions.Service module (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions:
- Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the project readme."/>
+ Handles CRUD operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme."/>
 
 
 
@@ -122,8 +122,8 @@ The SaaS.Permissions.Service module (aka Permissions Service) is a component of 
   <ul class="ul-1">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasquick-start-li">
   <a href="/azure-saas/quick-start/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasquick-start"><span class="">Quick Start</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasdesign-li">
-  <a href="/azure-saas/design/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasdesign"><span class="">Design</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasdiagrams-li">
+  <a href="/azure-saas/diagrams/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasdiagrams"><span class="">Architecture Diagrams</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-azure-saascomponents-li">
   <a href="/azure-saas/components/" title="Azure SaaS Dev Kit Components" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-azure-saascomponents"><span class="">Components</span></a>
   <ul class="ul-2 foldable">
@@ -157,8 +157,6 @@ The SaaS.Permissions.Service module (aka Permissions Service) is a component of 
   <a href="/azure-saas/resources/branding-considerations-for-saas/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesbranding-considerations-for-saas"><span class="">SaaS Branding Considerations</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-badgemeup-li">
   <a href="/azure-saas/resources/contoso-badgemeup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-badgemeup"><span class="">Contoso BadgeMeUp</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-tickets-li">
-  <a href="/azure-saas/resources/contoso-tickets/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-tickets"><span class="">Contoso Tickets</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesterminology-li">
   <a href="/azure-saas/resources/terminology/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesterminology"><span class="">Terminology</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdevops-li">
@@ -278,9 +276,9 @@ The SaaS.Permissions.Service module (aka Permissions Service) is a component of 
 <li>Serves as an endpoint for the <a href="../identity-provider">Identity Provider</a> to retrieve permission data in order to enrich the user token with claims</li>
 </ol>
 <h2 id="how-to-run-locally">How to Run Locally</h2>
-<p>Instructions to get this module running on your local dev machine are located in the project <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>.</p>
+<p>Instructions to get this module running on your local dev machine are located in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>.</p>
 <h3 id="configuration-and-secrets">Configuration and Secrets</h3>
-<p>A list of app settings and secrets can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>. All non-secret values will have a default value in the <code>appsettings.json</code> file. All secret values will need to be set using the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;tabs=windows">.NET secrets manager</a> when running the project locally, as it is not reccomended to have these secret values in your <code>appsettings.json</code> file.</p>
+<p>A list of app settings and secrets can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>. All non-secret values will have a default value in the <code>appsettings.json</code> file. All secret values will need to be set using the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;tabs=windows">.NET secrets manager</a> when running the module locally, as it is not reccomended to have these secret values in your <code>appsettings.json</code> file.</p>
 <p>When deployed to Azure, the application is configured to load in its secrets from <a href="https://docs.microsoft.com/en-us/azure/key-vault/general/overview">Azure Key Vault</a> instead. If you deploy the project using our bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the key vault using a <a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">System Assigned Managed Identity</a>. The Permissions Service module is also configured with <a href="https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix">key name prefixes</a> to only import secrets with the prefix of <code>permissions-</code>, as other modules share the same keyvault.</p>
 <h2 id="module-design">Module Design</h2>
 <h3 id="dependencies">Dependencies</h3>
@@ -334,7 +332,7 @@ The certificate that gets deployed out of the box by following the Quick Start i
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 14, 2022: <a href="https://github.com/Azure/azure-saas/commit/4bcfe210eae9366e4f41e27b21642e5b77195fd3">signupadmin docs (4bcfe21)</a>
+  Last modified May 17, 2022: <a href="https://github.com/Azure/azure-saas/commit/ddfadad889b617651ff95fe205e8a797b5278fa8">docs almost done (ddfadad)</a>
 </div>
 
 </div>

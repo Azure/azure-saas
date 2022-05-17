@@ -113,9 +113,9 @@
 &lt;li&gt;Serves as an endpoint for the &lt;a href=&#34;../identity-provider&#34;&gt;Identity Provider&lt;/a&gt; to retrieve permission data in order to enrich the user token with claims&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2 id=&#34;how-to-run-locally&#34;&gt;How to Run Locally&lt;/h2&gt;
-&lt;p&gt;Instructions to get this module running on your local dev machine are located in the project &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions&#34;&gt;readme.md&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Instructions to get this module running on your local dev machine are located in the module&amp;rsquo;s &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions&#34;&gt;readme.md&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;configuration-and-secrets&#34;&gt;Configuration and Secrets&lt;/h3&gt;
-&lt;p&gt;A list of app settings and secrets can be found in the module&amp;rsquo;s &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions&#34;&gt;readme.md&lt;/a&gt;. All non-secret values will have a default value in the &lt;code&gt;appsettings.json&lt;/code&gt; file. All secret values will need to be set using the &lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;amp;tabs=windows&#34;&gt;.NET secrets manager&lt;/a&gt; when running the project locally, as it is not reccomended to have these secret values in your &lt;code&gt;appsettings.json&lt;/code&gt; file.&lt;/p&gt;
+&lt;p&gt;A list of app settings and secrets can be found in the module&amp;rsquo;s &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions&#34;&gt;readme.md&lt;/a&gt;. All non-secret values will have a default value in the &lt;code&gt;appsettings.json&lt;/code&gt; file. All secret values will need to be set using the &lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;amp;tabs=windows&#34;&gt;.NET secrets manager&lt;/a&gt; when running the module locally, as it is not reccomended to have these secret values in your &lt;code&gt;appsettings.json&lt;/code&gt; file.&lt;/p&gt;
 &lt;p&gt;When deployed to Azure, the application is configured to load in its secrets from &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/key-vault/general/overview&#34;&gt;Azure Key Vault&lt;/a&gt; instead. If you deploy the project using our bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the key vault using a &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview&#34;&gt;System Assigned Managed Identity&lt;/a&gt;. The Permissions Service module is also configured with &lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix&#34;&gt;key name prefixes&lt;/a&gt; to only import secrets with the prefix of &lt;code&gt;permissions-&lt;/code&gt;, as other modules share the same keyvault.&lt;/p&gt;
 &lt;h2 id=&#34;module-design&#34;&gt;Module Design&lt;/h2&gt;
 &lt;h3 id=&#34;dependencies&#34;&gt;Dependencies&lt;/h3&gt;
@@ -231,15 +231,25 @@ admin--&amp;gt;&amp;gt;frontend : Ok
       <description>
         
         
-        &lt;p&gt;&lt;strong&gt;Caveat&lt;/strong&gt;: This reference implementation does not provide support for per-tenant “local” users (i.e., all users will be accessing all tenants, there will be no landon@tenant1 vs landon@tenant2, it will be just &lt;a href=&#34;mailto:landon@email.com&#34;&gt;landon@email.com&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Caveat&lt;/strong&gt;: This version only supports “local” users and social identities and does not provide support for configuring federation with other Identity Providers.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Caveat&lt;/strong&gt;: Even if future versions provide support for configuring federation with additional Identity Providers (IdP), it will not provide support for “per-tenant federation” (i.e., where each tenant could bring their own IdP). This is primarily due to limitations in Azure AD B2C which make it additional work to manage “per-tenants” users/policies within a directory:&lt;/p&gt;
+        &lt;p&gt;There are a few caveats of the identity solution provided within this reference implementation that you should be aware of.&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Each federation is configured via directory-wide policy and there is a limit of 200 policies on a directory.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a singular B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had &lt;code&gt;jill@contoso.com&lt;/code&gt; sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same &lt;code&gt;jill@contoso.com&lt;/code&gt; account. You may still control what tenants they have roles under via the permissions that come back in their JWT claims.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The current version only supports “local” users and social identities and does not provide support for configuring federation with other Identity Providers.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Future versions will likely not provide support for “per-tenant federation” (i.e., where each tenant could bring their own IdP). This is primarily due to limitations in Azure AD B2C which introduce significant overhead when attempting to manage “per-tenants” users &amp;amp; policies within a directory.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ie. It is possible, but each federation is configured via directory-wide policy and there is a limit of 200 policies on a directory.&lt;/li&gt;
+&lt;li&gt;If all tenants can be assumed to have their own Azure Active Directory (regular B2B), then per-tenant federation could be implemented using Azure AD (multitenant) federation identity provider with the application code doing the authorization based on specific tenant id claim. However, if each tenant wants to be able to configure their own completely different IdP (e.g., Okta, Ping, Auth0, Cognito), it would require additional work due to policy limits.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;Caveat&lt;/strong&gt;: If all tenants can be assumed to have their own Azure Active Directory (regular B2B), then per-tenant federation could be implemented using Azure AD (multitenant) federation identity provider with “application code” doing the authorization based on specific tenant id claim.&lt;/p&gt;
-&lt;p&gt;However, if each tenant wants to be able to configure their own completely different IdP (e.g., Okta, Ping, Auth0, Cognito), it would require additional work due to policy limits.&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations&#34;&gt;https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Azure AD B2C has a documented limitation preventing API chaining via the OAuth 2.0 On-Behalf-Of flow. You may request a token to call an API via a web app, but not an API via an API. See the &lt;a href=&#34;https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations&#34;&gt;B2C Limitations&lt;/a&gt; page for more information.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 
       </description>
     </item>
