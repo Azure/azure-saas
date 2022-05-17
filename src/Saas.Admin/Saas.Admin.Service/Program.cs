@@ -21,7 +21,7 @@ if (builder.Environment.IsProduction())
     CertificateClient certificateClient = new CertificateClient(new Uri(builder.Configuration["KeyVault:Url"]), new DefaultAzureCredential());
     permissionsApiCertificate = certificateClient.DownloadCertificate(builder.Configuration["KeyVault:PermissionsApiCertName"]).Value;
 }
-else 
+else
 {
     // If running locally, you must first set the certificate as a base 64 encoded string in your .NET secrets manager.
     var certString = builder.Configuration["PermissionsApi:LocalCertificate"];
@@ -43,11 +43,12 @@ builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration,
 builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTransformer");
 builder.Services.AddRouteBasedRoleHandler("tenantId");
 
-builder.Services.AddAuthorization(options => {
+builder.Services.AddAuthorization(options =>
+{
     options.AddPolicy("TenantAdminOnly", policyBuilder =>
 {
-        policyBuilder.Requirements.Add(new RolesAuthorizationRequirement(new string[] { "TenantAdmin" }));
-    });
+    policyBuilder.Requirements.Add(new RolesAuthorizationRequirement(new string[] { "TenantAdmin" }));
+});
 });
 
 
@@ -64,37 +65,39 @@ builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient
         handler.ClientCertificates.Add(permissionsApiCertificate);
         return handler;
     })
-    .ConfigureHttpClient(options => {
+    .ConfigureHttpClient(options =>
+    {
         options.BaseAddress = new Uri(builder.Configuration["PermissionsApi:BaseUrl"]);
 
         if (builder.Environment.IsDevelopment())
         {
             // The permissions API expects the certificate to be provided to the application layer by the web server after the TLS handshake
             // Since this doesn't happen locally, we need to do it ourselves
-            
+
             options.DefaultRequestHeaders.Add("X-ARR-ClientCert", Convert.ToBase64String(permissionsApiCertificate.GetRawCertData()));
         }
-        });
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+//Documents for the Authorization Parts https://azure.github.io/azure-saas/components/admin-service/#authentication
 builder.Services.AddSwaggerGen(options =>
 {
     string? xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-    
-        options.SwaggerDoc("v1", new OpenApiInfo { Title = "Saas.Admin.Service", Version = "v1" });
 
-        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        {
-            In = ParameterLocation.Header,
-            Description = "Please enter a valid token",
-            Name = "Authorization",
-            Type = SecuritySchemeType.Http,
-            BearerFormat = "JWT",
-            Scheme = "Bearer"
-        });
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Saas.Admin.Service", Version = "v1", Description = "Documentations on authentication can be found at <a href='https://azure.github.io/azure-saas/components/admin-service/#authentication'>https://azure.github.io/azure-saas/components/admin-service/#authentication</a>" });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
         {
             {
                 new OpenApiSecurityScheme
@@ -107,7 +110,7 @@ builder.Services.AddSwaggerGen(options =>
                 },
                 new string[] { }
             }
-        }); 
+        });
 });
 
 var app = builder.Build();
