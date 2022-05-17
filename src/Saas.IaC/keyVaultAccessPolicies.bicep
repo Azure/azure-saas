@@ -9,6 +9,9 @@ param adminApiPrincipalId string
 @description('The object ID of the logged in Azure Active Directory User.')
 param azureAdUserID string
 
+@description('The ASDK modules to deploy.')
+param modulesToDeploy object
+
 @description('The Principal Id of the Permissions Api System Assigned Managed Identity.')
 param permissionApiPrincipalId string
 
@@ -46,7 +49,7 @@ resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-previ
           ]
         }
       }
-      {
+      (modulesToDeploy.adminService) ? {
         objectId: adminApiPrincipalId
         tenantId: subscription().tenantId
         permissions: {
@@ -54,8 +57,8 @@ resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-previ
             'get'
           ]
         }
-      }
-      {
+      } : {}
+      (modulesToDeploy.permissionService) ? {
         objectId: permissionApiPrincipalId
         tenantId: subscription().tenantId
         permissions: {
@@ -63,8 +66,8 @@ resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-previ
             'get'
           ]
         }
-      }
-      {
+      } : {}
+      (modulesToDeploy.signupWeb) ? {
         objectId: signupAdminAppServicePrincipalId
         tenantId: subscription().tenantId
         permissions: {
@@ -72,7 +75,7 @@ resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-previ
             'get'
           ]
         }
-      }
+      } : {}
     ]
   }
 }

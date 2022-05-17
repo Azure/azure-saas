@@ -24,6 +24,18 @@ param azureAdB2cTenantIdSecretValue string
 @description('The object ID of the logged in Azure Active Directory User.')
 param azureAdUserID string
 
+@description('Deploy the AdminService module. Defaults to true.')
+param deployAdminServiceModule bool = true
+
+@description('Deploy the ApplicationWeb module. Defaults to true.')
+param deployApplicationWebModule bool = true
+
+@description('Deploy the PermissionsService module. Defaults to true.')
+param deployPermissionsServiceModule bool = true
+
+@description('Deploy the SignupWeb module. Defaults to true.')
+param deploySignupAdminWebModule bool = true
+
 @description('The value of the Permissions Api Certificate Key Vault Secret.')
 param permissionsApiCertificateSecretValue string
 
@@ -71,6 +83,15 @@ var permissionsSqlDatabaseName = 'sqldb-permissions-${saasProviderName}-${saasEn
 var permissionsSqlServerName = 'sql-permissions-${saasProviderName}-${saasEnvironment}-${saasInstanceNumber}'
 var signupAdminAppServiceName = replace('app-signup-${saasProviderName}-${saasEnvironment}', '-', '')
 
+var modulesToDeploy = {
+  adminService: deployAdminServiceModule
+  applicationWeb: deployApplicationWebModule
+  permissionsService: deployPermissionsServiceModule
+  signupAdminWeb: deploySignupAdminWebModule
+}
+
+var messageToUpdate = 'UPDATE THIS AFTER DEPLOYMENT'
+
 // Module - App Service Plan
 //////////////////////////////////////////////////
 module appServicePlanModule './appServicePlan.bicep' = {
@@ -93,7 +114,7 @@ module logicAppModule 'notifications.bicep' = {
 
 // Module - Permissions SQL Database
 //////////////////////////////////////////////////
-module permissionsSqlModule './permissionsSql.bicep' = {
+module permissionsSqlModule './permissionsSql.bicep' = if (modulesToDeploy.permissionsService) {
   name: 'permissionsSqlDeployment'
   params: {
     location: location
@@ -106,7 +127,7 @@ module permissionsSqlModule './permissionsSql.bicep' = {
 
 // Module - Admin SQL Database
 //////////////////////////////////////////////////
-module adminSqlModule './adminSql.bicep' = {
+module adminSqlModule './adminSql.bicep' = if (modulesToDeploy.adminService) {
   name: 'adminSqlDeployment'
   params: {
     adminSqlDatabaseName: adminSqlDatabaseName
@@ -122,7 +143,7 @@ module adminSqlModule './adminSql.bicep' = {
 module keyVaultModule 'keyVault.bicep' = {
   name: 'keyVaultDeployment'
   params: {
-    adminSqlConnectionStringSecretValue: adminSqlModule.outputs.adminSqlDatabaseConnectionString
+    adminSqlConnectionStringSecretValue: (modulesToDeploy.adminService) ? adminSqlModule.outputs.adminSqlDatabaseConnectionString : ''
     azureAdB2cAdminApiClientIdSecretValue: azureAdB2cAdminApiClientIdSecretValue
     azureAdB2cDomainSecretValue: azureAdB2cDomainSecretValue
     azureAdB2cInstanceSecretValue: azureAdB2cInstanceSecretValue
@@ -133,13 +154,13 @@ module keyVaultModule 'keyVault.bicep' = {
     location: location
     permissionsApiCertificateSecretValue: permissionsApiCertificateSecretValue
     permissionsApiSslThumbprintSecretValue: permissionsApiSslThumbprintSecretValue
-    permissionsSqlConnectionStringSecretValue: permissionsSqlModule.outputs.permissionsSqlDatabaseConnectionString
+    permissionsSqlConnectionStringSecretValue: (modulesToDeploy.permissionsService) ? permissionsSqlModule.outputs.permissionsSqlDatabaseConnectionString : ''
   }
 }
 
 // Module - Permissions Api
 //////////////////////////////////////////////////
-module permissionsApiModule './permissionsApi.bicep' = {
+module permissionsApiModule './permissionsApi.bicep' = if (modulesToDeploy.permissionsService) {
   name: 'permissionsApiDeployment'
   params: {
     appServicePlanId: appServicePlanModule.outputs.appServicePlanId
@@ -151,23 +172,23 @@ module permissionsApiModule './permissionsApi.bicep' = {
 
 // Module - Admin Api
 //////////////////////////////////////////////////
-module adminApiModule './adminApi.bicep' = {
+module adminApiModule './adminApi.bicep' = if (modulesToDeploy.adminService) {
   name: 'adminApiDeployment'
   params: {
     adminApiName: adminApiName
     appServicePlanId: appServicePlanModule.outputs.appServicePlanId
     keyVaultUri: keyVaultModule.outputs.keyVaultUri
     location: location
-    permissionsApiHostName: permissionsApiModule.outputs.permissionsApiHostName
+    permissionsApiHostName: (modulesToDeploy.permissionsService) ? permissionsApiModule.outputs.permissionsApiHostName : messageToUpdate
   }
 }
 
 // Module - Signup Administration App Service
 //////////////////////////////////////////////////
-module signupAdminAppServiceModule 'signupAdminWeb.bicep' = {
+module signupAdminAppServiceModule 'signupAdminWeb.bicep' = if (modulesToDeploy.signupAdminWeb) {
   name: 'signupAdminAppServiceDeployment'
   params: {
-    adminApiHostName: adminApiModule.outputs.adminApiHostName
+    adminApiHostName: (modulesToDeploy.adminService) ? adminApiModule.outputs.adminApiHostName : messageToUpdate
     adminApiScopes: adminApiScopes
     appServicePlanId: appServicePlanModule.outputs.appServicePlanId
     keyVaultUri: keyVaultModule.outputs.keyVaultUri
@@ -178,7 +199,7 @@ module signupAdminAppServiceModule 'signupAdminWeb.bicep' = {
 
 // Module - Application App Service
 //////////////////////////////////////////////////
-module applicationAppServiceModule 'applicationWeb.bicep' = {
+module applicationAppServiceModule 'applicationWeb.bicep' = if (modulesToDeploy.applicationWeb) {
   name: 'applicationAppServiceDeployment'
   params: {
     applicationAppServiceName: applicationAppServiceName
@@ -195,6 +216,7 @@ module keyVaultAccessPolicyModule 'keyVaultAccessPolicies.bicep' = {
     adminApiPrincipalId: adminApiModule.outputs.systemAssignedManagedIdentityPrincipalId
     azureAdUserID: azureAdUserID
     keyVaultName: keyVaultName
+    modulesToDeploy: modulesToDeploy
     permissionApiPrincipalId: permissionsApiModule.outputs.systemAssignedManagedIdentityPrincipalId
     signupAdminAppServicePrincipalId: signupAdminAppServiceModule.outputs.systemAssignedManagedIdentityPrincipalId
   }
