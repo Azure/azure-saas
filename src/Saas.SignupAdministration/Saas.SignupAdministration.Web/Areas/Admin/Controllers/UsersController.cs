@@ -53,7 +53,7 @@ public class UsersController : Controller
         {
             try
             {
-                await _adminServiceClient.PermissionsPOSTAsync(addUserRequest.TenantId, addUserRequest.UserEmail, new List<string> { $"{addUserRequest.TenantId}.TenantAdmin" });
+                await _adminServiceClient.PermissionsPOSTAsync(addUserRequest.TenantId, addUserRequest.UserEmail, new List<string> { "TenantAdmin" });
             }
             catch (ApiException)
             {
