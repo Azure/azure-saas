@@ -24,12 +24,12 @@ public class UsersController : Controller
                 UserId = x.UserId,
                 Permissions = string.Join(", ", await _adminServiceClient.PermissionsAllAsync(tenantid, x.UserId))
             }).ToListAsync();
-
+        ViewData["tenantid"] = tenantid;
         return View(userViewModels);
     }
 
     [HttpGet]
-    [Route("AddUserToTenant")]
+    [Route("AddUserToTenant", Name = "AddUserToTenant")]
     public IActionResult AddUserToTenant(string tenantId)
     {
         return View(new AddUserRequest { TenantId = tenantId });

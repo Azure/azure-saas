@@ -50,7 +50,9 @@
                 <td>
                     @Html.ActionLink("Edit", "Edit", new {area = "Admin", id=item.Id} ) |
                     @Html.ActionLink("Details", "Details", new { area = "Admin", id=item.Id}) |
+                    @Html.ActionLink("Users", "Index", new { area = "Admin", controller="users", tenantid=item.Id}) |
                     @Html.ActionLink("Delete", "Delete", new { area = "Admin", id=item.Id})
+
                 </td>
             </tr>
         }
