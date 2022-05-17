@@ -9,10 +9,12 @@ public class PermissionsService : IPermissionsService
 {
     private readonly PermissionsContext _context;
     private readonly ILogger _logger;
-    public PermissionsService(PermissionsContext permissionsContext, ILogger<PermissionsService> logger)
+    private readonly IGraphAPIService _graphAPIService;
+    public PermissionsService(PermissionsContext permissionsContext, ILogger<PermissionsService> logger, IGraphAPIService graphAPIService)
     {
         _context = permissionsContext;
         _logger = logger;
+        _graphAPIService = graphAPIService;
     }
 
     public async Task<ICollection<Permission>> GetPermissionsAsync(string userId)
@@ -52,6 +54,23 @@ public class PermissionsService : IPermissionsService
             }
 
             _context.Permissions.Add(new Permission { TenantId = tenantId, UserId = userId, PermissionStr = permission });
+        }
+        await _context.SaveChangesAsync();
+        return;
+    }
+
+    public async Task AddUserPermissionsToTenantByEmailAsync(string tenantId, string userEmail, string[] permissions)
+    {
+        _logger.LogDebug("User permissions where requested to be added to {userEmail} on {tenantId}", userEmail, tenantId);
+        User user = await _graphAPIService.GetUserByEmail(userEmail);
+        foreach (var permission in permissions)
+        {
+            if (await GetPermissionExistsAsync(tenantId, user.UserId, permission))
+            {
+                throw new ItemAlreadyExistsException($"User: {user.UserId} has already been granted {permission} on tenant: {tenantId}");
+            }
+
+            _context.Permissions.Add(new Permission { TenantId = tenantId, UserId = user.UserId, PermissionStr = permission });
         }
         await _context.SaveChangesAsync();
         return;
