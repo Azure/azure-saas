@@ -164,7 +164,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task InviteAsync(string tenantId, string? userEmail, string userId);
+        System.Threading.Tasks.Task InviteAsync(string tenantId, string? userEmail);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -172,7 +172,7 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task InviteAsync(string tenantId, string? userEmail, string userId, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task InviteAsync(string tenantId, string? userEmail, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Get all tenant IDs that a user has access to
@@ -1177,9 +1177,9 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task InviteAsync(string tenantId, string? userEmail, string userId)
+        public virtual System.Threading.Tasks.Task InviteAsync(string tenantId, string? userEmail)
         {
-            return InviteAsync(tenantId, userEmail, userId, System.Threading.CancellationToken.None);
+            return InviteAsync(tenantId, userEmail, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -1188,18 +1188,14 @@ namespace Saas.SignupAdministration.Web.Services
         /// </summary>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task InviteAsync(string tenantId, string? userEmail, string userId, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task InviteAsync(string tenantId, string? userEmail, System.Threading.CancellationToken cancellationToken)
         {
             if (tenantId == null)
                 throw new System.ArgumentNullException("tenantId");
 
-            if (userId == null)
-                throw new System.ArgumentNullException("userId");
-
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/Tenants/{tenantId}/Users/{userId}/invite?");
+            urlBuilder_.Append("api/Tenants/{tenantId}/invite?");
             urlBuilder_.Replace("{tenantId}", System.Uri.EscapeDataString(ConvertToString(tenantId, System.Globalization.CultureInfo.InvariantCulture)));
-            urlBuilder_.Replace("{userId}", System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture)));
             if (userEmail != null)
             {
                 urlBuilder_.Append(System.Uri.EscapeDataString("userEmail") + "=").Append(System.Uri.EscapeDataString(ConvertToString(userEmail, System.Globalization.CultureInfo.InvariantCulture))).Append("&");

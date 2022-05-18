@@ -284,7 +284,7 @@ public class TenantsController : ControllerBase
     /// <param name="userId"></param>
     /// <param name="permissions"></param>
     /// <returns></returns>
-    [HttpPost("{tenantId}/Users/{userId}/invite")]
+    [HttpPost("{tenantId}/invite")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -292,7 +292,7 @@ public class TenantsController : ControllerBase
     [Authorize(Policy = AppConstants.Policies.TenantWrite)]
     public async Task<IActionResult> InviteUserToTenant(string tenantId, string userEmail)
     {
-        await _permissionService.AddUserPermissionsToTenantAsync(tenantId, userEmail, AppConstants.Roles.TenantAdmin);
+        await _permissionService.AddUserPermissionsToTenantByEmailAsync(tenantId, userEmail, AppConstants.Roles.TenantAdmin);
         return NoContent();
     }
 
