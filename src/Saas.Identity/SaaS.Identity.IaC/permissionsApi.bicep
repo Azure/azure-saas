@@ -24,7 +24,8 @@ resource permissionsApi 'Microsoft.Web/sites@2021-03-01' = {
   properties: {
     serverFarmId: appServicePlanId
     httpsOnly: true
-    clientCertMode: 'Optional'
+    clientCertEnabled: true
+    clientCertMode: 'Required'
     siteConfig: {
       linuxFxVersion: permissionsApiContainerImageTag
       appSettings: [

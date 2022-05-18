@@ -104,7 +104,7 @@ module identityKeyVaultModule './identityKeyVault.bicep' = {
 
 // Module - Permissions Api
 //////////////////////////////////////////////////
-module permissionsApiModule './permissionsApi.bicep' = {
+module permissionsApiModule 'permissionsApi.bicep' = {
   name: 'permissionsApiDeployment'
   params: {
     appServicePlanId: appServicePlanModule.outputs.appServicePlanId
