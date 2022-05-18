@@ -73,6 +73,7 @@ resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-previ
         permissions: {
           secrets: [
             'get'
+            'list'
           ]
         }
       } : {}
