@@ -54,4 +54,4 @@ ARG app_path
 
 COPY --from=build /app/$app_path/out .
 
-ENTRYPOINT ["dotnet", ${dll_name}]
+ENTRYPOINT ["/bin/sh", "-c", "dotnet $dll_name"]
