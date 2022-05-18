@@ -33,7 +33,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @Html.ActionLink("Back to List", "Index", new { area = "Admin", controller="users", tenantid=Model.TenantId })
 </div>
 
 @section Scripts {

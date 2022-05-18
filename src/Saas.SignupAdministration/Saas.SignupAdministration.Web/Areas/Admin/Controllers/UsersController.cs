@@ -53,13 +53,13 @@ public class UsersController : Controller
         {
             try
             {
-                await _adminServiceClient.PermissionsPOSTAsync(addUserRequest.TenantId, addUserRequest.UserEmail, new List<string> { "TenantAdmin" });
+                await _adminServiceClient.InviteAsync(addUserRequest.TenantId, addUserRequest.UserEmail);
             }
             catch (ApiException)
             {
                 return NotFound();
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", new { area = "Admin", controller = "users", tenantid = addUserRequest.TenantId });
         }
         return View(addUserRequest);
     }
