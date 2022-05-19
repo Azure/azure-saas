@@ -47,5 +47,4 @@ ARG app_path
 
 COPY --from=build /app/$app_path/out .
 
-EXPOSE 443
 ENTRYPOINT ["/bin/sh", "-c", "dotnet $dll_name"]

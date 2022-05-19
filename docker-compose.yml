@@ -9,6 +9,8 @@ services:
       dockerfile: ./Saas.Admin/Saas.Admin.Service/Dockerfile
     expose:
       - "80"
+    ports:
+      - "8080:80"
   asdk-web:
     image: asdk-web
     container_name: asdk-web
@@ -17,6 +19,8 @@ services:
       dockerfile: ./Saas.Application/Saas.Application.Web/Dockerfile
     expose:
       - "80"
+    ports:
+      - "8081:80"
   asdk-signup:
     image: asdk-signup
     container_name: asdk-signup
@@ -25,6 +29,9 @@ services:
       dockerfile: ./Saas.SignupAdministration/Saas.SignupAdministration.Web/Dockerfile
     expose:
       - "80"
+    ports:
+      - "8082:80"
+    
   asdk-permissions:
     image: asdk-permissions
     container_name: asdk-permissions
@@ -34,5 +41,5 @@ services:
     expose:
       - "80"
     ports:
-      - "7023:80"
+      - "8083:80"
     

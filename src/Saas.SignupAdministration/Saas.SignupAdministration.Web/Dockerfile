@@ -42,7 +42,7 @@ RUN dotnet publish -c Release -o out
 ##################################################################
 FROM base as final
 ARG app_name
-ENV dll_name = "${app_name}.dll"
+ENV dll_name="${app_name}.dll"
 ARG app_path
 
 COPY --from=build /app/$app_path/out .

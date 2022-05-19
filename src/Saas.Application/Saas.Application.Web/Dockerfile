@@ -8,6 +8,8 @@ ARG app_path=Saas.Application/Saas.Application.Web
 # Stage 0: Set the Base Primary Image of the App
 ##################################################################
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+ARG app_name 
+ARG app_path
 
 WORKDIR /app
 
@@ -42,7 +44,7 @@ RUN dotnet publish -c Release -o out
 ##################################################################
 FROM base as final
 ARG app_name
-ENV dll_name = "${app_name}.dll"
+ENV dll_name="${app_name}.dll"
 ARG app_path
 
 COPY --from=build /app/$app_path/out .
