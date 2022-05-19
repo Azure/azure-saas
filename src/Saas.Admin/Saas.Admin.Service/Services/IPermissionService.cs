@@ -9,4 +9,5 @@ public interface IPermissionService
     Task AddUserPermissionsToTenantAsync(string tenantId, string userId, params string[] permissions);
     Task RemoveUserPermissionsFromTenantAsync(string tenantId, string userId, params string[] permissions);
     Task<IEnumerable<string>> GetTenantsForUserAsync(string userId, string? filter);
+    Task AddUserPermissionsToTenantByEmailAsync(string tenantId, string userEmail, params string[] permissions);
 }
