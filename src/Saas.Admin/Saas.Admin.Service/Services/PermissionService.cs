@@ -17,6 +17,12 @@ public class PermissionService : IPermissionService
         return;
     }
 
+    public async Task AddUserPermissionsToTenantByEmailAsync(string tenantId, string userEmail, params string[] permissions)
+    {
+        await _permissionsServiceClient.AddUserPermissionsToTenantByEmailAsync(tenantId, userEmail, permissions);
+        return;
+    }
+
     public async Task<IEnumerable<string>> GetTenantsForUserAsync(string userId, string? filter)
     {
         return await _permissionsServiceClient.GetTenantsForUserAsync(userId, filter);
