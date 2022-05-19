@@ -1,7 +1,7 @@
+using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
-using Azure.Identity;
+using Microsoft.AspNetCore.HttpOverrides;
 using Saas.Permissions.Service.Data;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models.AppSettings;
@@ -47,7 +47,8 @@ builder.Services.AddSingleton<ICertificateValidationService, CertificateValidati
 builder.Services.AddCertificateForwarding(options => { options.CertificateHeader = "X-ARR-ClientCert"; });
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
-    options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto;
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
+    options.ForwardedProtoHeaderName = "X-Forwarded-Proto";
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -81,6 +82,7 @@ builder.Services.AddAuthorization(options =>
 {
 
 });
+
 
 var app = builder.Build();
 app.ConfigureDatabase();
