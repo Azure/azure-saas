@@ -24,7 +24,7 @@ param permissionsApiSslThumbprintSecretValue string
 param containerRegistryUrl string = 'https://ghcr.io'
 
 @description('The tag of the container image to deploy to the permissions api app service.')
-param permissionsApiContainerImageTag string = 'azure/azure-saas/asdk-permissions:latest'
+param permissionsApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-permissions:latest'
 
 @description('The object ID of the logged in Azure Active Directory User.')
 param azureAdUserID string
