@@ -1,4 +1,4 @@
-# SaaS.SignupAdministration.Web
+# Saas.SignupAdministration.Web
 
 ## Project Overview
 

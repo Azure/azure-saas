@@ -24,7 +24,7 @@ Whether you're modernizing an existing application, building a new application, 
 - [**Core App**](/services/core-app/)
 	- A web app where your customers to view plans and onboard to your solution.
 	- Provides you with tenant administration capabilities. (modify/remove/etc.)
-- [**SaaS.Application**](/services/saas-application/) - A sample application that you can extend or replace with your own code.
+- [**Saas.Application**](/services/saas-application/) - A sample application that you can extend or replace with your own code.
 
 ## Product SaaS Reference
 
