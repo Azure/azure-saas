@@ -30,7 +30,9 @@ services:
     container_name: asdk-permissions
     build:
       context: ./src/
-      dockerfile: ./Saas.Permissions/Saas.Permissions.Service/Dockerfile
+      dockerfile: ./Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Dockerfile
     expose:
       - "80"
+    ports:
+      - "7023:80"
     
