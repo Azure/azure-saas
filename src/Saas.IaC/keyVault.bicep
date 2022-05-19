@@ -7,7 +7,7 @@ param adminSqlConnectionStringSecretName string = 'admin-ConnectionStrings--Tena
 param adminSqlConnectionStringSecretValue string
 
 @description('The name of the Azure AD B2C Admin Api Client Id Key Vault Secret.')
-param azureAdB2cAdminApiClientIdSecretName string = 'admin-AzureAdB2C--AdminApiClientId'
+param azureAdB2cAdminApiClientIdSecretName string = 'admin-AzureAdB2C--ClientId'
 
 @description('The value of the Azure AD B2C Admin Api Client Id Key Vault Secret.')
 param azureAdB2cAdminApiClientIdSecretValue string
@@ -31,7 +31,7 @@ param azureAdB2cSignupAdminInstanceSecretName string = 'signupadmin-AzureAdB2C--
 param azureAdB2cInstanceSecretValue string
 
 @description('The name of the Azure AD B2C Signup Admin Client Id Key Vault Secret.')
-param azureAdB2cSignupAdminClientIdSecretName string = 'signupadmin-AzureAdB2C--SignupAdminClientId'
+param azureAdB2cSignupAdminClientIdSecretName string = 'signupadmin-AzureAdB2C--ClientId'
 
 @description('The value of the Azure AD B2C Signup Admin Client Id Key Vault Secret.')
 param azureAdB2cSignupAdminClientIdSecretValue string
@@ -58,7 +58,7 @@ param keyVaultName string
 param location string
 
 @description('The name of the Permissions Api Certificate Key Vault Secret.')
-param permissionsApiCertificateSecretName string = 'admin-KeyVault--PermissionsApiCertName'
+param permissionsApiCertificateSecretName string = 'admin-KeyVault--PermissionsApiCert'
 
 @description('The value of the Permissions Api Certificate Key Vault Secret.')
 param permissionsApiCertificateSecretValue string

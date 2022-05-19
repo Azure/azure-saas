@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - users/brandonmartinez/**
     paths:
       - ".github/workflows/**"
       - "src/**"

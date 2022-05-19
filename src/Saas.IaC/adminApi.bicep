@@ -19,7 +19,7 @@ param permissionsApiCertificateSecretName string = 'KeyVault--PermissionsApiCert
 param permissionsApiHostName string
 
 @description('The URL for the container registry to pull the docker images from')
-param containerRegistryUrl string = 'ghcr.io'
+param containerRegistryUrl string
 
 @description('The tag of the container image to deploy to the permissions api app service')
 param adminApiContainerImageTag string
