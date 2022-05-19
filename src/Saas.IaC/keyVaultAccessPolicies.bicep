@@ -12,9 +12,6 @@ param azureAdUserID string
 @description('The ASDK modules to deploy.')
 param modulesToDeploy object
 
-@description('The Principal Id of the Permissions Api System Assigned Managed Identity.')
-param permissionApiPrincipalId string
-
 @description('The Principal Id of the Signup Admin App Service System Assigned Managed Identity.')
 param signupAdminAppServicePrincipalId string
 
@@ -55,15 +52,7 @@ resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-previ
         permissions: {
           secrets: [
             'get'
-          ]
-        }
-      } : {}
-      (modulesToDeploy.permissionService) ? {
-        objectId: permissionApiPrincipalId
-        tenantId: subscription().tenantId
-        permissions: {
-          secrets: [
-            'get'
+            'list'
           ]
         }
       } : {}

@@ -3,6 +3,12 @@
 @description('Scopes to authorize user for the admin service.')
 param adminApiScopes string
 
+@description('The tag of the container image to deploy to the Admin api app service.')
+param adminApiContainerImageTag string = 'azure/azure-saas/asdk-permissions:latest'
+
+@description('The tag of the container image to deploy to the SaaS Application api app service.')
+param applicationContainerImageTag string = 'azure/azure-saas/asdk-permissions:latest'
+
 @description('The value of the Azure AD B2C Admin Api Client Id Key Vault Secret.')
 param azureAdB2cAdminApiClientIdSecretValue string
 
@@ -24,6 +30,9 @@ param azureAdB2cTenantIdSecretValue string
 @description('The object ID of the logged in Azure Active Directory User.')
 param azureAdUserID string
 
+@description('The URL for the container registry to pull the docker images from')
+param containerRegistryUrl string = 'https://ghcr.io'
+
 @description('Deploy the AdminService module. Defaults to true.')
 param deployAdminServiceModule bool = true
 
@@ -36,14 +45,17 @@ param deployPermissionsServiceModule bool = true
 @description('Deploy the SignupWeb module. Defaults to true.')
 param deploySignupAdminWebModule bool = true
 
-@description('The value of the Permissions Api Certificate Key Vault Secret.')
-param permissionsApiCertificateSecretValue string
-
-@description('The value of the Permissions Api SSL Thumbprint Key Vault Secret.')
-param permissionsApiSslThumbprintSecretValue string
-
 @description('The location for all resources.')
 param location string = resourceGroup().location
+
+@description('The Host Name of the Permissions Api to point the Admin Api to.')
+param permissionsApiHostName string
+
+@description('The base64 encoded certificate to save in the keyvault for securing communication with the permissions API.')
+param permissionsApiCertificateSecretValue string
+
+@description('The tag of the container image to deploy to the SignupAdmin app service.')
+param signupAdminContainerImageTag string = 'azure/azure-saas/asdk-signup:latest'
 
 @description('The SaaS Provider name.')
 param saasProviderName string
@@ -78,9 +90,6 @@ var applicationAppServiceName = replace('app-application-${saasProviderName}-${s
 var appServicePlanName = 'plan-${saasProviderName}-${saasEnvironment}-${saasInstanceNumber}'
 var keyVaultName = 'kv-${saasProviderName}-${saasEnvironment}-${saasInstanceNumber}'
 var logicAppName = 'logic-${saasProviderName}-${saasEnvironment}-${saasInstanceNumber}'
-var permissionsApiName = replace('api-permissions-${saasProviderName}-${saasEnvironment}', '-', '')
-var permissionsSqlDatabaseName = 'sqldb-permissions-${saasProviderName}-${saasEnvironment}-${saasInstanceNumber}'
-var permissionsSqlServerName = 'sql-permissions-${saasProviderName}-${saasEnvironment}-${saasInstanceNumber}'
 var signupAdminAppServiceName = replace('app-signup-${saasProviderName}-${saasEnvironment}', '-', '')
 
 var modulesToDeploy = {
@@ -112,19 +121,6 @@ module logicAppModule 'notifications.bicep' = {
   }
 }
 
-// Module - Permissions SQL Database
-//////////////////////////////////////////////////
-module permissionsSqlModule './permissionsSql.bicep' = if (modulesToDeploy.permissionsService) {
-  name: 'permissionsSqlDeployment'
-  params: {
-    location: location
-    permissionsSqlDatabaseName: permissionsSqlDatabaseName
-    permissionsSqlServerName: permissionsSqlServerName
-    sqlAdministratorLogin: sqlAdministratorLogin
-    sqlAdministratorLoginPassword: sqlAdministratorLoginPassword
-  }
-}
-
 // Module - Admin SQL Database
 //////////////////////////////////////////////////
 module adminSqlModule './adminSql.bicep' = if (modulesToDeploy.adminService) {
@@ -153,22 +149,9 @@ module keyVaultModule 'keyVault.bicep' = {
     keyVaultName: keyVaultName
     location: location
     permissionsApiCertificateSecretValue: permissionsApiCertificateSecretValue
-    permissionsApiSslThumbprintSecretValue: permissionsApiSslThumbprintSecretValue
-    permissionsSqlConnectionStringSecretValue: (modulesToDeploy.permissionsService) ? permissionsSqlModule.outputs.permissionsSqlDatabaseConnectionString : ''
   }
 }
 
-// Module - Permissions Api
-//////////////////////////////////////////////////
-module permissionsApiModule './permissionsApi.bicep' = if (modulesToDeploy.permissionsService) {
-  name: 'permissionsApiDeployment'
-  params: {
-    appServicePlanId: appServicePlanModule.outputs.appServicePlanId
-    keyVaultUri: keyVaultModule.outputs.keyVaultUri
-    location: location
-    permissionsApiName: permissionsApiName
-  }
-}
 
 // Module - Admin Api
 //////////////////////////////////////////////////
@@ -179,7 +162,9 @@ module adminApiModule './adminApi.bicep' = if (modulesToDeploy.adminService) {
     appServicePlanId: appServicePlanModule.outputs.appServicePlanId
     keyVaultUri: keyVaultModule.outputs.keyVaultUri
     location: location
-    permissionsApiHostName: (modulesToDeploy.permissionsService) ? permissionsApiModule.outputs.permissionsApiHostName : messageToUpdate
+    permissionsApiHostName: permissionsApiHostName
+    adminApiContainerImageTag: adminApiContainerImageTag
+    containerRegistryUrl: containerRegistryUrl
   }
 }
 
@@ -194,6 +179,8 @@ module signupAdminAppServiceModule 'signupAdminWeb.bicep' = if (modulesToDeploy.
     keyVaultUri: keyVaultModule.outputs.keyVaultUri
     location: location
     signupAdminAppServiceName: signupAdminAppServiceName
+    signupAdminApiContainerImageTag: signupAdminContainerImageTag
+    containerRegistryUrl: containerRegistryUrl
   }
 }
 
@@ -205,6 +192,8 @@ module applicationAppServiceModule 'applicationWeb.bicep' = if (modulesToDeploy.
     applicationAppServiceName: applicationAppServiceName
     appServicePlanId: appServicePlanModule.outputs.appServicePlanId
     location: location
+    applicationApiContainerImageTag: applicationContainerImageTag
+    containerRegistryUrl: containerRegistryUrl
   }
 }
 
@@ -217,7 +206,6 @@ module keyVaultAccessPolicyModule 'keyVaultAccessPolicies.bicep' = {
     azureAdUserID: azureAdUserID
     keyVaultName: keyVaultName
     modulesToDeploy: modulesToDeploy
-    permissionApiPrincipalId: permissionsApiModule.outputs.systemAssignedManagedIdentityPrincipalId
     signupAdminAppServicePrincipalId: signupAdminAppServiceModule.outputs.systemAssignedManagedIdentityPrincipalId
   }
 }

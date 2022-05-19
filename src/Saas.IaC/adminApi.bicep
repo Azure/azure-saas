@@ -18,18 +18,28 @@ param permissionsApiCertificateSecretName string = 'KeyVault--PermissionsApiCert
 @description('The Permissions Api host name.')
 param permissionsApiHostName string
 
+@description('The URL for the container registry to pull the docker images from')
+param containerRegistryUrl string = 'ghcr.io'
+
+@description('The tag of the container image to deploy to the permissions api app service')
+param adminApiContainerImageTag string
+
 // Resource - Admin Api
 //////////////////////////////////////////////////
 resource adminApi 'Microsoft.Web/sites@2021-03-01' = {
   name: adminApiName
   location: location
-  kind: 'app'
+  kind: 'app,linux,container'
   properties: {
     serverFarmId: appServicePlanId
     httpsOnly: true
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|6.0'
-      appSettings: [        
+      linuxFxVersion: 'DOCKER|${adminApiContainerImageTag}'
+      appSettings: [
+        {
+          name: 'DOCKER_REGISTRY_SERVER_URL'
+          value: containerRegistryUrl
+        }        
         {
           name: 'AzureAdB2C__SignedOutCallbackPath'
           value: '/signout/B2C_1A_SIGNUP_SIGNIN'

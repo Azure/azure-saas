@@ -26,6 +26,9 @@
         "azureAdUserID": {
             "value": "null"
         },
+        "permissionsApiHostName": {
+            "value": "null"
+        },
         "permissionsApiCertificateSecretValue": {
             "value": "null"
         },

@@ -9,18 +9,30 @@ param location string
 @description('The Application App Service name.')
 param applicationAppServiceName string
 
+@description('The URL for the container registry to pull the docker images from')
+param containerRegistryUrl string = 'ghcr.io'
+
+@description('The tag of the container image to deploy to the permissions api app service')
+param applicationApiContainerImageTag string
+
+
 // Resource - Signup Admin App Service
 //////////////////////////////////////////////////
 resource applicationAppService 'Microsoft.Web/sites@2021-03-01' = {
   name: applicationAppServiceName
   location: location
-  kind: 'app'
+  kind: 'app,linux,container'
   properties: {
     serverFarmId: appServicePlanId
     httpsOnly: true
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|6.0'
-      appSettings: []
+      linuxFxVersion: 'DOCKER|${applicationApiContainerImageTag}'
+      appSettings: [
+        {
+          name: 'DOCKER_REGISTRY_SERVER_URL'
+          value: containerRegistryUrl
+        }     
+      ]
     }
   }
 }

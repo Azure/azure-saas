@@ -1,43 +1,52 @@
 // Parameters
 //////////////////////////////////////////////////
 @description('The name of the Admin SQL Connection String Key Vault Secret.')
-param adminSqlConnectionStringSecretName string = 'ConnectionStrings--TenantsContext'
+param adminSqlConnectionStringSecretName string = 'admin-ConnectionStrings--TenantsContext'
 
 @description('The value of the Admin SQL Connection String Key Vault Secret.')
 param adminSqlConnectionStringSecretValue string
 
 @description('The name of the Azure AD B2C Admin Api Client Id Key Vault Secret.')
-param azureAdB2cAdminApiClientIdSecretName string = 'AzureAdB2C--AdminApiClientId'
+param azureAdB2cAdminApiClientIdSecretName string = 'admin-AzureAdB2C--AdminApiClientId'
 
 @description('The value of the Azure AD B2C Admin Api Client Id Key Vault Secret.')
 param azureAdB2cAdminApiClientIdSecretValue string
 
-@description('The name of the Azure AD B2C Domain Key Vault Secret.')
-param azureAdB2cDomainSecretName string = 'AzureAdB2C--Domain'
+@description('The name of the Azure AD B2C Domain Key Vault Secret for the Admin Api.')
+param azureAdB2cAdminApiDomainSecretName string = 'admin-AzureAdB2C--Domain'
+
+@description('The name of the Azure AD B2C Domain Key Vault Secret for the SignupAdmin Site.')
+param azureAdB2cSignupAdminDomainSecretName string = 'signupadmin-AzureAdB2C--Domain'
 
 @description('The value of the Azure AD B2C Domain Key Vault Secret.')
 param azureAdB2cDomainSecretValue string
 
-@description('The name of the Azure AD B2C Instance Key Vault Secret.')
-param azureAdB2cInstanceSecretName string = 'AzureAdB2C--Instance'
+@description('The name of the Azure AD B2C Instance Key Vault Secre for the Admin Api.')
+param azureAdB2cAdminApiInstanceSecretName string = 'admin-AzureAdB2C--Instance'
+
+@description('The name of the Azure AD B2C Instance Key Vault Secret for the SignupAdmin Site.')
+param azureAdB2cSignupAdminInstanceSecretName string = 'signupadmin-AzureAdB2C--Instance'
 
 @description('The value of the Azure AD B2C Instance Key Vault Secret.')
 param azureAdB2cInstanceSecretValue string
 
 @description('The name of the Azure AD B2C Signup Admin Client Id Key Vault Secret.')
-param azureAdB2cSignupAdminClientIdSecretName string = 'AzureAdB2C--SignupAdminClientId'
+param azureAdB2cSignupAdminClientIdSecretName string = 'signupadmin-AzureAdB2C--SignupAdminClientId'
 
 @description('The value of the Azure AD B2C Signup Admin Client Id Key Vault Secret.')
 param azureAdB2cSignupAdminClientIdSecretValue string
 
 @description('The name of the Azure AD B2C Signup Admin Client Secret Key Vault Secret.')
-param azureAdB2cSignupAdminClientSecretSecretName string = 'AzureAdB2C--ClientSecret'
+param azureAdB2cSignupAdminClientSecretSecretName string = 'signupadmin-AzureAdB2C--ClientSecret'
 
 @description('The value of the Azure AD B2C Signup Admin Client Secret Key Vault Secret.')
 param azureAdB2cSignupAdminClientSecretSecretValue string
 
-@description('The name of the Azure AD B2C Tenant Id Key Vault Secret.')
-param azureAdB2cTenantIdSecretName string = 'AzureAdB2C--TenantId'
+@description('The name of the Azure AD B2C Tenant Id Key Vault Secret for the Admin Api.')
+param azureAdB2cAdminApiTenantIdSecretName string = 'admin-AzureAdB2C--TenantId'
+
+@description('The name of the Azure AD B2C Tenant Id Key Vault Secret for the SignupAdmin site.')
+param azureAdB2cSignupAdminTenantIdSecretName string = 'signupadmin-AzureAdB2C--TenantId'
 
 @description('The value of the Azure AD B2C Tenant Id Key Vault Secret.')
 param azureAdB2cTenantIdSecretValue string
@@ -49,22 +58,11 @@ param keyVaultName string
 param location string
 
 @description('The name of the Permissions Api Certificate Key Vault Secret.')
-param permissionsApiCertificateSecretName string = 'KeyVault--PermissionsApiCertName'
+param permissionsApiCertificateSecretName string = 'admin-KeyVault--PermissionsApiCertName'
 
 @description('The value of the Permissions Api Certificate Key Vault Secret.')
 param permissionsApiCertificateSecretValue string
 
-@description('The name of the Permissions Api SSL Thumbprint Key Vault Secret.')
-param permissionsApiSslThumbprintSecretName string = 'AppSettings--SSLCertThumbprint'
-
-@description('The value of the Permissions Api SSL Thumbprint Key Vault Secret.')
-param permissionsApiSslThumbprintSecretValue string
-
-@description('The name of the Permissions SQL Connection String Key Vault Secret.')
-param permissionsSqlConnectionStringSecretName string = 'ConnectionStrings--PermissionsContext'
-
-@description('The value of the Permissions SQL Connection String Key Vault Secret.')
-param permissionsSqlConnectionStringSecretValue string
 
 // Resource - Key Vault
 //////////////////////////////////////////////////
@@ -86,26 +84,6 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
   }
 }
 
-// Resource - Key Vault - Secret - Permissions Api SSL Thumbprint
-//////////////////////////////////////////////////
-resource permissionsApiSslThumbprintSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
-  parent: keyVault
-  name: permissionsApiSslThumbprintSecretName
-  properties: {
-    value: permissionsApiSslThumbprintSecretValue
-  }
-}
-
-// Resource - Key Vault - Secret - Permissions SQL Connection String
-//////////////////////////////////////////////////
-resource permissionsSqlConnectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
-  parent: keyVault
-  name: permissionsSqlConnectionStringSecretName
-  properties: {
-    value: permissionsSqlConnectionStringSecretValue
-  }
-}
-
 // Resource - Key Vault - Secret - Permissions Api Certificate
 //////////////////////////////////////////////////
 resource permissionsApiCertificateSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
@@ -116,21 +94,41 @@ resource permissionsApiCertificateSecret 'Microsoft.KeyVault/vaults/secrets@2021
   }
 }
 
-// Resource - Key Vault - Secret - Azure AD B2C Instance
+// Resource - Key Vault - Secret - Azure AD B2C Instance Admin Api
 //////////////////////////////////////////////////
-resource azureAdB2cInstanceSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+resource azureAdB2cAdminApiInstanceSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   parent: keyVault
-  name: azureAdB2cInstanceSecretName
+  name: azureAdB2cAdminApiInstanceSecretName
   properties: {
     value: azureAdB2cInstanceSecretValue
   }
 }
 
-// Resource - Key Vault - Secret - Azure AD B2C Domain
+// Resource - Key Vault - Secret - Azure AD B2C Instance SignupAdmin
 //////////////////////////////////////////////////
-resource azureAdB2cDomainSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+resource azureAdB2cSignupAdminInstanceSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   parent: keyVault
-  name: azureAdB2cDomainSecretName
+  name: azureAdB2cSignupAdminInstanceSecretName
+  properties: {
+    value: azureAdB2cInstanceSecretValue
+  }
+}
+
+// Resource - Key Vault - Secret - Azure AD B2C Domain Admin Api
+//////////////////////////////////////////////////
+resource azureAdB2cAdminApiDomainSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+  parent: keyVault
+  name: azureAdB2cAdminApiDomainSecretName
+  properties: {
+    value: azureAdB2cDomainSecretValue
+  }
+}
+
+// Resource - Key Vault - Secret - Azure AD B2C Domain SignupAdmin
+//////////////////////////////////////////////////
+resource azureAdB2cSignupAdminDomainSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+  parent: keyVault
+  name: azureAdB2cSignupAdminDomainSecretName
   properties: {
     value: azureAdB2cDomainSecretValue
   }
@@ -146,15 +144,26 @@ resource azureAdB2cAdminApiClientIdSecret 'Microsoft.KeyVault/vaults/secrets@202
   }
 }
 
-// Resource - Key Vault - Secret - Azure AD B2C Tenant Id
+// Resource - Key Vault - Secret - Azure AD B2C Admin API Tenant Id
 //////////////////////////////////////////////////
-resource azureAdB2cTenantSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+resource azureAdB2cAdminApiTenantSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   parent: keyVault
-  name: azureAdB2cTenantIdSecretName
+  name: azureAdB2cAdminApiTenantIdSecretName
   properties: {
     value: azureAdB2cTenantIdSecretValue
   }
 }
+
+// Resource - Key Vault - Secret - Azure AD B2C SignupAdmin Tenant Id
+//////////////////////////////////////////////////
+resource azureAdB2cSignupAdminTenantSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+  parent: keyVault
+  name: azureAdB2cSignupAdminTenantIdSecretName
+  properties: {
+    value: azureAdB2cTenantIdSecretValue
+  }
+}
+
 
 // Resource - Key Vault - Secret - Admin SQL Connection String
 //////////////////////////////////////////////////
