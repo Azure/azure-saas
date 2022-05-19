@@ -12,6 +12,9 @@ param location string
 @description('The Permissions Api name.')
 param permissionsApiName string
 
+@description('The URL for the container registry to pull the docker images from')
+param containerRegistryUrl string = 'ghcr.io'
+
 @description('The tag of the container image to deploy to the permissions api app service')
 param permissionsApiContainerImageTag string
 
@@ -20,15 +23,19 @@ param permissionsApiContainerImageTag string
 resource permissionsApi 'Microsoft.Web/sites@2021-03-01' = {
   name: permissionsApiName
   location: location
-  kind: 'container'
+  kind: 'app,linux,container'
   properties: {
     serverFarmId: appServicePlanId
     httpsOnly: true
     clientCertEnabled: true
     clientCertMode: 'Required'
     siteConfig: {
-      linuxFxVersion: permissionsApiContainerImageTag
+      linuxFxVersion: 'DOCKER|${permissionsApiContainerImageTag}'
       appSettings: [
+        {
+          name: 'DOCKER_REGISTRY_SERVER_URL'
+          value: containerRegistryUrl
+        }
         {
           name: 'KeyVault__Url'
           value: keyVaultUri

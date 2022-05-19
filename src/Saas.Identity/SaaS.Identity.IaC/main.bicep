@@ -20,8 +20,11 @@ param azureAdB2cPermissionsApiClientSecretSecretValue string
 @description('The value of the Permissions Api SSL Thumbprint Key Vault Secret.')
 param permissionsApiSslThumbprintSecretValue string
 
+@description('The URL for the container registry to pull the docker images from')
+param containerRegistryUrl string = 'https://ghcr.io'
+
 @description('The tag of the container image to deploy to the permissions api app service.')
-param permissionsApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-permissions:latest'
+param permissionsApiContainerImageTag string = 'azure/azure-saas/asdk-permissions:latest'
 
 @description('The object ID of the logged in Azure Active Directory User.')
 param azureAdUserID string
@@ -111,6 +114,7 @@ module permissionsApiModule 'permissionsApi.bicep' = {
     keyVaultUri: identityKeyVaultModule.outputs.keyVaultUri
     location: location
     permissionsApiName: permissionsApiName
+    containerRegistryUrl: containerRegistryUrl
     permissionsApiContainerImageTag: permissionsApiContainerImageTag
   }
 }

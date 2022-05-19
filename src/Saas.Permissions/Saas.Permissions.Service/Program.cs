@@ -45,6 +45,10 @@ builder.Services.AddSingleton<ICertificateValidationService, CertificateValidati
 
 // Look for certificate forwarded by the web server on X-Arr-Client-Cert
 builder.Services.AddCertificateForwarding(options => { options.CertificateHeader = "X-ARR-ClientCert"; });
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto;
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     // Add Certificate Validation for authentication from azure b2c.
@@ -90,6 +94,7 @@ app.UseHttpsRedirection();
 
 // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0#configure-certificate-validation
 app.UseCertificateForwarding();
+app.UseForwardedHeaders();
 
 app.UseAuthentication();
 app.UseAuthorization();
