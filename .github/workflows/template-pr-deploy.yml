@@ -74,7 +74,7 @@ jobs:
   deploy-to-slot:
     runs-on: ubuntu-latest
     name: Deploy dotnet Project to Deployment Slot
-    needs: [build, create-deployment-slot]
+    needs: [build]
     steps:
 
     - name: Download Build Artifact
