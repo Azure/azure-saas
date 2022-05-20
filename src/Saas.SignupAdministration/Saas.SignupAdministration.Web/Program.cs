@@ -68,9 +68,8 @@ builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration,
     .EnableTokenAcquisitionToCallDownstreamApi(
         builder.Configuration["AppSettings:AdminServiceScopes"]
         .Split(" "))
-        //.Select(scope => builder.Configuration["AppSettings:AdminServiceScopeBaseUrl"] + scope ))
-    .AddSessionTokenCaches()
-    .Services.AddCookiePolicy(options => options.Secure = CookieSecurePolicy.SameAsRequest);
+    //.Select(scope => builder.Configuration["AppSettings:AdminServiceScopeBaseUrl"] + scope ))
+    .AddSessionTokenCaches();
 
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
@@ -96,6 +95,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    Secure = CookieSecurePolicy.Always
+});
 app.UseAuthentication();
 app.UseAuthorization();
 
