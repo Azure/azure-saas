@@ -83,6 +83,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 app.ConfigureDatabase();
@@ -99,6 +100,7 @@ app.UseCertificateForwarding();
 app.UseForwardedHeaders();
 
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
