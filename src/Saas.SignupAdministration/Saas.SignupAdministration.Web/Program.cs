@@ -69,7 +69,8 @@ builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration,
         builder.Configuration["AppSettings:AdminServiceScopes"]
         .Split(" "))
         //.Select(scope => builder.Configuration["AppSettings:AdminServiceScopeBaseUrl"] + scope ))
-    .AddSessionTokenCaches();
+    .AddSessionTokenCaches()
+    .Services.AddCookiePolicy(options => options.Secure = CookieSecurePolicy.SameAsRequest);
 
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
