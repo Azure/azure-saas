@@ -92,5 +92,5 @@ resource adminApi 'Microsoft.Web/sites@2021-03-01' = {
 
 // Outputs
 //////////////////////////////////////////////////
-output adminApiHostName string = adminApi.properties.defaultHostName
+output adminApiHostName string = 'https://${adminApi.properties.defaultHostName}'
 output systemAssignedManagedIdentityPrincipalId string = adminApi.identity.principalId
