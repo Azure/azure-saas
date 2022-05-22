@@ -8,7 +8,7 @@ weight: 50
 
 The [SaaS.Admin.Service](https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin) module (aka Admin Service) is an API that has two main responsibilities:
 
-1. Preforming CRUD operations on tenants
+1. Preforming Create, Read, Update, and Delete (CRUD) operations on tenants
 2. Serving as a broker to the permissions API to assign roles and permissions to tenants
 
 ## How to Run Locally
@@ -17,9 +17,9 @@ Instructions to get this module running on your local dev machine are located in
 
 ### Configuration and Secrets
 
-A list of app settings and secrets can be found in the module's [readme.md](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions). All non-secret values will have a default value in the `appsettings.json` file. All secret values will need to be set using the [.NET secrets manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&tabs=windows) when running the project locally, as it is not reccomended to have these secret values in your `appsettings.json` file.
+A list of app settings and secrets can be found in the module's [readme.md](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions). All non-secret values will have a default value in the `appsettings.json` file. All secret values will need to be set using the [.NET Secret Manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&tabs=windows) when running the project locally, as it is not recommended to have these secret values in your `appsettings.json` file.
 
-When deployed to Azure, the application is configured to load in its secrets from [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/overview) instead. If you deploy the project using our bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the key vault using a [System Assigned Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview). The Admin Service module is also configured with [key name prefixes](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix) to only import secrets with the prefix of `admin-`, as other modules share the same keyvault.
+When deployed to Azure, the application is configured to load in its secrets from [Azure Key Vault](https://docs.microsoft.com/azure/key-vault/general/overview) instead. If you deploy the project using our ARM/Bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the Azure Key Vault using a [System Assigned Managed Identity](https://docs.microsoft.com/azure/active-directory/managed-identities-azure-resources/overview). The Admin Service module is also configured with [key name prefixes](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix) to only import secrets with the prefix of `admin-`, as other modules share the same Azure Key Vault.
 
 ## Module Design
 
@@ -32,7 +32,7 @@ When deployed to Azure, the application is configured to load in its secrets fro
 
 ### Consumers
 
-Currently, the only consumer of this API is the 2 frontend applications. Every module in the ASDK project was designed to be extensible, so you could also build your own applications that interface directly with this API to fit other use cases that the included frontend applications do not provide.
+Currently, the only consumers of this API are the 2 frontend applications. Every module in the ASDK project was designed to be extensible, so you could also build your own applications that interface directly with this API to fit other use cases that the included frontend applications do not provide.
 
 - [SaaS.SignupAdministration.Web](../signup-administration)
 
@@ -40,9 +40,9 @@ Currently, the only consumer of this API is the 2 frontend applications. Every m
 
 ### Authentication
 
-The Admin Service is secured using OAuth 2.0 authentication via the Microsoft Identity Platform. Incoming requests must contain a valid JWT Bearer token on the `Authorization` header. The token must contain a valid scope that the calling application has been authorized to use. To learn more about how this process works and is configured in B2C, we highly reccomend checking out our list of [identity resources & documentation]((../../resources/additional-recommended-resources#identity-focused)).
+The Admin Service is secured using OAuth 2.0 authentication via the Microsoft Identity Platform. Incoming requests must contain a valid JWT Bearer token in the `Authorization` header. The token must contain a valid scope that the calling application has been authorized to use. To learn more about how this process works and is configured in Azure AD B2C, we highly recommend checking out our list of [identity resources & documentation]((../../resources/additional-recommended-resources#identity-focused)).
 
-For authorization, we have also included middleware on the Admin Service that extracts the user's permission records from the JWT token claims and preforms authorization based on policies applied at the route level. In other words, before preforming any action on a tenant once a request is received, the admin service will first ensure that the user making the request has a claim to that tenant on their token. If there is no claim to that tenant, or their role does not match what they're trying to do, the request will be denied.
+For authorization, we have also included middleware on the Admin Service that extracts the user's permission records from the JWT token claims and performs authorization based on policies applied at the route level. In other words, before preforming any action on a tenant once a request is received, the admin service will first ensure that the user making the request has a claim to that tenant on their token. If there is no claim to that tenant, or their role does not match what they're trying to do, the request will be denied.
 
 Implementing this in a multitenant fashion is often the most difficult part of starting a SaaS project, so we tried to make it as extensible as possible to support a wide range of scenarios.
 

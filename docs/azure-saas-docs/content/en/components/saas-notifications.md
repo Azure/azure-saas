@@ -58,7 +58,7 @@ To do this, follow these instructions:
 6. You may now test using the application, or by clicking "Run trigger" at the top of the logic app designer
 
 
-If you'd like more information on how this works, check out some additional reading on this subject here: 
+## Additional Reading 
 
 - [Connect to Office 365 Outlook using Azure Logic Apps](https://docs.microsoft.com/en-us/azure/connectors/connectors-create-api-office365-outlook)
 - [Connect to SendGrid from Azure Logic Apps](https://docs.microsoft.com/en-us/azure/connectors/connectors-create-api-office365-outlook)
