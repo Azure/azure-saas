@@ -11,7 +11,7 @@ weight: 0
 The Azure SaaS Development Kit is a deployable reference implementation of pre-built modules designed to help you launch your SaaS offering faster:
 
 * It includes commonly needed SaaS components that implement features such as identity, onboarding, and tenant management.
-* It is 100% [Open-source code](https://github.com/Azure/azure-saas), allowing you to build by example or modify/extend to be purpose-built for your particular scenario.
+* It is [100% open-source code](https://github.com/Azure/azure-saas), allowing you to build by example or modify/extend to be purpose-built for your particular scenario.
 * The code is fully documented, making it clear how the code functions, and why key design decisions were made.
 
 ## Usage Options
@@ -31,10 +31,10 @@ This is not a one-size-fits-all solution. Use as little or as much as you like. 
 
 ## Modular Architecture
 
-This kit uses a [microservices architecture](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/microservices-architecture) so that each module is self-contained and can be used idependantly.
+This kit uses a [microservices architecture](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/microservices-architecture) so that each module is self-contained and can be used independently.
 
 * [**Identity Framework**](components/identity)
-  * [**Identity Provider (Azure AD B2C)**](components/identity/identity-provider/) - Provides a flexible identity solution.
+  * [**Identity Provider (Azure AD B2C)**](components/identity/identity-provider/) - An identity solution that provides flexibility for both local accounts and integration with external providers.
   * [**Permissions Service**](components/identity/permissions-service) - An API that manages all user permissions and serves to enrich the user tokens returned from the identity provider.
 * [**Signup / Administration**](components/signup-administration/)
   * A web app where your customers view plans and onboard to your solution.

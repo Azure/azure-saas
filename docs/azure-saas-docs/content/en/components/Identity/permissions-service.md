@@ -8,7 +8,7 @@ weight: 55
 
 The [SaaS.Permissions.Service](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions) module (aka Permissions Service) is a component of the [Identity Framework](../). It is an API that serves 2 main functions: 
 
-1. Handles CRUD operations from the rest of the solution for permission data
+1. Handles Create, Read, Update, and Delete (CRUD) operations from the rest of the solution for permission data
 2. Serves as an endpoint for the [Identity Provider](../identity-provider) to retrieve permission data in order to enrich the user token with claims
 
 ## How to Run Locally
@@ -17,9 +17,9 @@ Instructions to get this module running on your local dev machine are located in
 
 ### Configuration and Secrets
 
-A list of app settings and secrets can be found in the module's [readme.md](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions). All non-secret values will have a default value in the `appsettings.json` file. All secret values will need to be set using the [.NET secrets manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&tabs=windows) when running the module locally, as it is not reccomended to have these secret values in your `appsettings.json` file.
+A list of app settings and secrets can be found in the module's [readme.md](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions). All non-secret values will have a default value in the `appsettings.json` file. All secret values will need to be set using the [.NET Secret Manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&tabs=windows) when running the module locally, as it is not recommended to have these secret values in your `appsettings.json` file.
 
-When deployed to Azure, the application is configured to load in its secrets from [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/overview) instead. If you deploy the project using our bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the key vault using a [System Assigned Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview). The Permissions Service module is also configured with [key name prefixes](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix) to only import secrets with the prefix of `permissions-`, as other modules share the same keyvault.
+When deployed to Azure, the application is configured to load its secrets from [Azure Key Vault](https://docs.microsoft.com/azure/key-vault/general/overview) instead. If you deploy the project using our ARM/Bicep templates from the Quick Start guide, the modules will be deployed to an Azure App Service which accesses the Azure Key Vault using a [System Assigned Managed Identity](https://docs.microsoft.com/azure/active-directory/managed-identities-azure-resources/overview). The Permissions Service module is also configured with [key name prefixes](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix) to only import secrets with the prefix of `permissions-`, as other modules share the same Azure Key Vault.
 
 ## Module Design
 
@@ -46,7 +46,7 @@ The Permissions Service is secured using [TLS Mutual Authentication](https://doc
 
 ### Microsoft Graph API
 
-The [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/overview) is an API that provides a unified experience for accessing data on users within an AAD or AAD B2C tenant. Since we are using Azure AD B2C as our default Identity Provider, we must also use the Graph API when it becomes neccesary to fetch data on our users. If you'd like to replace the identity provider with something else, you must also replace the Graph API calls within the permissions service to gather user data. These areas are clearly labeled with comments inline with the code.
+The [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/overview) is an API that provides a unified experience for accessing data on users within an Azure AD or Azure AD B2C tenant. Since we are using Azure AD B2C as our default Identity Provider, we must also use the Graph API when it becomes necessary to fetch data on our users. If you'd like to replace the identity provider with something else, you must also replace the Graph API calls within the permissions service to gather user data. These areas are clearly labeled with comments inline with the code.
 
 ### Swagger
 
@@ -57,7 +57,7 @@ The Permissions Service uses [Swashbuckle](https://www.nuget.org/packages/Swashb
 - Q: Why did we choose to secure the permissions service with certificate authentication over API Keys/JWT Tokens/Another Method?
   - A: The communication between Azure AD B2C (our default Identity Provider) and the permissions service must be secured with either [Basic or Certificate Auth](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-api-connector-token-enrichment?pivots=b2c-custom-policy#configure-the-restful-api-technical-profile) and it is not considered best practice to use Basic authentication in a production environment.
 
-- Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.
+- Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique (i.e., you cannot have the same Permission for the same user on the same tenant more than once). Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a separate database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.
 - We have purposefully chosen to flow all CRUD operations on permissions through the [Admin Service](../admin-service). This is for a number of reasons:
   1. It removes the burden of authorization from the permissions service. All the permissions service needs to worry about is accepting a valid certificate, which only the identity provider and admin service possess. For higher security applications, you may choose to preform more authorization checks before adding permissions
-  2. It simplifys the architecture. The frontend applications do not need to have any knowledge of the permissions service existing. When a tenant is created, they make 1 call to the admin service, and it handles the subsequent call to update the permissions records.
+  2. It simplifies the architecture. The frontend applications do not need to have any knowledge of the permissions service existing. When a tenant is created, the applications make 1 call to the admin service, and it handles the subsequent call to update the permissions records.

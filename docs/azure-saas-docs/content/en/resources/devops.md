@@ -31,12 +31,12 @@ Triggered On: `Pull Request targeting main branch`
 | app_service_name                | The name of the app service to deploy the artifact to                                                                                |                                          |
 | app_service_resource_group_name | The name of the resource group the app service resides in                                                                            |                                          |
 | project_build_path              | The path of the folder that the .csproj for the module is in                                                                         |                                          |
-| slot_name                       | The name of the deployment slot slot to create and deploy to on the app service (Used for override, recommended to keep the default) | pr-${{github.event.pull_request.number}} |
+| slot_name                       | The name of the deployment slot  to create and deploy to on the app service (Used for override, recommended to keep the default) | pr-${{github.event.pull_request.number}} |
 
 #### Secrets
 
 - `AZURE_CREDENTIALS`
-  - The devops pipeline must contain azure credentials for a service principal that has an appropriate access level to create a new app service slot and deploy to it. See [this](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows) document for setting up these credentials in your own repo. 
+  - The CI/CD pipeline must contain Azure credentials for a service principal that has an appropriate access level to create a new Azure App Service slot and deploy to it. See [this](https://docs.microsoft.com/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows) document for setting up these credentials in your own repo. 
 
 #### Job Breakdown
 There are 3 jobs within this workflow: `build`, `create-deployment-slot`, and `deploy-to-slot`. Here is a high level overview of what each job does.
@@ -47,7 +47,7 @@ There are 3 jobs within this workflow: `build`, `create-deployment-slot`, and `d
 
 2. `create-deployment-slot`
    1. Logs into the Azure CLI with [credentials provided](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows#create-a-service-principal-and-add-it-as-a-github-secret) in the `AZURE_CREDENTIALS` secret.
-   2. Runs Azure CLI command to create a new deployment slot in the app service provided in the `app_service_name` input variable. Slot name is provided via the `slot_name` input variable.
+   2. Runs Azure CLI command to create a new deployment slot in the Azure App Service provided in the `app_service_name` input variable. Slot name is provided via the `slot_name` input variable.
 
 3. `deploy-to-slot`
 Depends on the `build` and `create-deployment-slot` jobs to succeed in order to run. 
@@ -79,7 +79,7 @@ Triggered On: `Pull request close`
 #### Secrets
 
 - `AZURE_CREDENTIALS`
-  - The devops pipeline must contain azure credentials for a service principal that has an appropriate access level to preform the swap operation on the app service in question. See [this](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows) document for setting up these credentials in your own repo. 
+  - The CI/CD pipeline must contain Azure credentials for a service principal that has an appropriate access level to perform the swap operation on the Azure App Service in question. See [this](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows) document for setting up these credentials in your own repo. 
 
 #### Job Breakdown
 
@@ -87,10 +87,10 @@ There are 2 main jobs within this workflow: `swap-slot` and `delete-slot`
 
 1. `swap-slot` - *This job only runs if the PR is closed AND merged. This job does not run if the PR is closed without merging.*
    1. Logs into the Azure CLI with [credentials provided](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows#create-a-service-principal-and-add-it-as-a-github-secret) in the `AZURE_CREDENTIALS` secret.
-   2. Runs the Azure CLI command to swap the deployment slot named in the `slot_name` input variable with the production slot on the app service named in the `app_service_name` input variable. 
+   2. Runs the Azure CLI command to swap the deployment slot named in the `slot_name` input variable with the production slot on the Azure App Service named in the `app_service_name` input variable. 
 
 2. `delete-slot` - This job will only run if the preceding step runs and succeeds. If the PR is closed without merging, the previous step will be skipped but this will still run.
    1. Logs into the Azure CLI with [credentials provided](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows#create-a-service-principal-and-add-it-as-a-github-secret) in the `AZURE_CREDENTIALS` secret.
-   2. Runs the Azure CLI command to delete the deployment slot named in the `slot_name` input variable with the production slot on the app service named in the `app_service_name` input variable. 
+   2. Runs the Azure CLI command to delete the deployment slot named in the `slot_name` input variable with the production slot on the Azure App Service named in the `app_service_name` input variable. 
 
 > **Important**: You may choose to not delete the deployment slot directly following a deployment to retain the ability to swap the slot back if there are any issues and you'd like to undo the deployment. Deleting the slot immediately after a deployment is most reccomended in a development/test environment where you may be deploying multiple times per day.
