@@ -52,24 +52,24 @@ jobs:
         name: ${{ inputs.artifact_name }}
         path: './app'
 
-  # create-deployment-slot:
-  #   runs-on: ubuntu-latest
-  #   name: Create App Service Deployment Slot
-  #   steps:
-  #   - name: Azure Login
-  #     uses: azure/login@v1
-  #     with:
-  #       creds: ${{ secrets.AZURE_CREDENTIALS }}
+  create-deployment-slot:
+    runs-on: ubuntu-latest
+    name: Create App Service Deployment Slot
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-  #   - name: Azure CLI script
-  #     uses: azure/CLI@v1
-  #     with:
-  #       inlineScript: |
-  #         az webapp deployment slot create \
-  #         --resource-group ${{ inputs.app_service_resource_group_name }} \
-  #         --name ${{ inputs.app_service_name }} \
-  #         --configuration-source ${{ inputs.app_service_name }} \
-  #         --slot ${{ inputs.slot_name }}
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az webapp deployment slot create \
+          --resource-group ${{ inputs.app_service_resource_group_name }} \
+          --name ${{ inputs.app_service_name }} \
+          --configuration-source ${{ inputs.app_service_name }} \
+          --slot ${{ inputs.slot_name }}
   
   deploy-to-slot:
     runs-on: ubuntu-latest
@@ -92,6 +92,6 @@ jobs:
       uses: azure/webapps-deploy@v2
       with: 
         app-name: ${{ inputs.app_service_name }}
-        #slot-name: ${{ inputs.slot_name }}
+        slot-name: ${{ inputs.slot_name }}
         package: './app'
 

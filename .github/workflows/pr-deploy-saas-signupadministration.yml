@@ -1,8 +1,5 @@
 # Builds any PR with target branch of "main". Creates app service slot with PR number and deploys built code
 on:
-  push:
-    branches:
-      - addcookiepolicy
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
