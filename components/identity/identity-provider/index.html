@@ -27,13 +27,13 @@ What does Azure AD B2C give us? Azure AD B2C provides business-to-customer ident
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/identity-provider/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-22T18:54:08-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-22T18:54:44-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Identity Provider">
 <meta itemprop="description" content="Overview For the identity framework, we chose to use Azure AD B2C as our default identity provider. If you&rsquo;d like to use another identity provider such as Azure AD or a different 3rd party tool, you can swap it out.
 What does Azure AD B2C give us? Azure AD B2C provides business-to-customer identity as a service. It enables you to easily authenticate users to your application using their preferred identity provider and is configurable to support a wide array of scenarios.">
-<meta itemprop="dateModified" content="2022-05-22T18:54:08-04:00" />
-<meta itemprop="wordCount" content="631">
+<meta itemprop="dateModified" content="2022-05-22T18:54:44-04:00" />
+<meta itemprop="wordCount" content="638">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Identity Provider"/>
 <meta name="twitter:description" content="Overview For the identity framework, we chose to use Azure AD B2C as our default identity provider. If you&rsquo;d like to use another identity provider such as Azure AD or a different 3rd party tool, you can swap it out.
@@ -263,7 +263,7 @@ What does Azure AD B2C give us? Azure AD B2C provides business-to-customer ident
 <h3 id="what-does-azure-ad-b2c-give-us">What does Azure AD B2C give us?</h3>
 <p>Azure AD B2C provides business-to-customer identity as a service. It enables you to easily authenticate users to your application using their preferred identity provider and is configurable to support a wide array of scenarios.</p>
 <h3 id="configuration">Configuration</h3>
-<p>B2C has two methods of configuring the business logic that users follow to gain access to your application: <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview">User Flows and Custom Policies</a>. User Flows are predefined and are configured directly through the B2C Web Portal. Custom Policies are XML based configuration that is uploaded to the B2C tenant.</p>
+<p>Azure AD B2C has two methods of configuring the business logic that users follow to gain access to your application: <a href="https://docs.microsoft.com/azure/active-directory-b2c/user-flow-overview">User Flows and Custom Policies</a>. User Flows are predefined and are configured directly through the Azure AD B2C Web Portal. Custom Policies are XML based configuration files that are uploaded to the Azure AD B2C tenant.</p>
 <p>The ASDK project uses Custom Policies to configure the Azure AD B2C tenant. The XML configuration that gets deployed can be found under the <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider">Saas.IdentityProvider</a> folder within the repo, and you can read more about how to configure custom policies <a href="https://docs.microsoft.com/azure/active-directory-b2c/user-flow-overview">here</a>.</p>
 <p>When deploying the Azure AD B2C Identity Provider via the instructions found in the <a href="../../quick-start">Quick Start</a> guide, Azure AD B2C is configured to do the following:</p>
 <ul>
@@ -332,7 +332,7 @@ What does Azure AD B2C give us? Azure AD B2C provides business-to-customer ident
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/588ba72ee9d724fe73ee1ab421628843465dcde8">Apply suggestions from code review (588ba72)</a>
+  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/78d09ddf529fe52186b425bba12779f9ce1534b5">changes from arsen&#39;s suggestions (78d09dd)</a>
 </div>
 
 </div>

@@ -259,7 +259,7 @@
 <p>Identity Provider (IdP) - Performs user login/authentication and provides a JWT token to the web applications. ASDK comes with Azure AD B2C implemented as the IdP out of the box.</p>
 </li>
 <li>
-<p>Permissions Service - An authorization microservice that tracks what data each user has access to, and serves as an endpoint for the IDP to enrich the user&rsquo;s token with permissions and role claims.</p>
+<p>Permissions Service - A microservice that tracks what tenants and data each user has access to and serves as an endpoint for the IdP to enrich the user&rsquo;s token with permissions and role claims during the login flow.</p>
 </li>
 </ol>
 <p>The Identity Framework also has a dependency on the <a href="https://docs.microsoft.com/en-us/graph/overview">Microsoft Graph API</a>, which we use to look up certain user information when needed.</p>
@@ -326,7 +326,7 @@
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/588ba72ee9d724fe73ee1ab421628843465dcde8">Apply suggestions from code review (588ba72)</a>
+  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/78d09ddf529fe52186b425bba12779f9ce1534b5">changes from arsen&#39;s suggestions (78d09dd)</a>
 </div>
 
 </div>

@@ -28,7 +28,7 @@
 &lt;h3 id=&#34;what-does-azure-ad-b2c-give-us&#34;&gt;What does Azure AD B2C give us?&lt;/h3&gt;
 &lt;p&gt;Azure AD B2C provides business-to-customer identity as a service. It enables you to easily authenticate users to your application using their preferred identity provider and is configurable to support a wide array of scenarios.&lt;/p&gt;
 &lt;h3 id=&#34;configuration&#34;&gt;Configuration&lt;/h3&gt;
-&lt;p&gt;B2C has two methods of configuring the business logic that users follow to gain access to your application: &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview&#34;&gt;User Flows and Custom Policies&lt;/a&gt;. User Flows are predefined and are configured directly through the B2C Web Portal. Custom Policies are XML based configuration that is uploaded to the B2C tenant.&lt;/p&gt;
+&lt;p&gt;Azure AD B2C has two methods of configuring the business logic that users follow to gain access to your application: &lt;a href=&#34;https://docs.microsoft.com/azure/active-directory-b2c/user-flow-overview&#34;&gt;User Flows and Custom Policies&lt;/a&gt;. User Flows are predefined and are configured directly through the Azure AD B2C Web Portal. Custom Policies are XML based configuration files that are uploaded to the Azure AD B2C tenant.&lt;/p&gt;
 &lt;p&gt;The ASDK project uses Custom Policies to configure the Azure AD B2C tenant. The XML configuration that gets deployed can be found under the &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider&#34;&gt;Saas.IdentityProvider&lt;/a&gt; folder within the repo, and you can read more about how to configure custom policies &lt;a href=&#34;https://docs.microsoft.com/azure/active-directory-b2c/user-flow-overview&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;When deploying the Azure AD B2C Identity Provider via the instructions found in the &lt;a href=&#34;../../quick-start&#34;&gt;Quick Start&lt;/a&gt; guide, Azure AD B2C is configured to do the following:&lt;/p&gt;
 &lt;ul&gt;
@@ -146,12 +146,6 @@ The certificate that gets deployed out of the box by following the Quick Start i
 &lt;p&gt;Q: Why did we choose to secure the permissions service with certificate authentication over API Keys/JWT Tokens/Another Method?&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;A: The communication between Azure AD B2C (our default Identity Provider) and the permissions service must be secured with either &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-api-connector-token-enrichment?pivots=b2c-custom-policy#configure-the-restful-api-technical-profile&#34;&gt;Basic or Certificate Auth&lt;/a&gt; and it is not considered best practice to use Basic authentication in a production environment.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Q: Why did we choose to not give the permissions service it&amp;rsquo;s own key vault?&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;A: For simplicity&amp;rsquo;s sake, we decided to use key name prefixes to store keys for each module across the entire application into one keyvault. This is an acceptable scenario, but for tighter security, you may choose to separate the secrets for each module into a dedicated keyvault.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;

@@ -30,14 +30,14 @@ Configuration and Secrets A list of app settings and secrets can be found in the
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/admin-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-22T18:54:08-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-22T18:54:44-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Admin.Service">
 <meta itemprop="description" content="Overview The SaaS.Admin.Service module (aka Admin Service) is an API that has two main responsibilities:
  Preforming Create, Read, Update, and Delete (CRUD) operations on tenants Serving as a broker to the permissions API to assign roles and permissions to tenants  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.md.
 Configuration and Secrets A list of app settings and secrets can be found in the module&rsquo;s readme.">
-<meta itemprop="dateModified" content="2022-05-22T18:54:08-04:00" />
-<meta itemprop="wordCount" content="687">
+<meta itemprop="dateModified" content="2022-05-22T18:54:44-04:00" />
+<meta itemprop="wordCount" content="752">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Admin.Service"/>
 <meta name="twitter:description" content="Overview The SaaS.Admin.Service module (aka Admin Service) is an API that has two main responsibilities:
@@ -314,9 +314,16 @@ Configuration and Secrets A list of app settings and secrets can be found in the
 <p>In addition, it also uses NSwag to consume the OpenAPI definition for the Permissions Service to generate a client implementation for that. Read more about NSwag <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&amp;tabs=visual-studio">here</a>.</p>
 <h2 id="faq-and-design-considerations">FAQ and Design Considerations</h2>
 <ul>
-<li>Q: Why did we choose to use strings to store our IDs and not GUIDs?
+<li>
+<p>Q: Why did we choose to use strings to store our IDs and not GUIDs?</p>
 <ul>
 <li>A: The default implementation that we chose is to use GUIDs for IDs, but store them as strings. This decisision was made so that consumers of the ASDK project would not be forced into using GUIDs, should they want to use something else for IDs.</li>
+</ul>
+</li>
+<li>
+<p>Q: Why did we choose to not give the admin service its own Azure Key Vault?</p>
+<ul>
+<li>A: For simplicity, we decided to use key name prefixes to store keys for each module across the entire application into one Azure Key Vault. This is an acceptable approach, but, if necessary, you may choose to separate the secrets for each module into a dedicated Azure Key Vault.</li>
 </ul>
 </li>
 </ul>
@@ -324,7 +331,7 @@ Configuration and Secrets A list of app settings and secrets can be found in the
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/588ba72ee9d724fe73ee1ab421628843465dcde8">Apply suggestions from code review (588ba72)</a>
+  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/78d09ddf529fe52186b425bba12779f9ce1534b5">changes from arsen&#39;s suggestions (78d09dd)</a>
 </div>
 
 </div>

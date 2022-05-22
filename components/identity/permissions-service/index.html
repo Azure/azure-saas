@@ -27,13 +27,13 @@ The SaaS.Permissions.Service module (aka Permissions Service) is a component of 
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/permissions-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-22T18:54:08-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-22T18:54:44-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Permissions.Service">
 <meta itemprop="description" content="Overview The SaaS.Permissions.Service module (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions:
  Handles Create, Read, Update, and Delete (CRUD) operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.">
-<meta itemprop="dateModified" content="2022-05-22T18:54:08-04:00" />
-<meta itemprop="wordCount" content="929">
+<meta itemprop="dateModified" content="2022-05-22T18:54:44-04:00" />
+<meta itemprop="wordCount" content="867">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Permissions.Service"/>
 <meta name="twitter:description" content="Overview The SaaS.Permissions.Service module (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions:
@@ -310,12 +310,6 @@ The certificate that gets deployed out of the box by following the Quick Start i
 </ul>
 </li>
 <li>
-<p>Q: Why did we choose to not give the permissions service it&rsquo;s own key vault?</p>
-<ul>
-<li>A: For simplicity&rsquo;s sake, we decided to use key name prefixes to store keys for each module across the entire application into one keyvault. This is an acceptable scenario, but for tighter security, you may choose to separate the secrets for each module into a dedicated keyvault.</li>
-</ul>
-</li>
-<li>
 <p>Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique (i.e., you cannot have the same Permission for the same user on the same tenant more than once). Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a separate database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.</p>
 </li>
 <li>
@@ -330,7 +324,7 @@ The certificate that gets deployed out of the box by following the Quick Start i
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/588ba72ee9d724fe73ee1ab421628843465dcde8">Apply suggestions from code review (588ba72)</a>
+  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/78d09ddf529fe52186b425bba12779f9ce1534b5">changes from arsen&#39;s suggestions (78d09dd)</a>
 </div>
 
 </div>

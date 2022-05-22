@@ -244,7 +244,7 @@ The Azure SaaS Development Kit is a …">
 	</header>
 	<h1 id="welcome-to-the-azure-saas-dev-kit">Welcome to the Azure SaaS Dev Kit!</h1>
 <p><a href="https://azure.microsoft.com/en-us/overview/what-is-saas/">Software as a Service (SaaS)</a> doesn’t need to be complex and time consuming.</p>
-<p>The Azure SaaS Development Kit is a deployable reference implementation of pre-built resources designed to help you launch your SaaS offering faster:</p>
+<p>The Azure SaaS Development Kit is a deployable reference implementation of pre-built modules designed to help you launch your SaaS offering faster:</p>
 <ul>
 <li>It includes commonly needed SaaS components that implement features such as identity, onboarding, and tenant management.</li>
 <li>It is <a href="https://github.com/Azure/azure-saas">100% open-source code</a>, allowing you to build by example or modify/extend to be purpose-built for your particular scenario.</li>
@@ -257,9 +257,9 @@ The Azure SaaS Development Kit is a …">
 <li>Developing a greenfield SaaS offering for the first time.</li>
 <li>Migrating a SaaS offering from another cloud to Azure.</li>
 </ul>
-<p>This is not a one-size-fits-all solution. Use as little or as much as you like. It is designed to be both a modular deployable reference implementation and also a reference architecture. You are free to use and change the code contained within this project in any way you&rsquo;d like (following the terms of the license):</p>
+<p>This is not a one-size-fits-all solution. Use as little or as much as you like. It is designed to be both a modular deployable reference implementation and also a reference architecture. You are free to use and change the code contained within this project in any way you&rsquo;d like (following the terms of the <a href="https://github.com/Azure/azure-saas/blob/main/LICENSE">license</a>)):</p>
 <ul>
-<li>Deploy the entire solution to Azure using the bicep templates we provide, make changes to fit your exact use case, and start building your SaaS application from there.</li>
+<li>Deploy the entire solution to Azure using the <a href="https://docs.microsoft.com/azure/azure-resource-manager/bicep/">Bicep</a> templates we provide, make changes to fit your exact use case, and start building your SaaS application from there.</li>
 <li>Deploy one or more of our modules and hook it into your existing SaaS application.</li>
 <li>Reference our code &amp; architecture and build something entirely custom using the best practices we outlined.</li>
 <li>Or, simply gain inspiration from this codebase.</li>
@@ -270,15 +270,15 @@ The Azure SaaS Development Kit is a …">
 <li>
 <p><a href="components/identity"><strong>Identity Framework</strong></a></p>
 <ul>
-<li><a href="components/identity/identity-provider/"><strong>Identity Provider (B2C)</strong></a> - An identity solution that provides flexibility for both local accounts and integration with external providers.</li>
+<li><a href="components/identity/identity-provider/"><strong>Identity Provider (Azure AD B2C)</strong></a> - An identity solution that provides flexibility for both local accounts and integration with external providers.</li>
 <li><a href="components/identity/permissions-service"><strong>Permissions Service</strong></a> - An API that manages all user permissions and serves to enrich the user tokens returned from the identity provider.</li>
 </ul>
 </li>
 <li>
 <p><a href="components/signup-administration/"><strong>Signup / Administration</strong></a></p>
 <ul>
-<li>A web app where your customers to view plans and onboard to your solution.</li>
-<li>Provides you with tenant administration capabilities. (modify/remove/etc.)</li>
+<li>A web app where your customers view plans and onboard to your solution.</li>
+<li>Provides you with tenant administration capabilities such as modify, remove, etc.</li>
 </ul>
 </li>
 <li>
@@ -289,8 +289,8 @@ The Azure SaaS Development Kit is a …">
 </li>
 </ul>
 <blockquote>
-<p>The Dev Kit uses a <a href="https://docs.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models#fully-multitenant-deployments"><strong>fully multitenant depoyment</strong></a>. Multitenancy is a complex topic with many facets, and there is no <em>one size fits all</em> approach.</p>
-<p>Read more about multitenant architectures and considerations on Azure <a href="http://aka.ms/multitenancy">here</a>.</p>
+<p>The Azure SaaS Dev Kit uses a <a href="https://docs.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models#fully-multitenant-deployments"><strong>fully multitenant deployment</strong></a>. Multitenancy is a complex topic with many facets, and there is no <em>one size fits all</em> approach.</p>
+<p>Read more about multitenant architectures considerations and approaches at <a href="https://aka.ms/multitenancy">https://aka.ms/multitenancy</a>.</p>
 </blockquote>
 <p><img src="/azure-saas/diagrams/overview.drawio.png" alt=""></p>
 <h2 id="ready-to-get-started">Ready to get started?</h2>
@@ -336,7 +336,7 @@ The Azure SaaS Development Kit is a …">
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/588ba72ee9d724fe73ee1ab421628843465dcde8">Apply suggestions from code review (588ba72)</a>
+  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/78d09ddf529fe52186b425bba12779f9ce1534b5">changes from arsen&#39;s suggestions (78d09dd)</a>
 </div>
 
 </div>
