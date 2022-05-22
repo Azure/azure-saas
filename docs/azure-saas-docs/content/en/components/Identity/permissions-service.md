@@ -56,8 +56,6 @@ The Permissions Service uses [Swashbuckle](https://www.nuget.org/packages/Swashb
 
 - Q: Why did we choose to secure the permissions service with certificate authentication over API Keys/JWT Tokens/Another Method?
   - A: The communication between Azure AD B2C (our default Identity Provider) and the permissions service must be secured with either [Basic or Certificate Auth](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-api-connector-token-enrichment?pivots=b2c-custom-policy#configure-the-restful-api-technical-profile) and it is not considered best practice to use Basic authentication in a production environment.
-- Q: Why did we choose to not give the permissions service it's own key vault?
-  - A: For simplicity's sake, we decided to use key name prefixes to store keys for each module across the entire application into one keyvault. This is an acceptable scenario, but for tighter security, you may choose to separate the secrets for each module into a dedicated keyvault.
 
 - Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique, ie you cannot have the same Permission for the same user on the same tenant more than once. Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.
 - We have purposefully chosen to flow all CRUD operations on permissions through the [Admin Service](../admin-service). This is for a number of reasons:

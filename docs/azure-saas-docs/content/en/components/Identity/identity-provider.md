@@ -13,7 +13,7 @@ Azure Active Directory B2C provides business-to-customer identity as a service. 
 
 ### Configuration
 
-B2C has two methods of configuring the business logic that users follow to gain access to your application: [User Flows and Custom Policies](https://docs.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview). User Flows are predefined and are configured directly through the B2C Web Portal. Custom Policies are XML based configuration that is uploaded to the B2C tenant.
+Azure AD B2C has two methods of configuring the business logic that users follow to gain access to your application: [User Flows and Custom Policies](https://docs.microsoft.com/azure/active-directory-b2c/user-flow-overview). User Flows are predefined and are configured directly through the Azure AD B2C Web Portal. Custom Policies are XML based configuration files that are uploaded to the Azure AD B2C tenant.
 
 The ASDK project uses Custom Policies to configure the B2C tenant. The XML configuration that gets deployed can be found under the [Saas.IdentityProvider](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider) folder within the repo, and you can read more about how to configure custom policies [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/user-flow-overview).
 

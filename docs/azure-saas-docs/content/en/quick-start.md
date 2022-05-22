@@ -6,9 +6,9 @@ weight: 10
 description: "Getting Started with the Azure SaaS Dev Kit"
 ---
 
-On this page, you will find instructions to run the dev kit in your local environment, how to deploy the solution to Azure, and where to put your application code to customize the solution.
+On this page, you will find instructions for how to run the dev kit in your local environment, how to deploy the solution to Azure, and where to put your application code to customize the solution.
 
-> Tip: If you're new here and want to learn what this is, check out the [welcome page](..)
+> Tip: If you're new here and want to learn what is Azure SaaS Dev Kit, check out the [welcome page](..)
 
 ## 1. Setup Identity Framework
 
@@ -25,7 +25,9 @@ After finishing the IDP setup, you may choose to either run the project locally 
 - Depending on the project you wish to run, you'll need to set some secrets to properly setup authentication with B2C. See the [App Settings](#app-settings) section below
 
 ### App Settings
-When running the project locally, you will need to set some app settings & secrets manually using the [.NET secrets manager](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment). When deployed to azure (below), these secrets are automatically configured for you and stored in Azure Key Vault.
+
+- Running locally you will need to set some App Settings & User Secrets manually using the [.NET Secret Manager](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment).
+- Deployed to Azure, these secrets are automatically configured for you and stored in the Azure Key Vault.
 
 Make sure you check out the [readme files](#more-info) in each project's directory for a description of the app settings & secrets you'll need to set in order to run the respective project.
 
@@ -39,21 +41,6 @@ This button will take you to the Azure portal, passing it the template. You'll b
 **Deployment Coming Soon!**
 <!-- [![Deploy to Azure](https://www.azuresaas.net/assets/images/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2FcreateUiDefinition.json) -->
 
-## 2.c. (Advanced) Deploying to Azure - Single Module
-
-If you'd like to use just one (or more) module from the project, we've provided bicep templates to do that as well. In each project directory, you'll find a folder named `{ModuleName}.Deployment` that contains all the bicep code you'll need to deploy just that Module. Please be advised that there are certain dependencies that each module requires in order for it to deploy properly. You may find that you need to edit the bicep templates to match your use case. You will find instructions and a list of dependencies for each module within the [module's readme](#more-info).
-
-## 3. (Optional) Configure Email Provider
-
-If you choose to deploy the entire solution to Azure, one of the things that gets deployed is the SaaS.Notifications module **need page and link**, an Azure Logic App. This logic app has a simple HTTP trigger that the SaaS.SignupAdministration site is configured to make a POST request to in order to send emails (ie, at the end of the tenant creation process). By default, there is no email provider configured and the emails do not actually get sent. If you'd like to enable email sending, you will need to manually configure your email provider connector of choice inside the Logic App. See the instructions [here](components/saas-notifications.md) to get started.
-
-## Integrating your application
-
-Now that you've seen how to build and run the code locally, and you have a way to deploy your code to Azure in a repeatable and code-first way, you can integrate your own code into the solution.
-
-We've included a basic application within the `Saas.Application.Web` project that demonstrates a SaaS solution called "BadgeMeUp". BadgeMeUp is simply a badge sharing site that *Contoso* (representing your company) can sell to end customers.
-
-> SaaS solutions come in many shapes as sizes. We picked "BadgeMeUp", because it's a fairly simple scenario to understand. [You can read more about this particular SaaS scenario here](../resources/contoso-badgemeup/).
 
 ### How does this work?
 
@@ -61,6 +48,24 @@ This solution uses a Bicep template which is checked into source control. Whenev
 
 > What is Bicep?
 > Bicep is a domain-specific language (DSL) that uses declarative syntax to deploy Azure resources. In a Bicep file, you define the infrastructure you want to deploy to Azure, and then use that file throughout the development lifecycle to repeatedly deploy your infrastructure. Your resources are deployed in a consistent manner.
+
+## 2.c. (Advanced) Deploying to Azure - Single Module
+
+If you'd like to use just one (or more) module from the project, we've provided [Bicep]((https://docs.microsoft.com/azure/azure-resource-manager/bicep/) templates to do that as well. In each project directory, you'll find a folder named `{ModuleName}.Deployment` that contains all the Bicep code you'll need to deploy just that Module. Please be advised that there are certain dependencies that each module requires in order for it to deploy properly. You may find that you need to edit the Bicep templates to match your use case. You will find instructions and a list of dependencies for each module within the [module's readme](#more-info).
+
+## 3. (Optional) Configure Email Provider
+
+If you choose to deploy the entire solution to Azure, one of the things that gets deployed is the SaaS.Notifications module **need page and link**, an Azure Logic App. This logic app has a simple HTTP trigger that the SaaS.SignupAdministration site is configured to make a POST request to in order to send emails (ie, at the end of the tenant creation process). By default, there is no email provider configured and the emails do not actually get sent. If you'd like to enable email sending, you will need to manually configure your email provider connector of choice inside the Logic App. See the instructions [here](components/saas-notifications.md) to get started.
+
+## 4. Integrating your application
+
+Now that you've seen how to build and run the code locally, and you have a way to deploy your code to Azure in a repeatable and code-first way, you can integrate your own code into the solution.
+
+We've included a basic application within the `Saas.Application.Web` project that demonstrates a SaaS solution called "BadgeMeUp". BadgeMeUp is simply a badge sharing site that *Contoso* (representing your company) can sell to end customers.
+
+> SaaS solutions come in many shapes as sizes. We picked "BadgeMeUp", because it's a fairly simple scenario to understand. [You can read more about this particular SaaS scenario here](../resources/contoso-badgemeup/).
+
+
 
 ## More Info
 

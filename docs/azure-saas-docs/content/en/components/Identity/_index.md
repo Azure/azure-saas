@@ -17,7 +17,7 @@ Our Identity Framework is comprised of two main pieces:
 
 1. Identity Provider (IDP) - Preforms user login and authorization and provides a JWT token to the web applications. ASDK comes with Azure AD B2C implemented as the IDP out of the box.
 
-2. Permissions Service - A microservice that tracks what data each user has access to, and serves as an endpoint for the IDP to enrich the user's token with permissions and role claims.
+2. Permissions Service - A microservice that tracks what tenants and data each user has access to and serves as an endpoint for the IdP to enrich the user's token with permissions and role claims during the login flow.
 
 The Identity Framework also has a dependency on the [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/overview), which we use to look up certain user information when needed.
 

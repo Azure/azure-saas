@@ -66,6 +66,9 @@ When a new tenant is created, the SignupAdmin site will make a REST call to the 
 
 - A better solution for sending transactional emails might be to emit an event or message from the application, and building a notifications system to subscribe to those events. You could then build other applications to consume those events for other business functions as well. This style of architecture is called an [Event Driven](https://docs.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven) architecture. We decided to not go this route (yet!) with this project to keep it simple, but it is something to be considered when looking at your overall technical landscape.
 
+- Q: Why did we choose to not give the signup admin api its own Azure Key Vault?
+  - A: For simplicity, we decided to use key name prefixes to store keys for each module across the entire application into one Azure Key Vault. This is an acceptable approach, but, if necessary, you may choose to separate the secrets for each module into a dedicated Azure Key Vault.
+
 ## Signup Administration User Flows
 
 ### Sign In

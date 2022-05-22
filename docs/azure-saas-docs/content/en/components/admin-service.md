@@ -60,3 +60,6 @@ In addition, it also uses NSwag to consume the OpenAPI definition for the Permis
 
 - Q: Why did we choose to use strings to store our IDs and not GUIDs?
   - A: The default implementation that we chose is to use GUIDs for IDs, but store them as strings. This decisision was made so that consumers of the ASDK project would not be forced into using GUIDs, should they want to use something else for IDs.
+
+- Q: Why did we choose to not give the admin service its own Azure Key Vault?
+  - A: For simplicity, we decided to use key name prefixes to store keys for each module across the entire application into one Azure Key Vault. This is an acceptable approach, but, if necessary, you may choose to separate the secrets for each module into a dedicated Azure Key Vault.
