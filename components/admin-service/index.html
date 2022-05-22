@@ -22,26 +22,26 @@
 <meta name="description" content="Overview
 The SaaS.Admin.Service module (aka Admin Service) is an API that has two main responsibilities:
 
-Preforming CRUD operations on tenants …">
+Preforming Create, Read, Update, and Delete …">
 <meta property="og:title" content="SaaS.Admin.Service" />
 <meta property="og:description" content="Overview The SaaS.Admin.Service module (aka Admin Service) is an API that has two main responsibilities:
- Preforming CRUD operations on tenants Serving as a broker to the permissions API to assign roles and permissions to tenants  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.md.
+ Preforming Create, Read, Update, and Delete (CRUD) operations on tenants Serving as a broker to the permissions API to assign roles and permissions to tenants  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.md.
 Configuration and Secrets A list of app settings and secrets can be found in the module&rsquo;s readme." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/admin-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-16T15:41:56-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-22T18:54:08-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Admin.Service">
 <meta itemprop="description" content="Overview The SaaS.Admin.Service module (aka Admin Service) is an API that has two main responsibilities:
- Preforming CRUD operations on tenants Serving as a broker to the permissions API to assign roles and permissions to tenants  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.md.
+ Preforming Create, Read, Update, and Delete (CRUD) operations on tenants Serving as a broker to the permissions API to assign roles and permissions to tenants  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.md.
 Configuration and Secrets A list of app settings and secrets can be found in the module&rsquo;s readme.">
-<meta itemprop="dateModified" content="2022-05-16T15:41:56-04:00" />
-<meta itemprop="wordCount" content="677">
+<meta itemprop="dateModified" content="2022-05-22T18:54:08-04:00" />
+<meta itemprop="wordCount" content="687">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Admin.Service"/>
 <meta name="twitter:description" content="Overview The SaaS.Admin.Service module (aka Admin Service) is an API that has two main responsibilities:
- Preforming CRUD operations on tenants Serving as a broker to the permissions API to assign roles and permissions to tenants  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.md.
+ Preforming Create, Read, Update, and Delete (CRUD) operations on tenants Serving as a broker to the permissions API to assign roles and permissions to tenants  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.md.
 Configuration and Secrets A list of app settings and secrets can be found in the module&rsquo;s readme."/>
 
 
@@ -271,14 +271,14 @@ Configuration and Secrets A list of app settings and secrets can be found in the
 	<h2 id="overview">Overview</h2>
 <p>The <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin">SaaS.Admin.Service</a> module (aka Admin Service) is an API that has two main responsibilities:</p>
 <ol>
-<li>Preforming CRUD operations on tenants</li>
+<li>Preforming Create, Read, Update, and Delete (CRUD) operations on tenants</li>
 <li>Serving as a broker to the permissions API to assign roles and permissions to tenants</li>
 </ol>
 <h2 id="how-to-run-locally">How to Run Locally</h2>
 <p>Instructions to get this module running on your local dev machine are located in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin">readme.md</a>.</p>
 <h3 id="configuration-and-secrets">Configuration and Secrets</h3>
-<p>A list of app settings and secrets can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>. All non-secret values will have a default value in the <code>appsettings.json</code> file. All secret values will need to be set using the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;tabs=windows">.NET secrets manager</a> when running the project locally, as it is not reccomended to have these secret values in your <code>appsettings.json</code> file.</p>
-<p>When deployed to Azure, the application is configured to load in its secrets from <a href="https://docs.microsoft.com/en-us/azure/key-vault/general/overview">Azure Key Vault</a> instead. If you deploy the project using our bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the key vault using a <a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">System Assigned Managed Identity</a>. The Admin Service module is also configured with <a href="https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix">key name prefixes</a> to only import secrets with the prefix of <code>admin-</code>, as other modules share the same keyvault.</p>
+<p>A list of app settings and secrets can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>. All non-secret values will have a default value in the <code>appsettings.json</code> file. All secret values will need to be set using the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;tabs=windows">.NET Secret Manager</a> when running the project locally, as it is not recommended to have these secret values in your <code>appsettings.json</code> file.</p>
+<p>When deployed to Azure, the application is configured to load in its secrets from <a href="https://docs.microsoft.com/azure/key-vault/general/overview">Azure Key Vault</a> instead. If you deploy the project using our ARM/Bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the Azure Key Vault using a <a href="https://docs.microsoft.com/azure/active-directory/managed-identities-azure-resources/overview">System Assigned Managed Identity</a>. The Admin Service module is also configured with <a href="https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix">key name prefixes</a> to only import secrets with the prefix of <code>admin-</code>, as other modules share the same Azure Key Vault.</p>
 <h2 id="module-design">Module Design</h2>
 <h3 id="dependencies">Dependencies</h3>
 <ul>
@@ -294,7 +294,7 @@ Configuration and Secrets A list of app settings and secrets can be found in the
 </li>
 </ul>
 <h3 id="consumers">Consumers</h3>
-<p>Currently, the only consumer of this API is the 2 frontend applications. Every module in the ASDK project was designed to be extensible, so you could also build your own applications that interface directly with this API to fit other use cases that the included frontend applications do not provide.</p>
+<p>Currently, the only consumers of this API are the 2 frontend applications. Every module in the ASDK project was designed to be extensible, so you could also build your own applications that interface directly with this API to fit other use cases that the included frontend applications do not provide.</p>
 <ul>
 <li>
 <p><a href="../signup-administration">SaaS.SignupAdministration.Web</a></p>
@@ -304,8 +304,8 @@ Configuration and Secrets A list of app settings and secrets can be found in the
 </li>
 </ul>
 <h3 id="authentication">Authentication</h3>
-<p>The Admin Service is secured using OAuth 2.0 authentication via the Microsoft Identity Platform. Incoming requests must contain a valid JWT Bearer token on the <code>Authorization</code> header. The token must contain a valid scope that the calling application has been authorized to use. To learn more about how this process works and is configured in B2C, we highly reccomend checking out our list of <a href="(../../resources/additional-recommended-resources#identity-focused)">identity resources &amp; documentation</a>.</p>
-<p>For authorization, we have also included middleware on the Admin Service that extracts the user&rsquo;s permission records from the JWT token claims and preforms authorization based on policies applied at the route level. In other words, before preforming any action on a tenant once a request is received, the admin service will first ensure that the user making the request has a claim to that tenant on their token. If there is no claim to that tenant, or their role does not match what they&rsquo;re trying to do, the request will be denied.</p>
+<p>The Admin Service is secured using OAuth 2.0 authentication via the Microsoft Identity Platform. Incoming requests must contain a valid JWT Bearer token in the <code>Authorization</code> header. The token must contain a valid scope that the calling application has been authorized to use. To learn more about how this process works and is configured in Azure AD B2C, we highly recommend checking out our list of <a href="(../../resources/additional-recommended-resources#identity-focused)">identity resources &amp; documentation</a>.</p>
+<p>For authorization, we have also included middleware on the Admin Service that extracts the user&rsquo;s permission records from the JWT token claims and performs authorization based on policies applied at the route level. In other words, before preforming any action on a tenant once a request is received, the admin service will first ensure that the user making the request has a claim to that tenant on their token. If there is no claim to that tenant, or their role does not match what they&rsquo;re trying to do, the request will be denied.</p>
 <p>Implementing this in a multitenant fashion is often the most difficult part of starting a SaaS project, so we tried to make it as extensible as possible to support a wide range of scenarios.</p>
 <h3 id="database">Database</h3>
 <p><a href="https://docs.microsoft.com/en-us/ef/core/">Entity Framework Core</a> is used to manage the SQL Server Database schema and connections. We are using <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/new-database">Code First Development</a> and, if no data or schema exists in the database on application startup, the application will automatically create the database schema that is defined in our <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Data">model files</a>. If you make any changes to these models, you will need to preform a <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/">migration</a> to upgrade the database schema.</p>
@@ -324,7 +324,7 @@ Configuration and Secrets A list of app settings and secrets can be found in the
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 16, 2022: <a href="https://github.com/Azure/azure-saas/commit/29c95f71c6481c6987224202caf5877c4204db41">more signupadmin docs (29c95f7)</a>
+  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/588ba72ee9d724fe73ee1ab421628843465dcde8">Apply suggestions from code review (588ba72)</a>
 </div>
 
 </div>

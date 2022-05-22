@@ -20,23 +20,23 @@
 
 <title>Contoso BadgeMeUp | Azure SaaS Dev Kit Docs</title>
 <meta name="description" content="Intro
-For ease of explaining the project and who it might benefit, we created a few example &ldquo;stories&rdquo; to help users visualize the …">
+For ease of explaining the project and who it might benefit, we created an example &ldquo;story&rdquo; to help users visualize the components. …">
 <meta property="og:title" content="Contoso BadgeMeUp" />
-<meta property="og:description" content="Intro For ease of explaining the project and who it might benefit, we created a few example &ldquo;stories&rdquo; to help users visualize the components. Contoso BadgeMeUp is one of those example stories.
+<meta property="og:description" content="Intro For ease of explaining the project and who it might benefit, we created an example &ldquo;story&rdquo; to help users visualize the components. In the story below, Contoso is ISV who developed the BadgeMeUp SaaS platform and Lucerne Publishing is the customer who purchased BadgeMeUp for use by employees within their organization.
 Context Contoso is a SaaS ISV (software vendor) that has a product, Contoso BadgeMeUp. Contoso BadgeMeUp is a SaaS B2B application that Contoso sells to companies that want a great tool to improve the culture within their organization." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/resources/contoso-badgemeup/" /><meta property="article:section" content="resources" />
 
-<meta property="article:modified_time" content="2022-05-17T11:13:42-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-22T18:54:08-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Contoso BadgeMeUp">
-<meta itemprop="description" content="Intro For ease of explaining the project and who it might benefit, we created a few example &ldquo;stories&rdquo; to help users visualize the components. Contoso BadgeMeUp is one of those example stories.
+<meta itemprop="description" content="Intro For ease of explaining the project and who it might benefit, we created an example &ldquo;story&rdquo; to help users visualize the components. In the story below, Contoso is ISV who developed the BadgeMeUp SaaS platform and Lucerne Publishing is the customer who purchased BadgeMeUp for use by employees within their organization.
 Context Contoso is a SaaS ISV (software vendor) that has a product, Contoso BadgeMeUp. Contoso BadgeMeUp is a SaaS B2B application that Contoso sells to companies that want a great tool to improve the culture within their organization.">
-<meta itemprop="dateModified" content="2022-05-17T11:13:42-04:00" />
-<meta itemprop="wordCount" content="217">
+<meta itemprop="dateModified" content="2022-05-22T18:54:08-04:00" />
+<meta itemprop="wordCount" content="241">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Contoso BadgeMeUp"/>
-<meta name="twitter:description" content="Intro For ease of explaining the project and who it might benefit, we created a few example &ldquo;stories&rdquo; to help users visualize the components. Contoso BadgeMeUp is one of those example stories.
+<meta name="twitter:description" content="Intro For ease of explaining the project and who it might benefit, we created an example &ldquo;story&rdquo; to help users visualize the components. In the story below, Contoso is ISV who developed the BadgeMeUp SaaS platform and Lucerne Publishing is the customer who purchased BadgeMeUp for use by employees within their organization.
 Context Contoso is a SaaS ISV (software vendor) that has a product, Contoso BadgeMeUp. Contoso BadgeMeUp is a SaaS B2B application that Contoso sells to companies that want a great tool to improve the culture within their organization."/>
 
 
@@ -254,7 +254,7 @@ Context Contoso is a SaaS ISV (software vendor) that has a product, Contoso Badg
 		
 	</header>    
 	<h2 id="intro">Intro</h2>
-<p>For ease of explaining the project and who it might benefit, we created a few example &ldquo;stories&rdquo; to help users visualize the components. Contoso BadgeMeUp is one of those example stories.</p>
+<p>For ease of explaining the project and who it might benefit, we created an example &ldquo;story&rdquo; to help users visualize the components. In the story below, Contoso is ISV who developed the BadgeMeUp SaaS platform and Lucerne Publishing is the customer who purchased BadgeMeUp for use by employees within their organization.</p>
 <h2 id="context">Context</h2>
 <p><img src="../badgemeup-screenshot.gif" alt="BadgeMeUp Screenshot"></p>
 <p>Contoso is a SaaS ISV (software vendor) that has a product, Contoso BadgeMeUp. Contoso BadgeMeUp is a SaaS B2B application that Contoso sells to companies that want a great tool to improve the culture within their organization.</p>
@@ -263,12 +263,12 @@ Context Contoso is a SaaS ISV (software vendor) that has a product, Contoso Badg
 </blockquote>
 <p>Lucerne Publishing has recently purchased Contoso BadgeMeUp. They&rsquo;re currently using Azure Active Directory and want their employees to be able to Single Sign-on to BadgeMeUp.</p>
 <blockquote>
-<p>Note: Contoso IT has configured their B2C instance for an external authentication provider. Additional documentation is available <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-azure-ad-multi-tenant?pivots=b2c-user-flow">here</a>.</p>
+<p>Note: Contoso IT has configured their Azure AD B2C instance for an external authentication provider. Additional documentation is available <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-azure-ad-multi-tenant?pivots=b2c-user-flow">here</a>.</p>
 </blockquote>
 <h3 id="onboarding">Onboarding</h3>
 <ol>
-<li>Phil in accounting browsed the plans available at Signup.BadgeMeUp.Contoso.com and selected the plan he thought would best fit their companies needs.</li>
-<li>Sandy navigates to BadgeMeUp.Contoso.com/lucernepublishing and signs in using her Active Directory credentials.</li>
+<li>Phil in Lucerne Publishing accounting browsed the plans available at Signup.BadgeMeUp.Contoso.com and selected the plan he thought would best fit the company&rsquo;s needs.</li>
+<li>Sandy navigates to BadgeMeUp.Contoso.com/lucernepublishing and signs in using her Azure AD credentials.</li>
 <li>After Sandy creates an account, Phil can then go to Signup.BadgeMeUp.Contoso.com/admin to see his previously created tenant and grant Sandy elevation permissions if he wishes.</li>
 </ol>
 <pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">graph LR
@@ -289,7 +289,7 @@ Context Contoso is a SaaS ISV (software vendor) that has a product, Contoso Badg
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 17, 2022: <a href="https://github.com/Azure/azure-saas/commit/ddfadad889b617651ff95fe205e8a797b5278fa8">docs almost done (ddfadad)</a>
+  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/588ba72ee9d724fe73ee1ab421628843465dcde8">Apply suggestions from code review (588ba72)</a>
 </div>
 
 </div>

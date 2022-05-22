@@ -30,7 +30,7 @@ The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application 
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/signup-administration/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-17T11:13:42-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-22T18:54:08-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.SignupAdministration.Web">
 <meta itemprop="description" content="Overview The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS product. End Users/Customers can visit this site to:
@@ -38,8 +38,8 @@ The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application 
   Go through an onboarding flow to create a new tenant
   Manage their existing tenants.
   This site also supports administrative functionality for global administrators to view and manage all tenants and users of the application.">
-<meta itemprop="dateModified" content="2022-05-17T11:13:42-04:00" />
-<meta itemprop="wordCount" content="1118">
+<meta itemprop="dateModified" content="2022-05-22T18:54:08-04:00" />
+<meta itemprop="wordCount" content="1144">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.SignupAdministration.Web"/>
 <meta name="twitter:description" content="Overview The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application meant to faciliate self service onboarding to your SaaS product. End Users/Customers can visit this site to:
@@ -297,8 +297,8 @@ The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application 
 <h2 id="how-to-run-locally">How to Run Locally</h2>
 <p>Instructions to get this module running on your local dev machine are located in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">readme.md</a>.</p>
 <h3 id="configuration-and-secrets">Configuration and Secrets</h3>
-<p>A list of app settings and secrets can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>. All non-secret values will have a default value in the <code>appsettings.json</code> file. All secret values will need to be set using the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;tabs=windows">.NET secrets manager</a> when running the module locally, as it is not reccomended to have these secret values in your <code>appsettings.json</code> file.</p>
-<p>When deployed to Azure, the application is configured to load in its secrets from <a href="https://docs.microsoft.com/en-us/azure/key-vault/general/overview">Azure Key Vault</a> instead. If you deploy the project using our bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the key vault using a <a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">System Assigned Managed Identity</a>. The SignupAdmin module is also configured with <a href="https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix">key name prefixes</a> to only import secrets with the prefix of <code>signupadmin-</code>, as other modules share the same keyvault.</p>
+<p>A list of app settings and secrets can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions">readme.md</a>. All non-secret values will have a default value in the <code>appsettings.json</code> file. All secret values will need to be set using the <a href="https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&amp;tabs=windows">.NET Secrets Manager</a> when running the module locally, as it is not recommended to have these secret values in your <code>appsettings.json</code> file.</p>
+<p>When deployed to Azure, the application is configured to load in its secrets from <a href="https://docs.microsoft.com/azure/key-vault/general/overview">Azure Key Vault</a> instead. If you deploy the project using our ARM/Bicep templates from the Quick Start guide, the modules will be deployed to an app service which accesses the Azure Key Vault using a <a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">System Assigned Managed Identity</a>. The SignupAdmin module is also configured with <a href="https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix">key name prefixes</a> to only import secrets with the prefix of <code>signupadmin-</code>, as other modules share the same Azure Key Vault.</p>
 <h2 id="module-design">Module Design</h2>
 <h3 id="dependencies">Dependencies</h3>
 <ul>
@@ -323,10 +323,10 @@ The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application 
 <li>End Users/Customers</li>
 </ul>
 <h3 id="authentication">Authentication</h3>
-<p>The SignupAdmin site uses the <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-overview">Microsoft Authentication Library (MSAL)</a> to handle the <a href="../identity/identity-flows#sign-in">flow</a> of signing in and parsing the user token from the Azure B2C. The identity provider must be configured properly for this to work, and you must provide certain configuration values to the SignupAdmin site for it to properly communicate with B2C. These config values can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">readme.md</a>.</p>
-<p>For communication with the SaaS.Admin.Service, the SignupAdmin site also uses the MSAL to request an access token, using the signed in users existing token, to use in the Authorization header of all requests. This new token is specific to the SaaS.Admin.Service and will be requested from the Identity Provider with a specific scope. This type of exchange is known as an <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow">OAuth 2.0 On-Belf-Of flow</a>.</p>
+<p>The SignupAdmin site uses the <a href="https://docs.microsoft.com/azure/active-directory/develop/msal-overview">Microsoft Authentication Library (MSAL)</a> to handle the <a href="../identity/identity-flows#sign-in">flow</a> of signing in and parsing the user token from the Azure AD B2C. The identity provider must be configured properly for this to work, and you must provide certain configuration values to the SignupAdmin site for it to properly communicate with Azure AD B2C. These config values can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">readme.md</a>.</p>
+<p>For communication with the SaaS.Admin.Service, the SignupAdmin site also uses the MSAL to request an access token, using the signed-in user&rsquo;s existing token, to use in the Authorization header of all requests. This new token is specific to the SaaS.Admin.Service and will be requested from the Identity Provider with a specific scope. This type of exchange is known as an <a href="https://docs.microsoft.com/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow">OAuth 2.0 On-Behalf-Of Flow</a>.</p>
 <h3 id="nswag">NSwag</h3>
-<p>The NSwag project provides tools to generate OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI specifications. This provides us a ready-to-use HTTP client without having to write much boilerplate Read more about <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&amp;tabs=visual-studio">using NSwag on ASP.NET projects</a>.</p>
+<p>The NSwag project provides tools to generate OpenAPI specifications from existing ASP.NET Web API controllers and client code from these OpenAPI specifications. This provides us a ready-to-use HTTP client without having to write much boilerplate. Read more about <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&amp;tabs=visual-studio">using NSwag on ASP.NET projects</a>.</p>
 <!-- raw HTML omitted -->
 <!-- raw HTML omitted -->
 <h3 id="transactional-emails">Transactional Emails</h3>
@@ -334,13 +334,19 @@ The SaaS.SignupAdministration.Web (aka SignupAdmin) module is a web application 
 <h2 id="faq-and-design-considerations">FAQ and Design Considerations</h2>
 <ul>
 <li>
-<p>For the onboarding workflow, we are keeping track of the state in memory. This is fine for demo purposes and low traffic systems, but this is not a great pattern when introducing horizontally scaled backends. It is reccomended that you replace the JsonPersistenceProvider (the service that stores the state) with another implementation backed by an external cache (ex: Redis, CosmosDB, etc). Instructions on where to do this can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">readme.md</a></p>
+<p>For the onboarding workflow, we are keeping track of the state in memory. This is fine for demo purposes and low traffic systems, but this is not a great pattern when introducing horizontally scaled backends. It is recommended that you replace the JsonPersistenceProvider (the service that stores the state) with another implementation backed by an external cache (ex: Redis, CosmosDB, etc). Instructions on where to do this can be found in the module&rsquo;s <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration">readme.md</a></p>
 </li>
 <li>
-<p>For ease of management, we have chosen to incorporate the global administrative functionality into this application. You may choose to separate this functionality into a different module if you require more administrative functionality than just tenant and user management</p>
+<p>Q: How do I manage tenants created by this application?</p>
+<ul>
+<li>A: For ease of management, we have chosen to incorporate the global administrative functionality into this application. You may choose to separate this functionality into a different module if you require more administrative functionality than just tenant and user management</li>
+</ul>
 </li>
 <li>
-<p>A better solution for sending transactional emails might be to emit an event or message from the application, and building a notifications system to subscribe to those events. You could then build other applications to consume those events for other business functions as well. This style of architecture is called an <a href="https://docs.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven">Event Driven</a> architecture. We decided to not go this route (yet!) with this project to keep it simple, but it is something to be considered when looking at your overall technical landscape.</p>
+<p>Q: What other implementation options exist for email notifications?</p>
+<ul>
+<li>A: A better solution for sending transactional emails might be to emit an event or message from the application, and building a notifications system to subscribe to those events. You could then build other applications to consume those events for other business functions as well. This style of architecture is called an <a href="https://docs.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven">Event Driven</a> architecture. We decided to not go this route (yet!) with this project to keep it simple, but it is something to be considered when looking at your overall technical landscape.</li>
+</ul>
 </li>
 </ul>
 <h2 id="signup-administration-user-flows">Signup Administration User Flows</h2>
@@ -428,7 +434,7 @@ signup--&gt;&gt;user : Error, User does not exist
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 17, 2022: <a href="https://github.com/Azure/azure-saas/commit/ddfadad889b617651ff95fe205e8a797b5278fa8">docs almost done (ddfadad)</a>
+  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/588ba72ee9d724fe73ee1ab421628843465dcde8">Apply suggestions from code review (588ba72)</a>
 </div>
 
 </div>

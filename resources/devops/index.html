@@ -26,13 +26,13 @@ How does it work? There are 2 reusable workflows we have created which the proce
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/resources/devops/" /><meta property="article:section" content="resources" />
 
-<meta property="article:modified_time" content="2022-05-17T11:13:42-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-22T18:54:08-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="DevOps Workflows">
 <meta itemprop="description" content="For your convenience, we have provided some sample GitHub workflows that you can use to build and deploy code changes to each module. These workflows are the same ones that we use to package and release the code to our test environment. They were created as a baseline reference with the intent to be extensible when needed.
 How does it work? There are 2 reusable workflows we have created which the process is based on.">
-<meta itemprop="dateModified" content="2022-05-17T11:13:42-04:00" />
-<meta itemprop="wordCount" content="768">
+<meta itemprop="dateModified" content="2022-05-22T18:54:08-04:00" />
+<meta itemprop="wordCount" content="772">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="DevOps Workflows"/>
 <meta name="twitter:description" content="For your convenience, we have provided some sample GitHub workflows that you can use to build and deploy code changes to each module. These workflows are the same ones that we use to package and release the code to our test environment. They were created as a baseline reference with the intent to be extensible when needed.
@@ -304,7 +304,7 @@ How does it work? There are 2 reusable workflows we have created which the proce
 </tr>
 <tr>
 <td>slot_name</td>
-<td>The name of the deployment slot slot to create and deploy to on the app service (Used for override, recommended to keep the default)</td>
+<td>The name of the deployment slot  to create and deploy to on the app service (Used for override, recommended to keep the default)</td>
 <td>pr-${{github.event.pull_request.number}}</td>
 </tr>
 </tbody>
@@ -313,7 +313,7 @@ How does it work? There are 2 reusable workflows we have created which the proce
 <ul>
 <li><code>AZURE_CREDENTIALS</code>
 <ul>
-<li>The devops pipeline must contain azure credentials for a service principal that has an appropriate access level to create a new app service slot and deploy to it. See <a href="https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows">this</a> document for setting up these credentials in your own repo.</li>
+<li>The CI/CD pipeline must contain Azure credentials for a service principal that has an appropriate access level to create a new Azure App Service slot and deploy to it. See <a href="https://docs.microsoft.com/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows">this</a> document for setting up these credentials in your own repo.</li>
 </ul>
 </li>
 </ul>
@@ -331,7 +331,7 @@ How does it work? There are 2 reusable workflows we have created which the proce
 <p><code>create-deployment-slot</code></p>
 <ol>
 <li>Logs into the Azure CLI with <a href="https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows#create-a-service-principal-and-add-it-as-a-github-secret">credentials provided</a> in the <code>AZURE_CREDENTIALS</code> secret.</li>
-<li>Runs Azure CLI command to create a new deployment slot in the app service provided in the <code>app_service_name</code> input variable. Slot name is provided via the <code>slot_name</code> input variable.</li>
+<li>Runs Azure CLI command to create a new deployment slot in the Azure App Service provided in the <code>app_service_name</code> input variable. Slot name is provided via the <code>slot_name</code> input variable.</li>
 </ol>
 </li>
 <li>
@@ -385,7 +385,7 @@ Depends on the <code>build</code> and <code>create-deployment-slot</code> jobs t
 <ul>
 <li><code>AZURE_CREDENTIALS</code>
 <ul>
-<li>The devops pipeline must contain azure credentials for a service principal that has an appropriate access level to preform the swap operation on the app service in question. See <a href="https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows">this</a> document for setting up these credentials in your own repo.</li>
+<li>The CI/CD pipeline must contain Azure credentials for a service principal that has an appropriate access level to perform the swap operation on the Azure App Service in question. See <a href="https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows">this</a> document for setting up these credentials in your own repo.</li>
 </ul>
 </li>
 </ul>
@@ -396,14 +396,14 @@ Depends on the <code>build</code> and <code>create-deployment-slot</code> jobs t
 <p><code>swap-slot</code> - <em>This job only runs if the PR is closed AND merged. This job does not run if the PR is closed without merging.</em></p>
 <ol>
 <li>Logs into the Azure CLI with <a href="https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows#create-a-service-principal-and-add-it-as-a-github-secret">credentials provided</a> in the <code>AZURE_CREDENTIALS</code> secret.</li>
-<li>Runs the Azure CLI command to swap the deployment slot named in the <code>slot_name</code> input variable with the production slot on the app service named in the <code>app_service_name</code> input variable.</li>
+<li>Runs the Azure CLI command to swap the deployment slot named in the <code>slot_name</code> input variable with the production slot on the Azure App Service named in the <code>app_service_name</code> input variable.</li>
 </ol>
 </li>
 <li>
 <p><code>delete-slot</code> - This job will only run if the preceding step runs and succeeds. If the PR is closed without merging, the previous step will be skipped but this will still run.</p>
 <ol>
 <li>Logs into the Azure CLI with <a href="https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows#create-a-service-principal-and-add-it-as-a-github-secret">credentials provided</a> in the <code>AZURE_CREDENTIALS</code> secret.</li>
-<li>Runs the Azure CLI command to delete the deployment slot named in the <code>slot_name</code> input variable with the production slot on the app service named in the <code>app_service_name</code> input variable.</li>
+<li>Runs the Azure CLI command to delete the deployment slot named in the <code>slot_name</code> input variable with the production slot on the Azure App Service named in the <code>app_service_name</code> input variable.</li>
 </ol>
 </li>
 </ol>
@@ -414,7 +414,7 @@ Depends on the <code>build</code> and <code>create-deployment-slot</code> jobs t
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 17, 2022: <a href="https://github.com/Azure/azure-saas/commit/ddfadad889b617651ff95fe205e8a797b5278fa8">docs almost done (ddfadad)</a>
+  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/588ba72ee9d724fe73ee1ab421628843465dcde8">Apply suggestions from code review (588ba72)</a>
 </div>
 
 </div>

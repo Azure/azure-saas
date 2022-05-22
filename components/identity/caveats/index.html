@@ -25,21 +25,21 @@
 This reference …">
 <meta property="og:title" content="Caveats &amp; Limitations" />
 <meta property="og:description" content="There are a few caveats of the identity solution provided within this reference implementation that you should be aware of.
-  This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a singular B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had jill@contoso.com sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same jill@contoso." />
+  This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a single Azure AD B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had jill@contoso.com sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same jill@contoso." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/caveats/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-17T11:13:42-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-22T18:54:08-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Caveats &amp; Limitations">
 <meta itemprop="description" content="There are a few caveats of the identity solution provided within this reference implementation that you should be aware of.
-  This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a singular B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had jill@contoso.com sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same jill@contoso.">
-<meta itemprop="dateModified" content="2022-05-17T11:13:42-04:00" />
-<meta itemprop="wordCount" content="311">
+  This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a single Azure AD B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had jill@contoso.com sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same jill@contoso.">
+<meta itemprop="dateModified" content="2022-05-22T18:54:08-04:00" />
+<meta itemprop="wordCount" content="314">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Caveats &amp; Limitations"/>
 <meta name="twitter:description" content="There are a few caveats of the identity solution provided within this reference implementation that you should be aware of.
-  This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a singular B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had jill@contoso.com sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same jill@contoso."/>
+  This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a single Azure AD B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had jill@contoso.com sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same jill@contoso."/>
 
 
 
@@ -250,7 +250,7 @@ This reference …">
 	<p>There are a few caveats of the identity solution provided within this reference implementation that you should be aware of.</p>
 <ul>
 <li>
-<p>This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a singular B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had <code>jill@contoso.com</code> sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same <code>jill@contoso.com</code> account. You may still control what tenants they have roles under via the permissions that come back in their JWT claims.</p>
+<p>This reference implementation does not provide support for per-tenant “local” users. All users will be stored in a single Azure AD B2C tenant and the user objects themselves will not be separated by the tenant they signed up with. For example, if you had <code>jill@contoso.com</code> sign up to tenant 1, they would also be able to sign into tenant 2, tenant 3, and tenant 4 with the same <code>jill@contoso.com</code> account. You may still control what tenants they have roles under via the permissions that come back in their JWT claims.</p>
 </li>
 <li>
 <p>The current version only supports “local” users and social identities and does not provide support for configuring federation with other Identity Providers.</p>
@@ -258,19 +258,19 @@ This reference …">
 <li>
 <p>Future versions will likely not provide support for “per-tenant federation” (i.e., where each tenant could bring their own IdP). This is primarily due to limitations in Azure AD B2C which introduce significant overhead when attempting to manage “per-tenants” users &amp; policies within a directory.</p>
 <ul>
-<li>ie. It is possible, but each federation is configured via directory-wide policy and there is a limit of 200 policies on a directory.</li>
+<li>It is possible, but each federation is configured via directory-wide policy and there is a limit of 200 policies on a directory.</li>
 <li>If all tenants can be assumed to have their own Azure Active Directory (regular B2B), then per-tenant federation could be implemented using Azure AD (multitenant) federation identity provider with the application code doing the authorization based on specific tenant id claim. However, if each tenant wants to be able to configure their own completely different IdP (e.g., Okta, Ping, Auth0, Cognito), it would require additional work due to policy limits.</li>
 </ul>
 </li>
 <li>
-<p>Azure AD B2C has a documented limitation preventing API chaining via the OAuth 2.0 On-Behalf-Of flow. You may request a token to call an API via a web app, but not an API via an API. See the <a href="https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations">B2C Limitations</a> page for more information.</p>
+<p>Azure AD B2C has a documented limitation preventing API chaining via the OAuth 2.0 On-Behalf-Of flow. You may request a token to call an API via a web app, but not an API via an API. See the <a href="https://github.com/AzureAD/microsoft-identity-web/wiki/b2c-limitations">Azure AD B2C Limitations</a> page for more information.</p>
 </li>
 </ul>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 17, 2022: <a href="https://github.com/Azure/azure-saas/commit/ddfadad889b617651ff95fe205e8a797b5278fa8">docs almost done (ddfadad)</a>
+  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/588ba72ee9d724fe73ee1ab421628843465dcde8">Apply suggestions from code review (588ba72)</a>
 </div>
 
 </div>
