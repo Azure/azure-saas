@@ -5,6 +5,7 @@ using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using Microsoft.IdentityModel.Logging;
 using Saas.SignupAdministration.Web;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,7 +69,7 @@ builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration,
     .EnableTokenAcquisitionToCallDownstreamApi(
         builder.Configuration["AppSettings:AdminServiceScopes"]
         .Split(" "))
-        //.Select(scope => builder.Configuration["AppSettings:AdminServiceScopeBaseUrl"] + scope ))
+    //.Select(scope => builder.Configuration["AppSettings:AdminServiceScopeBaseUrl"] + scope ))
     .AddSessionTokenCaches();
 
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
@@ -76,6 +77,15 @@ builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 // Configuring appsettings section AzureAdB2C, into IOptions
 builder.Services.AddOptions();
 builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection("AzureAdB2C"));
+
+// This is required for auth to work correctly when running in a docker container because of SSL Termination
+// Remove this and the subsequent app.UseForwardedHeaders() line below if you choose to run the app without using containers
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
+    options.ForwardedProtoHeaderName = "X-Forwarded-Proto";
+});
+
 
 var app = builder.Build();
 
@@ -95,6 +105,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
+app.UseForwardedHeaders();
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    Secure = CookieSecurePolicy.Always
+});
 app.UseAuthentication();
 app.UseAuthorization();
 

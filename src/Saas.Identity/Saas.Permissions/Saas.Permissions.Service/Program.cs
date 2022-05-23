@@ -47,6 +47,9 @@ builder.Services.AddSingleton<ICertificateValidationService, CertificateValidati
 
 // Look for certificate forwarded by the web server on X-Arr-Client-Cert
 builder.Services.AddCertificateForwarding(options => { options.CertificateHeader = "X-ARR-ClientCert"; });
+
+// This is required for auth to work correctly when running in a docker container because of SSL Termination
+// Remove this and the subsequent app.UseForwardedHeaders() line below if you choose to run the app without using containers
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
@@ -80,11 +83,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization(options =>
-{
-
-});
-
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 app.ConfigureDatabase();
