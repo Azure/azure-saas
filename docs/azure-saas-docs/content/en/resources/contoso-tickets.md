@@ -2,6 +2,7 @@
 type: docs
 title: "Contoso Tickets"
 weight: 20
+toc_hide: true
 ---
 
 ## Context
