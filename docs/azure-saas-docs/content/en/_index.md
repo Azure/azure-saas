@@ -22,7 +22,15 @@ How you use the dev kit is up to you, here are some ideas to get you started:
 * Developing a greenfield SaaS offering for the first time.
 * Migrating a SaaS offering from another cloud to Azure.
 
+
 This is not a one-size-fits-all solution. Use as little or as much as you like. It is designed to be both a modular deployable reference implementation and also a reference architecture. You are free to use and change the code contained within this project in any way you'd like (following the terms of the [license](https://github.com/Azure/azure-saas/blob/main/LICENSE))):
+
+- [**B2C Authentication Service**](/services/b2c-auth-service/) - Provides a flexible identity solution.
+- [**Core App**](/services/core-app/)
+	- A web app where your customers to view plans and onboard to your solution.
+	- Provides you with tenant administration capabilities. (modify/remove/etc.)
+- [**Saas.Application**](/services/saas-application/) - A sample application that you can extend or replace with your own code.
+
 
 * Deploy the entire solution to Azure using the [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/bicep/) templates we provide, make changes to fit your exact use case, and start building your SaaS application from there.
 * Deploy one or more of our modules and hook it into your existing SaaS application.
