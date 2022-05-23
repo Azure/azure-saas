@@ -28,6 +28,9 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 
 | AppSetting Key |  Description | Secret | Default Value |
 | ---  | --- | --- | --- |
+| AzureAdB2C:TenantId | The tenant ID for the b2c instance | true | |
+| AzureAdB2C:ClientId | The ClientID for the permissions api app registration in the b2c instance | true | |
+| AzureAdB2C:ClientSecret | The secret for the permissions api app registration in the b2c instance | true | |
 | AppSettings:SSLCertThumbprint | The certificate thumbprint used to validate the certificate forwarded to the application via the web server. | true | |
 | KeyVault:Url | KeyVault URL to pull secret values from in production | false |  |
 | ConnectionStrings:PermissionsContext | Connection String to SQL server database used to store permission data. If using local db for development, this connection string is fine to commit to your repo as it does not contain any secrets. | true | (local db connection string) |
