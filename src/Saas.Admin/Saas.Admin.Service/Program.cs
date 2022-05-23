@@ -45,6 +45,7 @@ builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration,
 
 builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTransformer");
 builder.Services.AddRouteBasedRoleHandler("tenantId");
+builder.Services.AddRouteBasedRoleHandler("userId");
 
 builder.Services.AddAuthorization(options =>
 {

@@ -24,13 +24,13 @@ param azureAdB2cTenantIdSecretName string = 'permissions-AzureAdB2C--TenantId'
 @description('The value of the Azure AD B2C Tenant Id Key Vault Secret.')
 param azureAdB2cTenantIdSecretValue string
 @description('The name of the Azure AD B2C Permissions Api Client Id Key Vault Secret.')
-param azureAdB2cPermissionsApiClientIdSecretName string = 'permissions-AzureAdB2C--PermisionsApiClientId'
+param azureAdB2cPermissionsApiClientIdSecretName string = 'permissions-AzureAdB2C--ClientId'
 
 @description('The value of the Azure AD B2C Permissions Api Client Id Key Vault Secret.')
 param azureAdB2cPermissionsApiClientIdSecretValue string
 
 @description('The name of the Azure AD B2C Permissions Api Client Id Key Vault Secret.')
-param azureAdB2cPermissionsApiClientSecretSecretName string = 'permissions-AzureAdB2C--PermisionsApiClientSecret'
+param azureAdB2cPermissionsApiClientSecretSecretName string = 'permissions-AzureAdB2C--ClientSecret'
 
 @description('The value of the Azure AD B2C Permissions Api Client Secret Key Vault Secret.')
 param azureAdB2cPermissionsApiClientSecretSecretValue string

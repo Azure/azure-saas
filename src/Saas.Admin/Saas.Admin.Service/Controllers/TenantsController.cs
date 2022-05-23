@@ -281,8 +281,7 @@ public class TenantsController : ControllerBase
     /// Add a set of permissions for a user on a tenant
     /// </summary>
     /// <param name="tenantId"></param>
-    /// <param name="userId"></param>
-    /// <param name="permissions"></param>
+    /// <param name="userEmail"></param>
     /// <returns></returns>
     [HttpPost("{tenantId}/invite")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
