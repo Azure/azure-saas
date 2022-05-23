@@ -23,21 +23,21 @@
 The SaaS.Notifications module is a relatively simple Azure Logic App that gets deployed to enable email sending from the rest of the …">
 <meta property="og:title" content="SaaS.Notifications" />
 <meta property="og:description" content="Overview The SaaS.Notifications module is a relatively simple Azure Logic App that gets deployed to enable email sending from the rest of the solution. It is deployed with an HTTP trigger that takes in a JSON payload with fields required to send an email.
-Design Dependencies  Email provider of choice, once configured  Consumers  SaaS.SignupAdministration.Web  Logic App Configuration Input The logic app comes pre-configured with a default JSON schema with some common email data fields." />
+Design Dependencies  Email provider of choice, once configured  Consumers  SaaS.SignupAdministration.Web  Authentication The logic app is using the default SAS Token that gets generated with the HTTP trigger." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/saas-notifications/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-22T18:54:08-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-23T10:53:15-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Notifications">
 <meta itemprop="description" content="Overview The SaaS.Notifications module is a relatively simple Azure Logic App that gets deployed to enable email sending from the rest of the solution. It is deployed with an HTTP trigger that takes in a JSON payload with fields required to send an email.
-Design Dependencies  Email provider of choice, once configured  Consumers  SaaS.SignupAdministration.Web  Logic App Configuration Input The logic app comes pre-configured with a default JSON schema with some common email data fields.">
-<meta itemprop="dateModified" content="2022-05-22T18:54:08-04:00" />
-<meta itemprop="wordCount" content="326">
+Design Dependencies  Email provider of choice, once configured  Consumers  SaaS.SignupAdministration.Web  Authentication The logic app is using the default SAS Token that gets generated with the HTTP trigger.">
+<meta itemprop="dateModified" content="2022-05-23T10:53:15-04:00" />
+<meta itemprop="wordCount" content="404">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Notifications"/>
 <meta name="twitter:description" content="Overview The SaaS.Notifications module is a relatively simple Azure Logic App that gets deployed to enable email sending from the rest of the solution. It is deployed with an HTTP trigger that takes in a JSON payload with fields required to send an email.
-Design Dependencies  Email provider of choice, once configured  Consumers  SaaS.SignupAdministration.Web  Logic App Configuration Input The logic app comes pre-configured with a default JSON schema with some common email data fields."/>
+Design Dependencies  Email provider of choice, once configured  Consumers  SaaS.SignupAdministration.Web  Authentication The logic app is using the default SAS Token that gets generated with the HTTP trigger."/>
 
 
 
@@ -193,6 +193,7 @@ Design Dependencies  Email provider of choice, once configured  Consumers  SaaS.
       <ul>
         <li><a href="#dependencies">Dependencies</a></li>
         <li><a href="#consumers">Consumers</a></li>
+        <li><a href="#authentication">Authentication</a></li>
       </ul>
     </li>
     <li><a href="#logic-app-configuration">Logic App Configuration</a>
@@ -272,6 +273,8 @@ Design Dependencies  Email provider of choice, once configured  Consumers  SaaS.
 <ul>
 <li><a href="../signup-administration">SaaS.SignupAdministration.Web</a></li>
 </ul>
+<h3 id="authentication">Authentication</h3>
+<p>The logic app is using the default <a href="https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-securing-a-logic-app?tabs=azure-portal#generate-shared-access-signatures-sas">SAS Token</a> that gets generated with the HTTP trigger. Take care to not commit this SAS token into your repo, as it is considered a secret. Anyone with access to this URL with the SAS token will have permission to call your logic app. If you deploy the Azure SaaS Dev Kit using the Quick Start guide, this will be automatically uploaded to a keyvault for reference via the applications.</p>
 <h2 id="logic-app-configuration">Logic App Configuration</h2>
 <h3 id="input">Input</h3>
 <p>The logic app comes pre-configured with a default JSON schema with some common email data fields. You may edit this to your liking by going to the logic app designer for the logic app that is deployed in your environment. Here is the default JSON schema that gets deployed:</p>
@@ -318,7 +321,7 @@ Design Dependencies  Email provider of choice, once configured  Consumers  SaaS.
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/588ba72ee9d724fe73ee1ab421628843465dcde8">Apply suggestions from code review (588ba72)</a>
+  Last modified May 23, 2022: <a href="https://github.com/Azure/azure-saas/commit/630546a89ab36b6d1fc793c8c0f51c829332d8ae">conversations with arsen (630546a)</a>
 </div>
 
 </div>

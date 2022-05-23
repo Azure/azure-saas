@@ -27,13 +27,13 @@ What does Azure AD B2C give us? Azure AD B2C provides business-to-customer ident
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/identity-provider/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-22T18:54:44-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-23T10:53:15-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Identity Provider">
 <meta itemprop="description" content="Overview For the identity framework, we chose to use Azure AD B2C as our default identity provider. If you&rsquo;d like to use another identity provider such as Azure AD or a different 3rd party tool, you can swap it out.
 What does Azure AD B2C give us? Azure AD B2C provides business-to-customer identity as a service. It enables you to easily authenticate users to your application using their preferred identity provider and is configurable to support a wide array of scenarios.">
-<meta itemprop="dateModified" content="2022-05-22T18:54:44-04:00" />
-<meta itemprop="wordCount" content="638">
+<meta itemprop="dateModified" content="2022-05-23T10:53:15-04:00" />
+<meta itemprop="wordCount" content="666">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Identity Provider"/>
 <meta name="twitter:description" content="Overview For the identity framework, we chose to use Azure AD B2C as our default identity provider. If you&rsquo;d like to use another identity provider such as Azure AD or a different 3rd party tool, you can swap it out.
@@ -322,9 +322,9 @@ What does Azure AD B2C give us? Azure AD B2C provides business-to-customer ident
 </ul>
 </li>
 <li>
-<p>Q: Why didn&rsquo;t we use App Roles for all permissions? Why did we choose to put the tenant permissions in a special API?</p>
+<p>Q: Why are we only using Azure AD B2C App Roles for global administrator permissions? Why did we choose to put the tenant permissions in a special API?</p>
 <ul>
-<li>A: App roles in Azure AD B2C are nice, but too many of them get extremely complicated to manage. You can absolutely achieve the same thing using just app roles, but we wouldn&rsquo;t reccomend it if you are going to have more than just a handful of tenants.</li>
+<li>A: App roles in Azure AD B2C are nice, but too many of them get extremely complicated to manage. You can absolutely achieve application tenant permissions using just app roles, but we wouldn&rsquo;t reccomend it if you are going to have more than just a handful of tenants. That&rsquo;s why we chose to separate the application tenant permissions into a special API/data store that gets called during the user login flow.</li>
 </ul>
 </li>
 </ul>
@@ -332,7 +332,7 @@ What does Azure AD B2C give us? Azure AD B2C provides business-to-customer ident
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/78d09ddf529fe52186b425bba12779f9ce1534b5">changes from arsen&#39;s suggestions (78d09dd)</a>
+  Last modified May 23, 2022: <a href="https://github.com/Azure/azure-saas/commit/630546a89ab36b6d1fc793c8c0f51c829332d8ae">conversations with arsen (630546a)</a>
 </div>
 
 </div>
