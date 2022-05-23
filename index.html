@@ -259,6 +259,16 @@ The Azure SaaS Development Kit is a …">
 </ul>
 <p>This is not a one-size-fits-all solution. Use as little or as much as you like. It is designed to be both a modular deployable reference implementation and also a reference architecture. You are free to use and change the code contained within this project in any way you&rsquo;d like (following the terms of the <a href="https://github.com/Azure/azure-saas/blob/main/LICENSE">license</a>)):</p>
 <ul>
+<li><a href="/services/b2c-auth-service/"><strong>B2C Authentication Service</strong></a> - Provides a flexible identity solution.</li>
+<li><a href="/services/core-app/"><strong>Core App</strong></a>
+<ul>
+<li>A web app where your customers to view plans and onboard to your solution.</li>
+<li>Provides you with tenant administration capabilities. (modify/remove/etc.)</li>
+</ul>
+</li>
+<li><a href="/services/saas-application/"><strong>Saas.Application</strong></a> - A sample application that you can extend or replace with your own code.</li>
+</ul>
+<ul>
 <li>Deploy the entire solution to Azure using the <a href="https://docs.microsoft.com/azure/azure-resource-manager/bicep/">Bicep</a> templates we provide, make changes to fit your exact use case, and start building your SaaS application from there.</li>
 <li>Deploy one or more of our modules and hook it into your existing SaaS application.</li>
 <li>Reference our code &amp; architecture and build something entirely custom using the best practices we outlined.</li>
