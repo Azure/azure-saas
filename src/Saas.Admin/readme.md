@@ -1,4 +1,4 @@
-# SaaS.Admin.Service
+# Saas.Admin.Service
 
 The SaaS Admin Service is an API that is reponsible for tenant management operations. Within this folder, you will find 3 sections:
 

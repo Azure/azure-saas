@@ -1,0 +1,43 @@
+﻿@using Saas.SignupAdministration.Web
+@model IEnumerable<Saas.SignupAdministration.Web.Areas.Admin.Data.UserViewModel>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h1>Users</h1>
+
+<p>
+    @Html.ActionLink("Add User To Tenant", "AddUserToTenant", new { area = "Admin", controller="users", tenantid=@ViewData["tenantid"]})
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DisplayName)
+            </th>
+             <th>
+                @Html.DisplayNameFor(model => model.Permissions)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.DisplayName, "Details", new { area = "Admin", controller="users", id=item.UserId })
+                </td>
+                 <td>
+                    @item.Permissions
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new {area = "Admin" } ) |
+                    @Html.ActionLink("Details", "Details", new { area = "Admin" }) |
+                    @Html.ActionLink("Delete", "Delete", new { area = "Admin" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
