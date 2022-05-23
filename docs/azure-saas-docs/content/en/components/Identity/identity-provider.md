@@ -60,5 +60,5 @@ If you followed our steps in the [Quick Start](../../quick-start), the user that
 - Q: Why did we choose custom policies over user flows?
   - A: User Flows are predefined and meant for more basic use cases. Custom Policies provide more support for automating the setup and deployment of the Azure AD B2C configuration, and generally provide greater extensibility in the long term for more complicated scenarios.
 
-- Q: Why didn't we use App Roles for all permissions? Why did we choose to put the tenant permissions in a special API?
-  - A: App roles in Azure AD B2C are nice, but too many of them get extremely complicated to manage. You can absolutely achieve the same thing using just app roles, but we wouldn't reccomend it if you are going to have more than just a handful of tenants. 
+- Q: Why are we only using Azure AD B2C App Roles for global administrator permissions? Why did we choose to put the tenant permissions in a special API?
+  - A: App roles in Azure AD B2C are nice, but too many of them get extremely complicated to manage. You can absolutely achieve application tenant permissions using just app roles, but we wouldn't reccomend it if you are going to have more than just a handful of tenants. That's why we chose to separate the application tenant permissions into a special API/data store that gets called during the user login flow.

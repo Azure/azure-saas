@@ -19,7 +19,7 @@ Our Identity Framework is comprised of two main pieces:
 
 2. Permissions Service - A microservice that tracks what tenants and data each user has access to and serves as an endpoint for the IdP to enrich the user's token with permissions and role claims during the login flow.
 
-The Identity Framework also has a dependency on the [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/overview), which we use to look up certain user information when needed.
+The Identity Framework also has a dependency on the [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/overview), which we use to look up user information when needed.
 
 ## Architecture Diagram
 ![Identity Diagram](/azure-saas/diagrams/identity-diagram.drawio.png)

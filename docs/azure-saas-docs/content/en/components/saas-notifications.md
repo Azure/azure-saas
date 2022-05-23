@@ -16,6 +16,10 @@ The SaaS.Notifications module is a relatively simple [Azure Logic App](https://d
 
 - [SaaS.SignupAdministration.Web](../signup-administration)
 
+
+### Authentication
+
+The logic app is using the default [SAS Token](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-securing-a-logic-app?tabs=azure-portal#generate-shared-access-signatures-sas) that gets generated with the HTTP trigger. Take care to not commit this SAS token into your repo, as it is considered a secret. Anyone with access to this URL with the SAS token will have permission to call your logic app. If you deploy the Azure SaaS Dev Kit using the Quick Start guide, this will be automatically uploaded to a keyvault for reference via the applications.
 ## Logic App Configuration
 
 ### Input
