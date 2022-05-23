@@ -3,7 +3,7 @@ name: Hugo Docs Build - GH Pages
 on:
   push:
     branches:
-      - docs-updates
+      - main
     paths:
       - '.github/**'
       - 'docs/**'

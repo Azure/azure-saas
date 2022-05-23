@@ -2,6 +2,7 @@
 type: docs
 title: "DevOps Workflows"
 weight: 100
+toc_hide: true
 ---
 
 For your convenience, we have provided some sample GitHub workflows that you can use to build and deploy code changes to each module. These workflows are the same ones that we use to package and release the code to our test environment. They were created as a baseline reference with the intent to be extensible when needed.
