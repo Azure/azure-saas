@@ -30,7 +30,7 @@
 &lt;h3 id=&#34;configuration&#34;&gt;Configuration&lt;/h3&gt;
 &lt;p&gt;Azure AD B2C has two methods of configuring the business logic that users follow to gain access to your application: &lt;a href=&#34;https://docs.microsoft.com/azure/active-directory-b2c/user-flow-overview&#34;&gt;User Flows and Custom Policies&lt;/a&gt;. User Flows are predefined and are configured directly through the Azure AD B2C Web Portal. Custom Policies are XML based configuration files that are uploaded to the Azure AD B2C tenant.&lt;/p&gt;
 &lt;p&gt;The ASDK project uses Custom Policies to configure the Azure AD B2C tenant. The XML configuration that gets deployed can be found under the &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider&#34;&gt;Saas.IdentityProvider&lt;/a&gt; folder within the repo, and you can read more about how to configure custom policies &lt;a href=&#34;https://docs.microsoft.com/azure/active-directory-b2c/user-flow-overview&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;When deploying the Azure AD B2C Identity Provider via the instructions found in the &lt;a href=&#34;../../quick-start&#34;&gt;Quick Start&lt;/a&gt; guide, Azure AD B2C is configured to do the following:&lt;/p&gt;
+&lt;p&gt;When deploying the Azure AD B2C Identity Provider via the instructions found in the &lt;a href=&#34;../../../quick-start&#34;&gt;Quick Start&lt;/a&gt; guide, Azure AD B2C is configured to do the following:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Provide a hosted SignIn and SignUp page that users can be directed to&lt;/li&gt;
 &lt;li&gt;Reach out to the &lt;a href=&#34;../permissions-service&#34;&gt;SaaS.Permissions.Service&lt;/a&gt; upon a user signing in to fetch their application permissions and roles&lt;/li&gt;
@@ -39,7 +39,7 @@
 &lt;h3 id=&#34;app-roles-and-global-admin&#34;&gt;App Roles and Global Admin&lt;/h3&gt;
 &lt;p&gt;We are using &lt;a href=&#34;https://docs.microsoft.com/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps&#34;&gt;App Roles&lt;/a&gt; to grant users &amp;ldquo;Global Admin&amp;rdquo; capabilities for the application. This App Role should only be granted to staff users that need it to administrate ALL the tenants across the entire SaaS solution. These roles are stored directly in Azure AD B2C and are returned in the JWT token claims when the user signs in.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;How do I add a user to the default Global Admin role?&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;If you followed our steps in the &lt;a href=&#34;../../quick-start&#34;&gt;Quick Start&lt;/a&gt;, the user that created the Azure AD B2C tenant will  be automatically added to this global admin role. Follow these steps if you&amp;rsquo;d like to add additional users:&lt;/p&gt;
+&lt;p&gt;If you followed our steps in the &lt;a href=&#34;../../../quick-start&#34;&gt;Quick Start&lt;/a&gt;, the user that created the Azure AD B2C tenant will  be automatically added to this global admin role. Follow these steps if you&amp;rsquo;d like to add additional users:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
 &lt;p&gt;Switch to your Azure AD B2C Tenant in the Azure portal&lt;/p&gt;
@@ -126,7 +126,7 @@
 &lt;h3 id=&#34;consumers&#34;&gt;Consumers&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;../identity-provider&#34;&gt;Identity Provider&lt;/a&gt; (Azure AD B2C)&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;../../components/admin-service&#34;&gt;Admin Service&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;../../../components/admin-service&#34;&gt;Admin Service&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id=&#34;authentication&#34;&gt;Authentication&lt;/h3&gt;
 &lt;p&gt;The Permissions Service is secured using &lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0#configure-certificate-validation&#34;&gt;TLS Mutual Authentication&lt;/a&gt; (Certificate Authentication). The application layer is configured to verify the authenticity of the certificate by comparing the thumbprint of the certificate against a configuration value. For TLS Mutual Authentication to work properly, the web server must also be configured to forward the certificate to the application layer. This is done for you if you deploy the application following the steps in the &lt;a href=&#34;../../quick-start&#34;&gt;Quick Start&lt;/a&gt; guide, but if you choose to run the code in an environment you provision, you will need to do &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth&#34;&gt;this configuration&lt;/a&gt; yourself.&lt;/p&gt;
@@ -152,7 +152,7 @@ The certificate that gets deployed out of the box by following the Quick Start i
 &lt;p&gt;Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique (i.e., you cannot have the same Permission for the same user on the same tenant more than once). Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a separate database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;We have purposefully chosen to flow all CRUD operations on permissions through the &lt;a href=&#34;../admin-service&#34;&gt;Admin Service&lt;/a&gt;. This is for a number of reasons:&lt;/p&gt;
+&lt;p&gt;We have purposefully chosen to flow all CRUD operations on permissions through the &lt;a href=&#34;../../../components/admin-service&#34;&gt;Admin Service&lt;/a&gt;. This is for a number of reasons:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;It removes the burden of authorization from the permissions service. All the permissions service needs to worry about is accepting a valid certificate, which only the identity provider and admin service possess. For higher security applications, you may choose to preform more authorization checks before adding permissions&lt;/li&gt;
 &lt;li&gt;It simplifies the architecture. The frontend applications do not need to have any knowledge of the permissions service existing. When a tenant is created, the applications make 1 call to the admin service, and it handles the subsequent call to update the permissions records.&lt;/li&gt;

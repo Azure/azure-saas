@@ -30,13 +30,13 @@ Configuration and Secrets A list of app settings and secrets can be found in the
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/admin-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-22T18:54:44-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-24T09:23:40-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Admin.Service">
 <meta itemprop="description" content="Overview The SaaS.Admin.Service module (aka Admin Service) is an API that has two main responsibilities:
  Preforming Create, Read, Update, and Delete (CRUD) operations on tenants Serving as a broker to the permissions API to assign roles and permissions to tenants  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.md.
 Configuration and Secrets A list of app settings and secrets can be found in the module&rsquo;s readme.">
-<meta itemprop="dateModified" content="2022-05-22T18:54:44-04:00" />
+<meta itemprop="dateModified" content="2022-05-24T09:23:40-05:00" />
 <meta itemprop="wordCount" content="752">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Admin.Service"/>
@@ -164,8 +164,6 @@ Configuration and Secrets A list of app settings and secrets can be found in the
   <a href="/azure-saas/resources/contoso-badgemeup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-badgemeup"><span class="">Contoso BadgeMeUp</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesterminology-li">
   <a href="/azure-saas/resources/terminology/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesterminology"><span class="">Terminology</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesdevops-li">
-  <a href="/azure-saas/resources/devops/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesdevops"><span class="">DevOps Workflows</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesadditional-recommended-resources-li">
   <a href="/azure-saas/resources/additional-recommended-resources/" title="Azure Recommended Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesadditional-recommended-resources"><span class="">Additional Recommended Resources</span></a>
 </li>
@@ -304,7 +302,7 @@ Configuration and Secrets A list of app settings and secrets can be found in the
 </li>
 </ul>
 <h3 id="authentication">Authentication</h3>
-<p>The Admin Service is secured using OAuth 2.0 authentication via the Microsoft Identity Platform. Incoming requests must contain a valid JWT Bearer token in the <code>Authorization</code> header. The token must contain a valid scope that the calling application has been authorized to use. To learn more about how this process works and is configured in Azure AD B2C, we highly recommend checking out our list of <a href="(../../resources/additional-recommended-resources#identity-focused)">identity resources &amp; documentation</a>.</p>
+<p>The Admin Service is secured using OAuth 2.0 authentication via the Microsoft Identity Platform. Incoming requests must contain a valid JWT Bearer token in the <code>Authorization</code> header. The token must contain a valid scope that the calling application has been authorized to use. To learn more about how this process works and is configured in Azure AD B2C, we highly recommend checking out our list of <a href="../../resources/additional-recommended-resources/#identity-focused">identity resources &amp; documentation</a>.</p>
 <p>For authorization, we have also included middleware on the Admin Service that extracts the user&rsquo;s permission records from the JWT token claims and performs authorization based on policies applied at the route level. In other words, before preforming any action on a tenant once a request is received, the admin service will first ensure that the user making the request has a claim to that tenant on their token. If there is no claim to that tenant, or their role does not match what they&rsquo;re trying to do, the request will be denied.</p>
 <p>Implementing this in a multitenant fashion is often the most difficult part of starting a SaaS project, so we tried to make it as extensible as possible to support a wide range of scenarios.</p>
 <h3 id="database">Database</h3>
@@ -331,7 +329,7 @@ Configuration and Secrets A list of app settings and secrets can be found in the
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 22, 2022: <a href="https://github.com/Azure/azure-saas/commit/78d09ddf529fe52186b425bba12779f9ce1534b5">changes from arsen&#39;s suggestions (78d09dd)</a>
+  Last modified May 24, 2022: <a href="https://github.com/Azure/azure-saas/commit/01a5a6953f384e1df9e898a0c97cf9e53ca75972">Fix 404 link on admin-service (01a5a69)</a>
 </div>
 
 </div>
