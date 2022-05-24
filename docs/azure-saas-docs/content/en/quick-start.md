@@ -51,11 +51,11 @@ This solution uses a Bicep template which is checked into source control. Whenev
 
 ## 2.c. (Advanced) Deploying to Azure - Single Module
 
-If you'd like to use just one (or more) module from the project, we've provided [Bicep]((https://docs.microsoft.com/azure/azure-resource-manager/bicep/) templates to do that as well. In each project directory, you'll find a folder named `{ModuleName}.Deployment` that contains all the Bicep code you'll need to deploy just that Module. Please be advised that there are certain dependencies that each module requires in order for it to deploy properly. You may find that you need to edit the Bicep templates to match your use case. You will find instructions and a list of dependencies for each module within the [module's readme](#more-info).
+If you'd like to use just one (or more) module from the project, we've provided [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/bicep/) templates to do that as well. In each project directory, you'll find a folder named `{ModuleName}.Deployment` that contains all the Bicep code you'll need to deploy just that Module. Please be advised that there are certain dependencies that each module requires in order for it to deploy properly. You may find that you need to edit the Bicep templates to match your use case. You will find instructions and a list of dependencies for each module within the [module's readme](#more-info).
 
 ## 3. (Optional) Configure Email Provider
 
-The SaaS.Notifications module **need page and link** is an Azure Logic App responsible for generating email notifications. By default, there is no email provider configured. If you'd like to enable email notifications, you will need to manually configure your email provider connector of choice inside the Logic App. See the instructions [here](components/saas-notifications.md) to get started.
+The SaaS.Notifications module **need page and link** is an Azure Logic App responsible for generating email notifications. By default, there is no email provider configured. If you'd like to enable email notifications, you will need to manually configure your email provider connector of choice inside the Logic App. See the instructions [here](../components/saas-notifications.md) to get started.
 
 ## 4. Integrating your application
 
@@ -64,8 +64,6 @@ Now that you've seen how to run the code locally as well as deploy your code to 
 We've included a basic application within the `Saas.Application.Web` project that demonstrates a SaaS solution called "BadgeMeUp". BadgeMeUp is simply a badge sharing site that *Contoso* (representing your company) can sell to end customers.
 
 > SaaS solutions come in many shapes as sizes. We picked "BadgeMeUp", because it's a fairly simple scenario to understand. [You can read more about this particular SaaS scenario here](../resources/contoso-badgemeup/).
-
-
 
 ## More Info
 
@@ -78,4 +76,4 @@ For more information, including deployment instructions, an outline of dependenc
 
 ## Learn more about SaaS
 
-There are a plethora of resources to help you on your SaaS journey. They're available in the [SaaS Resources section](../resources/saas-resources/).
+There are a plethora of resources to help you on your SaaS journey. They're available in the [SaaS Resources section](../resources/additional-recommended-resources/).
