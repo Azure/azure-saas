@@ -31,7 +31,7 @@ When deployed to Azure, the application is configured to load its secrets from [
 ### Consumers
 
 - [Identity Provider](../identity-provider) (Azure AD B2C)
-- [Admin Service](../../components/admin-service)
+- [Admin Service](../../../components/admin-service)
 
 ### Authentication
 
@@ -58,6 +58,6 @@ The Permissions Service uses [Swashbuckle](https://www.nuget.org/packages/Swashb
   - A: The communication between Azure AD B2C (our default Identity Provider) and the permissions service must be secured with either [Basic or Certificate Auth](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-api-connector-token-enrichment?pivots=b2c-custom-policy#configure-the-restful-api-technical-profile) and it is not considered best practice to use Basic authentication in a production environment.
 
 - Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique (i.e., you cannot have the same Permission for the same user on the same tenant more than once). Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a separate database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.
-- We have purposefully chosen to flow all CRUD operations on permissions through the [Admin Service](../admin-service). This is for a number of reasons:
+- We have purposefully chosen to flow all CRUD operations on permissions through the [Admin Service](../../../components/admin-service). This is for a number of reasons:
   1. It removes the burden of authorization from the permissions service. All the permissions service needs to worry about is accepting a valid certificate, which only the identity provider and admin service possess. For higher security applications, you may choose to preform more authorization checks before adding permissions
   2. It simplifies the architecture. The frontend applications do not need to have any knowledge of the permissions service existing. When a tenant is created, the applications make 1 call to the admin service, and it handles the subsequent call to update the permissions records.

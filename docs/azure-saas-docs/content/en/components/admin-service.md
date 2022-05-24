@@ -40,7 +40,7 @@ Currently, the only consumers of this API are the 2 frontend applications. Every
 
 ### Authentication
 
-The Admin Service is secured using OAuth 2.0 authentication via the Microsoft Identity Platform. Incoming requests must contain a valid JWT Bearer token in the `Authorization` header. The token must contain a valid scope that the calling application has been authorized to use. To learn more about how this process works and is configured in Azure AD B2C, we highly recommend checking out our list of [identity resources & documentation]((../../resources/additional-recommended-resources#identity-focused)).
+The Admin Service is secured using OAuth 2.0 authentication via the Microsoft Identity Platform. Incoming requests must contain a valid JWT Bearer token in the `Authorization` header. The token must contain a valid scope that the calling application has been authorized to use. To learn more about how this process works and is configured in Azure AD B2C, we highly recommend checking out our list of [identity resources & documentation](../../resources/additional-recommended-resources/#identity-focused).
 
 For authorization, we have also included middleware on the Admin Service that extracts the user's permission records from the JWT token claims and performs authorization based on policies applied at the route level. In other words, before preforming any action on a tenant once a request is received, the admin service will first ensure that the user making the request has a claim to that tenant on their token. If there is no claim to that tenant, or their role does not match what they're trying to do, the request will be denied.
 
