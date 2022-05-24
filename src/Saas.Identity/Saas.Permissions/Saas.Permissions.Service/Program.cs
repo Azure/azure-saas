@@ -1,6 +1,7 @@
 using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Saas.Permissions.Service.Data;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models.AppSettings;
@@ -47,6 +48,14 @@ builder.Services.AddSingleton<ICertificateValidationService, CertificateValidati
 // Look for certificate forwarded by the web server on X-Arr-Client-Cert
 builder.Services.AddCertificateForwarding(options => { options.CertificateHeader = "X-ARR-ClientCert"; });
 
+// This is required for auth to work correctly when running in a docker container because of SSL Termination
+// Remove this and the subsequent app.UseForwardedHeaders() line below if you choose to run the app without using containers
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
+    options.ForwardedProtoHeaderName = "X-Forwarded-Proto";
+});
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     // Add Certificate Validation for authentication from azure b2c.
     .AddCertificate(options =>
@@ -74,10 +83,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization(options =>
-{
-
-});
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 app.ConfigureDatabase();
@@ -91,6 +97,7 @@ app.UseHttpsRedirection();
 
 // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0#configure-certificate-validation
 app.UseCertificateForwarding();
+app.UseForwardedHeaders();
 
 app.UseAuthentication();
 app.UseAuthorization();

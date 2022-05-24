@@ -3,6 +3,7 @@
 namespace Saas.SignupAdministration.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize]
 public class TenantsController : Controller
 {
     private readonly IAdminServiceClient _adminServiceClient;
@@ -12,11 +13,20 @@ public class TenantsController : Controller
         _adminServiceClient = adminServiceClient;
     }
 
+    // GET: Admin/Tenants/Admin
+    [HttpGet]
+    [Route("{area}/{controller}/admin")]
+    public async Task<IActionResult> Admin()
+    {
+        var items = await _adminServiceClient.TenantsAllAsync();
+        return View(items.Select(x => new TenantViewModel(x, ReferenceData.TenantCategories, ReferenceData.ProductServicePlans)));
+    }
+
     // GET: Admin/Tenants
     public async Task<IActionResult> Index()
     {
-        var items = await _adminServiceClient.TenantsAllAsync();
-        return View(items.Select(x=>new TenantViewModel(x, ReferenceData.TenantCategories, ReferenceData.ProductServicePlans)));
+        var items = await _adminServiceClient.TenantsAsync(HttpContext.User.GetNameIdentifierId(), "");
+        return View(items.Select(x => new TenantViewModel(x, ReferenceData.TenantCategories, ReferenceData.ProductServicePlans)));
     }
 
     // GET: Admin/Tenants/Details/5
@@ -41,21 +51,6 @@ public class TenantsController : Controller
     public IActionResult Create()
     {
         return RedirectToAction(SR.OrganizationNameAction, SR.OnboardingWorkflowController, new { Area = "" });
-    }
-
-    // POST: Admin/Tenants/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Name, RoutePrefix")] NewTenantRequest newTenantRequest)
-    {
-        if (ModelState.IsValid)
-        {
-            await _adminServiceClient.TenantsPOSTAsync(newTenantRequest);
-            return RedirectToAction(nameof(Index), nameof(TenantsController));
-        }
-        return View(newTenantRequest);
     }
 
     // GET: Admin/Tenants/Edit/5

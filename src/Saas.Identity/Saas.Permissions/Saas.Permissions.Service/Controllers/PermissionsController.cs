@@ -69,7 +69,6 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    //[RequiredScope("permissions.write")]
     [Route("AddUserPermissionsToTenant")]
     public async Task<IActionResult> AddUserPermissionsToTenant(string tenantId, string userId, string[] permissions)
     {
@@ -80,7 +79,33 @@ public class PermissionsController : ControllerBase
         }
         catch (ItemAlreadyExistsException ex)
         {
-            _logger.LogError("Permissions where not able to be added to {userId} on {tenantId}", userId, tenantId);
+            _logger.LogError("Permissions were not able to be added to {userId} on {tenantId}", userId, tenantId);
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Route("AddUserPermissionsToTenantByEmail")]
+    public async Task<IActionResult> AddUserPermissionsToTenantByEmail(string tenantId, string userEmail, string[] permissions)
+    {
+        try
+        {
+            await _permissionsService.AddUserPermissionsToTenantByEmailAsync(tenantId, userEmail, permissions);
+            return Ok();
+        }
+        catch (ItemAlreadyExistsException ex)
+        {
+            _logger.LogError("Permissions where not able to be added to {userEmail} on {tenantId}. Permission already exists.", userEmail, tenantId);
+            return BadRequest(ex.Message);
+        }
+        catch (UserNotFoundException ex)
+        {
+            _logger.LogError("User: {userEmail} was not found in the identity provider or more than one user exists with that email. permissions could not be added on {tenantId}", userEmail, tenantId);
             return BadRequest(ex.Message);
         }
     }
@@ -128,6 +153,11 @@ public class PermissionsController : ControllerBase
     [Route("GetUsersByIds")]
     public async Task<IActionResult> GetUsersByIds(string[] userIds)
     {
+        if (userIds.Length <= 0) 
+        {
+            return BadRequest("You must provide at least one userID");
+        }
+
         try
         {
             var users = await _graphAPIService.GetUsersByIds(userIds.Select(stringId => Guid.Parse(stringId)).ToList());

@@ -1,6 +1,7 @@
 ﻿using Azure.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
+using Saas.Permissions.Service.Exceptions;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models;
 using Saas.Permissions.Service.Models.AppSettings;
@@ -33,6 +34,28 @@ public class GraphAPIService : IGraphAPIService
         }
 
         return await GetAppRoleAssignmentsAsync(servicePrincipal, request.ObjectId.ToString());
+    }
+
+    public async Task<Models.User> GetUserByEmail(string userEmail)
+    {
+        string issuerName = "asdkdev.onmicrosoft.com";
+        var graphUsers = await _graphServiceClient.Users
+            .Request()
+            .Filter($"identities/any(id: id/issuer eq '{issuerName}' and id/issuerAssignedId eq '{userEmail}')")
+            .Select("id, identitied, displayName")
+            .GetAsync();
+
+        if (graphUsers.Count() > 1)
+        {
+            throw new UserNotFoundException($"More than one user with the email {userEmail} exists in the Identity provider");
+        }
+        if (graphUsers.Count() == 0)
+        {
+            throw new UserNotFoundException($"The user with the email {userEmail} was not found in the Identity Provider");
+        }
+
+        // Ok to just return first, because at this point we've verified we have exactly 1 user in the graphUsers object.
+        return ToUserObjects(graphUsers).First();
     }
 
     // Enriches the user object with data from Microsoft Graph. 

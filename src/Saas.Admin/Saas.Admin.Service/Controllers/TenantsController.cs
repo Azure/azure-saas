@@ -276,6 +276,25 @@ public class TenantsController : ControllerBase
         return NoContent();
     }
 
+
+    /// <summary>
+    /// Add a set of permissions for a user on a tenant
+    /// </summary>
+    /// <param name="tenantId"></param>
+    /// <param name="userEmail"></param>
+    /// <returns></returns>
+    [HttpPost("{tenantId}/invite")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+    [Authorize(Policy = AppConstants.Policies.TenantWrite)]
+    public async Task<IActionResult> InviteUserToTenant(string tenantId, string userEmail)
+    {
+        await _permissionService.AddUserPermissionsToTenantByEmailAsync(tenantId, userEmail, AppConstants.Roles.TenantAdmin);
+        return NoContent();
+    }
+
     /// <summary>
     /// Delete a set of permissions for a user on a tenant
     /// </summary>

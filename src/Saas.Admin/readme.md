@@ -1,4 +1,4 @@
-# SaaS.Admin.Service
+# Saas.Admin.Service
 
 The SaaS Admin Service is an API that is reponsible for tenant management operations. Within this folder, you will find 3 sections:
 
@@ -45,7 +45,7 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 | AzureAdB2C:SignedOutCallbackPath | | false | /signout/B2C_1A_SIGNUP_SIGNIN |
 | AzureAdB2C:SignUpSignInPolicyId | | false | B2C_1A_SIGNUP_SIGNIN |
 | KeyVault:Url | KeyVault URL to pull secret values from in production | false |  |
-| KeyVault:PermissionsApiCertName | Certificate name in Key Vault to use for authentication to permissions API | false |  |
+| KeyVault:PermissionsApiCert | The name of the secret in Azure Key Vault that contains a base64 encoded certificate to use for authentication with the permissions api | false |  |
 | PermissionsApi:BaseUrl | URL for downstream [Permissions API](../Saas.Identity/Saas.Permissions/readme.md) | false | |
 | PermissionsApi:LocalCertificate | A Base64 encoded certificate (.CER) used to authenticate with the permissions API. Only used for local development. | true | |
 | ConnectionStrings:TenantsContext | Connection String to SQL server database used to store tenants data. If using local db for development, this connection string is fine to commit to your repo as it does not contain any secrets. | true | (local db connection string) |

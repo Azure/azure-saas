@@ -38,6 +38,10 @@
   $(() => {
     $(".language-mermaid").wrapInner("<div class=\"mermaid\"></div>");
     mermaid.init();
+
+    //Fixes an issue with padding above/below charts
+    const svg = $(".mermaid svg");
+		svg.removeAttr('height');
   });
 </script>
 
