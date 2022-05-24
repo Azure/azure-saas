@@ -55,7 +55,7 @@ If you'd like to use just one (or more) module from the project, we've provided 
 
 ## 3. (Optional) Configure Email Provider
 
-The SaaS.Notifications module **need page and link** is an Azure Logic App responsible for generating email notifications. By default, there is no email provider configured. If you'd like to enable email notifications, you will need to manually configure your email provider connector of choice inside the Logic App. See the instructions [here](../components/saas-notifications.md) to get started.
+The SaaS.Notifications module **need page and link** is an Azure Logic App responsible for generating email notifications. By default, there is no email provider configured. If you'd like to enable email notifications, you will need to manually configure your email provider connector of choice inside the Logic App. See the instructions [here](../components/saas-notifications) to get started.
 
 ## 4. Integrating your application
 
