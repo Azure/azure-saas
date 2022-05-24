@@ -6,7 +6,7 @@
 # - dot-source in a PS script: . ./Create-AzureB2C.ps1
 # - invoke individual functions, or the main one: Initialize-B2CTenant -B2CTenantName mytenant -ResourceGroupName myrg -Location "Europe" -CountryCode "CZ"
 
-function Install-B2CTenant {
+function Deploy-SaaSIdentityProvider {
     [CmdletBinding()] # indicate that this is advanced function (with additional params automatically added)
     param (
       [Parameter(Mandatory = $true, HelpMessage = "B2C tenant name, without the '.onmicrosoft.com'.")]
@@ -54,9 +54,10 @@ function Install-B2CTenant {
   
     #Setup IEF
     Write-Host "Setting up Identity Experience Framework..."
-    # Upload Policies
-    Write-Host "Uploading Policies"
-    New-IefPolicies 
+    New-IefPolicies -B2CTenantName $B2CTenantName
+    
+    
+    
 
   
   }
@@ -209,15 +210,24 @@ function Invoke-TenantInit {
 
         #Create Key with certificate
 
-
-
   }
 
   function Import-IefPolicies{
-    cd ../
+   
 
   }
 
+  #Exectues the Bicep template to install
+  function Install-SaaSIdentityProvider
+  {
+
+
+  }
+
+  function Install-AppRegistration
+  {
+    
+  }
   function Install-ModuleIfNotInstalled{
       param(
     [string] [Parameter(Mandatory = $true)] $moduleName,
