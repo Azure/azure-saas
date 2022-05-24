@@ -17,7 +17,7 @@ Azure AD B2C has two methods of configuring the business logic that users follow
 
 The ASDK project uses Custom Policies to configure the Azure AD B2C tenant. The XML configuration that gets deployed can be found under the [Saas.IdentityProvider](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider) folder within the repo, and you can read more about how to configure custom policies [here](https://docs.microsoft.com/azure/active-directory-b2c/user-flow-overview).
 
-When deploying the Azure AD B2C Identity Provider via the instructions found in the [Quick Start](../../quick-start) guide, Azure AD B2C is configured to do the following:
+When deploying the Azure AD B2C Identity Provider via the instructions found in the [Quick Start](../../../quick-start) guide, Azure AD B2C is configured to do the following:
 
 - Provide a hosted SignIn and SignUp page that users can be directed to
 - Reach out to the [SaaS.Permissions.Service](../permissions-service) upon a user signing in to fetch their application permissions and roles
@@ -30,7 +30,7 @@ We are using [App Roles](https://docs.microsoft.com/azure/active-directory/devel
 
 **How do I add a user to the default Global Admin role?**
 
-If you followed our steps in the [Quick Start](../../quick-start), the user that created the Azure AD B2C tenant will  be automatically added to this global admin role. Follow these steps if you'd like to add additional users:
+If you followed our steps in the [Quick Start](../../../quick-start), the user that created the Azure AD B2C tenant will  be automatically added to this global admin role. Follow these steps if you'd like to add additional users:
 
 1. Switch to your Azure AD B2C Tenant in the Azure portal
 
