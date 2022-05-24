@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Saas.Common.Interface;
 
 namespace Saas.SignupAdministration.Web
 {

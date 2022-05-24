@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\**" />
+    <Content Remove="Data\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <None Remove="Data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2" />
     <PackageReference Include="Azure.Identity" Version="1.6.0" />
     <PackageReference Include="Dawn.Guard" Version="1.12.0" />
@@ -23,11 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="wwwroot\assets\images\favicon\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Saas.Common\Saas.Common.csproj" />
     <ProjectReference Include="..\..\Saas.Authorization\Saas.AspNetCore.Authorization\Saas.AspNetCore.Authorization.csproj" />
   </ItemGroup>
 

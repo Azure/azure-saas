@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using Microsoft.IdentityModel.Logging;
+using Saas.Common.Interface;
+using Saas.Common.Utility;
 using Saas.SignupAdministration.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,7 +63,7 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(10);
 });
 
-builder.Services.AddApplicationInsightsTelemetry(builder.Configuration[SR.AppInsightsConnectionProperty]);
+//builder.Services.AddApplicationInsightsTelemetry(builder.Configuration[SR.AppInsightsConnectionProperty]);
 
 // builder.Configuration to sign-in users with Azure AD B2C
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, Constants.AzureAdB2C)
