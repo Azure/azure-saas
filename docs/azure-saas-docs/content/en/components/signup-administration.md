@@ -75,7 +75,7 @@ When a new tenant is created, the SignupAdmin site will make a REST call to the 
 
 ### Sign In
 
-See the [Sign-In Flow](./Identity/identity-flows.md##Sign-In) in Identity Flows.
+See the [Sign-In Flow](../identity/identity-flows#Sign-In) in Identity Flows.
 
 ### Onboarding Flow
 
