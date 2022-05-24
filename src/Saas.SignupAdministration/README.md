@@ -2,28 +2,26 @@
 
 ## Module Overview
 
-For a complete overview, please see the [SaaS.SignupAdministration.Web](https://azure.github.io/azure-saas/components/signup-administration/) page in our documentation site.
+For a complete overview of this module, please see the [SaaS.SignupAdministration.Web](https://azure.github.io/azure-saas/components/signup-administration/) page in our documentation site.
+
 ## How to Run Locally
 
 ### Requirements
 
-To run the web api, you must have the following installed on your machine:
+To run this web app locally, you must have the following installed on your machine:
 
 - [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
-- (Reccomended) [Visual Studio](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download)
+- (Recommended) [Visual Studio](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download)
 
 You must also have the following:
 
-- A connection string to a running, empty SQL Server Database
-  - Some options for using SQL Server Locally which we reccomend:
-    - [Local DB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver15) (Windows Only)
-    - [SQL Server Docker Container](https://hub.docker.com/_/microsoft-mssql-server)
-    - [SQL Server Developer Edition](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+- A deployed instance of Azure AD B2C (or another identity provider, if you plan on replacing B2C)
+  - This can be done by following Step #1 in our [Quick Start](https://azure.github.io/azure-saas/quick-start/#1-setup-identity-framework) guide
 
 ### App Settings
 
-In order to run the project locally, the App Settings marked as `secret: true` must be set using the [.NET secrets manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&tabs=windows). When deployed to azure using the bicep deployments, these secrets are [loaded from Azure Key Vault](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment) instead.
+In order to run the project locally, the App Settings marked as `secret=true` must first be set using the [.NET secrets manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&tabs=windows). When deployed to azure using the bicep deployments, these secrets are [loaded from Azure Key Vault](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment) instead.
 
 Default values for non secret app settings can be found in [appsettings.json](Saas.Admin.Service/appsettings.json)
 
