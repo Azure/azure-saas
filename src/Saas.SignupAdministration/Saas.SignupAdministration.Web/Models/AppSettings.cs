@@ -1,6 +1,7 @@
-﻿namespace Saas.SignupAdministration.Web.Models
+﻿
+namespace Saas.SignupAdministration.Web.Models
 {
-    public class AppSettings
+    public class AppSettings : IAdminClientSettings
     {
         public string RedirectUri { get; set; }
         public string AdminServiceBaseUrl { get; set; }

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Saas.Deployment.Root", "src\Saas.Deployment\Saas.Deployment.Root\Saas.Deployment.Root.deployproj", "{BF9A592C-510B-493C-AEE4-45BA45A8323E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestUtilities", "src\TestUtilities\TestUtilities.csproj", "{02F6CFF4-70ED-4C9D-AF21-4EE3AD668AA4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.SignupAdministration.Web", "src\Saas.SignupAdministration\Saas.SignupAdministration.Web\Saas.SignupAdministration.Web.csproj", "{71694EE0-1D10-4DC3-B4EA-30C45A9FF31F}"
@@ -30,18 +28,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Permissions.Service", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.AspNetCore.Authorization.Tests", "src\Saas.Authorization\Saas.AspNetCore.Authorization.Tests\Saas.AspNetCore.Authorization.Tests.csproj", "{AEDE788C-35EF-4C03-AA2F-1D1D787001FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saas.Common", "Saas.Common\Saas.Common.csproj", "{DB6C6C45-FFA1-48DE-9516-2C1DE559718C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BF9A592C-510B-493C-AEE4-45BA45A8323E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BF9A592C-510B-493C-AEE4-45BA45A8323E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BF9A592C-510B-493C-AEE4-45BA45A8323E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BF9A592C-510B-493C-AEE4-45BA45A8323E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{02F6CFF4-70ED-4C9D-AF21-4EE3AD668AA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{02F6CFF4-70ED-4C9D-AF21-4EE3AD668AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02F6CFF4-70ED-4C9D-AF21-4EE3AD668AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -82,10 +74,6 @@ Global
 		{AEDE788C-35EF-4C03-AA2F-1D1D787001FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEDE788C-35EF-4C03-AA2F-1D1D787001FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEDE788C-35EF-4C03-AA2F-1D1D787001FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB6C6C45-FFA1-48DE-9516-2C1DE559718C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB6C6C45-FFA1-48DE-9516-2C1DE559718C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB6C6C45-FFA1-48DE-9516-2C1DE559718C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB6C6C45-FFA1-48DE-9516-2C1DE559718C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

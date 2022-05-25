@@ -1,21 +1,27 @@
 ﻿using Saas.Application.Web.Interfaces;
-using Saas.Application.Web.Models;
 
 namespace Saas.Application.Web.Services
 {
     public class TenantService : ITenantService
     {
         private HttpClient _client;
-        public TenantService(HttpClient client)
+        private IAdminServiceClient _adminServiceClient;
+        public TenantService(HttpClient client, IAdminServiceClient adminServiceClient)
         {
             _client = client;
+            _adminServiceClient = adminServiceClient;
         }
 
-        public async Task<Tenant> GetTenantByRouteAsync(string routeName)
+        public async Task<TenantViewModel> GetTenantByRouteAsync(string routeName)
         {
-            // TODO: Implement admin api and test this route
-            //return await _client.GetFromJsonAsync<Tenant>($"/tenants?routeName={routeName}"); 
-            return new Tenant { Id = 1, Name = routeName };
+            Guid guid = new Guid();
+            if (Guid.TryParse(routeName, out guid))
+            {
+                var tenant = await _adminServiceClient.TenantsGETAsync(guid);
+                return new TenantViewModel() { Id = tenant.Id, Name = tenant.Name };
+            }
+
+            return null;
         }
     }
 }

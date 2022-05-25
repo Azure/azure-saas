@@ -1,38 +1,103 @@
-using Saas.Application.Web.Services;
+﻿using Azure.Identity;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Identity.Web.UI;
+using Microsoft.IdentityModel.Logging;
+using Saas.Application.Web;
 using Saas.Application.Web.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorPages();
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddHttpClient<ITenantService, TenantService>(config => 
+if (builder.Environment.IsProduction())
 {
-    config.BaseAddress = new Uri(Environment.GetEnvironmentVariable("AdminServiceUrl") ?? "");
-});
-builder.Services.AddSingleton<ITenantService, TenantService>();  
+    // Get Secrets From Azure Key Vault if in production. If not in production, secrets are automatically loaded in from the .NET secrets manager
+    // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0
 
+    // We don't want to fetch all the secrets for the other microservices in the app/solution, so we only fetch the ones with the prefix of "signupadmin-".
+    // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix
+
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(builder.Configuration[SR.KeyVaultProperty]),
+        new DefaultAzureCredential(),
+        //TODO: Update secret manager key to one specific to the application
+        new CustomPrefixKeyVaultSecretManager("saasapplication"));
+}
+
+builder.Services.AddRazorPages();
+// Load the app settings
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(SR.AppSettingsProperty));
+
+builder.Services.AddMvc();
+// Add this to allow for context to be shared outside of requests
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+// Required for the JsonPersistenceProvider
+// Should be replaced based on the persistence scheme
+builder.Services.AddDistributedMemoryCache();
+
+// TODO: Replace with your implementation of persistence provider
+// Session persistence is the default
+builder.Services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>();
+
+// Add the user details that come back from B2C
+builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
+    .ConfigureHttpClient(client =>
+   client.BaseAddress = new Uri(builder.Configuration[SR.AdminServiceBaseUrl]));
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+});
+
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration[SR.AppInsightsConnectionProperty]);
+
+// builder.Configuration to sign-in users with Azure AD B2C
+builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, Constants.AzureAdB2C)
+    .EnableTokenAcquisitionToCallDownstreamApi(
+        builder.Configuration[SR.AdminServiceScopesProperty]
+        .Split(" "))
+    .AddSessionTokenCaches();
+
+builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
+
+// Configuring appsettings section AzureAdB2C, into IOptions
+builder.Services.AddOptions();
+builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection(SR.AzureAdB2CProperty));
 // Add services to the container.
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+    app.UseDeveloperExceptionPage();
+    IdentityModelEventSource.ShowPII = true;
+}
+else
+{
+    app.UseExceptionHandler(SR.ErrorRoute);
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
+app.UseSession();
+app.UseAuthentication();
+app.UseAuthorization();
 
-//app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    // default
+    endpoints.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
 
-app.MapRazorPages();
+    endpoints.MapRazorPages();
+});
 
-IConfiguration config = new ConfigurationBuilder()
-    .AddJsonFile("appsettings.json")
-    .AddJsonFile("appsettings.development.json", true)
-    .AddEnvironmentVariables()
-    .Build();
+AppHttpContext.Services = ((IApplicationBuilder)app).ApplicationServices;
 
 app.Run();

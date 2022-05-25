@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Saas.Application.Web.Interfaces;
 
-namespace Saas.SignupAdministration.Web
+namespace Saas.Application.Web
 {
     public class JsonSessionPersistenceProvider : IPersistenceProvider
     { 

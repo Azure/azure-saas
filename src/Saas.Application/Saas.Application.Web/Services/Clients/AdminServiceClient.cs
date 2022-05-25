@@ -19,8 +19,9 @@
 #pragma warning disable 3016 // Disable "CS3016 Arrays as attribute arguments is not CLS-compliant"
 #pragma warning disable 8603 // Disable "CS8603 Possible null reference return"
 
-namespace Saas.SignupAdministration.Web.Services;
+namespace Saas.Application.Web.Services;
 
+using Microsoft.Extensions.Options;
 using System = global::System;
 
 [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v11.0.0.0))")]

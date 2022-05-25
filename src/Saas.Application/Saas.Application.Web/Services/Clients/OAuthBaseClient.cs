@@ -3,7 +3,7 @@ using Microsoft.Identity.Web;
 using System.Net.Http;
 using System.Threading;
 
-namespace Saas.SignupAdministration.Web.Services;
+namespace Saas.Application.Web.Services;
 
 // Create base client for Nswag generated clients that gets an access token using the passed in ITokenAcquisition interface.
 public abstract class OAuthBaseClient
