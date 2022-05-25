@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Logging;
 using Saas.Application.Web;
 using Saas.Application.Web.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +65,13 @@ builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration,
 
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
+// This is required for auth to work correctly when running in a docker container because of SSL Termination
+// Remove this and the subsequent app.UseForwardedHeaders() line below if you choose to run the app without using containers
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
+    options.ForwardedProtoHeaderName = "X-Forwarded-Proto";
+});
 // Configuring appsettings section AzureAdB2C, into IOptions
 builder.Services.AddOptions();
 builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection(SR.AzureAdB2CProperty));

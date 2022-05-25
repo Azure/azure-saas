@@ -1,4 +1,4 @@
-baseURL = 'http://example.org/'
+baseURL = 'https://azure.github.io/azure-saas'
 title = 'Azure Saas Dev Kit(ASDK)'
 theme = "docsy"
 
@@ -32,10 +32,13 @@ languageCode = "en-us"
 [params]
 
 # Algolia
-algolia_docsearch = true
+algolia_docsearch = false
 offlineSearch = false
 
 # GitHub Information
 github_repo = "https://github.com/Azure/azure-saas"
 github_subdir = "docs/azure-saas-docs"
 github_branch = "main"
+
+[params.drawio]
+enable = false

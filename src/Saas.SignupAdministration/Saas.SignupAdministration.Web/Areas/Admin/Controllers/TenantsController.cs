@@ -25,7 +25,7 @@ public class TenantsController : Controller
     // GET: Admin/Tenants
     public async Task<IActionResult> Index()
     {
-        var items = await _adminServiceClient.TenantsAllAsync();
+        var items = await _adminServiceClient.TenantsAsync(HttpContext.User.GetNameIdentifierId(), "");
         return View(items.Select(x => new TenantViewModel(x, ReferenceData.TenantCategories, ReferenceData.ProductServicePlans)));
     }
 

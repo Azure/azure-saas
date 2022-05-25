@@ -31,8 +31,8 @@ public class CustomClaimsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Permissions(ClaimsRequest request)
     {
-        _logger.LogDebug("Custom claims where requested for email: {EmailAddress}", request.EmailAddress);
-        var permissions = await _permissionsService.GetPermissionsAsync(request.EmailAddress);
+        _logger.LogDebug("Custom claims where requested for user id: {objectId}", request.ObjectId);
+        var permissions = await _permissionsService.GetPermissionsAsync(request.ObjectId.ToString());
 
         string[] permissionStrings = permissions.Select(x => x.ToTenantPermissionString())
                                                      // Append default permission with the users object ID
