@@ -1,9 +1,10 @@
-﻿@page "{tenantRoute}"
+﻿@page
+@using Humanizer
 @model Saas.Application.Web.Pages.TenantModel
 @{
+    ViewData["Title"] = "Welcome";
 }
 
-@*<p>@Model.RouteData.Values["tenantRoute"]</p>*@
-
-<p>ID = @Model.tenantData?.Id</p>
-<p>Name = @Model.tenantData?.Name</p>
+<h1>Welcome to your app!</h1>
+<p>App Tenant ID: @(Model.tenantData?.Id.ToString() ?? "Unknown")</p>
+<p>Tenant Name: @(Model.tenantData?.Name ?? "Unknown")</p>

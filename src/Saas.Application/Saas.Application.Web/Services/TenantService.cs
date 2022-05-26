@@ -6,19 +6,23 @@ namespace Saas.Application.Web.Services
     {
         private HttpClient _client;
         private IAdminServiceClient _adminServiceClient;
-        public TenantService(HttpClient client, IAdminServiceClient adminServiceClient)
+        private IOptions<AppSettings> _appSettings;
+        public TenantService(HttpClient client, IAdminServiceClient adminServiceClient, IOptions<AppSettings> appSettings)
         {
             _client = client;
             _adminServiceClient = adminServiceClient;
+            _appSettings = appSettings;
         }
 
-        public async Task<TenantViewModel> GetTenantByRouteAsync(string routeName)
+        public async Task<TenantViewModel> GetTenantByRouteAsync(string userIdentifer)
         {
-            Guid guid = new Guid();
-            if (Guid.TryParse(routeName, out guid))
+            if (userIdentifer != null)
             {
-                var tenant = await _adminServiceClient.TenantsGETAsync(guid);
-                return new TenantViewModel() { Id = tenant.Id, Name = tenant.Name };
+                var tenants = await _adminServiceClient.TenantsAsync(userIdentifer, _appSettings.Value.AppTenantId.Substring(0, AppConstants.Tenant.IdLength));
+                var activeTenant = tenants.FirstOrDefault();
+
+                if (activeTenant != null)
+                    return new TenantViewModel() { Id = activeTenant.Id, Name = activeTenant.Name };
             }
 
             return null;

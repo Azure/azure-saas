@@ -45,6 +45,7 @@ builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
     .ConfigureHttpClient(client =>
    client.BaseAddress = new Uri(builder.Configuration[SR.AdminServiceBaseUrl]));
