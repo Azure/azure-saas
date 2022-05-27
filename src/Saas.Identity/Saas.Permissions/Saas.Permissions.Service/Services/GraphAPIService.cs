@@ -12,6 +12,7 @@ namespace Saas.Permissions.Service.Services;
 public class GraphAPIService : IGraphAPIService
 {
     private readonly GraphServiceClient _graphServiceClient;
+    private readonly AzureADB2COptions _options;
 
     public GraphAPIService(IOptions<AzureADB2COptions> options)
     {
@@ -22,7 +23,7 @@ public class GraphAPIService : IGraphAPIService
 
         _graphServiceClient = new GraphServiceClient(clientSecretCredential);
 
-
+        _options = options.Value;
     }
     public async Task<string[]> GetAppRolesAsync(ClaimsRequest request)
     {
@@ -38,10 +39,9 @@ public class GraphAPIService : IGraphAPIService
 
     public async Task<Models.User> GetUserByEmail(string userEmail)
     {
-        string issuerName = "asdkdev.onmicrosoft.com";
         var graphUsers = await _graphServiceClient.Users
             .Request()
-            .Filter($"identities/any(id: id/issuer eq '{issuerName}' and id/issuerAssignedId eq '{userEmail}')")
+            .Filter($"identities/any(id: id/issuer eq '{_options.IssuerDomain}' and id/issuerAssignedId eq '{userEmail}')")
             .Select("id, identitied, displayName")
             .GetAsync();
 
