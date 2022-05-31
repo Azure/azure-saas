@@ -11,9 +11,9 @@ public abstract class OAuthBaseClient
     public string BearerToken { get; private set; } = string.Empty;
     private readonly ITokenAcquisition _tokenAcquisition;
 
-    private readonly IAdminClientSettings _appSettings;
+    private readonly AppSettings _appSettings;
 
-    public OAuthBaseClient(ITokenAcquisition tokenAcquisition, IOptions<IAdminClientSettings> appSettings)
+    public OAuthBaseClient(ITokenAcquisition tokenAcquisition, IOptions<AppSettings> appSettings)
     {
         _appSettings = appSettings.Value;
         _tokenAcquisition = tokenAcquisition;
