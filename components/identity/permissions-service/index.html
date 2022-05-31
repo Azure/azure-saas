@@ -27,12 +27,12 @@ The SaaS.Permissions.Service module (aka Permissions Service) is a component of 
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/permissions-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-05-24T09:18:47-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-05-24T12:06:54-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Permissions.Service">
 <meta itemprop="description" content="Overview The SaaS.Permissions.Service module (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions:
  Handles Create, Read, Update, and Delete (CRUD) operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.">
-<meta itemprop="dateModified" content="2022-05-24T09:18:47-05:00" />
+<meta itemprop="dateModified" content="2022-05-24T12:06:54-05:00" />
 <meta itemprop="wordCount" content="867">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Permissions.Service"/>
@@ -288,7 +288,7 @@ The SaaS.Permissions.Service module (aka Permissions Service) is a component of 
 <li><a href="../../../components/admin-service">Admin Service</a></li>
 </ul>
 <h3 id="authentication">Authentication</h3>
-<p>The Permissions Service is secured using <a href="https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0#configure-certificate-validation">TLS Mutual Authentication</a> (Certificate Authentication). The application layer is configured to verify the authenticity of the certificate by comparing the thumbprint of the certificate against a configuration value. For TLS Mutual Authentication to work properly, the web server must also be configured to forward the certificate to the application layer. This is done for you if you deploy the application following the steps in the <a href="../../quick-start">Quick Start</a> guide, but if you choose to run the code in an environment you provision, you will need to do <a href="https://docs.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth">this configuration</a> yourself.</p>
+<p>The Permissions Service is secured using <a href="https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0#configure-certificate-validation">TLS Mutual Authentication</a> (Certificate Authentication). The application layer is configured to verify the authenticity of the certificate by comparing the thumbprint of the certificate against a configuration value. For TLS Mutual Authentication to work properly, the web server must also be configured to forward the certificate to the application layer. This is done for you if you deploy the application following the steps in the <a href="../../../quick-start">Quick Start</a> guide, but if you choose to run the code in an environment you provision, you will need to do <a href="https://docs.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth">this configuration</a> yourself.</p>
 <blockquote>
 <p><strong>Important!</strong><br>
 The certificate that gets deployed out of the box by following the Quick Start is a self signed certificate. Self signed certificates are not meant for production use, and it highly reccomended that you replace this certificate with one signed by a Certificate Authority before using this module in production.</p>
@@ -322,7 +322,7 @@ The certificate that gets deployed out of the box by following the Quick Start i
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified May 24, 2022: <a href="https://github.com/Azure/azure-saas/commit/8585e1328e8b9dbb955e9eff26aa2087ed98c4f6">Fix 404 link to Admin Service (8585e13)</a>
+  Last modified May 24, 2022: <a href="https://github.com/Azure/azure-saas/commit/02c577f3d7f9f57c720e265de02383bd4176eef0">Update permissions-service.md (02c577f)</a>
 </div>
 
 </div>
