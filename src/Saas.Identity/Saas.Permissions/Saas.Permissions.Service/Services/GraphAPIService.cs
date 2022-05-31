@@ -41,7 +41,7 @@ public class GraphAPIService : IGraphAPIService
     {
         var graphUsers = await _graphServiceClient.Users
             .Request()
-            .Filter($"identities/any(id: id/issuer eq '{_options.IssuerDomain}' and id/issuerAssignedId eq '{userEmail}')")
+            .Filter($"identities/any(id: id/issuer eq '{_options.Domain}' and id/issuerAssignedId eq '{userEmail}')")
             .Select("id, identitied, displayName")
             .GetAsync();
 
