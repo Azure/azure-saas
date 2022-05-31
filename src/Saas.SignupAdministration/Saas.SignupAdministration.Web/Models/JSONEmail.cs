@@ -6,14 +6,14 @@ namespace Saas.SignupAdministration.Web.Models
     public class JSONEmail
     {
         [JsonPropertyName("HTML")]
-        public string HTML { get; set; }
+        public string HTML { get; set; } = string.Empty;
         [JsonPropertyName("emailFrom")]
-        public string EmailFrom { get; set; }
+        public string EmailFrom { get; set; } = string.Empty;
         [JsonPropertyName("emailTo")]
-        public string EmailTo { get; set; }
+        public string EmailTo { get; set; } = string.Empty;
         [JsonPropertyName("emailToName")]
-        public string EmailToName { get; set; }
+        public string EmailToName { get; set; } = string.Empty;
         [JsonPropertyName("subject")]
-        public string Subject { get; set; }
+        public string Subject { get; set; } = string.Empty;
     }
 }

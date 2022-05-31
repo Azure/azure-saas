@@ -6,6 +6,7 @@ using Microsoft.Identity.Web.UI;
 using Microsoft.IdentityModel.Logging;
 using Saas.SignupAdministration.Web;
 using Microsoft.AspNetCore.HttpOverrides;
+using Saas.Application.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,16 +117,11 @@ app.UseEndpoints(endpoints =>
 {
                 // admin
                 endpoints.MapControllerRoute(
-        name: "Admin",
-        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    name: "Admin",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
                 // default
                 endpoints.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
-                //if (env.IsDevelopment())
-                //{
-                //    routes.WithMetadata(new AllowAnonymousAttribute());
-
-                //}
 
                 endpoints.MapRazorPages();
 });

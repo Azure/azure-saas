@@ -16,16 +16,15 @@ namespace Saas.Application.Web.Services
 
         public async Task<TenantViewModel> GetTenantByRouteAsync(string userIdentifer)
         {
+            TenantDTO? tenant = null;
+
             if (userIdentifer != null)
             {
-                var tenants = await _adminServiceClient.TenantsAsync(userIdentifer, _appSettings.Value.AppTenantId.Substring(0, AppConstants.Tenant.IdLength));
-                var activeTenant = tenants.FirstOrDefault();
-
-                if (activeTenant != null)
-                    return new TenantViewModel() { Id = activeTenant.Id, Name = activeTenant.Name };
+                var filteredTenants = await _adminServiceClient.TenantsAsync(userIdentifer, _appSettings.Value.AppTenantId?.Substring(0, AppConstants.Tenant.IdLength) ?? string.Empty);
+                tenant = filteredTenants.FirstOrDefault();
             }
 
-            return null;
+            return new TenantViewModel() { Id = tenant?.Id ?? Guid.Empty, Name = tenant?.Name ?? "Unknown" };
         }
     }
 }

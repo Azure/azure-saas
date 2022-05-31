@@ -2,8 +2,7 @@
 
 public class AddUserRequest
 {
-    public string TenantId { get; set; }
-    public string UserEmail { get; set; }
-    public string ConfirmUserEmail { get; set; }
-    //public string Permission { get; set; }
+    public string? TenantId { get; set; }
+    public string? UserEmail { get; set; }
+    public string? ConfirmUserEmail { get; set; }
 }
