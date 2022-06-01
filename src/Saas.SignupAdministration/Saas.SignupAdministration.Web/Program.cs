@@ -90,8 +90,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
-    IdentityModelEventSource.ShowPII = true;
+    app.UseExceptionHandler("/Error");
 }
 else
 {
