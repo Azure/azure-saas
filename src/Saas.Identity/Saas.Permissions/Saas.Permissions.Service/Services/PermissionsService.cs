@@ -107,7 +107,6 @@ public class PermissionsService : IPermissionsService
         _logger.LogDebug("{userId} has requested tenants", userId);
         return await _context.Permissions
             .Where(x => x.UserId == userId)
-            .Where(x => filter == null || x.TenantId.Length == filter.Length && EF.Functions.Like(x.TenantId, $"%{filter}%"))
             .Select(x => x.TenantId)
             .ToListAsync();
     }
