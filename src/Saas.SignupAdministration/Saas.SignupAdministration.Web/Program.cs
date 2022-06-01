@@ -69,7 +69,6 @@ builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration,
     .EnableTokenAcquisitionToCallDownstreamApi(
         builder.Configuration["AppSettings:AdminServiceScopes"]
         .Split(" "))
-    //.Select(scope => builder.Configuration["AppSettings:AdminServiceScopeBaseUrl"] + scope ))
     .AddSessionTokenCaches();
 
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
@@ -91,8 +90,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
-    IdentityModelEventSource.ShowPII = true;
+    app.UseExceptionHandler("/Error");
 }
 else
 {

@@ -1,14 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Saas.Application.Web.Interfaces;
-using Saas.Application.Web.Models;
 
 namespace Saas.Application.Web.Pages
 {
     public class TenantModel : PageModel
     {
         private readonly ITenantService _tenantService;
-        public Tenant? tenantData;
+        public TenantViewModel? tenantData;
         public TenantModel(ITenantService tenantService)
         {
             _tenantService = tenantService;

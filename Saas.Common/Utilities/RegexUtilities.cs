@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Saas.SignupAdministration.Web.Utilities;
+namespace Saas.Common.Utility;
 
 public static class RegexUtilities
 {

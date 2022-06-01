@@ -1,4 +1,4 @@
-﻿namespace Saas.SignupAdministration.Web;
+﻿namespace Saas.Application.Web.Interfaces;
 
 public interface IApplicationUser
 {

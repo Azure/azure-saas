@@ -17,19 +17,19 @@
 #pragma warning disable 3016 // Disable "CS3016 Arrays as attribute arguments is not CLS-compliant"
 #pragma warning disable 8603 // Disable "CS8603 Possible null reference return"
 
-namespace Saas.SignupAdministration.Web.Services;
+namespace Saas.Application.Web.Services;
 
 using System = global::System;
 
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial interface IAdminServiceClient
-    {
-        /// <summary>
-        /// Get all tenants in the system
-        /// </summary>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAllAsync();
+[System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
+public partial interface IAdminServiceClient
+{
+    /// <summary>
+    /// Get all tenants in the system
+    /// </summary>
+    /// <returns>Success</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAllAsync();
 
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <summary>
@@ -39,20 +39,20 @@ using System = global::System;
     /// <exception cref="ApiException">A server side error occurred.</exception>
     System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAllAsync(System.Threading.CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Add a new tenant
-        /// </summary>
-        /// <returns>Created</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<TenantDTO> TenantsPOSTAsync(NewTenantRequest body);
+    /// <summary>
+    /// Add a new tenant
+    /// </summary>
+    /// <returns>Created</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task<TenantDTO> TenantsPOSTAsync(NewTenantRequest body);
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Add a new tenant
-        /// </summary>
-        /// <returns>Created</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<TenantDTO> TenantsPOSTAsync(NewTenantRequest body, System.Threading.CancellationToken cancellationToken);
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Add a new tenant
+    /// </summary>
+    /// <returns>Created</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task<TenantDTO> TenantsPOSTAsync(NewTenantRequest body, System.Threading.CancellationToken cancellationToken);
 
     /// <summary>
     /// Get a tenant by tenant ID
@@ -71,20 +71,20 @@ using System = global::System;
     /// <exception cref="ApiException">A server side error occurred.</exception>
     System.Threading.Tasks.Task<TenantDTO> TenantsGETAsync(System.Guid tenantId, System.Threading.CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Update an existing tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task TenantsPUTAsync(System.Guid tenantId, TenantDTO body);
+    /// <summary>
+    /// Update an existing tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task TenantsPUTAsync(System.Guid tenantId, TenantDTO body);
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Update an existing tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task TenantsPUTAsync(System.Guid tenantId, TenantDTO body, System.Threading.CancellationToken cancellationToken);
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Update an existing tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task TenantsPUTAsync(System.Guid tenantId, TenantDTO body, System.Threading.CancellationToken cancellationToken);
 
     /// <summary>
     /// Deletes a tenant
@@ -131,67 +131,67 @@ using System = global::System;
     /// <exception cref="ApiException">A server side error occurred.</exception>
     System.Threading.Tasks.Task<System.Collections.Generic.ICollection<string>> PermissionsAllAsync(string tenantId, string userId, System.Threading.CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Add a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body);
+    /// <summary>
+    /// Add a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body);
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Add a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken);
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Add a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Delete a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body);
+    /// <summary>
+    /// Delete a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body);
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Delete a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken);
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Delete a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Add a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task InviteAsync(string tenantId, string userEmail);
+    /// <summary>
+    /// Add a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task InviteAsync(string tenantId, string userEmail);
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Add a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task InviteAsync(string tenantId, string userEmail, System.Threading.CancellationToken cancellationToken);
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Add a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task InviteAsync(string tenantId, string userEmail, System.Threading.CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Get all tenant IDs that a user has access to
-        /// </summary>
-        /// <param name="filter">Optionally filter by access type</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAsync(string userId, string filter);
+    /// <summary>
+    /// Get all tenant IDs that a user has access to
+    /// </summary>
+    /// <param name="filter">Optionally filter by access type</param>
+    /// <returns>Success</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAsync(string userId, string filter);
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Get all tenant IDs that a user has access to
-        /// </summary>
-        /// <param name="filter">Optionally filter by access type</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAsync(string userId, string filter, System.Threading.CancellationToken cancellationToken);
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Get all tenant IDs that a user has access to
+    /// </summary>
+    /// <param name="filter">Optionally filter by access type</param>
+    /// <returns>Success</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAsync(string userId, string filter, System.Threading.CancellationToken cancellationToken);
 
     /// <returns>Success</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -204,17 +204,17 @@ using System = global::System;
 
 }
 
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AdminServiceClient : OAuthBaseClient, IAdminServiceClient
-    {
-        private System.Net.Http.HttpClient _httpClient;
-        private System.Lazy<System.Text.Json.JsonSerializerOptions> _settings;
+[System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
+public partial class AdminServiceClient : OAuthBaseClient, IAdminServiceClient
+{
+    private System.Net.Http.HttpClient _httpClient;
+    private System.Lazy<System.Text.Json.JsonSerializerOptions> _settings;
 
-        public AdminServiceClient(IOptions<AppSettings> configuration, ITokenAcquisition tokenAcquisition, System.Net.Http.HttpClient httpClient) : base(tokenAcquisition, configuration)
-        {
-            _httpClient = httpClient;
-            _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings);
-        }
+    public AdminServiceClient(IOptions<AppSettings> configuration, ITokenAcquisition tokenAcquisition, System.Net.Http.HttpClient httpClient) : base(tokenAcquisition, configuration)
+    {
+        _httpClient = httpClient;
+        _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings);
+    }
 
     private System.Text.Json.JsonSerializerOptions CreateSerializerSettings()
     {
@@ -327,26 +327,26 @@ using System = global::System;
         }
     }
 
-        /// <summary>
-        /// Add a new tenant
-        /// </summary>
-        /// <returns>Created</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<TenantDTO> TenantsPOSTAsync(NewTenantRequest body)
-        {
-            return TenantsPOSTAsync(body, System.Threading.CancellationToken.None);
-        }
+    /// <summary>
+    /// Add a new tenant
+    /// </summary>
+    /// <returns>Created</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual System.Threading.Tasks.Task<TenantDTO> TenantsPOSTAsync(NewTenantRequest body)
+    {
+        return TenantsPOSTAsync(body, System.Threading.CancellationToken.None);
+    }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Add a new tenant
-        /// </summary>
-        /// <returns>Created</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TenantDTO> TenantsPOSTAsync(NewTenantRequest body, System.Threading.CancellationToken cancellationToken)
-        {
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/Tenants");
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Add a new tenant
+    /// </summary>
+    /// <returns>Created</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual async System.Threading.Tasks.Task<TenantDTO> TenantsPOSTAsync(NewTenantRequest body, System.Threading.CancellationToken cancellationToken)
+    {
+        var urlBuilder_ = new System.Text.StringBuilder();
+        urlBuilder_.Append("api/Tenants");
 
         var client_ = _httpClient;
         var disposeClient_ = false;
@@ -542,26 +542,26 @@ using System = global::System;
         }
     }
 
-        /// <summary>
-        /// Update an existing tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task TenantsPUTAsync(System.Guid tenantId, TenantDTO body)
-        {
-            return TenantsPUTAsync(tenantId, body, System.Threading.CancellationToken.None);
-        }
+    /// <summary>
+    /// Update an existing tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual System.Threading.Tasks.Task TenantsPUTAsync(System.Guid tenantId, TenantDTO body)
+    {
+        return TenantsPUTAsync(tenantId, body, System.Threading.CancellationToken.None);
+    }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Update an existing tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task TenantsPUTAsync(System.Guid tenantId, TenantDTO body, System.Threading.CancellationToken cancellationToken)
-        {
-            if (tenantId == null)
-                throw new System.ArgumentNullException("tenantId");
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Update an existing tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual async System.Threading.Tasks.Task TenantsPUTAsync(System.Guid tenantId, TenantDTO body, System.Threading.CancellationToken cancellationToken)
+    {
+        if (tenantId == null)
+            throw new System.ArgumentNullException("tenantId");
 
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append("api/Tenants/{tenantId}");
@@ -963,26 +963,26 @@ using System = global::System;
         }
     }
 
-        /// <summary>
-        /// Add a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body)
-        {
-            return PermissionsPOSTAsync(tenantId, userId, body, System.Threading.CancellationToken.None);
-        }
+    /// <summary>
+    /// Add a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body)
+    {
+        return PermissionsPOSTAsync(tenantId, userId, body, System.Threading.CancellationToken.None);
+    }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Add a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken)
-        {
-            if (tenantId == null)
-                throw new System.ArgumentNullException("tenantId");
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Add a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual async System.Threading.Tasks.Task PermissionsPOSTAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken)
+    {
+        if (tenantId == null)
+            throw new System.ArgumentNullException("tenantId");
 
         if (userId == null)
             throw new System.ArgumentNullException("userId");
@@ -1068,26 +1068,26 @@ using System = global::System;
         }
     }
 
-        /// <summary>
-        /// Delete a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body)
-        {
-            return PermissionsDELETEAsync(tenantId, userId, body, System.Threading.CancellationToken.None);
-        }
+    /// <summary>
+    /// Delete a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body)
+    {
+        return PermissionsDELETEAsync(tenantId, userId, body, System.Threading.CancellationToken.None);
+    }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Delete a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken)
-        {
-            if (tenantId == null)
-                throw new System.ArgumentNullException("tenantId");
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Delete a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual async System.Threading.Tasks.Task PermissionsDELETEAsync(string tenantId, string userId, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken)
+    {
+        if (tenantId == null)
+            throw new System.ArgumentNullException("tenantId");
 
         if (userId == null)
             throw new System.ArgumentNullException("userId");
@@ -1173,26 +1173,26 @@ using System = global::System;
         }
     }
 
-        /// <summary>
-        /// Add a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task InviteAsync(string tenantId, string userEmail)
-        {
-            return InviteAsync(tenantId, userEmail, System.Threading.CancellationToken.None);
-        }
+    /// <summary>
+    /// Add a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual System.Threading.Tasks.Task InviteAsync(string tenantId, string userEmail)
+    {
+        return InviteAsync(tenantId, userEmail, System.Threading.CancellationToken.None);
+    }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Add a set of permissions for a user on a tenant
-        /// </summary>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task InviteAsync(string tenantId, string userEmail, System.Threading.CancellationToken cancellationToken)
-        {
-            if (tenantId == null)
-                throw new System.ArgumentNullException("tenantId");
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Add a set of permissions for a user on a tenant
+    /// </summary>
+    /// <returns>No Content</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual async System.Threading.Tasks.Task InviteAsync(string tenantId, string userEmail, System.Threading.CancellationToken cancellationToken)
+    {
+        if (tenantId == null)
+            throw new System.ArgumentNullException("tenantId");
 
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append("api/Tenants/{tenantId}/invite?");
@@ -1277,28 +1277,28 @@ using System = global::System;
         }
     }
 
-        /// <summary>
-        /// Get all tenant IDs that a user has access to
-        /// </summary>
-        /// <param name="filter">Optionally filter by access type</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAsync(string userId, string filter)
-        {
-            return TenantsAsync(userId, filter, System.Threading.CancellationToken.None);
-        }
+    /// <summary>
+    /// Get all tenant IDs that a user has access to
+    /// </summary>
+    /// <param name="filter">Optionally filter by access type</param>
+    /// <returns>Success</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAsync(string userId, string filter)
+    {
+        return TenantsAsync(userId, filter, System.Threading.CancellationToken.None);
+    }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Get all tenant IDs that a user has access to
-        /// </summary>
-        /// <param name="filter">Optionally filter by access type</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAsync(string userId, string filter, System.Threading.CancellationToken cancellationToken)
-        {
-            if (userId == null)
-                throw new System.ArgumentNullException("userId");
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <summary>
+    /// Get all tenant IDs that a user has access to
+    /// </summary>
+    /// <param name="filter">Optionally filter by access type</param>
+    /// <returns>Success</returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TenantDTO>> TenantsAsync(string userId, string filter, System.Threading.CancellationToken cancellationToken)
+    {
+        if (userId == null)
+            throw new System.ArgumentNullException("userId");
 
         var urlBuilder_ = new System.Text.StringBuilder();
         urlBuilder_.Append("api/Tenants/user/{userId}/tenants?");
@@ -1481,51 +1481,51 @@ using System = global::System;
 
     public bool ReadResponseAsString { get; set; }
 
-        protected virtual async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
+    protected virtual async System.Threading.Tasks.Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(System.Net.Http.HttpResponseMessage response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Threading.CancellationToken cancellationToken)
+    {
+        if (response == null || response.Content == null)
         {
-            if (response == null || response.Content == null)
-            {
-                return new ObjectResponseResult<T>(default(T), string.Empty);
-            }
-
-            if (ReadResponseAsString)
-            {
-                var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                try
-                {
-                    var typedBody = System.Text.Json.JsonSerializer.Deserialize<T>(responseText, JsonSerializerSettings);
-                    return new ObjectResponseResult<T>(typedBody, responseText);
-                }
-                catch (System.Text.Json.JsonException exception)
-                {
-                    var message = "Could not deserialize the response body string as " + typeof(T).FullName + ".";
-                    throw new ApiException(message, (int)response.StatusCode, responseText, headers, exception);
-                }
-            }
-            else
-            {
-                try
-                {
-                    using (var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                    {
-                        var typedBody = await System.Text.Json.JsonSerializer.DeserializeAsync<T>(responseStream, JsonSerializerSettings, cancellationToken).ConfigureAwait(false);
-                        return new ObjectResponseResult<T>(typedBody, string.Empty);
-                    }
-                }
-                catch (System.Text.Json.JsonException exception)
-                {
-                    var message = "Could not deserialize the response body stream as " + typeof(T).FullName + ".";
-                    throw new ApiException(message, (int)response.StatusCode, string.Empty, headers, exception);
-                }
-            }
+            return new ObjectResponseResult<T>(default(T), string.Empty);
         }
 
-        private string ConvertToString(object value, System.Globalization.CultureInfo cultureInfo)
+        if (ReadResponseAsString)
         {
-            if (value == null)
+            var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            try
             {
-                return "";
+                var typedBody = System.Text.Json.JsonSerializer.Deserialize<T>(responseText, JsonSerializerSettings);
+                return new ObjectResponseResult<T>(typedBody, responseText);
             }
+            catch (System.Text.Json.JsonException exception)
+            {
+                var message = "Could not deserialize the response body string as " + typeof(T).FullName + ".";
+                throw new ApiException(message, (int)response.StatusCode, responseText, headers, exception);
+            }
+        }
+        else
+        {
+            try
+            {
+                using (var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+                {
+                    var typedBody = await System.Text.Json.JsonSerializer.DeserializeAsync<T>(responseStream, JsonSerializerSettings, cancellationToken).ConfigureAwait(false);
+                    return new ObjectResponseResult<T>(typedBody, string.Empty);
+                }
+            }
+            catch (System.Text.Json.JsonException exception)
+            {
+                var message = "Could not deserialize the response body stream as " + typeof(T).FullName + ".";
+                throw new ApiException(message, (int)response.StatusCode, string.Empty, headers, exception);
+            }
+        }
+    }
+
+    private string ConvertToString(object value, System.Globalization.CultureInfo cultureInfo)
+    {
+        if (value == null)
+        {
+            return "";
+        }
 
         if (value is System.Enum)
         {
@@ -1566,45 +1566,45 @@ using System = global::System;
     }
 }
 
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class NewTenantRequest
-    {
+[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
+public partial class NewTenantRequest
+{
 
-        [System.Text.Json.Serialization.JsonPropertyName("name")]
-        public string Name { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("name")]
+    public string Name { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("route")]
-        public string Route { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("route")]
+    public string Route { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("creatorEmail")]
-        public string CreatorEmail { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("creatorEmail")]
+    public string CreatorEmail { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("productTierId")]
-        public int ProductTierId { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("productTierId")]
+    public int ProductTierId { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("categoryId")]
-        public int CategoryId { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("categoryId")]
+    public int CategoryId { get; set; }
 
 }
 
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ProblemDetails
-    {
+[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
+public partial class ProblemDetails
+{
 
-        [System.Text.Json.Serialization.JsonPropertyName("type")]
-        public string Type { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("type")]
+    public string Type { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("title")]
-        public string Title { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("title")]
+    public string Title { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("status")]
-        public int? Status { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("status")]
+    public int? Status { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("detail")]
-        public string Detail { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("detail")]
+    public string Detail { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("instance")]
-        public string Instance { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("instance")]
+    public string Instance { get; set; }
 
     private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
 
@@ -1617,66 +1617,66 @@ using System = global::System;
 
 }
 
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class TenantDTO
-    {
+[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
+public partial class TenantDTO
+{
 
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
-        public System.Guid Id { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("id")]
+    public System.Guid Id { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("name")]
-        public string Name { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("name")]
+    public string Name { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("route")]
-        public string Route { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("route")]
+    public string Route { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("productTierId")]
-        public int ProductTierId { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("productTierId")]
+    public int ProductTierId { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("categoryId")]
-        public int CategoryId { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("categoryId")]
+    public int CategoryId { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("creatorEmail")]
-        public string CreatorEmail { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("creatorEmail")]
+    public string CreatorEmail { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("createdTime")]
-        public System.DateTimeOffset CreatedTime { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("createdTime")]
+    public System.DateTimeOffset CreatedTime { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("version")]
-        public string Version { get; set; }
-
-}
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UserDTO
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("userId")]
-        public string UserId { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("displayName")]
-        public string DisplayName { get; set; }
+    [System.Text.Json.Serialization.JsonPropertyName("version")]
+    public string Version { get; set; }
 
 }
 
+[System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
+public partial class UserDTO
+{
+
+    [System.Text.Json.Serialization.JsonPropertyName("userId")]
+    public string UserId { get; set; }
+
+    [System.Text.Json.Serialization.JsonPropertyName("displayName")]
+    public string DisplayName { get; set; }
+
+}
 
 
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ApiException : System.Exception
-    {
-        public int StatusCode { get; private set; }
 
-        public string Response { get; private set; }
+[System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
+public partial class ApiException : System.Exception
+{
+    public int StatusCode { get; private set; }
+
+    public string Response { get; private set; }
 
     public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; private set; }
 
-        public ApiException(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception innerException)
-            : base(message + "\n\nStatus: " + statusCode + "\nResponse: \n" + ((response == null) ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)), innerException)
-        {
-            StatusCode = statusCode;
-            Response = response;
-            Headers = headers;
-        }
+    public ApiException(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception innerException)
+        : base(message + "\n\nStatus: " + statusCode + "\nResponse: \n" + ((response == null) ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)), innerException)
+    {
+        StatusCode = statusCode;
+        Response = response;
+        Headers = headers;
+    }
 
     public override string ToString()
     {
@@ -1684,17 +1684,17 @@ using System = global::System;
     }
 }
 
-    [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ApiException<TResult> : ApiException
-    {
-        public TResult Result { get; private set; }
+[System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
+public partial class ApiException<TResult> : ApiException
+{
+    public TResult Result { get; private set; }
 
-        public ApiException(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception innerException)
-            : base(message, statusCode, response, headers, innerException)
-        {
-            Result = result;
-        }
+    public ApiException(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception innerException)
+        : base(message, statusCode, response, headers, innerException)
+    {
+        Result = result;
     }
+}
 
 
 #pragma warning restore 1591
