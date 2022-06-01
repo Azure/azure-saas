@@ -20,7 +20,7 @@ namespace Saas.Application.Web.Services
 
             if (userIdentifer != null)
             {
-                var filteredTenants = await _adminServiceClient.TenantsAsync(userIdentifer, _appSettings.Value.AppTenantId?.Substring(0, AppConstants.Tenant.IdLength) ?? string.Empty);
+                var filteredTenants = await _adminServiceClient.TenantsAsync(userIdentifer, _appSettings.Value.AppTenantId.Substring(0, AppConstants.Tenant.IdLength) ?? string.Empty);
                 tenant = filteredTenants.FirstOrDefault();
             }
 

@@ -2,7 +2,7 @@
 
 public class AddUserRequest
 {
-    public string? TenantId { get; set; }
-    public string? UserEmail { get; set; }
-    public string? ConfirmUserEmail { get; set; }
+    public string TenantId { get; set; } = string.Empty;
+    public string UserEmail { get; set; } = string.Empty;
+    public string ConfirmUserEmail { get; set; } = string.Empty;
 }
