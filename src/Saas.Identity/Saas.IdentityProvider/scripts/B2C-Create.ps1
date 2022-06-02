@@ -54,16 +54,12 @@ function New-SaaSIdentityProvider {
   Write-Host "Starting Interactive login to Microsoft Graph. Watch for a newly opened browser window (or device flow instructions) and complete the sign in."
   # Interactive login, so that we don't have to create a separate service principal and handle secrets.
   # Make sure that the user has administrative permissions in the tenant.
-  Connect-MgGraph -TenantId "$($B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All"
+  Connect-MgGraph -TenantId "$($B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All", "TrustFrameworkKeySet.ReadWrite.All"
   
-  #Setup IEF
-  Write-Host "Setting up Identity Experience Framework..."
-  New-IefPolicies -B2CTenantName $B2CTenantName
-    
-    
-    
+  #Create Signing and Encrpytion Keys
+  New-TrustFrameworkSigningKey 
+  New-TrustFrameworkEncryptionKey
 
-  
 }
 
 function New-AzureADB2CTenant {
@@ -214,17 +210,21 @@ function Invoke-TenantInit {
   }
 }
 
-function New-IefPolicies {
-  param (
-    [string] $B2CTenantName
-  )
-  #Install-ModuleIfNotInstalled -moduleName "IefPolicies" -minimalVersion "3.1.4"
-  Connect-IefPolicies "$($B2CTenantName)"
-  Initialize-IefPolicies 
-  Write-Host "IefPolicies initialized"
 
-  #Create Key with certificate
+function New-TrustFrameworkSigningKey
+{
+  Write-Host "Creating new signing key..."
+  $signingKeyName = "TokenSigningKeyContainer"
+  $signingKeyId =  New-MgTrustFrameworkKeySet -Id $signingKeyName
+  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $signingKeyId -Kty "RSA" -Use "Sig"
+}
 
+function New-TrustFrameworkEncryptionKey
+{
+  Write-Host "Creating new encryption key..."
+  $signingKeyName = "TokenEncryptionKeyContainer"
+  $signingKeyId =  New-MgTrustFrameworkKeySet -Id $signingKeyName
+  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $signingKeyId -Kty "RSA" -Use "Enc"
 }
 
 function Import-IefPolicies {
@@ -278,6 +278,10 @@ function Install-AppRegistration {
 # Outputs parameters.json file with the information from the b2c setup. 
 function Write-OutputFile {
     
+}
+
+function New-TrustframeworkeySet{
+
 }
 
 function Install-ModuleIfNotInstalled {
