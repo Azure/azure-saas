@@ -10,10 +10,9 @@ function New-AppRegistration {
     -DisplayName $AppRegistrationData.DisplayName `
     -Api @{
         Oauth2PermissionScopes = $AppRegistrationData.OAuth2PermissionScopes
-    }
-    -IdentifierUris @($AppRegistrationData.IdentifierUri) `
-    
-
+    } `
+    -IdentifierUris $AppRegistrationData.IdentifierUris `
+    -RequiredResourceAccess $AppRegistrationData.RequiredResourceAccess `
 
     $newAppSecret = $null
     if ($CreateSecret) {
@@ -25,6 +24,7 @@ function New-AppRegistration {
         Name = $newApp.DisplayName
         AppId = $newApp.AppId
         ClientSecret = $newAppSecret
+        Properties = $newApp
     }
 }
 
@@ -33,9 +33,9 @@ function Initialize-AppRegistrations {
         [Parameter(Mandatory = $true, HelpMessage = "The Tenant Identifier")]
         [string] $TenantId
     )
-    $adminAppReg = @{
-        DisplayName = asdk-admin-api
-        IdentifierUri = "https://$($TenantId)/$(New-Guid)"
+    $adminAppRegConfig = @{
+        DisplayName = "asdk-admin-api"
+        IdentifierUris = @("https://$($TenantId)/$(New-Guid)")
         OAuth2PermissionScopes = @(
             @{
                 AdminConsentDisplayName  = "Allows deletion of tenants";
@@ -80,16 +80,33 @@ function Initialize-AppRegistrations {
                 Value = "tenant.global.read";
             }
         )
+        RequiredResourceAccess = @()
     }
+
+    $adminAppReg = New-AppRegistration -AppRegistrationData $adminAppRegConfig
+
+    $signupAdminAppRegConfig = @{
+        DisplayName = "asdk-signupadmin-app"
+        IdentifierUri = @("https://$($TenantId)/$(New-Guid)")
+        OAuth2PermissionScopes = @()
+        RequiredResourceAccess = @{
+            ResourceAppId = $adminAppReg.AppId
+            ResourceAccess = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { @{Id = $_.Id;Type = "Scope"} }
+        }
+
+    }
+
+    $signupAdminAppReg = New-AppRegistration -AppRegistrationData $signupAdminAppRegConfig -CreateSecret $true
+
     return @{
-        AdminAppReg = New-AppRegistration -AppRegistrationName "asdk-admin-api"
-        SignupAdminAppReg = New-AppRegistration -AppRegistrationName "asdk-signupadmin-app" -CreateSecret $true
+        AdminAppReg = $adminAppReg
+        SignupAdminAppReg = $signupAdminAppReg
     }
 }
 
 $B2CTenantName = "lptestb2ctenant01"
 Connect-MgGraph -TenantId "$($B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All", "TrustFrameworkKeySet.ReadWrite.All"
 
-$ret = Initialize-AppRegistrations
+$ret = Initialize-AppRegistrations -TenantId "$($B2CTenantName).onmicrosoft.com"
 
 Write-Host "Done"
