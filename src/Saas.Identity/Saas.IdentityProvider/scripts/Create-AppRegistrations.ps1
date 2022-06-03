@@ -6,6 +6,7 @@ function New-AppRegistration {
         [Parameter(Mandatory = $false, HelpMessage = "Indicates whether to create a secret for the app registration")]
         [bool] $CreateSecret = $false
     )
+    # Create the app registration using the Microsoft Graph API and store the result. 
     $newApp = New-MgApplication `
         -DisplayName $AppRegistrationData.DisplayName `
         -Api @{
@@ -22,15 +23,44 @@ function New-AppRegistration {
     }
 
     # Also need to create the service principal for the app
-    New-MgServicePrincipal -AppId $newApp.AppId -DisplayName $newApp.DisplayName
+    $sp = New-MgServicePrincipal -AppId $newApp.AppId -DisplayName $newApp.DisplayName
 
     return @{
-        Id           = $newApp.Id
-        Name         = $newApp.DisplayName
-        AppId        = $newApp.AppId
         ClientSecret = $newAppSecret
-        Properties   = $newApp
+        AppRegistrationProperties  = $newApp
+        ServicePrincipalProperties = $sp
     }
+}
+
+function New-AdminConsent {
+    param(
+        [Parameter(Mandatory = $true, HelpMessage = "The identifier of the application that consent is being granted on.")]
+        [string] $ClientObjectId,
+
+        [Parameter(Mandatory = $true, HelpMessage = "The identifier of the API application for which consent is being granted for.")]
+        [string] $ApiObjectId,
+
+        [Parameter(Mandatory = $true, HelpMessage = "The Scopes for which consent is being granted.")]
+        [array] $ApiScopes
+    )
+
+    Write-Host "Granting consent for $ApiScopes on $ClientObjectId for $ApiObjectId"
+    
+    $payload = @{
+        ConsentType = "AllPrincipals"
+        ClientId = $ClientObjectId #"0b7224ff-15c8-4fbf-81b2-15ab3780f452" # object id of signup admin
+        ResourceId = $ApiObjectId #"e0a6143a-1135-400f-87ac-6e2f76b967e6" # object id of asdk-adminapi
+        Scope = $ApiScopes -Join " " #"tenant.delete tenant.write tenant.global.delete tenant.global.write tenant.read tenant.global.read"
+    }
+    try {
+        New-MgOauth2PermissionGrant -BodyParameter $payload 
+        Write-Host "Consent granted"
+    }
+    catch {
+        Write-Error "Error granting adnin consent: $_"
+        throw
+    }
+    
 }
 
 function Initialize-AppRegistrations {
@@ -121,12 +151,10 @@ function Initialize-AppRegistrations {
         IdentifierUri          = @("https://$($TenantId)/$(New-Guid)")
         OAuth2PermissionScopes = @()
         RequiredResourceAccess =@(@{
-            ResourceAppId  = $adminAppReg.Properties.AppId
+            ResourceAppId  = $adminAppReg.AppRegistrationProperties.AppId
             ResourceAccess = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { @{Id = $_.Id; Type = "Scope" } }
         },
-            
-            # Add Default Microsoft Graph permissions
-            $msGraphAccess
+            $msGraphAccess # Add Default Microsoft Graph permissions
         )
         PublicClient = @{ redirectUris = @("$($SignupAdminFQDN)/signin-oidc") }
         Web = @{ 
@@ -141,7 +169,10 @@ function Initialize-AppRegistrations {
     }
 
     $signupAdminAppReg = New-AppRegistration -AppRegistrationData $signupAdminAppRegConfig -CreateSecret $true
+    $adminScopes = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
 
+    New-AdminConsent -ClientObjectId $signupAdminAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopes
+    
     return @{
         AdminAppReg       = $adminAppReg
         SignupAdminAppReg = $signupAdminAppReg
@@ -153,4 +184,8 @@ Connect-MgGraph -TenantId "$($B2CTenantName).onmicrosoft.com" -Scopes "User.Read
 
 $ret = Initialize-AppRegistrations -TenantId "$($B2CTenantName).onmicrosoft.com" -SignupAdminFQDN "https://landonlptest.azurewebsites.net"
 
-Write-Host "Done"
+# Write-Host "Done"
+
+
+
+Write-Host "done"
