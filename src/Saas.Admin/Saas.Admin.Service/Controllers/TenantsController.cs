@@ -218,7 +218,7 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [Authorize()]
+    [Authorize(Policy = AppConstants.Policies.Authenticated)]
     public async Task<ActionResult<TenantInfoDTO>> GetTenantInfoByRoute(string route)
     {
         _logger.LogDebug("{User} requested tenant for route {Route}", User?.Identity?.Name, route);
@@ -363,7 +363,7 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [Authorize(Policy = AppConstants.Policies.Authenticated)]
+    [Authorize(Policy = AppConstants.Policies.GlobalAdmin)]
     public async Task<ActionResult<IEnumerable<TenantDTO>>> UserTenants(string userId, string? filter = null)
     {
         _logger.LogDebug("Getting all tenants for user {userID}", userId);
