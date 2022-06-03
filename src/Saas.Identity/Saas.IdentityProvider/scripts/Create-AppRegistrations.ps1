@@ -9,9 +9,7 @@ function New-AppRegistration {
     # Create the app registration using the Microsoft Graph API and store the result. 
     $newApp = New-MgApplication `
         -DisplayName $AppRegistrationData.DisplayName `
-        -Api @{
-        Oauth2PermissionScopes = $AppRegistrationData.OAuth2PermissionScopes
-    } `
+        -Api @{Oauth2PermissionScopes = $AppRegistrationData.OAuth2PermissionScopes} `
         -IdentifierUris $AppRegistrationData.IdentifierUris `
         -RequiredResourceAccess $AppRegistrationData.RequiredResourceAccess `
         -PublicClient $AppRegistrationData.PublicClient `
@@ -176,8 +174,10 @@ function Initialize-AppRegistrations {
     return @{
         AdminAppReg       = $adminAppReg
         SignupAdminAppReg = $signupAdminAppReg
+        #IEFAppREg 
     }
 }
+
 
 $B2CTenantName = "lptestb2ctenant01"
 Connect-MgGraph -TenantId "$($B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All", "TrustFrameworkKeySet.ReadWrite.All"
