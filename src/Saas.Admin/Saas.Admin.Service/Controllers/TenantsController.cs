@@ -205,6 +205,43 @@ public class TenantsController : ControllerBase
     }
 
     /// <summary>
+    /// Get public tenant info by route
+    /// </summary>
+    /// <param name="route">String route of tenant</param>
+    /// <returns>Information about the tenant</returns>
+    /// <remarks>
+    /// <para><b>Requires:</b>Authorize</para>
+    /// <para>Will return public details of a single tenant</para>
+    /// </remarks>
+    [HttpGet("tenantinfo/{route}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+    [Authorize()]
+    public async Task<ActionResult<TenantInfoDTO>> GetTenantInfoByRoute(string route)
+    {
+        _logger.LogDebug("{User} requested tenant for route {Route}", User?.Identity?.Name, route);
+        try
+        {
+            var tenant = await _tenantService.GetTenantInfoByRouteAsync(route);
+            _logger.LogDebug("Found {TenantName} with route {Route}", tenant.Name, route);
+
+            return Ok(tenant);
+        }
+        catch (ItemNotFoundExcepton)
+        {
+            _logger.LogDebug("Was not able to find tenant with route {Route}", route);
+            return NotFound();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Problem retrieving tenant with route {Route}", route);
+            throw;
+        }
+    }
+
+    /// <summary>
     /// Get all users associated with a tenant
     /// </summary>
     /// <param name="tenantId"></param>

@@ -16,14 +16,13 @@ namespace Saas.Application.Web.Pages
             _applicationUser = applicationUser;
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(string route)
         {
             if (_applicationUser == null)
                 return Redirect("Index");
 
-            tenantData = await _tenantService.GetTenantByRouteAsync(_applicationUser.NameIdentifier.ToString());
+            tenantData = await _tenantService.GetTenantInfoByRouteAsync(route);
             return Page();
-
         }
     }
 }
