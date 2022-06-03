@@ -2,8 +2,10 @@
 
 public static class SR
 {
-    //Tenant Page
+    //Project name used for scoped css reference despite renaming
+    public static readonly string ProjectName = typeof(SR).Assembly.GetName().Name ?? string.Empty;
 
+    //Tenant Page
 
     // Catalog DB Prperties
     public const string CatalogTenantIdProperty = "TenantId";
