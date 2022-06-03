@@ -59,7 +59,7 @@ function New-AdminConsent {
                 ResourceId = $role.ResourceId #"8e881353-1735-45af-af21-ee1344582a4d"
                 AppRoleId = $role.AppRoleId 
             }
-            New-MgUserAppRoleAssignment -UserId $role.PrincipalId -BodyParameter $params
+            New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $role.PrincipalId -BodyParameter $params
 
 
         }
@@ -236,7 +236,7 @@ function Initialize-AppRegistrations {
         @{
             PrincipalId = $permissionsAppReg.ServicePrincipalProperties.Id
             ResourceId = "01c2693d-f03b-404e-869f-14f5a396c0a9" # MS Graph Resource ID
-            AppRoleId =  "43dd826f-eb20-4668-9904-5940a31d5a81" 
+            AppRoleId =  "9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30" 
         }
     )
     New-AdminConsent -ClientObjectId $permissionsAppReg.ServicePrincipalProperties.Id `
