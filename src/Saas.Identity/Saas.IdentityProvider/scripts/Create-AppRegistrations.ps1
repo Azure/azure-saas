@@ -14,6 +14,7 @@ function New-AppRegistration {
         -IdentifierUris $AppRegistrationData.IdentifierUris `
         -RequiredResourceAccess $AppRegistrationData.RequiredResourceAccess `
         -PublicClient $AppRegistrationData.PublicClient `
+        -IsFallbackPublicClient:$AppRegistrationData.IsFallbackPublicClient `
         -Web $AppRegistrationData.Web `
         -AppRoles $AppRegistrationData.AppRoles `
 
@@ -113,7 +114,7 @@ function Initialize-AppRegistrations {
 
     $adminAppRegConfig = @{
         DisplayName            = "asdk-admin-api"
-        IdentifierUris         = @("https://$($TenantId)/$(New-Guid)")
+        IdentifierUris         = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
         OAuth2PermissionScopes = @(
             @{
                 AdminConsentDisplayName = "Allows deletion of tenants";
@@ -159,6 +160,7 @@ function Initialize-AppRegistrations {
             }
         )
         RequiredResourceAccess = @($msGraphAccess)
+    IsFallbackPublicClient = $false 
         PublicClient           = @{}
         Web                    = @{ 
             ImplicitGrantSettings = @{
@@ -181,7 +183,7 @@ function Initialize-AppRegistrations {
 
     $signupAdminAppRegConfig = @{
         DisplayName            = "asdk-signupadmin-app"
-        IdentifierUri          = @("https://$($TenantId)/$(New-Guid)")
+        IdentifierUri          = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
         OAuth2PermissionScopes = @()
         RequiredResourceAccess = @(@{
                 ResourceAppId  = $adminAppReg.AppRegistrationProperties.AppId
@@ -189,7 +191,9 @@ function Initialize-AppRegistrations {
             },
             $msGraphAccess # Add Default Microsoft Graph permissions
         )
-        PublicClient           = @{ redirectUris = @("$($SignupAdminFQDN)/signin-oidc") }
+    
+            IsFallbackPublicClient = $false
+        PublicClient           = @{ redirectUris = @("$($SaaSAppFQDN)/signin-oidc") }
         Web                    = @{ 
             ImplicitGrantSettings = @{
                 EnableAccessTokenIssuance = $true
@@ -213,7 +217,7 @@ function Initialize-AppRegistrations {
 
     $permissionsAppRegConfig = @{
         DisplayName            = "asdk-permissions-api"
-        IdentifierUri          = @("https://$($TenantId)/$(New-Guid)")
+        IdentifierUri          = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
         OAuth2PermissionScopes = @()
         RequiredResourceAccess = @(@{
                 ResourceAppId  = $msGraphAccess.ResourceAppId
@@ -231,7 +235,8 @@ function Initialize-AppRegistrations {
                 )
             }
         )
-        PublicClient           = @{}
+    IsFallbackPublicClient = $false
+    PublicClient           = @{}
         Web                    = @{}
         AppRoles               = @{
 
@@ -264,7 +269,7 @@ function Initialize-AppRegistrations {
 
     $saasAppAppRegConfig = @{
         DisplayName            = "asdk-saas-app"
-        IdentifierUri          = @("https://$($TenantId)/$(New-Guid)")
+        IdentifierUri          = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
         OAuth2PermissionScopes = @()
         RequiredResourceAccess = @(@{
                 ResourceAppId  = $adminAppReg.AppRegistrationProperties.AppId
@@ -272,6 +277,7 @@ function Initialize-AppRegistrations {
             },
             $msGraphAccess # Add Default Microsoft Graph permissions
         )
+    IsFallbackPublicClient = $false
         PublicClient           = @{ redirectUris = @("$($SaaSAppFQDN)/signin-oidc") }
         Web                    = @{ 
             ImplicitGrantSettings = @{
@@ -292,6 +298,73 @@ function Initialize-AppRegistrations {
     # Grant admin consent on the signupadmin app for the admin scopes
     New-AdminConsent -ClientObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopesForSaasApp
 
+    
+    ############# Create the IEF App Registration ##############
+
+    $iefAppRegConfig = @{
+        DisplayName            = "IdentityExperienceFramework"
+        IdentifierUris         = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
+        OAuth2PermissionScopes = @(
+            @{
+                AdminConsentDisplayName = "Access IdentityExperienceFramework";
+                AdminConsentDescription = "Allow the application to access IdentityExperienceFramework on behalf of the signed-in user.";
+                Id                      = New-Guid;
+                Type                    = "Admin";
+                Value                   = "user_impersonation";
+            }
+
+        )
+        RequiredResourceAccess = @($msGraphAccess)
+        IsFallbackPublicClient = $false
+        PublicClient           = @{}
+        Web                    = @{ 
+            ImplicitGrantSettings = @{
+                EnableAccessTokenIssuance = $false
+                EnableIdTokenIssuance     = $false
+            }
+            LogoutUrl             = ""
+            RedirectUris          = @("https://$TenantId.b2clogin.com/$TenantId.onmicrosoft.com")
+        }
+        AppRoles               = @{}
+    }
+
+    # Create the App Registration
+    $iefAppReg = New-AppRegistration -AppRegistrationData $iefAppRegConfig
+
+
+    
+    ############# Create the IEF Proxy App Registration ##############
+
+
+    $iefProxyAppRegConfig = @{
+        DisplayName            = "ProxyIdentityExperienceFramework"
+        IdentifierUri          = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
+        OAuth2PermissionScopes = @()
+        RequiredResourceAccess = @(@{
+                ResourceAppId  = $iefAppReg.AppRegistrationProperties.AppId
+                ResourceAccess = @($iefAppRegConfig.OAuth2PermissionScopes | ForEach-Object { @{Id = $_.Id; Type = "Scope" } })
+            },
+            $msGraphAccess # Add Default Microsoft Graph permissions
+        )
+        IsFallbackPublicClient = $true
+        PublicClient           = @{
+            redirectUris = @("myapp://auth") 
+        }
+        Web                    = @{ 
+            ImplicitGrantSettings = @{ }
+            LogoutUrl             = ""
+            RedirectUris          = @()
+        }
+        AppRoles               = @{}
+
+    }
+
+    # Create the App Registration
+    $iefProxyAppReg = New-AppRegistration -AppRegistrationData $iefProxyAppRegConfig
+    # Get the scopes from the admin app registration
+    $iefScopes = $iefAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
+    # Grant admin consent on the signupadmin app for the admin scopes
+    New-AdminConsent -ClientObjectId $iefProxyAppReg.ServicePrincipalProperties.Id -ApiObjectId $iefAppReg.ServicePrincipalProperties.Id -ApiScopes $iefScopes
 
 
     Write-Host "App Registrations Created"
@@ -301,7 +374,8 @@ function Initialize-AppRegistrations {
         SignupAdminAppReg = $signupAdminAppReg
         PermissionsAppReg = $permissionsAppReg
         SaasAppAppReg     = $saasAppAppReg
-        #IEFAppREg 
+        IEFAppReg         = $iefAppReg
+        IEFProxyAppReg    = $iefProxyAppReg
     }
 }
 
@@ -310,7 +384,7 @@ $B2CTenantName = "lptestb2ctenant01"
 Connect-MgGraph -TenantId "$($B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All", "TrustFrameworkKeySet.ReadWrite.All"
 
 $ret = Initialize-AppRegistrations `
--TenantId "$($B2CTenantName).onmicrosoft.com" `
+-TenantId $B2CTenantName `
 -SignupAdminFQDN "https://landonlptest.azurewebsites.net" `
 -SaasAppFQDN "https://saasapplptest.azurewebsites.net" `
 
