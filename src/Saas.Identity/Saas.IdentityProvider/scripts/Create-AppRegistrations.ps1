@@ -295,7 +295,7 @@ function Initialize-AppRegistrations {
     $saasAppAppReg = New-AppRegistration -AppRegistrationData $saasAppAppRegConfig -CreateSecret $true
     # Get the scopes from the admin app registration
     $adminScopesForSaasApp = @($adminAppRegConfig.OAuth2PermissionScopes | Where-Object {$_.Value -eq "tenant.read"} | ForEach-Object { $_.Value })
-    # Grant admin consent on the signupadmin app for the admin scopes
+    # Grant admin consent on the saas app app for the admin scopes
     New-AdminConsent -ClientObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopesForSaasApp
 
     
@@ -361,9 +361,9 @@ function Initialize-AppRegistrations {
 
     # Create the App Registration
     $iefProxyAppReg = New-AppRegistration -AppRegistrationData $iefProxyAppRegConfig
-    # Get the scopes from the admin app registration
+    # Get the scopes from the ief app registration
     $iefScopes = $iefAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
-    # Grant admin consent on the signupadmin app for the admin scopes
+    # Grant admin consent on the ief proxy app for the  ief  scopes
     New-AdminConsent -ClientObjectId $iefProxyAppReg.ServicePrincipalProperties.Id -ApiObjectId $iefAppReg.ServicePrincipalProperties.Id -ApiScopes $iefScopes
 
 
@@ -387,9 +387,3 @@ $ret = Initialize-AppRegistrations `
 -TenantId $B2CTenantName `
 -SignupAdminFQDN "https://landonlptest.azurewebsites.net" `
 -SaasAppFQDN "https://saasapplptest.azurewebsites.net" `
-
-# Write-Host "Done"
-
-
-
-Write-Host "done"
