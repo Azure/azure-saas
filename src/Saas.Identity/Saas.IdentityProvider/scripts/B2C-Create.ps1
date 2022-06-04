@@ -9,22 +9,22 @@
 function New-SaaSIdentityProvider {
   [CmdletBinding()] # indicate that this is advanced function (with additional params automatically added)
   param (
-    [Parameter(Mandatory = $true, HelpMessage = "B2C tenant name, without the '.onmicrosoft.com'.")]
-    [string] $B2CTenantName,
+    # [Parameter(Mandatory = $true, HelpMessage = "B2C tenant name, without the '.onmicrosoft.com'.")]
+    # [string] $B2CTenantName,
       
-    [Parameter(Mandatory = $true, HelpMessage = "Name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist.")]
-    [string] $IdentityFrameworkResourceGroupName,
+    # [Parameter(Mandatory = $true, HelpMessage = "Name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist.")]
+    # [string] $IdentityFrameworkResourceGroupName,
 
-    # [Parameter(Mandatory = $true, HelpMessage = "Name of the Azure Resource Group to put the application layer resources into. Will be created if it does not exist.")]
-    # [string] $ApplicationLayerResourceGroupName,
+    # # [Parameter(Mandatory = $true, HelpMessage = "Name of the Azure Resource Group to put the application layer resources into. Will be created if it does not exist.")]
+    # # [string] $ApplicationLayerResourceGroupName,
 
-    [Parameter(Mandatory = $true, HelpMessage = "Location of the Azure Resources to be deployed. Run az account list-locations to see the available locations.")]
-    [string] $AzureResourceLocation,
+    # [Parameter(Mandatory = $true, HelpMessage = "Location of the Azure Resources to be deployed. Run az account list-locations to see the available locations.")]
+    # [string] $AzureResourceLocation,
   
-    [string] $B2CTenantLocation = "United States",
+    # [string] $B2CTenantLocation = "United States",
       
-    [Parameter(HelpMessage = "Two letter country code (e.g. 'US', 'CZ', 'DE'). https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency")]
-    [string] $CountryCode = "US"
+    # [Parameter(HelpMessage = "Two letter country code (e.g. 'US', 'CZ', 'DE'). https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency")]
+    # [string] $CountryCode = "US"
   )
   
   if (Get-Module -ListAvailable -Name Microsoft.Graph) {
@@ -34,17 +34,19 @@ function New-SaaSIdentityProvider {
     throw "Module Microsoft.Graph is not installed yet. Please install it first! Run 'Install-Module Microsoft.Graph'."
   }
 
+  $userInputParams = Get-UserInputParameters
+
   #Create App Service and Key Vault
   Write-Host "Creating App Service and Key Vault..."
 
   
   # Create the B2C tenant resource in Azure
   New-AzureADB2CTenant `
-    -B2CTenantName $B2CTenantName `
-    -B2CTenantLocation $B2CTenantLocation `
-    -CountryCode $CountryCode `
-    -AzureResourceLocation $AzureResourceLocation `
-    -AzureResourceGroup $IdentityFrameworkResourceGroupName `
+    -B2CTenantName $userInputParams.$B2CTenantName `
+    -B2CTenantLocation $userInputParams.$B2CTenantLocation `
+    -CountryCode $userInputParams.$CountryCode `
+    -AzureResourceLocation $userInputParams.$AzureResourceLocation `
+    -AzureResourceGroup $userInputParams.$IdentityFrameworkResourceGroupName `
   
   # Call the init API
   Invoke-TenantInit `
@@ -56,9 +58,31 @@ function New-SaaSIdentityProvider {
   # Make sure that the user has administrative permissions in the tenant.
   Connect-MgGraph -TenantId "$($B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All", "TrustFrameworkKeySet.ReadWrite.All"
   
+  Install-AppRegistrations `
+    -B2CTenantName $B2CTenantName `
+
+    
   #Create Signing and Encrpytion Keys
   New-TrustFrameworkSigningKey 
   New-TrustFrameworkEncryptionKey
+
+}
+
+function Get-UserInputParameters  {
+
+ 
+  return @{
+    B2CTenantName = Read-Host "Please enter a name for the B2C tenant without the onmicrosoft.com suffix. (e.g. mytenant). Please note that tenant names must be globally unique."
+    B2CTenantLocation = Read-Host "Please enter the location for the B2C Tenant to be created in. See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available locations."
+    CountryCode = Read-Host "Please enter the two letter country code for the B2C Tenant (e.g. 'US', 'CZ', 'DE'). See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available country codes."
+    AzureResourceLocation = Read-Host "Please enter the location for the Azure Resources to be deployed (e.g. 'eastus', 'westus2', 'centraleurope'). Please run az account list-locations to see the available locations for your account."
+    IdentityFrameworkResourceGroupName = Read-Host "Please enter the name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist."
+    SaasEnvironment = Read-Host "Please enter an environment name. Accepted values are: 'prod', 'staging', 'dev', 'test'"
+    ProviderName = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp)"
+    InstanceNumber = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
+    UserId = az account show --query "id"
+
+  }
 
 }
 
@@ -383,7 +407,7 @@ function New-AdminConsent {
 function Install-AppRegistrations {
   param(
       [Parameter(Mandatory = $true, HelpMessage = "The Tenant Identifier")]
-      [string] $TenantId,
+      [string] $B2CTenantName,
       [Parameter(Mandatory = $true, HelpMessage = "The estimated FQDN for the signupadmin azure app service")]
       [string] $SignupAdminFQDN,
       [Parameter(Mandatory = $true, HelpMessage = "The estimated FQDN for the saas app azure app service")]
@@ -410,7 +434,7 @@ function Install-AppRegistrations {
 
   $adminAppRegConfig = @{
       DisplayName            = "asdk-admin-api"
-      IdentifierUris         = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
+      IdentifierUris         = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
       OAuth2PermissionScopes = @(
           @{
               AdminConsentDisplayName = "Allows deletion of tenants";
@@ -479,7 +503,7 @@ function Install-AppRegistrations {
 
   $signupAdminAppRegConfig = @{
       DisplayName            = "asdk-signupadmin-app"
-      IdentifierUri          = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
+      IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
       OAuth2PermissionScopes = @()
       RequiredResourceAccess = @(@{
               ResourceAppId  = $adminAppReg.AppRegistrationProperties.AppId
@@ -513,7 +537,7 @@ function Install-AppRegistrations {
 
   $permissionsAppRegConfig = @{
       DisplayName            = "asdk-permissions-api"
-      IdentifierUri          = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
+      IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
       OAuth2PermissionScopes = @()
       RequiredResourceAccess = @(@{
               ResourceAppId  = $msGraphAccess.ResourceAppId
@@ -565,7 +589,7 @@ function Install-AppRegistrations {
 
   $saasAppAppRegConfig = @{
       DisplayName            = "asdk-saas-app"
-      IdentifierUri          = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
+      IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
       OAuth2PermissionScopes = @()
       RequiredResourceAccess = @(@{
               ResourceAppId  = $adminAppReg.AppRegistrationProperties.AppId
@@ -599,7 +623,7 @@ function Install-AppRegistrations {
 
   $iefAppRegConfig = @{
       DisplayName            = "IdentityExperienceFramework"
-      IdentifierUris         = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
+      IdentifierUris         = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
       OAuth2PermissionScopes = @(
           @{
               AdminConsentDisplayName = "Access IdentityExperienceFramework";
@@ -619,7 +643,7 @@ function Install-AppRegistrations {
               EnableIdTokenIssuance     = $false
           }
           LogoutUrl             = ""
-          RedirectUris          = @("https://$TenantId.b2clogin.com/$TenantId.onmicrosoft.com")
+          RedirectUris          = @("https://$B2CTenantName.b2clogin.com/$B2CTenantName.onmicrosoft.com")
       }
       AppRoles               = @{}
   }
@@ -634,7 +658,7 @@ function Install-AppRegistrations {
 
   $iefProxyAppRegConfig = @{
       DisplayName            = "ProxyIdentityExperienceFramework"
-      IdentifierUri          = @("https://$($TenantId).onmicrosoft.com/$(New-Guid)")
+      IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
       OAuth2PermissionScopes = @()
       RequiredResourceAccess = @(@{
               ResourceAppId  = $iefAppReg.AppRegistrationProperties.AppId
