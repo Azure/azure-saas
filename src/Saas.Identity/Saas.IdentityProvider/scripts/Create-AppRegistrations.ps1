@@ -60,8 +60,7 @@ function New-AdminConsent {
                 AppRoleId = $role.AppRoleId 
             }
             New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $role.PrincipalId -BodyParameter $params
-
-
+            Write-Host "Assigned $($role.AppRoleId) to $($role.PrincipalId)"
         }
     }
     
@@ -76,7 +75,7 @@ function New-AdminConsent {
         Write-Host "Consent granted"
     }
     catch {
-        Write-Error "Error granting adnin consent: $_"
+        Write-Error "Error granting admin consent: $_"
         throw
     }
 
@@ -89,7 +88,9 @@ function Initialize-AppRegistrations {
         [Parameter(Mandatory = $true, HelpMessage = "The Tenant Identifier")]
         [string] $TenantId,
         [Parameter(Mandatory = $true, HelpMessage = "The estimated FQDN for the signupadmin azure app service")]
-        [string] $SignupAdminFQDN
+        [string] $SignupAdminFQDN,
+        [Parameter(Mandatory = $true, HelpMessage = "The estimated FQDN for the saas app azure app service")]
+        [string] $SaaSAppFQDN
     )
 
     Write-Host "Beginning Creating App Registrations"
@@ -107,6 +108,8 @@ function Initialize-AppRegistrations {
             }
         )
     }
+
+    ############## Admin API App Registration ##############
 
     $adminAppRegConfig = @{
         DisplayName            = "asdk-admin-api"
@@ -141,18 +144,18 @@ function Initialize-AppRegistrations {
                 Value                   = "tenant.global.write";
             },
             @{
-                AdminConsentDisplayName = "Allow reading tenant data for current user";
-                AdminConsentDescription = "Allow reading tenant data for current user";
-                Id                      = New-Guid;
-                Type                    = "Admin";
-                Value                   = "tenant.read";
-            },
-            @{
                 AdminConsentDisplayName = "Allow reading of tenant data across all tenants";
                 AdminConsentDescription = "Allow reading of tenant data across all tenants";
                 Id                      = New-Guid;
                 Type                    = "Admin";
                 Value                   = "tenant.global.read";
+            },
+            @{
+                AdminConsentDisplayName = "Allow reading tenant data for current user";
+                AdminConsentDescription = "Allow reading tenant data for current user";
+                Id                      = New-Guid;
+                Type                    = "Admin";
+                Value                   = "tenant.read";
             }
         )
         RequiredResourceAccess = @($msGraphAccess)
@@ -168,7 +171,13 @@ function Initialize-AppRegistrations {
         AppRoles               = @{}
     }
 
-    #$adminAppReg = New-AppRegistration -AppRegistrationData $adminAppRegConfig
+    # Create the App Registration
+    $adminAppReg = New-AppRegistration -AppRegistrationData $adminAppRegConfig
+
+
+
+    ############## Signup Admin App Registration ##############
+
 
     $signupAdminAppRegConfig = @{
         DisplayName            = "asdk-signupadmin-app"
@@ -193,9 +202,14 @@ function Initialize-AppRegistrations {
 
     }
 
-    #$signupAdminAppReg = New-AppRegistration -AppRegistrationData $signupAdminAppRegConfig -CreateSecret $true
-    #$adminScopes = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
-    #New-AdminConsent -ClientObjectId $signupAdminAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopes
+    # Create the App Registration
+    $signupAdminAppReg = New-AppRegistration -AppRegistrationData $signupAdminAppRegConfig -CreateSecret $true
+    # Get the scopes from the admin app registration
+    $adminScopes = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
+    # Grant admin consent on the signupadmin app for the admin scopes
+    New-AdminConsent -ClientObjectId $signupAdminAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopes
+
+    ############## Permissions API Registration ##############
 
     $permissionsAppRegConfig = @{
         DisplayName            = "asdk-permissions-api"
@@ -226,23 +240,59 @@ function Initialize-AppRegistrations {
 
     }
 
+    # Create the App Registration
     $permissionsAppReg = New-AppRegistration -AppRegistrationData $permissionsAppRegConfig -CreateSecret $true
-    $permissionsAppRegGraphAppRoles = @(
+    $permissionsAppRegGraphAppRoles = @( # App Roles to add to the permissions API. Namely the two for MS graph (Application.Read.All and User.Read.All)
         @{
             PrincipalId = $permissionsAppReg.ServicePrincipalProperties.Id
             ResourceId = "01c2693d-f03b-404e-869f-14f5a396c0a9" # MS Graph Resource ID
-            AppRoleId =  "df021288-bdef-4463-88db-98f22de89214" 
+            AppRoleId =  "df021288-bdef-4463-88db-98f22de89214" # App Role ID for Application.Read.All
         },
         @{
             PrincipalId = $permissionsAppReg.ServicePrincipalProperties.Id
             ResourceId = "01c2693d-f03b-404e-869f-14f5a396c0a9" # MS Graph Resource ID
-            AppRoleId =  "9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30" 
+            AppRoleId =  "9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30" # App Role ID for User.Read.All
         }
     )
+    # Grant Admin consent for the scopes and app roles to MS Graph API
     New-AdminConsent -ClientObjectId $permissionsAppReg.ServicePrincipalProperties.Id `
     -ApiObjectId "00000003-0000-0000-c000-000000000000" `
     -ApiScopes @("Application.Read.All", "offline_access", "openid", "User.Read.All") `
     -AppRoles $permissionsAppRegGraphAppRoles `
+
+    ############## SaaS App App Registration ##############
+
+    $saasAppAppRegConfig = @{
+        DisplayName            = "asdk-saas-app"
+        IdentifierUri          = @("https://$($TenantId)/$(New-Guid)")
+        OAuth2PermissionScopes = @()
+        RequiredResourceAccess = @(@{
+                ResourceAppId  = $adminAppReg.AppRegistrationProperties.AppId
+                ResourceAccess = @($adminAppRegConfig.OAuth2PermissionScopes | Where-Object {$_.Value -eq "tenant.read"} | ForEach-Object { @{Id = $_.Id; Type = "Scope" } })
+            },
+            $msGraphAccess # Add Default Microsoft Graph permissions
+        )
+        PublicClient           = @{ redirectUris = @("$($SaaSAppFQDN)/signin-oidc") }
+        Web                    = @{ 
+            ImplicitGrantSettings = @{
+                EnableAccessTokenIssuance = $true
+                EnableIdTokenIssuance     = $true
+            }
+            LogoutUrl             = "$($SaaSAppFQDN)/signout-oidc"
+            RedirectUris          = @("$($SaaSAppFQDN)/signin-oidc")
+        }
+        AppRoles               = @{}
+
+    }
+
+    # Create the App Registration
+    $saasAppAppReg = New-AppRegistration -AppRegistrationData $saasAppAppRegConfig -CreateSecret $true
+    # Get the scopes from the admin app registration
+    $adminScopesForSaasApp = @($adminAppRegConfig.OAuth2PermissionScopes | Where-Object {$_.Value -eq "tenant.read"} | ForEach-Object { $_.Value })
+    # Grant admin consent on the signupadmin app for the admin scopes
+    New-AdminConsent -ClientObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopesForSaasApp
+
+
 
     Write-Host "App Registrations Created"
     
@@ -250,6 +300,7 @@ function Initialize-AppRegistrations {
         AdminAppReg       = $adminAppReg
         SignupAdminAppReg = $signupAdminAppReg
         PermissionsAppReg = $permissionsAppReg
+        SaasAppAppReg     = $saasAppAppReg
         #IEFAppREg 
     }
 }
@@ -258,7 +309,10 @@ function Initialize-AppRegistrations {
 $B2CTenantName = "lptestb2ctenant01"
 Connect-MgGraph -TenantId "$($B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All", "TrustFrameworkKeySet.ReadWrite.All"
 
-$ret = Initialize-AppRegistrations -TenantId "$($B2CTenantName).onmicrosoft.com" -SignupAdminFQDN "https://landonlptest.azurewebsites.net"
+$ret = Initialize-AppRegistrations `
+-TenantId "$($B2CTenantName).onmicrosoft.com" `
+-SignupAdminFQDN "https://landonlptest.azurewebsites.net" `
+-SaasAppFQDN "https://saasapplptest.azurewebsites.net" `
 
 # Write-Host "Done"
 
