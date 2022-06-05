@@ -238,17 +238,33 @@ function Invoke-TenantInit {
 function New-TrustFrameworkSigningKey
 {
   Write-Host "Creating new signing key..."
-  $signingKeyName = "TokenSigningKeyContainer"
-  $signingKeyId =  New-MgTrustFrameworkKeySet -Id $signingKeyName
-  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $signingKeyId -Kty "RSA" -Use "Sig"
+  $trustFrameworkKeySetName = "TokenSigningKeyContainer"
+  $trustFrameworkKeySetId =  New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
+  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySetId -Kty "RSA" -Use "Sig"
 }
 
 function New-TrustFrameworkEncryptionKey
 {
   Write-Host "Creating new encryption key..."
-  $signingKeyName = "TokenEncryptionKeyContainer"
-  $signingKeyId =  New-MgTrustFrameworkKeySet -Id $signingKeyName
-  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $signingKeyId -Kty "RSA" -Use "Enc"
+  $trustFrameworkKeySetName = "TokenEncryptionKeyContainer"
+  $trustFrameworkKeySetId =  New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
+  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySetId -Kty "RSA" -Use "Enc"
+}
+
+function New-TrustFrameworkClientCertificateKey
+{
+  param (
+    [string] $Key = "",
+    [Security.SecureString] $Password
+  )
+  Write-Host "Creating client certificate policy..."
+  $trustFrameworkKeySetName = "RestApiClientCertificate"
+  $trustFrameworkKeySetId =  New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
+  $params = @{
+    Key = $Key
+    Password = ConvertFrom-SecureString $Password -Force -ToString
+  }
+  Invoke-MgUploadTrustFrameworkKeySetPkcs12 -TrustFrameworkKeySetId $trustFrameworkKeySetId -BodyParameter $params
 }
 
 function Import-IefPolicies {
@@ -284,7 +300,7 @@ function Import-IefPolicies {
           $customPolicyList += $policy
         } 
         #upload files
-        #TODO: Handle errors  when uploading files
+        #TODO: Handle errors when uploading files
         #TODO: Handle if file already exists
         Write-Host $customPolicyList
         $basePolicy = $customPolicyList | Where-Object { $null -eq $_.BasePolicyId }  | Select-Object -First 1
@@ -758,10 +774,6 @@ function Install-AppRegistrations {
 # Outputs parameters.json file with the information from the b2c setup. 
 function Write-OutputFile {
     
-}
-
-function New-TrustframeworkeySet{
-
 }
 
 $loggedIn = az account list | ConvertFrom-Json
