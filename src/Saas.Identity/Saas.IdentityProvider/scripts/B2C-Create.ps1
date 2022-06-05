@@ -54,7 +54,7 @@ function New-SaaSIdentityProvider {
   Write-Host "Starting Interactive login to Microsoft Graph. Watch for a newly opened browser window (or device flow instructions) and complete the sign in."
   # Interactive login, so that we don't have to create a separate service principal and handle secrets.
   # Make sure that the user has administrative permissions in the tenant.
-  Connect-MgGraph -TenantId "$($B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All", "TrustFrameworkKeySet.ReadWrite.All"
+  Connect-MgGraph -TenantId "$($B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All", "TrustFrameworkKeySet.ReadWrite.All, Policy.ReadWrite.TrustFramework"
   
   #Create Signing and Encrpytion Keys
   New-TrustFrameworkSigningKey 
@@ -228,10 +228,65 @@ function New-TrustFrameworkEncryptionKey
 }
 
 function Import-IefPolicies {
-   
+  param (
+    [string] $IEFPoliciesSourceDirectory = "../policies",
+    [hashtable] $configTokens
+  )
+  Write-Host "Importing IEF policies..."
+ 
+  #get XML Files in directory
+  $policyFiles = Get-Childitem -Path $IEFPoliciesSourceDirectory -Filter '*.xml'
+  $customPolicyList = @()
+  
+  try {
+    #Replace tokens in each file
+    Write-Host "Replacing tokens in IEF policies..."
+    foreach($file in $policyFiles) {
+        $policy = Get-Content -Path $file.FullName
+        
+        #replace config tokens
+        Write-Host "Replacing tokens in $($file.Name)"
+        $configTokens.GetEnumerator() | ForEach-Object {
+            $policy = $policy.Replace($_.Key, $_.Value)
+        }
+        [xml]$policyXml = $policy
+
+        #Get Policy information
+        $policy = [PSCustomObject]@{
+          "Id"       = $policyXml.TrustFrameworkPolicy.PolicyId
+          "BasePolicyId" = If ([string]::IsNullOrWhitespace($policyXml.TrustFrameworkPolicy.BasePolicy.PolicyId)) {$null} Else {$policyXml.TrustFrameworkPolicy.BasePolicy.PolicyId}
+          "Xml"     = $policyXml
+          }
+          $customPolicyList += $policy
+        } 
+        #upload files
+        #TODO: Handle errors  when uploading files
+        #TODO: Handle if file already exists
+        Write-Host $customPolicyList
+        $basePolicy = $customPolicyList | Where-Object { $null -eq $_.BasePolicyId }  | Select-Object -First 1
+        Write-Host "Uploading base policy $($basePolicy.Id)..."
+        Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/trustFramework/policies" -Body $basePolicy[0].Xml.OuterXml -ContentType "application/xml" -Method "POST"
+        Import-ChildTrustFrameworkPolicies -CustomPolicyList $customPolicyList  -PolicyId $($basePolicy.Id)
+
+      }
+      catch {
+        Write-Host "An error occurred: $_.Exception.Message"
+      }
+  }
+ 
+function Import-ChildTrustFrameworkPolicies{
+  param (
+    [object[]] $CustomPolicyList,
+    [string] $PolicyId
+  )
+      Write-Host "Base Policy is $($PolicyId)"
+      $customPolicyList | Where-Object { $_.BasePolicyId -eq $PolicyId}  | ForEach-Object {
+      Write-Host "Uploading policy $($_.Id)..."
+      Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/trustFramework/policies" -Body $_.Xml.OuterXml -ContentType "application/xml" -Method "POST"
+      Import-ChildTrustFrameworkPolicies -customPolicyList $customPolicyList -PolicyId $_.Id
+  }
 
 }
-
 #Executes the Bicep template to install
 function Install-SaaSIdentityProvider {
 
@@ -284,48 +339,9 @@ function New-TrustframeworkeySet{
 
 }
 
-function Install-ModuleIfNotInstalled {
-  param(
-    [string] [Parameter(Mandatory = $true)] $moduleName,
-    [string] $minimalVersion
-  ) 
-  $module = Get-Module -Name $moduleName -ListAvailable |`
-    Where-Object { $null -eq $minimalVersion -or $minimalVersion -lt $_.Version } |`
-    Select-Object -Last 1
-  if ($null -ne $module) {
-    Write-Verbose ('Module {0} (v{1}) is available.' -f $moduleName, $module.Version)
-  }
-  else {
-    Import-Module -Name 'PowershellGet'
-    $installedModule = Get-InstalledModule -Name $moduleName -ErrorAction SilentlyContinue
-    if ($null -ne $installedModule) {
-      Write-Verbose ('Module [{0}] (v {1}) is installed.' -f $moduleName, $installedModule.Version)
-    }
-    if ($null -eq $installedModule -or ($null -ne $minimalVersion -and $installedModule.Version -lt $minimalVersion)) {
-      Write-Verbose ('Module {0} min.vers {1}: not installed; check if nuget v2.8.5.201 or later is installed.' -f $moduleName, $minimalVersion)
-      #First check if package provider NuGet is installed. Incase an older version is installed the required version is installed explicitly
-      if ((Get-PackageProvider -Name NuGet -Force).Version -lt '2.8.5.201') {
-        Write-Warning ('Module {0} min.vers {1}: Install nuget!' -f $moduleName, $minimalVersion)
-        Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Scope CurrentUser -Force
-      }        
-      $optionalArgs = New-Object -TypeName Hashtable
-      if ($null -ne $minimalVersion) {
-        $optionalArgs['RequiredVersion'] = $minimalVersion
-      }  
-      Write-Warning ('Install module {0} (version [{1}]) within scope of the current user.' -f $moduleName, $minimalVersion)
-      Install-Module -Name $moduleName @optionalArgs -Scope CurrentUser -Force -Verbose
-    } 
-  }
-}
-
 $loggedIn = az account list | ConvertFrom-Json
 
 if ($loggedIn.Count -eq 0) {
   Write-Error "No Azure account is logged in. Initiating az login command"
   az login
 }
-
-# Gather signed in user's object id for use later
-$signedInUser = az ad signed-in-user show --query "objectId" -o tsv
-
-New-SaaSIdentityProvider -B2CTenantName "lptestb2ctenant01" -IdentityFrameworkResourceGroupName "lptestrg01" -AzureResourceLocation "eastus"
