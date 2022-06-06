@@ -60,6 +60,8 @@ function New-SaaSIdentityProvider {
   
   Install-AppRegistrations `
     -B2CTenantName $B2CTenantName `
+    -SignupAdminFQDN $userInputParams.SignupAdminFQDN `
+    -SaasAppFQDN $userInputParams.SaasAppFQDN `
 
     
   #Create Signing and Encrpytion Keys
@@ -69,9 +71,8 @@ function New-SaaSIdentityProvider {
 }
 
 function Get-UserInputParameters  {
-
  
-  return @{
+  $userInputParams = @{
     B2CTenantName = Read-Host "Please enter a name for the B2C tenant without the onmicrosoft.com suffix. (e.g. mytenant). Please note that tenant names must be globally unique."
     B2CTenantLocation = Read-Host "Please enter the location for the B2C Tenant to be created in. See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available locations."
     CountryCode = Read-Host "Please enter the two letter country code for the B2C Tenant (e.g. 'US', 'CZ', 'DE'). See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available country codes."
@@ -81,8 +82,15 @@ function Get-UserInputParameters  {
     ProviderName = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp)"
     InstanceNumber = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
     UserId = az account show --query "id"
-
+    SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. admin)"
+    SqlAdministratorLoginPassword = Read-Host "Please enter the desired password for the SQL administrator account." -AsSecureString -MaskInput
   }
+
+  $userInputParams.Add("SaasAppFQDN", "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
+  $userInputParams.Add("SignupAdminFQDN", "https://appsignup$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
+  $userInputParams.Add("PermissionsApiFQDN", "https://apipermissions$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
+
+  return $userInputParams
 
 }
 
@@ -333,10 +341,22 @@ function Install-SaaSIdentityProvider {
 
 }
 
-function Invoke-BicepDeployment {
+function Invoke-IdentityBicepDeployment {
   param (
     [string] $IdentityFrameworkResourceGroupName,
-    [string] $BicepTemplatePath = "./Saas.Identity.IaC/main.bicep"
+    [string] $BicepTemplatePath = "./Saas.Identity.IaC/main.bicep",
+    [string] $B2CDomain,
+    [string] $B2CInstanceName,
+    [string] $B2cTenantId,
+    [string] $PermissionsApiAppRegClientId,
+    [string] $PermissionsApiAppRegClientSecret,
+    [string] $PermissionsApiSelfSignedCertThumbprint,
+    [string] $AzureAdUserID,
+    [string] $SaasProviderName,
+    [string] $SaasInstanceNumber,
+    [string] $SqlAdministratorLogin,
+    [securestring] $SqlAdministratorPassword
+    
   )
 
   az deployment group create `
@@ -351,7 +371,6 @@ function Invoke-BicepDeployment {
         "azureAdB2cPermissionsApiClientIdSecretValue"     = null
         "azureAdB2cPermissionsApiClientSecretSecretValue" = null
         "permissionsApiSslThumbprintSecretValue"          = null
-        "permissionsApiContainerImageTag"                 = null
         "azureAdUserID"                                   = null
         "saasProviderName"                                = null
         "saasEnvironment"                                 = null
@@ -363,7 +382,15 @@ function Invoke-BicepDeployment {
 }
 
 function New-SelfSignedCertificate {
-  #az keyvault certificate create --vault-name $KeyVaultName --name $CertificateName --csp-name $CertificateProvider --output json --query id
+  $selfSignedCert = New-SelfSignedCertificate -DnsName *.azurewebsites.net -NotAfter (Get-Date).AddYears(2)
+
+  $pswd = ConvertTo-SecureString -String "1234" -Force -AsPlainText
+  Export-PfxCertificate -cert $selfSignedCert.PSPath -FilePath "selfSignedCertificate.pfx" -Password $pswd
+
+  $pfxBytes = Get-Content "selfSignedCertificate.pfx" -Encoding Byte
+  $pfxString = [System.Convert]::ToBase64String($pfxBytes)
+
+  return $pfxString
 }
 
 # Helper Function called by Install-AppRegistrations
