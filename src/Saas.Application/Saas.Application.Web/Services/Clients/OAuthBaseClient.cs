@@ -29,7 +29,7 @@ public abstract class OAuthBaseClient
 
     private async Task<string> GetAccessToken()
     {
-        var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_appSettings.AdminServiceScopes.Split(" ")); 
+        var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_appSettings.AdminServiceScopes.Split(" ") ?? new string[0]); 
         return accessToken;
     }
 }

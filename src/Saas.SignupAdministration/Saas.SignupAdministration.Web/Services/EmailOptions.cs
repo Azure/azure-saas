@@ -5,9 +5,9 @@ namespace Saas.SignupAdministration.Web.Services
 {
     public class EmailOptions
     {
-        public string EndPoint { get; set; }    
-        public string FromAddress { get; set; }
-        public string Subject { get; set; }
-        public string Body { get; set; }
+        public string EndPoint { get; set; } = string.Empty;
+        public string FromAddress { get; set; } = string.Empty;
+        public string Subject { get; set; } = string.Empty;
+        public string Body { get; set; } = string.Empty;
     }
 }

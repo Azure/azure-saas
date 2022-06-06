@@ -1,11 +1,9 @@
-﻿#nullable disable
-
-namespace Saas.SignupAdministration.Web.Models
+﻿namespace Saas.SignupAdministration.Web.Models
 {
     public record IdNameReferenceItem
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 
     public class ReferenceData
