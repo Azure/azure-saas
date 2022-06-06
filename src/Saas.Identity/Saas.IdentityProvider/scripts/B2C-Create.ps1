@@ -58,7 +58,19 @@ function New-SaaSIdentityProvider {
   # Make sure that the user has administrative permissions in the tenant.
   Connect-MgGraph -TenantId "$($B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All", "TrustFrameworkKeySet.ReadWrite.All, Policy.ReadWrite.TrustFramework"
   
-  Install-AppRegistrations `
+
+  #   return @{
+  #     AdminAppReg       = $adminAppReg
+  #     SignupAdminAppReg = $signupAdminAppReg
+  #     PermissionsAppReg = $permissionsAppReg
+  #     SaasAppAppReg     = $saasAppAppReg
+  #     IEFAppReg         = $iefAppReg
+  #     IEFProxyAppReg    = $iefProxyAppReg
+  # }
+
+  # App ID for IEF Proxy App reg $appRegistrations.IEFProxyAppReg.AppRegistrationProperties.AppId
+
+  $appRegistrations = Install-AppRegistrations `
     -B2CTenantName $B2CTenantName `
     -SignupAdminFQDN $userInputParams.SignupAdminFQDN `
     -SaasAppFQDN $userInputParams.SaasAppFQDN `
@@ -73,6 +85,10 @@ function New-SaaSIdentityProvider {
   #Create Signing and Encrpytion Keys
   New-TrustFrameworkSigningKey 
   New-TrustFrameworkEncryptionKey
+
+  # Upload policies
+
+  # Output parameters.json
 
 }
 
