@@ -1,5 +1,4 @@
-﻿#nullable disable
-
+﻿
 namespace Saas.Admin.Service.Data;
 
 public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>

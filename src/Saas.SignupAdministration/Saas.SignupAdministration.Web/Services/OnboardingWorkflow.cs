@@ -28,8 +28,8 @@ namespace Saas.SignupAdministration.Web.Services
             _persistenceProvider = persistenceProvider;
             _email = email;
 
-            OnboardingWorkflowItem item = _persistenceProvider.Retrieve<OnboardingWorkflowItem>(SR.OnboardingWorkflowItemKey);
-            OnboardingWorkflowState state = _persistenceProvider.Retrieve<OnboardingWorkflowState>(SR.OnboardingWorkflowStateKey);
+            OnboardingWorkflowItem? item = _persistenceProvider.Retrieve<OnboardingWorkflowItem>(SR.OnboardingWorkflowItemKey);
+            OnboardingWorkflowState? state = _persistenceProvider.Retrieve<OnboardingWorkflowState>(SR.OnboardingWorkflowStateKey);
 
             OnboardingWorkflowItem = (item is null) ? new() : item;
             OnboardingWorkflowState = (state is null) ? new() : state;

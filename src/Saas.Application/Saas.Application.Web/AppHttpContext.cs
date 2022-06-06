@@ -1,19 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-
-namespace Saas.Application.Web;
+﻿namespace Saas.Application.Web;
 
 public static class AppHttpContext
 {
-    static IServiceProvider services = null;
+    static IServiceProvider? services = null;
 
     /// <summary>
     /// Provides static access to the framework's services provider
     /// </summary>
-    public static IServiceProvider Services
+    public static IServiceProvider? Services
     {
-        get 
-        { 
+        get
+        {
             return services;
         }
         set
@@ -30,13 +27,20 @@ public static class AppHttpContext
     /// <summary>
     /// Provides static access to the current HttpContext
     /// </summary>
-    public static HttpContext Current
+    public static HttpContext? Current
     {
         get
         {
-            IHttpContextAccessor httpContextAccessor = services.GetService(typeof(IHttpContextAccessor)) as IHttpContextAccessor;
+            if(services != null)
+            {
+                IHttpContextAccessor? httpContextAccessor = services.GetService(typeof(IHttpContextAccessor)) as IHttpContextAccessor;
 
-            return httpContextAccessor?.HttpContext;
+                return httpContextAccessor?.HttpContext;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 
