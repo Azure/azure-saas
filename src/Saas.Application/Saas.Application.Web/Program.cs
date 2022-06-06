@@ -58,15 +58,18 @@ builder.Services.AddSession(options =>
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration[SR.AppInsightsConnectionProperty]);
 
 // builder.Configuration to sign-in users with Azure AD B2C
-var scopes = builder.Configuration[SR.AdminServiceScopesProperty].Split(" ");
-var baseUrl = builder.Configuration[SR.AdminServiceScopeBaseUrlProperty].Trim('/');
-for (var i = 0; i < scopes.Length; i++)
+
+// Azure AD B2C requires scope config with a fully qualified url along with an identifier. To make configuring it more manageable and less
+// error prone, we store the names of the scopes separately from the base url with identifier and combine them here.
+var adminServiceScopes = builder.Configuration[SR.AdminServiceScopesProperty].Split(" ");
+var adminServiceScopeBaseUrl = builder.Configuration[SR.AdminServiceScopeBaseUrlProperty].Trim('/');
+for (var i = 0; i < adminServiceScopes.Length; i++)
 {
-    scopes[i] = String.Format("{0}/{1}", baseUrl, scopes[i].Trim('/'));
+    adminServiceScopes[i] = String.Format("{0}/{1}", adminServiceScopeBaseUrl, adminServiceScopes[i].Trim('/'));
 }
 
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, Constants.AzureAdB2C)
-    .EnableTokenAcquisitionToCallDownstreamApi(scopes)
+    .EnableTokenAcquisitionToCallDownstreamApi(adminServiceScopes)
     .AddSessionTokenCaches();
 
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
