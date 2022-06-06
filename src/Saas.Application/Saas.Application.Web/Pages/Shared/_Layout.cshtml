@@ -19,14 +19,6 @@
             <a class="navbar-brand" asp-area="" asp-page="/Index">
                 <img src="/images/logo.svg" id="logo" alt="BadgeMeUp Logo" title="BadgeMeUp"/>
             </a>
-            @if (User?.Identity?.IsAuthenticated ?? false)
-            {
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="navbar-text">
-                        <a class="nav-link" asp-area="" asp-action="Tenant">Tenant</a>
-                    </li>
-                </ul>
-            }
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

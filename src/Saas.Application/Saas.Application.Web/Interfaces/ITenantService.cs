@@ -3,6 +3,6 @@ namespace Saas.Application.Web.Interfaces
 {
     public interface ITenantService
     {
-        public Task<TenantViewModel> GetTenantByRouteAsync(string userIdentifier);
+        public Task<TenantViewModel> GetTenantInfoByRouteAsync(string userIdentifier);
     }
 }

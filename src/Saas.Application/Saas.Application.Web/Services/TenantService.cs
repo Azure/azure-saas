@@ -14,15 +14,12 @@ namespace Saas.Application.Web.Services
             _appSettings = appSettings;
         }
 
-        public async Task<TenantViewModel> GetTenantByRouteAsync(string userIdentifer)
+        public async Task<TenantViewModel> GetTenantInfoByRouteAsync(string route)
         {
-            TenantDTO? tenant = null;
+            TenantInfoDTO? tenant = null;
 
-            if (userIdentifer != null)
-            {
-                var filteredTenants = await _adminServiceClient.TenantsAsync(userIdentifer, _appSettings.Value.AppTenantId.Substring(0, AppConstants.Tenant.IdLength) ?? string.Empty);
-                tenant = filteredTenants.FirstOrDefault();
-            }
+            if (route != null)
+                tenant = await _adminServiceClient.TenantsGET2Async(route);
 
             return new TenantViewModel() { Id = tenant?.Id ?? Guid.Empty, Name = tenant?.Name ?? "Unknown" };
         }
