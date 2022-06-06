@@ -6,6 +6,7 @@ using Microsoft.Identity.Web.UI;
 using Microsoft.IdentityModel.Logging;
 using Saas.SignupAdministration.Web;
 using Microsoft.AspNetCore.HttpOverrides;
+using Saas.Application.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
