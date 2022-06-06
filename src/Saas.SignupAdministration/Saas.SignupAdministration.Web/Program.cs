@@ -19,7 +19,7 @@ if (builder.Environment.IsProduction())
     // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix
 
     builder.Configuration.AddAzureKeyVault(
-        new Uri(builder.Configuration["KeyVault:Url"]),
+        new Uri(builder.Configuration[SR.KeyVaultProperty]),
         new DefaultAzureCredential(),
         new CustomPrefixKeyVaultSecretManager("signupadmin"));
 }
@@ -68,7 +68,7 @@ builder.Services.AddApplicationInsightsTelemetry(builder.Configuration[SR.AppIns
 // builder.Configuration to sign-in users with Azure AD B2C
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, Constants.AzureAdB2C)
     .EnableTokenAcquisitionToCallDownstreamApi(
-        builder.Configuration["AppSettings:AdminServiceScopes"]
+        builder.Configuration[SR.AdminServiceScopesProperty]
         .Split(" "))
     .AddSessionTokenCaches();
 
@@ -76,7 +76,7 @@ builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
 // Configuring appsettings section AzureAdB2C, into IOptions
 builder.Services.AddOptions();
-builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection("AzureAdB2C"));
+builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection(SR.AzureAdB2CProperty));
 
 // This is required for auth to work correctly when running in a docker container because of SSL Termination
 // Remove this and the subsequent app.UseForwardedHeaders() line below if you choose to run the app without using containers
