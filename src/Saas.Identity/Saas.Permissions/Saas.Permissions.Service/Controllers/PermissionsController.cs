@@ -139,8 +139,6 @@ public class PermissionsController : ControllerBase
     [Route("GetTenantsForUser")]
     public async Task<ICollection<string>> GetTenantsForUser(string userId, string? filter)
     {
-        // filter not currently implemented.
-
         return await _permissionsService.GetTenantsForUserAsync(userId, filter);
     }
 

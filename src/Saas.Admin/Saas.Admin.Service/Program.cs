@@ -53,6 +53,11 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(AppConstants.Policies.Authenticated, policyBuilder =>
     {
         policyBuilder.RequireAuthenticatedUser();
+    });
+
+    options.AddPolicy(AppConstants.Policies.GlobalAdmin, policyBuilder =>
+    {
+        policyBuilder.RequireAuthenticatedUser();
         policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
                                   AppConstants.Roles.Self);
     });

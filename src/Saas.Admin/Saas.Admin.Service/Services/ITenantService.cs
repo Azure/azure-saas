@@ -15,6 +15,7 @@ public interface ITenantService
 
     Task DeleteTenantAsync(Guid tenantId);
 
+    Task<TenantInfoDTO> GetTenantInfoByRouteAsync(string route);
     Task<bool> TenantExistsAsync(Guid tenantId);
     Task<bool> CheckPathExists(string path);
 }

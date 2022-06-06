@@ -2,6 +2,9 @@
 
 public static class SR
 {
+    //Tenant Page
+
+
     // Catalog DB Prperties
     public const string CatalogTenantIdProperty = "TenantId";
     public const string CatalogTenantIdParameter = "@" + CatalogTenantIdProperty;
@@ -10,8 +13,8 @@ public static class SR
     // Startup Properties
     public const string AppSettingsProperty = "AppSettings";
     public const string AppInsightsConnectionProperty = "APPINSIGHTS_CONNECTIONSTRING";
-    public const string ErrorRoute = "/Home/Error";
-    public const string MapControllerRoutePattern = "{controller=Home}/{action=Index}/{ id ?}";
+    public const string ErrorRoute = "/Error";
+    public const string MapControllerRoutePattern = "{action=Index}/{ id ?}";
     public const string DefaultName = "default";
     public const string AdminServiceBaseUrl = "AppSettings:AdminServiceBaseUrl";
     public const string AdminServiceScopesProperty = "AppSettings:AdminServiceScopes";

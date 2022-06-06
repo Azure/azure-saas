@@ -108,6 +108,13 @@ public class TenantService : ITenantService
         return await _context.Tenants.AnyAsync(e => e.Id == tenantId);
     }
 
+    public async Task<TenantInfoDTO> GetTenantInfoByRouteAsync(string route)
+    {
+        var tenant = await _context.Tenants.FirstOrDefaultAsync(x => route != null && x.Route.Length == route.Length && EF.Functions.Like(x.Route, $"%{route}%"));
+        TenantInfoDTO? returnValue = new TenantInfoDTO(tenant);
+        return returnValue;
+    }
+
     public async Task<bool> CheckPathExists(string path)
     {
         try
