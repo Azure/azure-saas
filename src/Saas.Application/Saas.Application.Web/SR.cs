@@ -20,6 +20,7 @@ public static class SR
     public const string DefaultName = "default";
     public const string AdminServiceBaseUrl = "AppSettings:AdminServiceBaseUrl";
     public const string AdminServiceScopesProperty = "AppSettings:AdminServiceScopes";
+    public const string AdminServiceScopeBaseUrlProperty = "AppSettings:AdminServiceScopeBaseUrl";
     public const string AzureAdB2CProperty = "AzureAdB2C";
     public const string KeyVaultProperty = "KeyVault:Url";
 
