@@ -63,7 +63,13 @@ function New-SaaSIdentityProvider {
     -SignupAdminFQDN $userInputParams.SignupAdminFQDN `
     -SaasAppFQDN $userInputParams.SaasAppFQDN `
 
-    
+  $certString = New-SelfSignedCertificate
+
+  # Deploy Bicep here
+
+
+  # Upload cert to b2c here
+
   #Create Signing and Encrpytion Keys
   New-TrustFrameworkSigningKey 
   New-TrustFrameworkEncryptionKey
