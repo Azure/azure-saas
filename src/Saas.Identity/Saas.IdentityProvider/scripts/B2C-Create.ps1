@@ -95,14 +95,25 @@ function New-SaaSIdentityProvider {
     -SqlAdministratorLogin $userInputParams.SqlAdministratorLogin `
     -SqlAdministratorPassword $userInputParams.SqlAdministratorLoginPassword `
 
-  # Upload cert to b2c here
-
+  
   #Create Signing and Encrpytion Keys
-  New-TrustFrameworkSigningKey 
-  New-TrustFrameworkEncryptionKey
+  $trustFrameworkKeySetSigningKeyId = New-TrustFrameworkSigningKey 
+  $trustFrameworkKeySetEncryptionKeyId = New-TrustFrameworkEncryptionKey
+  
+  # Upload cert to b2c here
+  $trustFrameworkKeySetClientCertificateKeyId = New-TrustFrameworkClientCertificateKey -Key $selfSignedCert.PfxString -Pswd $selfSignedCert.Pswd
 
   # Upload policies
+  $configTokens = @{
+      "{Settings:Tenant}" = "$($userInputParams.B2CTenantName).onmicrosoft.com"
+      "{Settings:ProxyIdentityExperienceFrameworkAppId}" = "$($appRegistrations.IEFAppReg.AppRegistrationProperties.AppId)"
+      "{Settings:IdentityExperienceFrameworkAppId}" = "$($appRegistrations.IEFProxyAppReg.AppRegistrationProperties.AppId)"
+      "{Settings:PermissionsAPIUrl}" = "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/permissions"
+      "{Settings:RolesAPIUrl}" = "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/roles"
+      "{Settings:RESTAPIClientCertificate}" = "$($trustFrameworkKeySetClientCertificateKeyId)"  
+}
 
+  Import-IEFPolicies -configTokens $configTokens
   # Output parameters.json
 
 }
@@ -305,30 +316,33 @@ function Invoke-TenantInit {
 function New-TrustFrameworkSigningKey {
   Write-Host "Creating new signing key..."
   $trustFrameworkKeySetName = "TokenSigningKeyContainer"
-  $trustFrameworkKeySetId = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
-  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySetId -Kty "RSA" -Use "Sig"
+  $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
+  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "Sig"
+  return $trustFrameworkKeySetName
 }
 
 function New-TrustFrameworkEncryptionKey {
   Write-Host "Creating new encryption key..."
   $trustFrameworkKeySetName = "TokenEncryptionKeyContainer"
-  $trustFrameworkKeySetId = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
-  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySetId -Kty "RSA" -Use "Enc"
+  $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
+  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "Enc"
+  return $trustFrameworkKeySetName
 }
 
 function New-TrustFrameworkClientCertificateKey {
   param (
     [string] $Key = "",
-    [Security.SecureString] $Password
+    [Security.SecureString] $Pswd
   )
   Write-Host "Creating client certificate policy..."
   $trustFrameworkKeySetName = "RestApiClientCertificate"
-  $trustFrameworkKeySetId = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
+  $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
   $params = @{
     Key      = $Key
-    Password = ConvertFrom-SecureString $Password -Force -ToString
+    Password = ConvertFrom-SecureString -SecureString $Pswd -AsPlainText
   }
-  Invoke-MgUploadTrustFrameworkKeySetPkcs12 -TrustFrameworkKeySetId $trustFrameworkKeySetId -BodyParameter $params
+  Invoke-MgUploadTrustFrameworkKeySetPkcs12 -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -BodyParameter $params
+  return $trustFrameworkKeySetName
 }
 
 function Import-IefPolicies {
@@ -441,16 +455,23 @@ function Invoke-IdentityBicepDeployment {
 
 # TODO: This is currently windows specific. Need to make this cross platform.
 function New-AsdkSelfSignedCertificate {
-  $selfSignedCert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -DnsName *.azurewebsites.net -NotAfter (Get-Date).AddYears(2)
+  try{
+    Write-Host "Creating self signed certificate..."
+    $selfSignedCert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -DnsName *.azurewebsites.net -NotAfter (Get-Date).AddYears(2)
 
-  $pswd = ConvertTo-SecureString -String "1234" -Force -AsPlainText
-  Export-PfxCertificate -cert $selfSignedCert.PSPath -FilePath "selfSignedCertificate.pfx" -Password $pswd
+    $pswd = ConvertTo-SecureString -String "1234" -Force -AsPlainText
+    Export-PfxCertificate -cert $selfSignedCert.PSPath -FilePath "selfSignedCertificate.pfx" -Password $pswd
 
-  $pfxThumbprint = $selfSignedCert.Thumbprint
-  $pfxBytes = Get-Content "selfSignedCertificate.pfx" -AsByteStream
-  $pfxString = [System.Convert]::ToBase64String($pfxBytes)
+    $pfxThumbprint = $selfSignedCert.Thumbprint
+    $pfxBytes = Get-Content "selfSignedCertificate.pfx" -AsByteStream
+    $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 
-  return @{ PfxString = $pfxString; PfxThumbprint = $pfxThumbprint }
+  }
+  catch {
+    Write-Host "An error occurred: $_.Exception.Message"
+  }
+  
+  return @{ PfxString = $pfxString; PfxThumbprint = $pfxThumbprint; Pswd = $pswd }
 }
 
 # Helper Function called by Install-AppRegistrations
