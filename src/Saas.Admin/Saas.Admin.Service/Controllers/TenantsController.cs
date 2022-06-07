@@ -355,7 +355,6 @@ public class TenantsController : ControllerBase
     /// Get all tenant IDs that a user has access to
     /// </summary>
     /// <param name="userId"></param>
-    /// <param name="filter">Optionally filter by access type</param>
     /// <returns></returns>
     [HttpGet("user/{userId}/tenants")]
     [Produces("application/json")]
@@ -364,11 +363,11 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
     [Authorize(Policy = AppConstants.Policies.GlobalAdmin)]
-    public async Task<ActionResult<IEnumerable<TenantDTO>>> UserTenants(string userId, string? filter = null)
+    public async Task<ActionResult<IEnumerable<TenantDTO>>> UserTenants(string userId)
     {
         _logger.LogDebug("Getting all tenants for user {userID}", userId);
 
-        IEnumerable<string> tenantIds = await _permissionService.GetTenantsForUserAsync(userId, filter);
+        IEnumerable<string> tenantIds = await _permissionService.GetTenantsForUserAsync(userId);
         IEnumerable<TenantDTO>? tenants = await _tenantService.GetTenantsByIdAsync(tenantIds);
         return tenants.ToList();
     }

@@ -96,18 +96,11 @@ public class PermissionsService : IPermissionsService
 
     }
 
-    /// <summary>
-    /// Optionally supply a filter for a specific TenantId
-    /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="filter"></param>
-    /// <returns></returns>
-    public async Task<ICollection<string>> GetTenantsForUserAsync(string userId, string? filter)
+    public async Task<ICollection<string>> GetTenantsForUserAsync(string userId)
     {
         _logger.LogDebug("{userId} has requested tenants", userId);
         return await _context.Permissions
             .Where(x => x.UserId == userId)
-            .Where(x => filter == null || x.TenantId.Length == filter.Length && EF.Functions.Like(x.TenantId, $"%{filter}%"))
             .Select(x => x.TenantId)
             .ToListAsync();
     }

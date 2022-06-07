@@ -23,9 +23,9 @@ public class PermissionService : IPermissionService
         return;
     }
 
-    public async Task<IEnumerable<string>> GetTenantsForUserAsync(string userId, string? filter)
+    public async Task<IEnumerable<string>> GetTenantsForUserAsync(string userId)
     {
-        return await _permissionsServiceClient.GetTenantsForUserAsync(userId, filter);
+        return await _permissionsServiceClient.GetTenantsForUserAsync(userId);
     }
 
     public async Task<IEnumerable<UserDTO>> GetTenantUsersAsync(string tenantId)

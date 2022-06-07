@@ -19,7 +19,7 @@ namespace Saas.Application.Web.Services
             TenantInfoDTO? tenant = null;
 
             if (route != null)
-                tenant = await _adminServiceClient.TenantsGET2Async(route);
+                tenant = await _adminServiceClient.TenantinfoAsync(route);
 
             return new TenantViewModel() { Id = tenant?.Id ?? Guid.Empty, Name = tenant?.Name ?? "Unknown" };
         }
