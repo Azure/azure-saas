@@ -4,7 +4,7 @@
 // </auto-generated>
 //
 // Manual Modifications:
-// * Constructor arguments altered to include IOptions<AppSettings> input to satisfy parent class OAuthBaseClient logic
+// * Constructor arguments altered to include ITokenAcquisition input to satisfy parent class OAuthBaseClient logic
 // * Remove Serialization.JsonIgnore for null attributes on DTOs
 //
 //----------------------
