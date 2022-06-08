@@ -68,6 +68,9 @@ for (var i = 0; i < adminServiceScopes.Length; i++)
     adminServiceScopes[i] = String.Format("{0}/{1}", adminServiceScopeBaseUrl, adminServiceScopes[i].Trim('/'));
 }
 
+// Set the newly-constructed form into memory for lookup when contacting Azure AD B2C later
+builder.Configuration[SR.AdminServiceScopesProperty] = string.Join(' ', adminServiceScopes);
+
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, Constants.AzureAdB2C)
     .EnableTokenAcquisitionToCallDownstreamApi(adminServiceScopes)
     .AddSessionTokenCaches();
