@@ -20,7 +20,7 @@ if (builder.Environment.IsProduction())
     builder.Configuration.AddAzureKeyVault(
         new Uri(builder.Configuration[SR.KeyVaultProperty]),
         new DefaultAzureCredential(),
-        //TODO: Update secret manager key to one specific to the application
+        // TODO (SaaS): Update secret manager key to one specific to the application
         new CustomPrefixKeyVaultSecretManager("saasapplication"));
 }
 
@@ -36,7 +36,7 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 // Should be replaced based on the persistence scheme
 builder.Services.AddDistributedMemoryCache();
 
-// TODO: Replace with your implementation of persistence provider
+// TODO (SaaS): Replace with your implementation of persistence provider
 // Session persistence is the default
 builder.Services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>();
 

@@ -47,6 +47,8 @@ builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTr
 builder.Services.AddRouteBasedRoleHandler("tenantId");
 builder.Services.AddRouteBasedRoleHandler("userId");
 
+// TODO (SaaS): Add necessary roles to scopes for SaaS App operations
+
 builder.Services.AddAuthorization(options =>
 {
 

@@ -6,6 +6,7 @@ namespace Saas.Application.Web.Pages;
 
 public class IndexModel : PageModel
 {
+    // TODO (SaaS): Connect your main page service calls here to begin guiding users both authenticated and otherwise along the right path
 
     private readonly ILogger<IndexModel> _logger;
     private readonly ITenantService _tenantService;

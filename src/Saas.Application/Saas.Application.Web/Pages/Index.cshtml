@@ -7,6 +7,8 @@
 
 @if (Model.DisplayTenantInfo)
 {
+    @*TODO (SaaS): Replace the basic info for the tenant landing page with your own app's, or redirect to dedicated pages*@
+
     <h1>Welcome to your app!</h1>
     <p>This page fetches relevant tenant info based off of the provided route, returning public information available to any valid user of the system.</p>
     <p>App Tenant ID: @(Model.tenantData?.Id.ToString() ?? "Unknown")</p>
@@ -14,6 +16,8 @@
 }
 else
 {
+    @*TODO (SaaS): Replace the welcome page when no tenant route is being contacted*@
+
     <div class="container">
     <section class="row mb-5 pb-md-4">
         <div class="col-md-5">
