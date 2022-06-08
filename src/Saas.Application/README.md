@@ -37,10 +37,6 @@ To run the web api, you must have the following installed on your machine:
 - [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 - [ASP.NET Core 6.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-6.0)
 - (Reccomended) [Visual Studio](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download)
-- A connection string to a running, empty SQL Server Database.
-    - [Local DB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver15) (Windows Only) - created with included configuration script
-    - [SQL Server Docker Container](https://hub.docker.com/_/microsoft-mssql-server)
-    - [SQL Server Developer Edition](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 - A user store compatible with Microsoft Identity
     - [Azure AD B2C](https://azure.microsoft.com/en-us/services/active-directory/external-identities/b2c/) - created automatically with Bicep deployment
 
@@ -58,28 +54,28 @@ In order to run the project locally, the App Settings marked as `secret: true` m
 
 When deployed to Azure using the Bicep deployments, these secrets are [loaded from Azure Key Vault](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment) instead.
 Default values for non secret app settings can be found in [appsettings.json](Saas.Application.Web/appsettings.json)
-A Powershell script has been included to configure local debug settings, including a localdb certificate. See [Set-UserSecrets.ps1](../../Set-UserSecrets.ps1)
 
-| AppSetting Key                        | Description                                                                    | Secret | Default Value                  |
-| ------------------------------------- | ------------------------------------------------------------------------------ | ------ | ------------------------------ |
-| AppSettings:AdminServiceBaseUrl       | URL for downstream admin service                                               | false  | https://localhost:7041/        |
-| AppSettings:AdminServiceScopeBaseUrl  | The B2C URL for the admin service scope                                        | false  |                                |
-| AppSettings:AdminServiceScopes        | List of scopes to authorize user for on the admin service. Space delimited     | false  |                                |
-| AzureAdB2C:Instance                   | URL for the root of the Azure AD B2C instance                                  | true   |                                |
-| AzureAdB2C:Domain                     | Domain name for the Azure AD B2C instance                                      | true   |                                |
-| AzureAdB2C:ClientId                   | The service client corresponding to the Signup Admin application               | true   |                                |
-| AzureAdB2C:ClientSecret               | Unique secret for the application client provided to authenticate the app      | true   |                                |
-| AzureAdB2C:TenantId                   | Identifier for the overall Azure AD B2C tenant for the overall SaaS ecosystem  | true   |                                |
-| AzureAdB2C:SignedOutCallbackPath      | Callback path (not full url) contacted after signout                           | false  | /signout/B2C_1A_SIGNUP_SIGNIN  |
-| AzureAdB2C:SignUpSignInPolicyId       | Name of signup/signin policy                                                   | false  | B2C_1A_SIGNUP_SIGNIN           |
-| KeyVault:Url                          | KeyVault URL to pull secret values from in production                          | false  |                                |
-| AllowedHosts                          | Allowed app host names, semicolon delimited, asterisk is wildcard              | false  | *                              |
-| Logging:LogLevel:Default              | Logging level when no configured provider is matched                           | false  | Information                    |
-| Logging:LogLevel:Microsoft.AspNetCore | Logging level for AspNetCore logging                                           | false  | Warning                        |
-| EmailOptions:EndPoint                 | Service endpoint to send confirmation email                                    | true   |                                |
-| EmailOptions:FromAddress              | Signup notification email source                                               | false  |                                |
-| EmailOptions:Subject                  | Signup notification email subject line                                         | false  |                                |
-| EmailOptions:Body                     | Signup notification email body text                                            | false  |                                |
+| AppSetting Key                              | Description                                                                    | Secret | Default Value                  |
+| ------------------------------------------- | ------------------------------------------------------------------------------ | ------ | ------------------------------ |
+| AllowedHosts                                | Allowed app host names, semicolon delimited, asterisk is wildcard              | false  | *                              |
+| AppSettings:AdminServiceBaseUrl             | URL for downstream admin service                                               | false  | https://localhost:7041/        |
+| AppSettings:AdminServiceScopeBaseUrl        | The B2C URL for the admin service scope                                        | false  |                                |
+| AppSettings:AdminServiceScopes              | List of scopes to authorize user for on the admin service. Space delimited     | false  |                                |
+| AzureAdB2C:ClientId                         | The service client corresponding to the Signup Admin application               | true   |                                |
+| AzureAdB2C:ClientSecret                     | Unique secret for the application client provided to authenticate the app      | true   |                                |
+| AzureAdB2C:Domain                           | Domain name for the Azure AD B2C instance                                      | true   |                                |
+| AzureAdB2C:Instance                         | URL for the root of the Azure AD B2C instance                                  | true   |                                |
+| AzureAdB2C:SignedOutCallbackPath            | Callback path (not full url) contacted after signout                           | false  | /signout/B2C_1A_SIGNUP_SIGNIN  |
+| AzureAdB2C:SignUpSignInPolicyId             | Name of signup/signin policy                                                   | false  | B2C_1A_SIGNUP_SIGNIN           |
+| AzureAdB2C:TenantId                         | Identifier for the overall Azure AD B2C tenant for the overall SaaS ecosystem  | true   |                                |
+| EmailOptions:Body                           | Signup notification email body text                                            | false  |                                |
+| EmailOptions:EndPoint                       | Service endpoint to send confirmation email                                    | true   |                                |
+| EmailOptions:FromAddress                    | Signup notification email source                                               | false  |                                |
+| EmailOptions:Subject                        | Signup notification email subject line                                         | false  |                                |
+| KeyVault:Url                                | KeyVault URL to pull secret values from in production                          | false  |                                |
+| Logging:LogLevel:Default                    | Logging level when no configured provider is matched                           | false  | Information                    |
+| Logging:LogLevel:Microsoft                  | Logging level for Microsoft logging                                            | false  | Warning                        |
+| Logging:LogLevel:Microsoft.Hosting.Lifetime | Logging level for Hosting Lifetime logging                                     | false  | Information                    |
  
 ### iv. Starting the App
 

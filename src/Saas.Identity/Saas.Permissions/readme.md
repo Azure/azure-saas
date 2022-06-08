@@ -18,7 +18,7 @@ To run the web api, you must have the following installed on your machine:
 - [ASP.NET Core 6.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-6.0)
 - (Reccomended) [Visual Studio](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download)
 - A connection string to a running, empty SQL Server Database.
-    - [Local DB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver15) (Windows Only) - created with included configuration script
+    - [Local DB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver15) (Windows Only) - See `Additional Resources` below for basic config secret
     - [SQL Server Docker Container](https://hub.docker.com/_/microsoft-mssql-server)
     - [SQL Server Developer Edition](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 - A user store compatible with Microsoft Identity
@@ -35,22 +35,23 @@ To run the web api, you must have the following installed on your machine:
 In order to run the project locally, the App Settings marked as `secret: true` must be set using the [.NET secrets manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&tabs=windows). When deployed to azure using the Bicep deployments, these secrets are [loaded from Azure Key Vault](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment) instead.
 
 Default values for non secret app settings can be found in [appsettings.json](Saas.Permissions.Service/appsettings.json)
-A Powershell script has been included to configure local debug settings, including a localdb certificate. See [Set-UserSecrets.ps1](../../../Set-UserSecrets.ps1)
 
 | AppSetting Key                        |  Description                                                                                                 | Secret | Default Value                 |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------ | ----------------------------- |
-| AzureAdB2C:Instance                   | URL for the root of the Azure AD B2C instance                                                                | true   |                               |
-| AzureAdB2C:Domain                     | Domain name for the Azure AD B2C instance                                                                    | true   |                               |
+| AllowedHosts                          | Allowed app host names, semicolon delimited                                                                  | false  | *                             |
+| AppSettings:SSLCertThumbprint         | The certificate thumbprint used to validate the certificate forwarded to the application via the web server. | true   |                               |
 | AzureAdB2C:ClientId                   | The service client corresponding to the Signup Admin application                                             | true   |                               |
-| AzureAdB2C:TenantId                   | Identifier for the overall Azure AD B2C tenant for the overall SaaS ecosystem                                | true   |                               |
+| AzureAdB2C:Domain                     | Domain name for the Azure AD B2C instance                                                                    | true   |                               |
+| AzureAdB2C:Instance                   | URL for the root of the Azure AD B2C instance                                                                | true   |                               |
 | AzureAdB2C:SignedOutCallbackPath      | Callback path (not full url) contacted after signout                                                         | false  | /signout/B2C_1A_SIGNUP_SIGNIN |
 | AzureAdB2C:SignUpSignInPolicyId       | Name of signup/signin policy                                                                                 | false  | B2C_1A_SIGNUP_SIGNIN          |
-| AppSettings:SSLCertThumbprint         | The certificate thumbprint used to validate the certificate forwarded to the application via the web server. | true   |                               |
+| AzureAdB2C:TenantId                   | Identifier for the overall Azure AD B2C tenant for the overall SaaS ecosystem                                | true   |                               |
+| ConnectionStrings:PermissionsContext  | Connection String to SQL server database used to store permission data.                                      | true   |                               |
 | KeyVault:Url                          | KeyVault URL to pull secret values from in production                                                        | false  |                               |
-| ConnectionStrings:PermissionsContext  | Connection String to SQL server database used to store permission data.                                      | true   | (local db connection string)  |
-| AllowedHosts                          | Allowed app host names, semicolon delimited                                                                  | false  | *                             |
 | Logging:LogLevel:Default              | Logging level when no configured provider is matched                                                         | false  | Information                   |
 | Logging:LogLevel:Microsoft.AspNetCore | Logging level for AspNetCore logging                                                                         | false  | Warning                       |
+
+"ConnectionStrings:PermissionsContext" "Server=(localdb)\\mssqllocaldb;Database=Saas.Permissions.Sql;Trusted_Connection=True;MultipleActiveResultSets=true"'
 
 ### iv. Starting the App
 
@@ -61,3 +62,6 @@ A Powershell script has been included to configure local debug settings, includi
 
 ### i. LocalDB
 If using the LocalDB persistance for local development, tables and data can be interacted with directly through Visual Studio. Under the `View` menu, find `SQL Server Object Explorer`. Additional documentation is available [here](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver16)
+
+Configure the following in your managed secrets to use LocalDB:
+>"ConnectionStrings:PermissionsContext": "Server=(localdb)\\mssqllocaldb;Database=Saas.Permissions.Sql;Trusted_Connection=True;MultipleActiveResultSets=true"
