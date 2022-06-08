@@ -14,7 +14,7 @@ This project hosts an application for providing the intended SaaS functions to v
 
 For a design overview, please see the [SaaS.Application.Web](https://azure.github.io/azure-saas/components/saas-application/) page in our documentation site.
 
-The application has been developed using Razor pages with code behind. Automatic reference to the project name has been established through the string resource class (SR.cs) for the scoped CSS reference in _Layout.cshtml. See the Pages and Service directories for relevant display or service logic.
+The application has been developed using [Razor](https://docs.microsoft.com/en-us/aspnet/core/razor-pages/?view=aspnetcore-6.0&tabs=visual-studio) pages with code behind. Automatic reference to the project name has been established through the string resource class (SR.cs) for the scoped CSS reference in _Layout.cshtml. See the Pages and Service directories for relevant display or service logic.
 
 ### i. Customizing the Template
 

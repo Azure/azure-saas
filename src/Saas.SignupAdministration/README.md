@@ -6,7 +6,7 @@ This project hosts an application for the administration of new tenants in your 
 
 For a complete overview, please see the [SaaS.SignupAdministration.Web](https://azure.github.io/azure-saas/components/signup-administration/) page in our documentation site.
 
-The application has been developed in MVC format, its pages built by respective Controllers paired to Views. See the Views and Controllers directories for relevant service logic or display logic.
+The application has been developed in [MVC](https://docs.microsoft.com/en-us/aspnet/core/mvc/overview?view=aspnetcore-6.0) format, its pages built by respective Controllers paired to Views. See the Views and Controllers directories for relevant service logic or display logic.
 
 ## 2. How to Run Locally
 
