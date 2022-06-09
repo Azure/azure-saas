@@ -120,33 +120,33 @@ function New-SaaSIdentityProvider {
 
 function Get-UserInputParameters {
  
-  # $userInputParams = @{
-  #   B2CTenantName = Read-Host "Please enter a name for the B2C tenant without the onmicrosoft.com suffix. (e.g. mytenant). Please note that tenant names must be globally unique."
-  #   B2CTenantLocation = Read-Host "Please enter the location for the B2C Tenant to be created in. (United States', 'Europe', 'Asia Pacific', 'Australia)"
-  #   CountryCode = Read-Host "Please enter the two letter country code for the B2C Tenant data to be stored in (e.g. 'US', 'CZ', 'DE'). See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available country codes."
-  #   AzureResourceLocation = Read-Host "Please enter the location for the Azure Resources to be deployed (e.g. 'eastus', 'westus2', 'centraleurope'). Please run az account list-locations to see the available locations for your account."
-  #   IdentityFrameworkResourceGroupName = Read-Host "Please enter the name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist."
-  #   SaasEnvironment = Read-Host "Please enter an environment name. Accepted values are: 'prod', 'staging', 'dev', 'test'"
-  #   ProviderName = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp)"
-  #   InstanceNumber = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
-  #   UserId = az account show --query "id" -o tsv
-  #   SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. admin)"
-  #   SqlAdministratorLoginPassword = Read-Host -MaskInput -Prompt "Please enter the desired password for the SQL administrator account."
-  # }
-
   $userInputParams = @{
-    B2CTenantName                      = "lpb2ctest02"
-    B2CTenantLocation                  = "United States"
-    CountryCode                        = "US"
-    AzureResourceLocation              = "eastus"
-    IdentityFrameworkResourceGroupName = "rg-identity-02"
-    SaasEnvironment                    = "dev"
-    ProviderName                       = "lbptst"
-    InstanceNumber                     = "004"
-    UserId                             = az account show --query "id" -o tsv
-    SqlAdministratorLogin              = "lpadmin"
-    SqlAdministratorLoginPassword      = Read-Host -MaskInput -Prompt "Please enter the desired password for the SQL administrator account." #  "asJ1@mf#!aks*"
+    B2CTenantName = Read-Host "Please enter a name for the B2C tenant without the onmicrosoft.com suffix. (e.g. mytenant). Please note that tenant names must be globally unique."
+    B2CTenantLocation = Read-Host "Please enter the location for the B2C Tenant to be created in. (United States', 'Europe', 'Asia Pacific', 'Australia)"
+    CountryCode = Read-Host "Please enter the two letter country code for the B2C Tenant data to be stored in (e.g. 'US', 'CZ', 'DE'). See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available country codes."
+    AzureResourceLocation = Read-Host "Please enter the location for the Azure Resources to be deployed (e.g. 'eastus', 'westus2', 'centraleurope'). Please run az account list-locations to see the available locations for your account."
+    IdentityFrameworkResourceGroupName = Read-Host "Please enter the name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist."
+    SaasEnvironment = Read-Host "Please enter an environment name. Accepted values are: 'prod', 'staging', 'dev', 'test'"
+    ProviderName = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp)"
+    InstanceNumber = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
+    UserId = az account show --query "id" -o tsv
+    SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. admin)"
+    SqlAdministratorLoginPassword = Read-Host -MaskInput -Prompt "Please enter the desired password for the SQL administrator account."
   }
+
+  # $userInputParams = @{
+  #   B2CTenantName                      = "lpb2ctest02"
+  #   B2CTenantLocation                  = "United States"
+  #   CountryCode                        = "US"
+  #   AzureResourceLocation              = "eastus"
+  #   IdentityFrameworkResourceGroupName = "rg-identity-02"
+  #   SaasEnvironment                    = "dev"
+  #   ProviderName                       = "lbptst"
+  #   InstanceNumber                     = "004"
+  #   UserId                             = az account show --query "id" -o tsv
+  #   SqlAdministratorLogin              = "lpadmin"
+  #   SqlAdministratorLoginPassword      = Read-Host -MaskInput -Prompt "Please enter the desired password for the SQL administrator account." #  "asJ1@mf#!aks*"
+  # }
 
   $userInputParams.Add("SaasAppFQDN", "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
   $userInputParams.Add("SignupAdminFQDN", "https://appsignup$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
@@ -300,7 +300,7 @@ function Invoke-TenantInit {
   $B2CTenantId = "$($B2CTenantName).onmicrosoft.com"
   
   # Get access token for the B2C tenant with audience "management.core.windows.net".
-  $managementAccessToken = $(az account get-access-token --tenant "$B2CTenantId" --query accessToken -o tsv)
+  $managementAccessToken = $(az account get-access-token --tenant "$($B2CTenantId)" --query accessToken -o tsv)
   
   # Invoke tenant initialization which happens through the portal automatically.
   # Ref: https://stackoverflow.com/questions/67706798/creation-of-the-b2c-extensions-app-by-script
