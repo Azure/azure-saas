@@ -105,13 +105,13 @@ function New-SaaSIdentityProvider {
 
   # Upload policies
   $configTokens = @{
-      "{Settings:Tenant}" = "$($userInputParams.B2CTenantName).onmicrosoft.com"
-      "{Settings:ProxyIdentityExperienceFrameworkAppId}" = "$($appRegistrations.IEFAppReg.AppRegistrationProperties.AppId)"
-      "{Settings:IdentityExperienceFrameworkAppId}" = "$($appRegistrations.IEFProxyAppReg.AppRegistrationProperties.AppId)"
-      "{Settings:PermissionsAPIUrl}" = "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/permissions"
-      "{Settings:RolesAPIUrl}" = "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/roles"
-      "{Settings:RESTAPIClientCertificate}" = "$($trustFrameworkKeySetClientCertificateKeyId)"  
-}
+    "{Settings:Tenant}"                                = "$($userInputParams.B2CTenantName).onmicrosoft.com"
+    "{Settings:ProxyIdentityExperienceFrameworkAppId}" = "$($appRegistrations.IEFAppReg.AppRegistrationProperties.AppId)"
+    "{Settings:IdentityExperienceFrameworkAppId}"      = "$($appRegistrations.IEFProxyAppReg.AppRegistrationProperties.AppId)"
+    "{Settings:PermissionsAPIUrl}"                     = "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/permissions"
+    "{Settings:RolesAPIUrl}"                           = "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/roles"
+    "{Settings:RESTAPIClientCertificate}"              = "$($trustFrameworkKeySetClientCertificateKeyId)"  
+  }
 
   Import-IEFPolicies -configTokens $configTokens
   # Output parameters.json
@@ -132,6 +132,17 @@ function Get-UserInputParameters {
     UserId = az account show --query "id" -o tsv
     SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. admin)"
     SqlAdministratorLoginPassword = Read-Host -MaskInput -Prompt "Please enter the desired password for the SQL administrator account."
+    B2CTenantName                      = "lpb2ctest02"
+    B2CTenantLocation                  = "United States"
+    CountryCode                        = "US"
+    AzureResourceLocation              = "eastus"
+    IdentityFrameworkResourceGroupName = "rg-identity-02"
+    SaasEnvironment                    = "dev"
+    ProviderName                       = "lbptst"
+    InstanceNumber                     = "004"
+    UserId                             = az account show --query "id" -o tsv
+    SqlAdministratorLogin              = "lpadmin"
+    SqlAdministratorLoginPassword      = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account." #  "asJ1@mf#!aks*"
   }
 
   # $userInputParams = @{
@@ -421,7 +432,7 @@ function Invoke-IdentityBicepDeployment {
     [string] $SaasEnvironment,
     [string] $SaasInstanceNumber,
     [string] $SqlAdministratorLogin,
-    [string] $SqlAdministratorPassword
+    [securestring] $SqlAdministratorPassword
     
   )
 
@@ -437,7 +448,7 @@ function Invoke-IdentityBicepDeployment {
     saasEnvironment                                 = $SaasEnvironment
     saasInstanceNumber                              = $SaasInstanceNumber
     sqlAdministratorLogin                           = $SqlAdministratorLogin
-    sqlAdministratorLoginPassword                   = $SqlAdministratorPassword
+    sqlAdministratorLoginPassword                   = ConvertFrom-SecureString $SqlAdministratorPassword
   } 
 
   $convertedParams = ConvertTo-AzJsonParams -params $params
@@ -455,7 +466,7 @@ function Invoke-IdentityBicepDeployment {
 
 # TODO: This is currently windows specific. Need to make this cross platform.
 function New-AsdkSelfSignedCertificate {
-  try{
+  try {
     Write-Host "Creating self signed certificate..."
     $selfSignedCert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -DnsName *.azurewebsites.net -NotAfter (Get-Date).AddYears(2)
 
@@ -483,34 +494,72 @@ function New-AppRegistration {
     [Parameter(Mandatory = $false, HelpMessage = "Indicates whether to create a secret for the app registration")]
     [bool] $CreateSecret = $false
   )
-  Write-Host "Creating App Registration $($AppRegistrationData.DisplayName)"
-  # Create the app registration using the Microsoft Graph API and store the result. 
-  $newApp = New-MgApplication `
-    -DisplayName $AppRegistrationData.DisplayName `
-    -Api @{Oauth2PermissionScopes = $AppRegistrationData.OAuth2PermissionScopes } `
-    -IdentifierUris $AppRegistrationData.IdentifierUris `
-    -RequiredResourceAccess $AppRegistrationData.RequiredResourceAccess `
-    -PublicClient $AppRegistrationData.PublicClient `
-    -IsFallbackPublicClient:$AppRegistrationData.IsFallbackPublicClient `
-    -Web $AppRegistrationData.Web `
-    -AppRoles $AppRegistrationData.AppRoles `
 
-  $newAppSecret = $null
-  if ($CreateSecret) {
-    $newAppSecretObject = Add-MgApplicationPassword -ApplicationId $newApp.Id 
-    $newAppSecret = $newAppSecretObject.SecretText
+  # Check to see if this app registration already exists by the name
+  $createdApp = Get-MgApplication -ConsistencyLevel eventual -Filter "DisplayName eq '$($AppRegistrationData.DisplayName)'"  -Top 1
+  Write-Host "App registration with name '$($AppRegistrationData.DisplayName)' already exists. Skipping creation."
+  
+  # If it does exist, do not recreate it, but re-create the secret.
+  if ($createdApp -ne $null) {
+    $createdAppSecret = $null
+    Write-Warning "App Registration '$($AppRegistrationData.DisplayName)' already exists, so we will not attempt to recreate it."
+
+    if ($CreateSecret ) {
+      Write-Warning "However, we still need to re-create its secret as it cannot be fetched after it has been created, and it is required for use later in the setup."
+      Write-Host "Creating secret for app registration '$($AppRegistrationData.DisplayName)'"
+      $createdAppSecret = Add-MgApplicationPassword -ApplicationId $createdApp.Id 
+      
+    }
+
+    $createdSp = Get-MgServicePrincipal -ConsistencyLevel eventual -Filter "AppId eq '$($createdApp.AppId)'" -Top 1
+
+    if ($createdSp -ne $null) {
+      Write-Warning "Service Principal for app registration '$($AppRegistrationData.DisplayName)' already exists, so we will not attempt to recreate it."
+    }
+    else {
+      Write-Host "Creating service principal for app registration '$($AppRegistrationData.DisplayName)'"
+      $createdSp = New-MgServicePrincipal -AppId $createdApp.AppId -DisplayName $($createdApp.DisplayName)
+    }
+
+    return @{
+      ClientSecret               = $createdAppSecret
+      AppRegistrationProperties  = $createdApp
+      ServicePrincipalProperties = $createdSp
+    }
+
   }
+  else {
+    # If it does not exist, continue with the creation of the app registration.
 
-  # Also need to create the service principal for the app
-  Write-Host "Creating Service Principal for App Registration $($AppRegistrationData.DisplayName)"
-  $sp = New-MgServicePrincipal -AppId $newApp.AppId -DisplayName $newApp.DisplayName
-  Write-Host "Created Service Principal for App Registration $($AppRegistrationData.DisplayName)"
+    Write-Host "Creating App Registration $($AppRegistrationData.DisplayName)"
+    # Create the app registration using the Microsoft Graph API and store the result. 
+    $newApp = New-MgApplication `
+      -DisplayName $AppRegistrationData.DisplayName `
+      -Api @{Oauth2PermissionScopes = $AppRegistrationData.OAuth2PermissionScopes } `
+      -IdentifierUris $AppRegistrationData.IdentifierUris `
+      -RequiredResourceAccess $AppRegistrationData.RequiredResourceAccess `
+      -PublicClient $AppRegistrationData.PublicClient `
+      -IsFallbackPublicClient:$AppRegistrationData.IsFallbackPublicClient `
+      -Web $AppRegistrationData.Web `
+      -AppRoles $AppRegistrationData.AppRoles `
 
-  Write-Host "App Registration $($newApp.DisplayName) Created"
-  return @{
-    ClientSecret               = $newAppSecret
-    AppRegistrationProperties  = $newApp
-    ServicePrincipalProperties = $sp
+    $newAppSecret = $null
+    if ($CreateSecret) {
+      $newAppSecretObject = Add-MgApplicationPassword -ApplicationId $newApp.Id 
+      $newAppSecret = $newAppSecretObject.SecretText
+    }
+
+    # Also need to create the service principal for the app
+    Write-Host "Creating Service Principal for App Registration $($AppRegistrationData.DisplayName)"
+    $sp = New-MgServicePrincipal -AppId $newApp.AppId -DisplayName $newApp.DisplayName
+    Write-Host "Created Service Principal for App Registration $($AppRegistrationData.DisplayName)"
+
+    Write-Host "App Registration $($newApp.DisplayName) Created"
+    return @{
+      ClientSecret               = $newAppSecret
+      AppRegistrationProperties  = $newApp
+      ServicePrincipalProperties = $sp
+    }
   }
 }
 
@@ -539,8 +588,19 @@ function New-AdminConsent {
         ResourceId  = $role.ResourceId
         AppRoleId   = $role.AppRoleId 
       }
-      New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $role.PrincipalId -BodyParameter $params
-      Write-Host "Assigned $($role.AppRoleId) to $($role.PrincipalId)"
+
+      # TODO: Check to see if an app role assignment exists before creating a new one. 
+      # $filterClause = "AppRoleId eq '$($role.AppRoleId)'"
+      #$appRoleAssignment = Get-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $role.PrincipalId -Filter+approleid+eq+$role.AppRoleId -Top 1 
+      # if ($appRoleAssignment -ne $null) {
+      #   Write-Warning "App Role Assignment for $($role.AppRoleId) already exists. Skipping creation."
+      #   continue
+      # }
+
+        ## check here if app role already exists. 
+        New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $role.PrincipalId -BodyParameter $params
+        Write-Host "Assigned $($role.AppRoleId) to $($role.PrincipalId)"
+      
     }
   }
   
@@ -550,13 +610,22 @@ function New-AdminConsent {
     ResourceId  = $ApiObjectId
     Scope       = $ApiScopes -Join " " #"tenant.delete tenant.write tenant.global.delete tenant.global.write tenant.read tenant.global.read"
   }
-  try {
-    New-MgOauth2PermissionGrant -BodyParameter $payload 
-    Write-Host "Consent granted"
+
+  $permissionGrant = Get-MgOauth2PermissionGrant -Filter "clientId eq '$($ClientObjectId)' and ConsentType eq 'AllPrincipals'" -Top 1
+
+  if ($permissionGrant -ne $null) {
+    Write-Warning "Consent already exists for $($ApiScopes -Join " ") on $($ClientObjectId) for $($ApiObjectId). Skipping Creation."
   }
-  catch {
-    Write-Error "Error granting admin consent: $_"
-    throw
+  else {
+
+    try {
+      New-MgOauth2PermissionGrant -BodyParameter $payload 
+      Write-Host "Consent granted"
+    }
+    catch {
+      Write-Error "Error granting admin consent: $_"
+      throw
+    }
   }
 
   
@@ -696,7 +765,7 @@ function Install-AppRegistrations {
     )
   
     IsFallbackPublicClient = $false
-    PublicClient           = @{ redirectUris = @("$($SaasAppFQDN)/signin-oidc") }
+    PublicClient           = @{ }
     Web                    = @{ 
       ImplicitGrantSettings = @{
         EnableAccessTokenIssuance = $true
@@ -705,7 +774,15 @@ function Install-AppRegistrations {
       LogoutUrl             = "$($SignupAdminFQDN)/signout-oidc"
       RedirectUris          = @("$($SignupAdminFQDN)/signin-oidc")
     }
-    AppRoles               = @{}
+    AppRoles               = @(
+      @{
+        AllowedMemberTypes = @("User")
+        Description        = "Global Admin - Web"
+        DisplayName        = "Global Admin - Web"
+        Id                 = New-Guid
+        Value              = "GlobalAdmin"
+      }
+    )
 
   }
 
@@ -715,6 +792,7 @@ function Install-AppRegistrations {
   $adminScopes = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
   # Grant admin consent on the signupadmin app for the admin scopes
   New-AdminConsent -ClientObjectId $signupAdminAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopes
+
 
   ############## Permissions API Registration ##############
 
