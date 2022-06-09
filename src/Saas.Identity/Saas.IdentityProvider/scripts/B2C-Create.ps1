@@ -39,6 +39,10 @@ function New-SaaSIdentityProvider {
     throw "Module Microsoft.Graph is not installed yet. Please install it first! Run 'Install-Module Microsoft.Graph'."
   }
 
+  Write-Host "Changing Graph Powershell SDK to Beta"
+  
+  Select-MgProfile -Name "beta"
+  $userSettings = Invoke-Login
   $userInputParams = Get-UserInputParameters
   
   # Create the B2C tenant resource in Azure and capture the Guid of the resource.
@@ -46,6 +50,7 @@ function New-SaaSIdentityProvider {
     -B2CTenantName $userInputParams.B2CTenantName `
     -B2CTenantLocation $userInputParams.B2CTenantLocation `
     -CountryCode $userInputParams.CountryCode `
+    -AzureSubscriptionId $userSettings.SubscriptionId `
     -AzureResourceLocation $userInputParams.AzureResourceLocation `
     -AzureResourceGroup $userInputParams.IdentityFrameworkResourceGroupName `
   
@@ -118,6 +123,46 @@ function New-SaaSIdentityProvider {
 
 }
 
+function Invoke-Login{
+
+  Write-Host "Logging user into azure"
+  az login
+
+  Write-Host "User logged in successfully"
+
+  $AzureSubscriptionId = $(az account show --query "id" -o tsv)
+  Write-Host "The default subscription ID from the current account is ${AzureSubscriptionId}"
+  $UseDefaultSubscriptionId = Read-Host -Prompt "Is this the subscription you'd like to use? (y/n) "
+
+  if ($UseDefaultSubscriptionId -eq "n") {
+    $AzureSubscriptionId = Read-Host -Prompt "Please provide the subscription ID of the subscription you'd like to use"
+  }
+
+  Write-Host "Using subscription ID ${AzureSubscriptionID}"
+  az account set --subscription $AzureSubscriptionId
+
+  Write-Host "Getting Access Token to Login to Powershell"
+
+  $accountShowResponse = $(az account show --output json) | ConvertFrom-Json
+  $accountId = $accountShowResponse.id
+  $accessTokenResponse = $(az account get-access-token --output json) | ConvertFrom-Json
+  $accessToken = $accessTokenResponse.accessToken
+
+  Write-Host "Logging in to Az PowerShell"
+
+  Connect-AzAccount -AccountId $accountId -AccessToken $accessToken -Subscription $AzureSubscriptionId
+
+  Write-Host "Setting Az PowerShell Subscription to $AzureSubscriptionId"
+
+  Get-AzSubscription -SubscriptionId $AzureSubscriptionId | Set-AzContext
+  
+  return @{
+    SubscriptionId = $AzureSubscriptionId
+    AccountId  = $accountId
+    AccessToken = $accessToken
+  }
+
+}
 function Get-UserInputParameters {
  
   $userInputParams = @{
@@ -132,17 +177,6 @@ function Get-UserInputParameters {
     UserId = az account show --query "id" -o tsv
     SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. admin)"
     SqlAdministratorLoginPassword = Read-Host -MaskInput -Prompt "Please enter the desired password for the SQL administrator account."
-    B2CTenantName                      = "lpb2ctest02"
-    B2CTenantLocation                  = "United States"
-    CountryCode                        = "US"
-    AzureResourceLocation              = "eastus"
-    IdentityFrameworkResourceGroupName = "rg-identity-02"
-    SaasEnvironment                    = "dev"
-    ProviderName                       = "lbptst"
-    InstanceNumber                     = "004"
-    UserId                             = az account show --query "id" -o tsv
-    SqlAdministratorLogin              = "lpadmin"
-    SqlAdministratorLoginPassword      = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account." #  "asJ1@mf#!aks*"
   }
 
   # $userInputParams = @{
@@ -185,26 +219,12 @@ function New-AzureADB2CTenant {
     [string] $CountryCode,
   
     # Under which Azure subscription will this B2C tenant reside. If not provided, use the current subscription from Azure CLI.
-    [string] $AzureSubscriptionId = $null,
+    [string] $AzureSubscriptionId,
   
     # Under which Azure resource group will this B2C tenant reside.
     [string] $AzureResourceGroup
 
   )
-  
-  if (!$AzureSubscriptionId) {
-    Write-Host "Getting subscription ID from the current account..."
-    $AzureSubscriptionId = $(az account show --query "id" -o tsv)
-    Write-Host "The default subscription ID from the current account is ${AzureSubscriptionId}"
-    $UseDefaultSubscriptionId = Read-Host -Prompt "Is this the subscription you'd like to use? (y/n) "
-
-    if ($UseDefaultSubscriptionId -eq "n") {
-      $AzureSubscriptionId = Read-Host -Prompt "Please provide the subscription ID of the subscription you'd like to use"
-    }
-
-    Write-Host "Using subscription ID ${AzureSubscriptionID}"
-    az account set --subscription $AzureSubscriptionId
-  }
   
   $aadProviderRegState = $(az provider show -n Microsoft.AzureActiveDirectory --query "registrationState" -o tsv)
   if ($aadProviderRegState -ne "Registered") {
@@ -309,7 +329,7 @@ function Invoke-TenantInit {
   )
   
   $B2CTenantId = "$($B2CTenantName).onmicrosoft.com"
-  
+ 
   # Get access token for the B2C tenant with audience "management.core.windows.net".
   $managementAccessToken = $(az account get-access-token --tenant "$($B2CTenantId)" --query accessToken -o tsv)
   
