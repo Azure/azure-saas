@@ -6,7 +6,9 @@ The Azure SaaS Development Kit (ASDK) provides a starting point into cloud-based
 
 For more information please review the [ASDK Documentation](https://azure.github.io/azure-saas/), including a Quick Start guide for environment setup.
 
-## 2. Module References
+## 2. Contents
+
+### i. Modules
 
 Several individual module readmes have been provided to cover key development concepts, necessary app setting secrets and how to run them locally.
 
@@ -14,6 +16,14 @@ Several individual module readmes have been provided to cover key development co
 - [Permissions Service](src\Saas.Identity\Saas.Permissions) - Services utilized by the Admin services to determine action authorization
 - [Signup Application Web](src\Saas.SignupAdministration) - MVC web application for new Tenant signup
 - [SaaS Application Web](src\Saas.Application) - Razor application providing the SaaS service to registered tenants
+
+### ii. GitHub Workflows
+
+Yaml scripts [have been included](\.github\workflows) that define [GitHub workflow actions](https://docs.github.com/en/actions/using-workflows/about-workflows), including scripts which publish container images of your modules to the [GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). Read the corresponding [documentation](https://azure.github.io/azure-saas/resources/container-publishing/) for more information.
+
+### iii. Documentation Generation
+
+Documentation for the site is generated using [Hugo](https://gohugo.io/) and [Docksy](https://www.docsy.dev/). See [azure-saas-docs](docs/azure-saas-docs) to review setup instructions for generating documentation and the [project documentation](https://azure.github.io/azure-saas/resources/documentation-build-process/) for information on how the pages are built.
 
 ## 3. Contributing
 
