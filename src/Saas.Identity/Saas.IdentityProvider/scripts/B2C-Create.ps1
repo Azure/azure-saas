@@ -39,9 +39,9 @@ function New-SaaSIdentityProvider {
     throw "Module Microsoft.Graph is not installed yet. Please install it first! Run 'Install-Module Microsoft.Graph'."
   }
 
-  Write-Host "Changing Graph Powershell SDK to Beta"
-  
+  Write-Host "Changing Graph Powershell SDK to Beta..."
   Select-MgProfile -Name "beta"
+
   $userSettings = Invoke-Login
   $userInputParams = Get-UserInputParameters
   
@@ -767,6 +767,11 @@ function Install-AppRegistrations {
 
   # Create the App Registration
   $adminAppReg = New-AppRegistration -AppRegistrationData $adminAppRegConfig
+  # Get the scopes from the admin app registration
+  $adminScopes = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
+  # Grant admin consent on the signupadmin app for the admin scopes
+  New-AdminConsent -ClientObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopes
+
 
 
 
@@ -809,7 +814,7 @@ function Install-AppRegistrations {
   # Create the App Registration
   $signupAdminAppReg = New-AppRegistration -AppRegistrationData $signupAdminAppRegConfig -CreateSecret $true
   # Get the scopes from the admin app registration
-  $adminScopes = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
+  $signupAdminScopes = $signupAdminAppReg.OAuth2PermissionScopes | ForEach-Object { $_.Value }
   # Grant admin consent on the signupadmin app for the admin scopes
   New-AdminConsent -ClientObjectId $signupAdminAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopes
 
@@ -895,9 +900,9 @@ function Install-AppRegistrations {
   # Create the App Registration
   $saasAppAppReg = New-AppRegistration -AppRegistrationData $saasAppAppRegConfig -CreateSecret $true
   # Get the scopes from the admin app registration
-  $adminScopesForSaasApp = @($adminAppRegConfig.OAuth2PermissionScopes | Where-Object { $_.Value -eq "tenant.read" } | ForEach-Object { $_.Value })
+  $adminScopesForSaasApp = @($saasAppAppReg.OAuth2PermissionScopes | Where-Object { $_.Value -eq "tenant.read" } | ForEach-Object { $_.Value })
   # Grant admin consent on the saas app app for the admin scopes
-  New-AdminConsent -ClientObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopesForSaasApp
+  New-AdminConsent -ClientObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopesForSaasApp
 
   
   ############# Create the IEF App Registration ##############
