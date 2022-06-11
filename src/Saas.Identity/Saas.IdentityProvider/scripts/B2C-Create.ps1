@@ -517,8 +517,7 @@ function New-AppRegistration {
 
   # Check to see if this app registration already exists by the name
   $createdApp = Get-MgApplication -ConsistencyLevel eventual -Filter "DisplayName eq '$($AppRegistrationData.DisplayName)'"  -Top 1
-  Write-Host "App registration with name '$($AppRegistrationData.DisplayName)' already exists. Skipping creation."
-  
+   
   # If it does exist, do not recreate it, but re-create the secret.
   if ($createdApp -ne $null) {
     $createdAppSecret = $null
@@ -624,11 +623,29 @@ function New-AdminConsent {
     }
   }
   
+  $currentDateTime = Get-Date
+  $StartTime = $currentDateTime 
+  $ExpiryTime = $currentDateTime.AddYears(5)
+
+  #openid and offline_access scopes are required for AAD B2C
+  if(-not($ApiScopes.Contains("offline_access")))
+  {
+    $ApiScopes += "offline_access"
+  }
+  
+  if(-not($ApiScopes.Contains("openid")))
+  {
+    $ApiScopes += "openid"
+  }
+
   $payload = @{
     ConsentType = "AllPrincipals"
     ClientId    = $ClientObjectId 
     ResourceId  = $ApiObjectId
     Scope       = $ApiScopes -Join " " #"tenant.delete tenant.write tenant.global.delete tenant.global.write tenant.read tenant.global.read"
+    StartTime = $StartTime
+    ExpiryTime = $ExpiryTime
+    
   }
 
   $permissionGrant = Get-MgOauth2PermissionGrant -Filter "clientId eq '$($ClientObjectId)' and ConsentType eq 'AllPrincipals'" -Top 1
@@ -768,7 +785,7 @@ function Install-AppRegistrations {
   # Create the App Registration
   $adminAppReg = New-AppRegistration -AppRegistrationData $adminAppRegConfig
   # Get the scopes from the admin app registration
-  $adminScopes = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
+  $adminScopes =  @('offline_access', 'openid') #$adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
   # Grant admin consent on the signupadmin app for the admin scopes
   New-AdminConsent -ClientObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopes
 
@@ -814,10 +831,11 @@ function Install-AppRegistrations {
   # Create the App Registration
   $signupAdminAppReg = New-AppRegistration -AppRegistrationData $signupAdminAppRegConfig -CreateSecret $true
   # Get the scopes from the admin app registration
-  $signupAdminScopes = $signupAdminAppReg.OAuth2PermissionScopes | ForEach-Object { $_.Value }
+  $adminScopes = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
+  $adminScopes += "openid"
+  $adminScopes += "offline_access"
   # Grant admin consent on the signupadmin app for the admin scopes
   New-AdminConsent -ClientObjectId $signupAdminAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopes
-
 
   ############## Permissions API Registration ##############
 
@@ -900,7 +918,9 @@ function Install-AppRegistrations {
   # Create the App Registration
   $saasAppAppReg = New-AppRegistration -AppRegistrationData $saasAppAppRegConfig -CreateSecret $true
   # Get the scopes from the admin app registration
-  $adminScopesForSaasApp = @($saasAppAppReg.OAuth2PermissionScopes | Where-Object { $_.Value -eq "tenant.read" } | ForEach-Object { $_.Value })
+  $adminScopesForSaasApp = @($adminAppRegConfig.OAuth2PermissionScopes | Where-Object { $_.Value -eq "tenant.read" } | ForEach-Object { $_.Value })
+  $adminScopesForSaasApp += 'offline_access'
+  $adminScopesForSaasApp += 'openid'
   # Grant admin consent on the saas app app for the admin scopes
   New-AdminConsent -ClientObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopesForSaasApp
 
