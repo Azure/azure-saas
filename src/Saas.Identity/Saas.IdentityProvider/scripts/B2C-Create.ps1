@@ -45,6 +45,9 @@ function New-SaaSIdentityProvider {
   $userSettings = Invoke-Login
   $userInputParams = Get-UserInputParameters
   
+  #get current signed in user
+  $adSignedInUser = az ad signed-in-user show | ConvertFrom-Json
+
   # Create the B2C tenant resource in Azure and capture the Guid of the resource.
   $createdTenantGuid = New-AzureADB2CTenant `
     -B2CTenantName $userInputParams.B2CTenantName `
@@ -76,10 +79,14 @@ function New-SaaSIdentityProvider {
 
   # App ID for IEF Proxy App reg $appRegistrations.IEFProxyAppReg.AppRegistrationProperties.AppId
 
+  $CurrentB2CUserPrincipalName = $adSignedInUser.userPrincipalName.Replace('@', '_')
+  $currentB2CUser = Get-MgUser -ConsistencyLevel eventual -Count userCount -Filter "startsWith(UserPrincipalName, '$($CurrentB2CUserPrincipalName)')" -Top 1
+
   $appRegistrations = Install-AppRegistrations `
     -B2CTenantName $userInputParams.B2CTenantName `
     -SignupAdminFQDN $userInputParams.SignupAdminFQDN `
     -SaasAppFQDN $userInputParams.SaasAppFQDN `
+    -CurrentB2CUserId $currentB2CUser.Id `
 
   $selfSignedCert = New-AsdkSelfSignedCertificate
 
@@ -582,6 +589,45 @@ function New-AppRegistration {
   }
 }
 
+function New-SPAppRoleAssignment{
+  param(
+    [Parameter(Mandatory = $true, HelpMessage = "The identifier of the application that consent is being granted on.")]
+    [string] $ServicePrincipalId,
+  
+    [Parameter(Mandatory = $true, HelpMessage = "The identifier of the API application for which consent is being granted for.")]
+    [string] $ResourceId,
+
+    [Parameter(Mandatory = $true, HelpMessage = "The identifier of the API application for which consent is being granted for.")]
+    [string] $AppRoleId
+  )
+  
+  $appRoleAssignment = @{
+    "principalId"= $ServicePrincipalId
+    "resourceId"= $ResourceId
+    "appRoleId"= $AppRoleId
+    }
+  
+  New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $ServicePrincipalId -BodyParameter $appRoleAssignment | Format-List
+}
+function New-UserAppRoleAssignment{
+  param(
+    [Parameter(Mandatory = $true, HelpMessage = "The identifier of the application that consent is being granted on.")]
+    [string] $UserId,
+  
+    [Parameter(Mandatory = $true, HelpMessage = "The identifier of the API application for which consent is being granted for.")]
+    [string] $ResourceId,
+    [Parameter(Mandatory = $true, HelpMessage = "The app role id to be assigned to the user")]
+    [string] $AppRoleId
+  )
+  
+  $appRoleAssignment = @{
+    "principalId"= $UserId
+    "resourceId"= $ResourceId
+    "appRoleId"= $AppRoleId
+    }
+  
+  New-MgUserAppRoleAssignment -UserId $UserId -BodyParameter $appRoleAssignment | Format-List
+}
 # Helper Function called by Install-AppRegistrations
 function New-AdminConsent {
   param(
@@ -592,51 +638,41 @@ function New-AdminConsent {
     [string] $ApiObjectId,
 
     [Parameter(Mandatory = $true, HelpMessage = "The Scopes for which consent is being granted.")]
-    [array] $ApiScopes,
+    [array] $ApiScopes
 
-    [Parameter(Mandatory = $false, HelpMessage = "The app roles to assign to the application.")]
-    [array] $AppRoles = $null
+    # [Parameter(Mandatory = $false, HelpMessage = "The app roles to assign to the application.")]
+    # [array] $AppRoles = $null
   )
 
   Write-Host "Granting consent for $ApiScopes on $ClientObjectId for $ApiObjectId"
 
-  if ($AppRoles -ne $null) {
-    foreach ($role in $AppRoles) {
-      $params = @{
-        PrincipalId = $role.PrincipalId
-        ResourceId  = $role.ResourceId
-        AppRoleId   = $role.AppRoleId 
-      }
+  # if ($AppRoles -ne $null) {
+  #   foreach ($role in $AppRoles) {
+  #     $params = @{
+  #       PrincipalId = $role.PrincipalId
+  #       ResourceId  = $role.ResourceId
+  #       AppRoleId   = $role.AppRoleId 
+  #     }
 
-      # TODO: Check to see if an app role assignment exists before creating a new one. 
-      # $filterClause = "AppRoleId eq '$($role.AppRoleId)'"
-      #$appRoleAssignment = Get-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $role.PrincipalId -Filter+approleid+eq+$role.AppRoleId -Top 1 
-      # if ($appRoleAssignment -ne $null) {
-      #   Write-Warning "App Role Assignment for $($role.AppRoleId) already exists. Skipping creation."
-      #   continue
-      # }
+  #     # TODO: Check to see if an app role assignment exists before creating a new one. 
+  #     # $filterClause = "AppRoleId eq '$($role.AppRoleId)'"
+  #     #$appRoleAssignment = Get-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $role.PrincipalId -Filter+approleid+eq+$role.AppRoleId -Top 1 
+  #     # if ($appRoleAssignment -ne $null) {
+  #     #   Write-Warning "App Role Assignment for $($role.AppRoleId) already exists. Skipping creation."
+  #     #   continue
+  #     # }
 
-        ## check here if app role already exists. 
-        New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $role.PrincipalId -BodyParameter $params
-        Write-Host "Assigned $($role.AppRoleId) to $($role.PrincipalId)"
+  #       ## check here if app role already exists. 
+  #       New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $role.PrincipalId -BodyParameter $params
+  #       Write-Host "Assigned $($role.AppRoleId) to $($role.PrincipalId)"
       
-    }
-  }
+  #   }
+  # }
   
   $currentDateTime = Get-Date
   $StartTime = $currentDateTime 
   $ExpiryTime = $currentDateTime.AddYears(5)
 
-  #openid and offline_access scopes are required for AAD B2C
-  if(-not($ApiScopes.Contains("offline_access")))
-  {
-    $ApiScopes += "offline_access"
-  }
-  
-  if(-not($ApiScopes.Contains("openid")))
-  {
-    $ApiScopes += "openid"
-  }
 
   $payload = @{
     ConsentType = "AllPrincipals"
@@ -648,7 +684,7 @@ function New-AdminConsent {
     
   }
 
-  $permissionGrant = Get-MgOauth2PermissionGrant -Filter "clientId eq '$($ClientObjectId)' and ConsentType eq 'AllPrincipals'" -Top 1
+  $permissionGrant = Get-MgOauth2PermissionGrant -Filter "clientId eq '$($ClientObjectId)' and resourceId eq '$($ApiObjectId)'and ConsentType eq 'AllPrincipals'" -Top 1
 
   if ($permissionGrant -ne $null) {
     Write-Warning "Consent already exists for $($ApiScopes -Join " ") on $($ClientObjectId) for $($ApiObjectId). Skipping Creation."
@@ -664,8 +700,6 @@ function New-AdminConsent {
       throw
     }
   }
-
-  
   
 }
 
@@ -697,7 +731,9 @@ function Install-AppRegistrations {
     [Parameter(Mandatory = $true, HelpMessage = "The estimated FQDN for the signupadmin azure app service")]
     [string] $SignupAdminFQDN,
     [Parameter(Mandatory = $true, HelpMessage = "The estimated FQDN for the saas app azure app service")]
-    [string] $SaasAppFQDN
+    [string] $SaasAppFQDN,
+    [Parameter(Mandatory = $true, HelpMessage = "The current user object id")]
+    [string] $CurrentB2CUserId
   )
 
   Write-Host "Beginning Creating App Registrations"
@@ -715,9 +751,11 @@ function Install-AppRegistrations {
       }
     )
   }
-
+  
+  
   # Gets the ms graph service principal for this account.
   $msGraphServicePrincipal = Get-MgServicePrincipal -Filter "appId eq '00000003-0000-0000-c000-000000000000'" -CountVariable CountVar -Top 1 -ConsistencyLevel eventual
+  $msGraphScopes = @('offline_access', 'openid')
 
   ############## Admin API App Registration ##############
 
@@ -784,17 +822,14 @@ function Install-AppRegistrations {
 
   # Create the App Registration
   $adminAppReg = New-AppRegistration -AppRegistrationData $adminAppRegConfig
-  # Get the scopes from the admin app registration
-  $adminScopes =  @('offline_access', 'openid') #$adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
+
   # Grant admin consent on the signupadmin app for the admin scopes
-  New-AdminConsent -ClientObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopes
-
-
-
+  New-AdminConsent -ClientObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiObjectId $msGraphServicePrincipal.Id -ApiScopes $msGraphScopes
+  New-UserAppRoleAssignment -UserId  $CurrentB2CUserId -ResourceId $adminAppReg.ServicePrincipalProperties.Id -AppRoleId "00000000-0000-0000-0000-000000000000"
 
   ############## Signup Admin App Registration ##############
 
-
+  $GlobalAdminAppRoleId = New-Guid
   $signupAdminAppRegConfig = @{
     DisplayName            = "asdk-signupadmin-app"
     IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
@@ -821,7 +856,7 @@ function Install-AppRegistrations {
         AllowedMemberTypes = @("User")
         Description        = "Global Admin - Web"
         DisplayName        = "Global Admin - Web"
-        Id                 = New-Guid
+        Id                 = $GlobalAdminAppRoleId
         Value              = "GlobalAdmin"
       }
     )
@@ -832,10 +867,11 @@ function Install-AppRegistrations {
   $signupAdminAppReg = New-AppRegistration -AppRegistrationData $signupAdminAppRegConfig -CreateSecret $true
   # Get the scopes from the admin app registration
   $adminScopes = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
-  $adminScopes += "openid"
-  $adminScopes += "offline_access"
+  
   # Grant admin consent on the signupadmin app for the admin scopes
   New-AdminConsent -ClientObjectId $signupAdminAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopes
+  New-AdminConsent -ClientObjectId $signupAdminAppReg.ServicePrincipalProperties.Id -ApiObjectId $msGraphServicePrincipal.Id -ApiScopes $msGraphScopes
+  New-UserAppRoleAssignment -UserId  $CurrentB2CUserId -ResourceId $signupAdminAppReg.ServicePrincipalProperties.Id -AppRoleId $GlobalAdminAppRoleId
 
   ############## Permissions API Registration ##############
 
@@ -871,23 +907,27 @@ function Install-AppRegistrations {
 
   # Create the App Registration
   $permissionsAppReg = New-AppRegistration -AppRegistrationData $permissionsAppRegConfig -CreateSecret $true
-  $permissionsAppRegGraphAppRoles = @( # App Roles to add to the permissions API. Namely the two for MS graph (Application.Read.All and User.Read.All)
-    @{
-      PrincipalId = $permissionsAppReg.ServicePrincipalProperties.Id
-      ResourceId  = $msGraphServicePrincipal.Id # MS Graph Resource ID
-      AppRoleId   = "df021288-bdef-4463-88db-98f22de89214" # App Role ID for Application.Read.All
-    },
-    @{
-      PrincipalId = $permissionsAppReg.ServicePrincipalProperties.Id
-      ResourceId  = $msGraphServicePrincipal.Id # MS Graph Resource ID
-      AppRoleId   = "9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30" # App Role ID for User.Read.All
-    }
-  )
+  # $permissionsAppRegGraphAppRoles = @( # App Roles to add to the permissions API. Namely the two for MS graph (Application.Read.All and User.Read.All)
+  #   @{
+  #     PrincipalId = $permissionsAppReg.ServicePrincipalProperties.Id
+  #     ResourceId  = $msGraphServicePrincipal.Id # MS Graph Resource ID
+  #     AppRoleId   = "df021288-bdef-4463-88db-98f22de89214" # App Role ID for Application.Read.All
+  #   },
+  #   @{
+  #     PrincipalId = $permissionsAppReg.ServicePrincipalProperties.Id
+  #     ResourceId  = $msGraphServicePrincipal.Id # MS Graph Resource ID
+  #     AppRoleId   = "9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30" # App Role ID for User.Read.All
+  #   }
+  # )
   # Grant Admin consent for the scopes and app roles to MS Graph API
   New-AdminConsent -ClientObjectId $permissionsAppReg.ServicePrincipalProperties.Id `
-    -ApiObjectId "00000003-0000-0000-c000-000000000000" `
-    -ApiScopes @("Application.Read.All", "offline_access", "openid", "User.Read.All") `
-    -AppRoles $permissionsAppRegGraphAppRoles `
+    -ApiObjectId $msGraphServicePrincipal.Id `
+    -ApiScopes @("offline_access", "openid") `
+    # -AppRoles $permissionsAppRegGraphAppRoles `
+  New-SPAppRoleAssignment -ServicePrincipalId $permissionsAppReg.ServicePrincipalProperties.Id -ResourceId $msGraphServicePrincipal.Id -AppRoleId "df021288-bdef-4463-88db-98f22de89214"
+  New-SPAppRoleAssignment -ServicePrincipalId $permissionsAppReg.ServicePrincipalProperties.Id -ResourceId $msGraphServicePrincipal.Id -AppRoleId "9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30"
+  New-UserAppRoleAssignment -UserId  $CurrentB2CUserId -ResourceId $permissionsAppReg.ServicePrincipalProperties.Id -AppRoleId "00000000-0000-0000-0000-000000000000"
+
 
   ############## SaaS App App Registration ##############
 
@@ -919,11 +959,11 @@ function Install-AppRegistrations {
   $saasAppAppReg = New-AppRegistration -AppRegistrationData $saasAppAppRegConfig -CreateSecret $true
   # Get the scopes from the admin app registration
   $adminScopesForSaasApp = @($adminAppRegConfig.OAuth2PermissionScopes | Where-Object { $_.Value -eq "tenant.read" } | ForEach-Object { $_.Value })
-  $adminScopesForSaasApp += 'offline_access'
-  $adminScopesForSaasApp += 'openid'
+ 
   # Grant admin consent on the saas app app for the admin scopes
-  New-AdminConsent -ClientObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopesForSaasApp
-
+  New-AdminConsent -ClientObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopesForSaasApp
+  New-AdminConsent -ClientObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiObjectId $msGraphServicePrincipal.Id -ApiScopes $msGraphScopes
+  New-UserAppRoleAssignment -UserId  $CurrentB2CUserId -ResourceId $saasAppAppReg.ServicePrincipalProperties.Id -AppRoleId "00000000-0000-0000-0000-000000000000"
   
   ############# Create the IEF App Registration ##############
 
@@ -956,8 +996,9 @@ function Install-AppRegistrations {
 
   # Create the App Registration
   $iefAppReg = New-AppRegistration -AppRegistrationData $iefAppRegConfig
-
-
+  New-AdminConsent -ClientObjectId $iefAppReg.ServicePrincipalProperties.Id -ApiObjectId $msGraphServicePrincipal.Id -ApiScopes $msGraphScopes
+  New-UserAppRoleAssignment -UserId  $CurrentB2CUserId -ResourceId $iefAppReg.ServicePrincipalProperties.Id -AppRoleId "00000000-0000-0000-0000-000000000000"
+  
   
   ############# Create the IEF Proxy App Registration ##############
 
@@ -991,7 +1032,9 @@ function Install-AppRegistrations {
   $iefScopes = $iefAppRegConfig.OAuth2PermissionScopes | ForEach-Object { $_.Value }
   # Grant admin consent on the ief proxy app for the  ief  scopes
   New-AdminConsent -ClientObjectId $iefProxyAppReg.ServicePrincipalProperties.Id -ApiObjectId $iefAppReg.ServicePrincipalProperties.Id -ApiScopes $iefScopes
-
+  New-AdminConsent -ClientObjectId $iefProxyAppReg.ServicePrincipalProperties.Id -ApiObjectId $msGraphServicePrincipal.Id -ApiScopes $msGraphScopes
+  New-UserAppRoleAssignment -UserId  $CurrentB2CUserId -ResourceId $iefProxyAppReg.ServicePrincipalProperties.Id -AppRoleId "00000000-0000-0000-0000-000000000000"
+ 
 
   Write-Host "App Registrations Created"
   
