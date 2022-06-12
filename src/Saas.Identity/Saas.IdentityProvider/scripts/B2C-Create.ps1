@@ -122,7 +122,7 @@ function New-SaaSIdentityProvider {
     "{Settings:IdentityExperienceFrameworkAppId}"      = "$($appRegistrations.IEFProxyAppReg.AppRegistrationProperties.AppId)"
     "{Settings:PermissionsAPIUrl}"                     = "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/permissions"
     "{Settings:RolesAPIUrl}"                           = "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/roles"
-    "{Settings:RESTAPIClientCertificate}"              = "$($trustFrameworkKeySetClientCertificateKeyId)"  
+    "{Settings:RESTAPIClientCertificate}"              = "$($trustFrameworkKeySetClientCertificateKeyId.Id)"  
   }
 
   Import-IEFPolicies -configTokens $configTokens
@@ -183,7 +183,7 @@ function Get-UserInputParameters {
     InstanceNumber = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
     UserId = az account show --query "id" -o tsv
     SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. admin)"
-    SqlAdministratorLoginPassword = Read-Host -MaskInput -Prompt "Please enter the desired password for the SQL administrator account."
+    SqlAdministratorLoginPassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account."
   }
 
   # $userInputParams = @{
@@ -364,7 +364,7 @@ function New-TrustFrameworkEncryptionKey {
   $trustFrameworkKeySetName = "TokenEncryptionKeyContainer"
   $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
   New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "Enc"
-  return $trustFrameworkKeySetName
+  return $trustFrameworkKeySet
 }
 
 function New-TrustFrameworkClientCertificateKey {
@@ -380,7 +380,7 @@ function New-TrustFrameworkClientCertificateKey {
     Password = ConvertFrom-SecureString -SecureString $Pswd -AsPlainText
   }
   Invoke-MgUploadTrustFrameworkKeySetPkcs12 -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -BodyParameter $params
-  return $trustFrameworkKeySetName
+  return $trustFrameworkKeySet
 }
 
 function Import-IefPolicies {
@@ -420,9 +420,10 @@ function Import-IefPolicies {
     #TODO: Handle if file already exists
     Write-Host $customPolicyList
     $basePolicy = $customPolicyList | Where-Object { $null -eq $_.BasePolicyId }  | Select-Object -First 1
-    Write-Host "Uploading base policy $($basePolicy.Id)..."
-    Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/trustFramework/policies" -Body $basePolicy[0].Xml.OuterXml -ContentType "application/xml" -Method "POST"
-    Import-ChildTrustFrameworkPolicies -CustomPolicyList $customPolicyList  -PolicyId $($basePolicy.Id)
+    
+    New-TrustFrameworkPolicy -PolicyId $basePolicy.Id -PolicyBody $basePolicy[0].Xml.OuterXml
+   
+     Import-ChildTrustFrameworkPolicies -CustomPolicyList $customPolicyList  -PolicyId $($basePolicy.Id)
 
   }
   catch {
@@ -437,11 +438,30 @@ function Import-ChildTrustFrameworkPolicies {
   )
   Write-Host "Base Policy is $($PolicyId)"
   $customPolicyList | Where-Object { $_.BasePolicyId -eq $PolicyId }  | ForEach-Object {
-    Write-Host "Uploading policy $($_.Id)..."
-    Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/trustFramework/policies" -Body $_.Xml.OuterXml -ContentType "application/xml" -Method "POST"
+    New-TrustFrameworkPolicy -PolicyId $_.Id -PolicyBody $_.Xml.OuterXml
     Import-ChildTrustFrameworkPolicies -customPolicyList $customPolicyList -PolicyId $_.Id
   }
 
+}
+
+function New-TrustFrameworkPolicy{
+  param (
+    [string] $PolicyId,
+    [string] $PolicyBody
+  )
+  Write-Host "Uploading policy $($PolicyId)..."
+
+  $policy = Get-MgTrustFrameworkPolicy -Filter "Id eq '$($PolicyId)'" -Top 1
+  if($null -eq $policy)
+  {
+
+    Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/trustFramework/policies" -Body $PolicyBody -ContentType "application/xml" -Method "POST"
+  }
+  else 
+  {
+    Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/trustFramework/policies/$($PolicyId)" -Body $PolicyBody -ContentType "application/xml" -Method "PUT"
+  }
+ 
 }
 #Executes the Bicep template to install
 function Invoke-IdentityBicepDeployment {
@@ -475,7 +495,7 @@ function Invoke-IdentityBicepDeployment {
     saasEnvironment                                 = $SaasEnvironment
     saasInstanceNumber                              = $SaasInstanceNumber
     sqlAdministratorLogin                           = $SqlAdministratorLogin
-    sqlAdministratorLoginPassword                   = ConvertFrom-SecureString $SqlAdministratorPassword
+    sqlAdministratorLoginPassword                   = ConvertFrom-SecureString -SecureString $SqlAdministratorPassword
   } 
 
   $convertedParams = ConvertTo-AzJsonParams -params $params
@@ -686,7 +706,7 @@ function New-AdminConsent {
 
   $permissionGrant = Get-MgOauth2PermissionGrant -Filter "clientId eq '$($ClientObjectId)' and resourceId eq '$($ApiObjectId)'and ConsentType eq 'AllPrincipals'" -Top 1
 
-  if ($permissionGrant -ne $null) {
+  if ($null -ne $permissionGrant) {
     Write-Warning "Consent already exists for $($ApiScopes -Join " ") on $($ClientObjectId) for $($ApiObjectId). Skipping Creation."
   }
   else {
