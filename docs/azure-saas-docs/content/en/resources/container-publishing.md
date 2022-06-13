@@ -48,10 +48,10 @@ The `docker-compose build` command in the build artifacts script finds and invok
 
 ### iii. Dockerfile
 Each module directory contains a corresponding [Dockerfile](https://docs.docker.com/engine/reference/builder/) referenced by `docker-commpose.yml` which contains the commands necessary to construct its container image.
-- [Admin Service](src/Saas.Admin)
-- [Permissions Service](src\Saas.Identity\Saas.Permissions)
-- [Signup Application Web](src\Saas.SignupAdministration)
-- [SaaS Application Web](src\Saas.Application)
+- [Admin Service](https://github.com/Azure/azure-saas/blob/main/src/Saas.Admin/Saas.Admin.Service/Dockerfile)
+- [Permissions Service](https://github.com/Azure/azure-saas/blob/main/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Dockerfile)
+- [Signup Application Web](https://github.com/Azure/azure-saas/blob/main/src/Saas.SignupAdministration/Saas.SignupAdministration.Web/Dockerfile)
+- [SaaS Application Web](https://github.com/Azure/azure-saas/blob/main/src/Saas.Application/Saas.Application.Web/Dockerfile)
 
 | Variable    | Section | Description                                                                    | Default |
 | ----------- | ------- | ------------------------------------------------------------------------------ | ------- |
