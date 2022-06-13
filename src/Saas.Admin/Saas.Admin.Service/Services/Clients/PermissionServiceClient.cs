@@ -5,7 +5,8 @@
 //
 // Manual Modifications:
 // * Replace invoking non-implemented base class CreateHttpRequestMessageAsync with "new System.Net.Http.HttpRequestMessage()"
-//
+// * Remove NSwag expectation for client to be passed IOptions<AppSettings> since Admin service has no such settings
+// 
 //----------------------
 
 #pragma warning disable 108 // Disable "CS0108 '{derivedDto}.ToJson()' hides inherited member '{dtoBase}.ToJson()'. Use the new keyword if hiding was intended."
