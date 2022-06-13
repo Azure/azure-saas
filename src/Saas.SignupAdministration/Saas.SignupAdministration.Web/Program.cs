@@ -35,7 +35,7 @@ builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection(SR.Ema
 builder.Services.AddMvc();
 
 // Add the workflow object
-builder.Services.AddScoped<OnboardingWorkflow, OnboardingWorkflow>();
+builder.Services.AddScoped<OnboardingWorkflowServices, OnboardingWorkflowServices>();
 
 // Add this to allow for context to be shared outside of requests
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
