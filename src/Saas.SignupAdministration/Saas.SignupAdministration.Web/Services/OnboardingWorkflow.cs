@@ -1,4 +1,5 @@
-﻿using Saas.SignupAdministration.Web.Services.StateMachine;
+﻿using Dawn;
+using Saas.SignupAdministration.Web.Services.StateMachine;
 
 
 namespace Saas.SignupAdministration.Web.Services
@@ -31,7 +32,7 @@ namespace Saas.SignupAdministration.Web.Services
             OnboardingWorkflowItem? item = _persistenceProvider.Retrieve<OnboardingWorkflowItem>(SR.OnboardingWorkflowItemKey);
             OnboardingWorkflowState? state = _persistenceProvider.Retrieve<OnboardingWorkflowState>(SR.OnboardingWorkflowStateKey);
 
-            OnboardingWorkflowItem = (item is null) ? new() : item;
+            OnboardingWorkflowItem = (item is null) ? new(Guard.Argument(applicationUser?.NameIdentifier).NotNull().NotDefault().ToString()) : item;
             OnboardingWorkflowState = (state is null) ? new() : state;
         }
 
