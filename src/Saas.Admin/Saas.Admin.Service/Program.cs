@@ -34,10 +34,6 @@ else
 builder.Services.AddDbContext<TenantsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TenantsContext")));
 
-// Add options using options pattern : https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0
-builder.Services.Configure<PermissionsApiOptions>(builder.Configuration.GetSection("PermissionsApi"));
-
-
 // Add authentication for incoming requests
 builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, "AzureAdB2C");
 
@@ -121,8 +117,6 @@ builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient
     })
     .ConfigureHttpClient(options =>
     {
-        options.BaseAddress = new Uri(builder.Configuration["PermissionsApi:BaseUrl"]);
-
         if (builder.Environment.IsDevelopment())
         {
             // The permissions API expects the certificate to be provided to the application layer by the web server after the TLS handshake
