@@ -120,6 +120,7 @@ namespace Saas.SignupAdministration.Web
         public const string CosmosNamePartitionKey = "/name";
         public const string AdminServiceBaseUrl = "AppSettings:AdminServiceBaseUrl";
         public const string AdminServiceScopesProperty = "AppSettings:AdminServiceScopes";
+        public const string AdminServiceScopeBaseUrlProperty = "AppSettings:AdminServiceScopeBaseUrl";
         public const string AzureAdB2CProperty = "AzureAdB2C";
         public const string KeyVaultProperty = "KeyVault:Url";
         public const string EmailOptionsProperty = "EmailOptions";
