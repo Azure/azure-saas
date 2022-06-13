@@ -6,9 +6,9 @@ namespace Saas.SignupAdministration.Web.Controllers
     public class OnboardingWorkflowController : Controller
     {
         private readonly ILogger<OnboardingWorkflowController> _logger;
-        private readonly OnboardingWorkflowServices _onboardingWorkflow;
+        private readonly OnboardingWorkflowService _onboardingWorkflow;
 
-        public OnboardingWorkflowController(ILogger<OnboardingWorkflowController> logger, OnboardingWorkflowServices onboardingWorkflow)
+        public OnboardingWorkflowController(ILogger<OnboardingWorkflowController> logger, OnboardingWorkflowService onboardingWorkflow)
         {
             _logger = logger;
             _onboardingWorkflow = onboardingWorkflow;
