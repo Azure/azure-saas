@@ -14,9 +14,13 @@ namespace Saas.Application.Web.Services
             _appSettings = appSettings;
         }
 
+        // TODO (SaaS): Define the necessary public tenant information necessary for non-member users
+
         public async Task<TenantViewModel> GetTenantInfoByRouteAsync(string route)
         {
             TenantInfoDTO? tenant = null;
+
+            await _adminServiceClient.IsValidPathAsync(route);
 
             if (route != null)
                 tenant = await _adminServiceClient.TenantinfoAsync(route);

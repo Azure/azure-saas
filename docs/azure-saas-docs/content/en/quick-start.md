@@ -14,12 +14,15 @@ On this page, you will find instructions for how to run the dev kit in your loca
 
 This project uses [Azure Active Directory B2C](https://docs.microsoft.com/azure/active-directory-b2c/overview) for an IdP (Identity Provider). The first step in setting up this project is to configure a new Azure AD B2C instance to house your local user accounts. You will also need to deploy the [Permissions API](../components/identity/permissions-service), as Azure AD B2C will have a dependency on it.
 
-To setup the Identity Framework, we have provided a PowerShell script [here]() that automates the setup for you. This PowerShell script will output a parameters file that you'll need to provide when deploying the solution to Azure in step 2.b.
+> **Important!** This section is currently here as a placeholder as we are actively working on creating an automated solution for deploying all components of this project to Azure, including automatically configuring the Identity Provider. Until then, feel free to clone or fork the repository and take a look at the code. Check out the [GitHub Issue](https://github.com/Azure/azure-saas/issues/171) on this work for the latest updates, and be sure to subscribe to notifications on the issue so you can receive a notification when it's ready for use!
 
-After finishing the IDP setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
+<!-- To setup the Identity Framework, we have provided a PowerShell script [here]() that automates the setup for you. This PowerShell script will output a parameters file that you'll need to provide when deploying the solution to Azure in step 2.b.
+
+After finishing the IDP setup, you may choose to either run the project locally first or immediately deploy the solution to Azure. -->
+
 ## 2.a. Running the Dev Kit in your local dev environment
 
-- Install the latest version of [Visual Studio 2022](https://visualstudio.microsoft.com/vs/). You may also use Visual Studio Code, but the solution and projects are targetted at VS2022.
+- Install the latest version of [Visual Studio 2022](https://visualstudio.microsoft.com/vs/). You may also use Visual Studio Code, but the solution and projects are targeted at VS2022.
 - Clone the repository `https://github.com/Azure/azure-saas.git` on to your dev machine.
 - Open the `.sln` in the root of the repository. This solution includes all of the modules.
 - Depending on the project you wish to run, you'll need to set some secrets to properly setup authentication with Azure AD B2C. See the [App Settings](#app-settings) section below.
@@ -38,7 +41,8 @@ Deploying to Azure is easy thanks to our pre-configured ARM (Azure Resource Mana
 
 This button will take you to the Azure portal and passing it the template. You'll be asked a few questions, and then the solution will be up and running in just a few minutes. You will need your Azure AD B2C configuration values and secrets from step 1.
 
-**Deployment Coming Soon!**
+> **Important!** This section is currently here as a placeholder as we are actively working on creating an automated solution for deploying all components of this project to Azure, including automatically configuring the Identity Provider. Until then, feel free to clone or fork the repository and take a look at the code. Check out the [GitHub Issue](https://github.com/Azure/azure-saas/issues/171) on this work for the latest updates, and be sure to subscribe to notifications on the issue so you can receive a notification when it's ready for use!
+
 <!-- [![Deploy to Azure](https://www.azuresaas.net/assets/images/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2FcreateUiDefinition.json) -->
 
 
