@@ -10,7 +10,6 @@ These processes are [defined by scripts](https://docs.github.com/en/actions/usin
 
 ## Pull-Based Image Publishing
 
-The project uses a pull-based publishing process for its container artifacts to the GitHub Container Registry. This means that it publishes available images for retrieval when appropriate by executing containers. This ensures that the solution is significantly more scalable by eliminating the need to store references to standing containers to push images to.
 
 ### i. Building Images
 
