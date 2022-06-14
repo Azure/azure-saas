@@ -1,14 +1,14 @@
 ﻿# Azure SaaS Development Kit (ASDK)
 
-## 1. Project Overview
+## Project Overview
 
 The Azure SaaS Development Kit (ASDK) provides a starting point into cloud-based Software as a Service (SaaS) for developers, startups, ISVs and enterprises. A platform for platform creators. The ASDK provides a reference architecture that is extensible to meet your application's needs, microservice-oriented, and fully-documented to empower all levels of experience in their entry into Azure Cloud Services.
 
 For more information please review the [ASDK Documentation](https://azure.github.io/azure-saas/), including a Quick Start guide for environment setup.
 
-## 2. Contents
+## Contents
 
-### i. Modules
+### Modules
 
 Several individual module readmes have been provided to cover key development concepts, necessary app setting secrets and how to run them locally.
 
@@ -17,15 +17,11 @@ Several individual module readmes have been provided to cover key development co
 - [Signup Application Web](src\Saas.SignupAdministration) - MVC web application for new Tenant signup
 - [SaaS Application Web](src\Saas.Application) - Razor application providing the SaaS service to registered tenants
 
-### ii. GitHub Workflows
+### GitHub Workflows
 
 Yaml files [have been included](.github\workflows) that define [GitHub workflow actions](https://docs.github.com/en/actions/using-workflows/about-workflows), including scripts which publish container images of your modules to the [GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). Read the corresponding [documentation](https://azure.github.io/azure-saas/resources/container-publishing/) for more information.
 
-### iii. Documentation Generation
-
-Documentation for the site is generated using [Hugo](https://gohugo.io/) and [Docksy](https://www.docsy.dev/). See [azure-saas-docs](docs/azure-saas-docs) to review setup instructions for generating documentation and the [project documentation](https://azure.github.io/azure-saas/resources/documentation-build-process/) for information on how the pages are built.
-
-## 3. Contributing
+## Contributing
 
 This project welcomes contributions and suggestions. Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit
 https://cla.microsoft.com.
@@ -34,5 +30,5 @@ When you submit a pull request, a CLA-bot will automatically determine whether y
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-## 4. License
+## License
 The Azure SaaS Development Kit is licensed under the MIT license. See the LICENSE file for more details.

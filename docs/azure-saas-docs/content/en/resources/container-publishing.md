@@ -4,7 +4,7 @@ title: "Container Publishing"
 weight: 300
 ---
 
-[Containers](https://azure.microsoft.com/en-us/product-categories/containers/) offer a high degree of platform flexibility and scalability necessary for SaaS ecosystems, and this project has been made container-ready for this reason. The [.github/workflows](https://github.com/Azure/azure-saas/tree/main/.github/workflows) directory hosts Yaml files utilized as part of [GitHub Workflows](https://docs.github.com/en/actions/using-workflows/about-workflows). Actions triggered by PR creation targeting the `main` branch handle publishing of container images to [Github Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). These container images are then pulled by the app services running the modules (if you followed the instructions listed in our [Quick Start](https://azure.github.io/azure-saas/quick-start/) guide).
+[Containers](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/container-docker-introduction/) offer a high degree of platform flexibility and scalability necessary for SaaS ecosystems, and this project has been made container-ready for this reason. The [.github/workflows](https://github.com/Azure/azure-saas/tree/main/.github/workflows) directory hosts Yaml files utilized as part of [GitHub Workflows](https://docs.github.com/en/actions/using-workflows/about-workflows). Actions triggered by PR creation targeting the `main` branch handle publishing of container images to [Github Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). These container images are then pulled by the app services running the modules (if you followed the instructions listed in our [Quick Start](https://azure.github.io/azure-saas/quick-start/) guide).
 
 These processes are [defined by scripts](https://docs.github.com/en/actions/using-workflows/triggering-a-workflow) GitHub will automatically recognize, and so comitting them to a GitHub repo will include them for use in your own project. Here are some key files and attributes to familiarize yourself with the publishing process:
 
@@ -23,7 +23,7 @@ As part of `build-artifacts.yml` each of the modules is built as a [Docker](http
 
 ### iii. Pulling Image
 
-Active containers will [receive a notification](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tasks-base-images) from a GitHub Container Registry action when the relevant module image is published, at which point they will perform a pull of the latest image to update when appropriate.
+Active containers can be prompted to update by [posting to a webhook created in the Docker Compose file](https://docs.microsoft.com/en-us/azure/app-service/deploy-ci-cd-custom-container?tabs=private&pivots=container-linux#4-enable-cicd) when the relevant module image is published, at which point they can pull the latest image when appropriate.
 
 ## Scripts and Variables
 
