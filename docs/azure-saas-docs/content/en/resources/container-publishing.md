@@ -8,7 +8,9 @@ weight: 300
 
 These processes are [defined by scripts](https://docs.github.com/en/actions/using-workflows/triggering-a-workflow) GitHub will automatically recognize, and so comitting them to a GitHub repo will include them for use in your own project. Here are some key files and attributes to familiarize yourself with the publishing process:
 
-## Pull-Based Image Publishing
+## Pull-Based vs Push-Based Deployments
+
+Using containers changes the way a traditional CI/CD process works, and moves away from a "push-based" deployment into a "pull-based" deployment. This means that in order to release code using containers, you will first need to build and publish your container (with your code and runtime inside), and then trigger your hosting environment to pull the new version of your container on your instance. See our [CI/CD for custom containers](https://docs.microsoft.com/en-us/azure/app-service/deploy-ci-cd-custom-container) documentation for a more thorough explanation of how this process works using Azure App Service. 
 
 
 ### i. Building Images
