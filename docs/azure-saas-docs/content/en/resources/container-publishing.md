@@ -6,7 +6,7 @@ weight: 300
 
 [Containers](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/container-docker-introduction/) offer a high degree of platform flexibility and scalability necessary for SaaS ecosystems, and this project has been made container-ready for this reason. The [.github/workflows](https://github.com/Azure/azure-saas/tree/main/.github/workflows) directory hosts Yaml files utilized as part of [GitHub Workflows](https://docs.github.com/en/actions/using-workflows/about-workflows). Actions triggered by PR creation targeting the `main` branch handle publishing of container images to [Github Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). These container images are then pulled by the app services running the modules (if you followed the instructions listed in our [Quick Start](https://azure.github.io/azure-saas/quick-start/) guide).
 
-These processes are [defined by scripts](https://docs.github.com/en/actions/using-workflows/triggering-a-workflow) GitHub will automatically recognize, and so comitting them to a GitHub repo will include them for use in your own project. Here are some key files and attributes to familiarize yourself with the publishing process:
+These processes are [defined by files](https://docs.github.com/en/actions/using-workflows/triggering-a-workflow) that GitHub will automatically recognize, and so comitting them to a GitHub repo will include them for use in your own project. Here are some key files and attributes to familiarize yourself with the publishing process:
 
 ## Pull-Based vs Push-Based Deployments
 
