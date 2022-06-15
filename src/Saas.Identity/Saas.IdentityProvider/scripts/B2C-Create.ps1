@@ -120,8 +120,8 @@ function New-SaaSIdentityProvider {
     "{Settings:Tenant}"                                = "$($userInputParams.B2CTenantName).onmicrosoft.com"
     "{Settings:ProxyIdentityExperienceFrameworkAppId}" = "$($appRegistrations.IEFAppReg.AppRegistrationProperties.AppId)"
     "{Settings:IdentityExperienceFrameworkAppId}"      = "$($appRegistrations.IEFProxyAppReg.AppRegistrationProperties.AppId)"
-    "{Settings:PermissionsAPIUrl}"                     = "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/permissions"
-    "{Settings:RolesAPIUrl}"                           = "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/roles"
+    "{Settings:PermissionsAPIUrl}"                     = "https://apipermissions$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/permissions"
+    "{Settings:RolesAPIUrl}"                           = "https://apipermissions$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/roles"
     "{Settings:RESTAPIClientCertificate}"              = "$($trustFrameworkKeySetClientCertificateKeyId.Id)"  
   }
 
