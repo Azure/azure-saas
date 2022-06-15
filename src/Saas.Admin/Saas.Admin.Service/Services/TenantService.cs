@@ -111,7 +111,7 @@ public class TenantService : ITenantService
     public async Task<TenantInfoDTO> GetTenantInfoByRouteAsync(string route)
     {
         var tenant = await _context.Tenants.FirstOrDefaultAsync(x => route != null && x.Route.Length == route.Length && EF.Functions.Like(x.Route, $"%{route}%"));
-        TenantInfoDTO? returnValue = new TenantInfoDTO(tenant);
+        TenantInfoDTO returnValue = new TenantInfoDTO(tenant);
         return returnValue;
     }
 
