@@ -3,7 +3,7 @@
 
 namespace Saas.SignupAdministration.Web.Services
 {
-    public class OnboardingWorkflow
+    public class OnboardingWorkflowService
     {
         private readonly IAdminServiceClient _adminServiceClient;
         private readonly IPersistenceProvider _persistenceProvider;
@@ -21,7 +21,7 @@ namespace Saas.SignupAdministration.Web.Services
             }
         }
 
-        public OnboardingWorkflow(IApplicationUser applicationUser, IAdminServiceClient adminServiceClient, IPersistenceProvider persistenceProvider, IEmail email)
+        public OnboardingWorkflowService(IApplicationUser applicationUser, IAdminServiceClient adminServiceClient, IPersistenceProvider persistenceProvider, IEmail email)
         {
             _applicationUser = applicationUser;
             _adminServiceClient = adminServiceClient;
