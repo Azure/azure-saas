@@ -10,7 +10,7 @@ For ease of explaining the project and who it might benefit, we created an examp
 
 ## Context
 
-![BadgeMeUp Screenshot](../badgemeup-screenshot.gif)
+![BadgeMeUp Screenshot](/azure-saas/images/badgemeup-screenshot.png)
 
 Contoso is a SaaS ISV (software vendor) that has a product, Contoso BadgeMeUp. Contoso BadgeMeUp is a SaaS B2B application that Contoso sells to companies that want a great tool to improve the culture within their organization.
 
