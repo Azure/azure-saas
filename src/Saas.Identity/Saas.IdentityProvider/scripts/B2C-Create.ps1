@@ -14,22 +14,6 @@ $ErrorActionPreference = "Stop"
 function New-SaaSIdentityProvider {
   [CmdletBinding()] # indicate that this is advanced function (with additional params automatically added)
   param (
-    # [Parameter(Mandatory = $true, HelpMessage = "B2C tenant name, without the '.onmicrosoft.com'.")]
-    # [string] $B2CTenantName,
-      
-    # [Parameter(Mandatory = $true, HelpMessage = "Name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist.")]
-    # [string] $IdentityFrameworkResourceGroupName,
-
-    # # [Parameter(Mandatory = $true, HelpMessage = "Name of the Azure Resource Group to put the application layer resources into. Will be created if it does not exist.")]
-    # # [string] $ApplicationLayerResourceGroupName,
-
-    # [Parameter(Mandatory = $true, HelpMessage = "Location of the Azure Resources to be deployed. Run az account list-locations to see the available locations.")]
-    # [string] $AzureResourceLocation,
-  
-    # [string] $B2CTenantLocation = "United States",
-      
-    # [Parameter(HelpMessage = "Two letter country code (e.g. 'US', 'CZ', 'DE'). https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency")]
-    # [string] $CountryCode = "US"
   )
   
   if (Get-Module -ListAvailable -Name Microsoft.Graph) {
@@ -61,23 +45,11 @@ function New-SaaSIdentityProvider {
   Invoke-TenantInit `
     -B2CTenantName $userInputParams.B2CTenantName
   
-  Write-Host "We must now authenticate against into the Microsoft Graph Service."
+  Write-Host "We must now authenticate against the Microsoft Graph Service on your newly created tenant."
   Write-Host "Starting Interactive login to Microsoft Graph. Watch for a newly opened browser window (or device flow instructions) and complete the sign in."
   # Interactive login, so that we don't have to create a separate service principal and handle secrets.
   # Make sure that the user has administrative permissions in the tenant.
   Connect-MgGraph -TenantId "$($userInputParams.B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All", "TrustFrameworkKeySet.ReadWrite.All, Policy.ReadWrite.TrustFramework"
-  
-
-  #   return @{
-  #     AdminAppReg       = $adminAppReg
-  #     SignupAdminAppReg = $signupAdminAppReg
-  #     PermissionsAppReg = $permissionsAppReg
-  #     SaasAppAppReg     = $saasAppAppReg
-  #     IEFAppReg         = $iefAppReg
-  #     IEFProxyAppReg    = $iefProxyAppReg
-  # }
-
-  # App ID for IEF Proxy App reg $appRegistrations.IEFProxyAppReg.AppRegistrationProperties.AppId
 
   $CurrentB2CUserPrincipalName = $adSignedInUser.userPrincipalName.Replace('@', '_')
   $currentB2CUser = Get-MgUser -ConsistencyLevel eventual -Count userCount -Filter "startsWith(UserPrincipalName, '$($CurrentB2CUserPrincipalName)')" -Top 1
@@ -88,7 +60,7 @@ function New-SaaSIdentityProvider {
     -SaasAppFQDN $userInputParams.SaasAppFQDN `
     -CurrentB2CUserId $currentB2CUser.Id `
 
-  $selfSignedCert = New-AsdkSelfSignedCertificate
+  $selfSignedCert = New-AsdkSelfSignedCertificate $userInputParams.SelfSignedCertificatePassword
 
   # Deploy Bicep here
 
@@ -113,7 +85,7 @@ function New-SaaSIdentityProvider {
   $trustFrameworkKeySetEncryptionKeyId = New-TrustFrameworkEncryptionKey
   
   # Upload cert to b2c here
-  $trustFrameworkKeySetClientCertificateKeyId = New-TrustFrameworkClientCertificateKey -Key $selfSignedCert.PfxString -Pswd $selfSignedCert.Pswd
+  $trustFrameworkKeySetClientCertificateKeyId = New-TrustFrameworkClientCertificateKey -Key $selfSignedCert.PfxString -Pswd $userInputParams.SelfSignedCertificatePassword
 
   # Upload policies
   $configTokens = @{
@@ -126,13 +98,16 @@ function New-SaaSIdentityProvider {
   }
 
   Import-IEFPolicies -configTokens $configTokens
+
+  
   # Output parameters.json
 
 }
 
 function Invoke-Login{
 
-  Write-Host "Logging user into azure"
+  Write-Host "We will need to log into azure twice. Once for your home tenant where your resources will be deployed, and once to your newly created b2c tenant"
+  Write-Host "Logging user into azure home tenant"
   az login
 
   Write-Host "User logged in successfully"
@@ -172,33 +147,35 @@ function Invoke-Login{
 }
 function Get-UserInputParameters {
  
-  $userInputParams = @{
-    B2CTenantName = Read-Host "Please enter a name for the B2C tenant without the onmicrosoft.com suffix. (e.g. mytenant). Please note that tenant names must be globally unique."
-    B2CTenantLocation = Read-Host "Please enter the location for the B2C Tenant to be created in. (United States', 'Europe', 'Asia Pacific', 'Australia)"
-    CountryCode = Read-Host "Please enter the two letter country code for the B2C Tenant data to be stored in (e.g. 'US', 'CZ', 'DE'). See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available country codes."
-    AzureResourceLocation = Read-Host "Please enter the location for the Azure Resources to be deployed (e.g. 'eastus', 'westus2', 'centraleurope'). Please run az account list-locations to see the available locations for your account."
-    IdentityFrameworkResourceGroupName = Read-Host "Please enter the name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist."
-    SaasEnvironment = Read-Host "Please enter an environment name. Accepted values are: 'prod', 'staging', 'dev', 'test'"
-    ProviderName = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp)"
-    InstanceNumber = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
-    UserId = az account show --query "id" -o tsv
-    SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. admin)"
-    SqlAdministratorLoginPassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account."
-  }
-
   # $userInputParams = @{
-  #   B2CTenantName                      = "lpb2ctest02"
-  #   B2CTenantLocation                  = "United States"
-  #   CountryCode                        = "US"
-  #   AzureResourceLocation              = "eastus"
-  #   IdentityFrameworkResourceGroupName = "rg-identity-02"
-  #   SaasEnvironment                    = "dev"
-  #   ProviderName                       = "lbptst"
-  #   InstanceNumber                     = "004"
-  #   UserId                             = az account show --query "id" -o tsv
-  #   SqlAdministratorLogin              = "lpadmin"
-  #   SqlAdministratorLoginPassword      = Read-Host -MaskInput -Prompt "Please enter the desired password for the SQL administrator account." #  "asJ1@mf#!aks*"
+  #   B2CTenantName = Read-Host "Please enter a name for the B2C tenant without the onmicrosoft.com suffix. (e.g. mytenant). Please note that tenant names must be globally unique."
+  #   B2CTenantLocation = Read-Host "Please enter the location for the B2C Tenant to be created in. (United States', 'Europe', 'Asia Pacific', 'Australia)"
+  #   CountryCode = Read-Host "Please enter the two letter country code for the B2C Tenant data to be stored in (e.g. 'US', 'CZ', 'DE'). See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available country codes."
+  #   AzureResourceLocation = Read-Host "Please enter the location for the Azure Resources to be deployed (e.g. 'eastus', 'westus2', 'centraleurope'). Please run az account list-locations to see the available locations for your account."
+  #   IdentityFrameworkResourceGroupName = Read-Host "Please enter the name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist."
+  #   SaasEnvironment = Read-Host "Please enter an environment name. Accepted values are: 'prod', 'staging', 'dev', 'test'"
+  #   ProviderName = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp)"
+  #   InstanceNumber = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
+  #   UserId = az account show --query "id" -o tsv
+  #   SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. admin)"
+  #   SqlAdministratorLoginPassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account."
+  #   SelfSignedCertificatePassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the self-signed certificate that will be generated."
   # }
+
+  $userInputParams = @{
+    B2CTenantName                      = "lpnewtest01"
+    B2CTenantLocation                  = "United States"
+    CountryCode                        = "US"
+    AzureResourceLocation              = "eastus"
+    IdentityFrameworkResourceGroupName = "rg-identity-04"
+    SaasEnvironment                    = "dev"
+    ProviderName                       = "4lptst"
+    InstanceNumber                     = "04"
+    UserId                             = az account show --query "id" -o tsv
+    SqlAdministratorLogin              = "lpadmin"
+    SqlAdministratorLoginPassword      = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account." #  "asJ1@mf#!aks*"
+    SelfSignedCertificatePassword      = Read-Host -AsSecureString -Prompt "Please enter the desired password for the cert account." #  "asJ1@mf#!aks*"
+  }
 
   $userInputParams.Add("SaasAppFQDN", "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
   $userInputParams.Add("SignupAdminFQDN", "https://appsignup$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
@@ -253,7 +230,7 @@ function New-AzureADB2CTenant {
   }
   
   if (!$checkRg) {
-    Write-Warning "Resource Group $AzureResourceGroup does not exist. Creating..."
+    Write-Host "Resource Group $AzureResourceGroup does not exist. Creating..."
     az group create --name $AzureResourceGroup --location $AzureResourceLocation
 
     do {
@@ -268,7 +245,7 @@ function New-AzureADB2CTenant {
   }
 
   else {
-    Write-Host "Resource Group $AzureResourceGroup already exists. Skipping creation."
+    Write-Warning "Resource Group $AzureResourceGroup already exists. Skipping creation."
   }
   
   $resourceId = "/subscriptions/$AzureSubscriptionId/resourceGroups/$AzureResourceGroup/providers/Microsoft.AzureActiveDirectory/b2cDirectories/$B2CTenantName.onmicrosoft.com"
@@ -495,7 +472,7 @@ function Invoke-IdentityBicepDeployment {
     saasEnvironment                                 = $SaasEnvironment
     saasInstanceNumber                              = $SaasInstanceNumber
     sqlAdministratorLogin                           = $SqlAdministratorLogin
-    sqlAdministratorLoginPassword                   = ConvertFrom-SecureString -SecureString $SqlAdministratorPassword
+    sqlAdministratorLoginPassword                   = ConvertFrom-SecureString -SecureString $SqlAdministratorPassword -AsPlainText
   } 
 
   $convertedParams = ConvertTo-AzJsonParams -params $params
@@ -511,22 +488,33 @@ function Invoke-IdentityBicepDeployment {
 
 }
 
-# TODO: This is currently windows specific. Need to make this cross platform.
+
 function New-AsdkSelfSignedCertificate {
+  param (
+    [securestring] $CertificatePassword
+  )
+
   try {
     Write-Host "Creating self signed certificate..."
-    $selfSignedCert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -DnsName *.azurewebsites.net -NotAfter (Get-Date).AddYears(2)
 
-    $pswd = ConvertTo-SecureString -String "1234" -Force -AsPlainText
-    Export-PfxCertificate -cert $selfSignedCert.PSPath -FilePath "selfSignedCertificate.pfx" -Password $pswd
+    # We are using OpenSSL to create a self signed certificate because the PKI powershell module is not supported on Powershell Core yet
 
-    $pfxThumbprint = $selfSignedCert.Thumbprint
+    ## Generate Certificate in .crt/.key format
+    openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out certificate.crt -keyout certificate.key -subj "/CN=*.azurewebsites.net"
+
+    # Convert Certificate to .pfx format with the private key
+    # As mentioned in our documentation, self signed certificates are not suitable for anything other than testing. Do not use this certificate in production.
+    $pswd = ConvertFrom-SecureString -SecureString $CertificatePassword -AsPlainText
+    openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in certificate.crt -password pass:$pswd
+
+    # Get the thumbprint of the generated certificate
+    $pfxThumbprint = $(openssl pkcs12 -in selfSignedCertificate.pfx -nodes -passin pass:$pswd | openssl x509 -noout -fingerprint) -replace "SHA1 Fingerprint=", "" -replace ":", ""
     $pfxBytes = Get-Content "selfSignedCertificate.pfx" -AsByteStream
     $pfxString = [System.Convert]::ToBase64String($pfxBytes)
-
   }
   catch {
-    Write-Host "An error occurred: $_.Exception.Message"
+    Write-Error "An error occurred generating the self signed certificate: $_.Exception.Message"
+    throw
   }
   
   return @{ PfxString = $pfxString; PfxThumbprint = $pfxThumbprint; Pswd = $pswd }
@@ -626,8 +614,13 @@ function New-SPAppRoleAssignment{
     "resourceId"= $ResourceId
     "appRoleId"= $AppRoleId
     }
+    try {
+      New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $ServicePrincipalId -BodyParameter $appRoleAssignment | Format-List
+    } catch {
+      Write-Warning "There was an error when attempting to grant consent on the service principal with the ID of $ServicePrincipalId. It is most likely because this script has been run twice and the permission already exists. 
+      If not, you will need to manually grant consent in the B2C Admin portal. Error: $_"
+    }
   
-  New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $ServicePrincipalId -BodyParameter $appRoleAssignment | Format-List
 }
 function New-UserAppRoleAssignment{
   param(
@@ -645,8 +638,14 @@ function New-UserAppRoleAssignment{
     "resourceId"= $ResourceId
     "appRoleId"= $AppRoleId
     }
-  
-  New-MgUserAppRoleAssignment -UserId $UserId -BodyParameter $appRoleAssignment | Format-List
+  try {
+
+    New-MgUserAppRoleAssignment -UserId $UserId -BodyParameter $appRoleAssignment | Format-List
+  }
+ catch {
+  Write-Warning "There was an error when attempting to grant consent on the User with the ID of $UserId. It is most likely because this script has been run twice and the permission already exists. 
+  If not, you will need to manually grant consent in the B2C Admin portal. Error: $_"
+}
 }
 # Helper Function called by Install-AppRegistrations
 function New-AdminConsent {
@@ -666,29 +665,6 @@ function New-AdminConsent {
 
   Write-Host "Granting consent for $ApiScopes on $ClientObjectId for $ApiObjectId"
 
-  # if ($AppRoles -ne $null) {
-  #   foreach ($role in $AppRoles) {
-  #     $params = @{
-  #       PrincipalId = $role.PrincipalId
-  #       ResourceId  = $role.ResourceId
-  #       AppRoleId   = $role.AppRoleId 
-  #     }
-
-  #     # TODO: Check to see if an app role assignment exists before creating a new one. 
-  #     # $filterClause = "AppRoleId eq '$($role.AppRoleId)'"
-  #     #$appRoleAssignment = Get-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $role.PrincipalId -Filter+approleid+eq+$role.AppRoleId -Top 1 
-  #     # if ($appRoleAssignment -ne $null) {
-  #     #   Write-Warning "App Role Assignment for $($role.AppRoleId) already exists. Skipping creation."
-  #     #   continue
-  #     # }
-
-  #       ## check here if app role already exists. 
-  #       New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $role.PrincipalId -BodyParameter $params
-  #       Write-Host "Assigned $($role.AppRoleId) to $($role.PrincipalId)"
-      
-  #   }
-  # }
-  
   $currentDateTime = Get-Date
   $StartTime = $currentDateTime 
   $ExpiryTime = $currentDateTime.AddYears(5)
@@ -927,18 +903,7 @@ function Install-AppRegistrations {
 
   # Create the App Registration
   $permissionsAppReg = New-AppRegistration -AppRegistrationData $permissionsAppRegConfig -CreateSecret $true
-  # $permissionsAppRegGraphAppRoles = @( # App Roles to add to the permissions API. Namely the two for MS graph (Application.Read.All and User.Read.All)
-  #   @{
-  #     PrincipalId = $permissionsAppReg.ServicePrincipalProperties.Id
-  #     ResourceId  = $msGraphServicePrincipal.Id # MS Graph Resource ID
-  #     AppRoleId   = "df021288-bdef-4463-88db-98f22de89214" # App Role ID for Application.Read.All
-  #   },
-  #   @{
-  #     PrincipalId = $permissionsAppReg.ServicePrincipalProperties.Id
-  #     ResourceId  = $msGraphServicePrincipal.Id # MS Graph Resource ID
-  #     AppRoleId   = "9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30" # App Role ID for User.Read.All
-  #   }
-  # )
+
   # Grant Admin consent for the scopes and app roles to MS Graph API
   New-AdminConsent -ClientObjectId $permissionsAppReg.ServicePrincipalProperties.Id `
     -ApiObjectId $msGraphServicePrincipal.Id `
@@ -1086,11 +1051,4 @@ function ConvertTo-AzJsonParams {
 # Outputs parameters.json file with the information from the b2c setup. 
 function Write-OutputFile {
     
-}
-
-$loggedIn = az account list | ConvertFrom-Json
-
-if ($loggedIn.Count -eq 0) {
-  Write-Error "No Azure account is logged in. Initiating az login command"
-  az login
 }
