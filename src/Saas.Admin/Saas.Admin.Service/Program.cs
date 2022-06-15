@@ -117,6 +117,8 @@ builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient
     })
     .ConfigureHttpClient(options =>
     {
+        options.BaseAddress = new Uri(builder.Configuration["PermissionsApi:BaseUrl"]);
+
         if (builder.Environment.IsDevelopment())
         {
             // The permissions API expects the certificate to be provided to the application layer by the web server after the TLS handshake
