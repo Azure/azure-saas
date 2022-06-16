@@ -3,6 +3,9 @@
 @description('Scopes to authorize user for the admin service.')
 param adminApiScopes string
 
+@description('The base url for the app registration that the scopes belong to.')
+param adminApiScopeBaseUrl string
+
 @description('The tag of the container image to deploy to the Admin api app service.')
 param adminApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-admin:latest'
 
@@ -175,6 +178,7 @@ module signupAdminAppServiceModule 'signupAdminWeb.bicep' = if (modulesToDeploy.
   params: {
     adminApiHostName: (modulesToDeploy.adminService) ? adminApiModule.outputs.adminApiHostName : messageToUpdate
     adminApiScopes: adminApiScopes
+    adminApiScopeBaseUrl: adminApiScopeBaseUrl
     appServicePlanId: appServicePlanModule.outputs.appServicePlanId
     keyVaultUri: keyVaultModule.outputs.keyVaultUri
     location: location

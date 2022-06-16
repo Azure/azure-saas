@@ -2,19 +2,22 @@ FROM mcr.microsoft.com/powershell:lts-ubuntu-20.04
 
 RUN apt-get update && apt-get install curl -y
  
+ENV DOCKER=true
+
 # Install the Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 #Install Required powershell modules
-RUN pwsh -Command "Install-Module -Name Microsoft.Graph -Force"
-RUN pwsh -Command "Install-Module -Name IefPolicies -Force"
+RUN pwsh -Command "Install-Module -Name Microsoft.Graph -Force -AllowClobber"
+RUN pwsh -Command "Install-Module -Name Microsoft.Graph.Applications -Force -AllowClobber" 
+RUN pwsh -Command "Install-Module -Name Az.Accounts -Force -AllowClobber" 
 
 WORKDIR /app
 
 
-COPY ./Saas.IdentityProvider/scripts/B2C-Create.ps1 /app
+COPY ./Saas.IdentityProvider /app/Saas.IdentityProvider
 
 COPY ./SaaS.Identity.IaC /app/Saas.Identity.IaC
 
 
-ENTRYPOINT [ "pwsh", "./B2C-Create.ps1" ]
+ENTRYPOINT [ "pwsh", "./Saas.IdentityProvider/scripts/B2C-Create.ps1" ]

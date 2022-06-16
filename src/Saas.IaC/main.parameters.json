@@ -5,6 +5,9 @@
         "adminApiScopes": {
             "value": "null"
         },
+        "adminApiScopeBaseUrl": {
+            "value": "null"
+        },
         "azureAdB2cAdminApiClientIdSecretValue": {
             "value": "null"
         },
@@ -31,10 +34,7 @@
         },
         "permissionsApiCertificateSecretValue": {
             "value": "null"
-        },
-        "permissionsApiSslThumbprintSecretValue": {
-            "value": "null"
-        },       
+        },  
         "saasProviderName": {
             "value": "dvader"
         },

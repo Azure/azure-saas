@@ -30,7 +30,7 @@ function New-SaaSIdentityProvider {
   $userInputParams = Get-UserInputParameters
   
   #get current signed in user
-  $adSignedInUser = az ad signed-in-user show | ConvertFrom-Json
+  $adSignedInUser = az account show --query "user.name" -o tsv
 
   # Create the B2C tenant resource in Azure and capture the Guid of the resource.
   $createdTenantGuid = New-AzureADB2CTenant `
@@ -51,7 +51,7 @@ function New-SaaSIdentityProvider {
   # Make sure that the user has administrative permissions in the tenant.
   Connect-MgGraph -TenantId "$($userInputParams.B2CTenantName).onmicrosoft.com" -Scopes "User.ReadWrite.All", "Application.ReadWrite.All", "Directory.AccessAsUser.All", "Directory.ReadWrite.All", "TrustFrameworkKeySet.ReadWrite.All, Policy.ReadWrite.TrustFramework"
 
-  $CurrentB2CUserPrincipalName = $adSignedInUser.userPrincipalName.Replace('@', '_')
+  $CurrentB2CUserPrincipalName = $adSignedInUser.Replace('@', '_')
   $currentB2CUser = Get-MgUser -ConsistencyLevel eventual -Count userCount -Filter "startsWith(UserPrincipalName, '$($CurrentB2CUserPrincipalName)')" -Top 1
 
   $appRegistrations = Install-AppRegistrations `
@@ -66,8 +66,8 @@ function New-SaaSIdentityProvider {
 
   Invoke-IdentityBicepDeployment `
     -IdentityFrameworkResourceGroupName $userInputParams.IdentityFrameworkResourceGroupName `
-    -B2CDomain "https://$($userInputParams.B2CTenantName).b2clogin.com" `
-    -B2CInstanceName "$($userInputParams.B2CTenantName).onmicrosoft.com" `
+    -B2CDomain "$($userInputParams.B2CTenantName).onmicrosoft.com" `
+    -B2CInstanceName "https://$($userInputParams.B2CTenantName).b2clogin.com" `
     -B2cTenantId $createdTenantGuid `
     -PermissionsApiAppRegClientId $appRegistrations.PermissionsAppReg.AppRegistrationProperties.AppId `
     -PermissionsApiAppRegClientSecret $appRegistrations.PermissionsAppReg.ClientSecret `
@@ -92,16 +92,39 @@ function New-SaaSIdentityProvider {
     "{Settings:Tenant}"                                = "$($userInputParams.B2CTenantName).onmicrosoft.com"
     "{Settings:ProxyIdentityExperienceFrameworkAppId}" = "$($appRegistrations.IEFAppReg.AppRegistrationProperties.AppId)"
     "{Settings:IdentityExperienceFrameworkAppId}"      = "$($appRegistrations.IEFProxyAppReg.AppRegistrationProperties.AppId)"
-    "{Settings:PermissionsAPIUrl}"                     = "https://apipermissions$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/permissions"
-    "{Settings:RolesAPIUrl}"                           = "https://apipermissions$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net/api/CustomClaims/roles"
+    "{Settings:PermissionsAPIUrl}"                     = "$($userInputParams.PermissionsApiFQDN)/api/CustomClaims/permissions"
+    "{Settings:RolesAPIUrl}"                           = "$($userInputParams.PermissionsApiFQDN)/api/CustomClaims/roles"
     "{Settings:RESTAPIClientCertificate}"              = "$($trustFrameworkKeySetClientCertificateKeyId.Id)"  
   }
 
   Import-IEFPolicies -configTokens $configTokens
 
   
+    
   # Output parameters.json
+  $outputParams = @{
+    '$Schema' = "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#"
+    contentVersion = "1.0.0.0"
 
+    AdminApiScopes = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.Oauth2PermissionScopes | Join-String -Property Value -Separator " " }
+    AdminApiScopeBaseUrl = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.IdentifierUris[0] }
+    AzureAdB2cAdminApiClientIdSecretValue = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.AppId }
+    AzureAdB2cDomainSecretValue = @{ value = "$($userInputParams.B2CTenantName).onmicrosoft.com" }
+    AzureAdB2cInstanceSecretValue = @{ value = "https://$($userInputParams.B2CTenantName).b2clogin.com" }
+    AzureAdB2cSignupAdminClientIdSecret = @{ value = $appRegistrations.SignupAdminAppReg.AppRegistrationProperties.AppId }
+    AzureAdB2cSignupAdminClientSecret = @{ value = $appRegistrations.SignupAdminAppReg.ClientSecret }
+    AzureAdB2cTenantIdSecretValue = @{ value = $createdTenantGuid }
+    AzureAdUserID = @{ value = $userInputParams.UserId }
+    PermissionsApiHostName = @{ value = $userInputParams.PermissionsApiFQDN }
+    PermissionsApiCertificateSecretVal = @{ value = $selfSignedCert.PfxString }
+    SaasProviderName = @{ value = $userInputParams.ProviderName }
+    SaasEnvironment = @{ value = $userInputParams.SaasEnvironment }
+    SaasInstanceNumber = @{ value = $userInputParams.InstanceNumber }
+    SqlAdministratorLogin = @{ value = $userInputParams.SqlAdministratorLogin }
+    SqlAdministratorLoginPassword = @{ value = ConvertFrom-SecureString -SecureString $SqlAdministratorPassword -AsPlainText }
+  }
+
+  Write-OutputFile -OutputParams $outputParams
 }
 
 function Invoke-Login{
@@ -112,8 +135,8 @@ function Invoke-Login{
 
   Write-Host "User logged in successfully"
 
-  $AzureSubscriptionId = $(az account show --query "id" -o tsv)
-  Write-Host "The default subscription ID from the current account is ${AzureSubscriptionId}"
+  $AzureSubscriptionId = $(az account show --query "[name, id]" -o tsv)
+  Write-Host "The default subscription from the current account is ${AzureSubscriptionId}"
   $UseDefaultSubscriptionId = Read-Host -Prompt "Is this the subscription you'd like to use? (y/n) "
 
   if ($UseDefaultSubscriptionId -eq "n") {
@@ -147,34 +170,19 @@ function Invoke-Login{
 }
 function Get-UserInputParameters {
  
-  # $userInputParams = @{
-  #   B2CTenantName = Read-Host "Please enter a name for the B2C tenant without the onmicrosoft.com suffix. (e.g. mytenant). Please note that tenant names must be globally unique."
-  #   B2CTenantLocation = Read-Host "Please enter the location for the B2C Tenant to be created in. (United States', 'Europe', 'Asia Pacific', 'Australia)"
-  #   CountryCode = Read-Host "Please enter the two letter country code for the B2C Tenant data to be stored in (e.g. 'US', 'CZ', 'DE'). See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available country codes."
-  #   AzureResourceLocation = Read-Host "Please enter the location for the Azure Resources to be deployed (e.g. 'eastus', 'westus2', 'centraleurope'). Please run az account list-locations to see the available locations for your account."
-  #   IdentityFrameworkResourceGroupName = Read-Host "Please enter the name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist."
-  #   SaasEnvironment = Read-Host "Please enter an environment name. Accepted values are: 'prod', 'staging', 'dev', 'test'"
-  #   ProviderName = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp)"
-  #   InstanceNumber = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
-  #   UserId = az account show --query "id" -o tsv
-  #   SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. admin)"
-  #   SqlAdministratorLoginPassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account."
-  #   SelfSignedCertificatePassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the self-signed certificate that will be generated."
-  # }
-
   $userInputParams = @{
-    B2CTenantName                      = "lpnewtest01"
-    B2CTenantLocation                  = "United States"
-    CountryCode                        = "US"
-    AzureResourceLocation              = "eastus"
-    IdentityFrameworkResourceGroupName = "rg-identity-04"
-    SaasEnvironment                    = "dev"
-    ProviderName                       = "4lptst"
-    InstanceNumber                     = "04"
-    UserId                             = az account show --query "id" -o tsv
-    SqlAdministratorLogin              = "lpadmin"
-    SqlAdministratorLoginPassword      = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account." #  "asJ1@mf#!aks*"
-    SelfSignedCertificatePassword      = Read-Host -AsSecureString -Prompt "Please enter the desired password for the cert account." #  "asJ1@mf#!aks*"
+    B2CTenantName = Read-Host "Please enter a name for the B2C tenant without the onmicrosoft.com suffix. (e.g. mytenant). Please note that tenant names must be globally unique."
+    B2CTenantLocation = Read-Host "Please enter the location for the B2C Tenant to be created in. (United States', 'Europe', 'Asia Pacific', 'Australia)"
+    CountryCode = Read-Host "Please enter the two letter country code for the B2C Tenant data to be stored in (e.g. 'US', 'CZ', 'DE'). See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available country codes."
+    AzureResourceLocation = Read-Host "Please enter the location for the Azure Resources to be deployed (e.g. 'eastus', 'westus2', 'centraleurope'). Please run az account list-locations to see the available locations for your account."
+    IdentityFrameworkResourceGroupName = Read-Host "Please enter the name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist."
+    SaasEnvironment = Read-Host "Please enter an environment name. Accepted values are: 'prod', 'staging', 'dev', 'test'"
+    ProviderName = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp)"
+    InstanceNumber = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
+    UserId = New-Guid #//TODO remove #az account show --query "id" -o tsv
+    SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. sqladmin). Note: 'admin' is not allowed and will fail during the deployment step."
+    SqlAdministratorLoginPassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account."
+    SelfSignedCertificatePassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the self-signed certificate that will be generated."
   }
 
   $userInputParams.Add("SaasAppFQDN", "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
@@ -362,7 +370,7 @@ function New-TrustFrameworkClientCertificateKey {
 
 function Import-IefPolicies {
   param (
-    [string] $IEFPoliciesSourceDirectory = "../policies",
+    [string] $IEFPoliciesSourceDirectory = "Saas.IdentityProvider/policies",
     [hashtable] $configTokens
   )
   Write-Host "Importing IEF policies..."
@@ -444,7 +452,7 @@ function New-TrustFrameworkPolicy{
 function Invoke-IdentityBicepDeployment {
   param (
     [string] $IdentityFrameworkResourceGroupName,
-    [string] $BicepTemplatePath = "../../Saas.Identity.IaC/main.bicep",
+    [string] $BicepTemplatePath = "Saas.Identity.IaC/main.bicep",
     [string] $B2CDomain,
     [string] $B2CInstanceName,
     [string] $B2cTenantId,
@@ -459,6 +467,11 @@ function Invoke-IdentityBicepDeployment {
     [securestring] $SqlAdministratorPassword
     
   )
+
+  # # If running inside the docker container, fix the path
+  # if ($null -eq $env:DOCKER -and $env:DOCKER -eq "true") {
+  #   $BicepTemplatePath = "Saas.Identity.IaC/main.bicep"
+  # }
 
   $params = @{
     azureAdB2cDomainSecretValue                     = $B2CDomain
@@ -553,6 +566,8 @@ function New-AppRegistration {
     else {
       Write-Host "Creating service principal for app registration '$($AppRegistrationData.DisplayName)'"
       $createdSp = New-MgServicePrincipal -AppId $createdApp.AppId -DisplayName $($createdApp.DisplayName)
+      # Sleep to give time for graph consistency to update before moving on
+      Start-Sleep -Seconds 3
     }
 
     return @{
@@ -576,6 +591,8 @@ function New-AppRegistration {
       -IsFallbackPublicClient:$AppRegistrationData.IsFallbackPublicClient `
       -Web $AppRegistrationData.Web `
       -AppRoles $AppRegistrationData.AppRoles `
+    # Sleep to give time for graph consistency to update before moving on
+    Start-Sleep -Seconds 3
 
     $newAppSecret = $null
     if ($CreateSecret) {
@@ -588,6 +605,8 @@ function New-AppRegistration {
     $sp = New-MgServicePrincipal -AppId $newApp.AppId -DisplayName $newApp.DisplayName
     Write-Host "Created Service Principal for App Registration $($AppRegistrationData.DisplayName)"
 
+    # Sleep to give time for graph consistency to update before moving on
+    Start-Sleep -Seconds 3
     Write-Host "App Registration $($newApp.DisplayName) Created"
     return @{
       ClientSecret               = $newAppSecret
@@ -1050,5 +1069,26 @@ function ConvertTo-AzJsonParams {
 
 # Outputs parameters.json file with the information from the b2c setup. 
 function Write-OutputFile {
-    
+  param (
+    [hashtable] $OutputParams,
+    [string] $OutputFile = "parameters.json",
+    [string] $OutputDirectory = "/data"
+  )
+
+  $outputJson = $OutputParams | ConvertTo-Json
+  Write-Host "Output parameters file to $OutputFile"
+
+
+  if (Test-Path -Path $OutputDirectory) {
+    Write-Host "A data directory has been mounted. Writing output file to $OutputDirectory/$OutputFile"
+    $outputJson > "$OutputDirectory/$OutputFile"
+  }
+  else {
+    Write-Host "No data directory was detected. If running this script via docker, you will need to copy this file out of the container onto your host machine."
+    $outputJson > "./$OutputFile"
+  }
+
+
 }
+
+New-SaaSIdentityProvider
