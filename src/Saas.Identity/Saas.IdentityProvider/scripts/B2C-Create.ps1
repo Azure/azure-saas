@@ -85,8 +85,8 @@ function New-SaaSIdentityProvider {
   # Upload policies
   $configTokens = @{
     "{Settings:Tenant}"                                = "$($userInputParams.B2CTenantName).onmicrosoft.com"
-    "{Settings:ProxyIdentityExperienceFrameworkAppId}" = "$($appRegistrations.IEFAppReg.AppRegistrationProperties.AppId)"
-    "{Settings:IdentityExperienceFrameworkAppId}"      = "$($appRegistrations.IEFProxyAppReg.AppRegistrationProperties.AppId)"
+    "{Settings:ProxyIdentityExperienceFrameworkAppId}" = "$($appRegistrations.IEFProxyAppReg.AppRegistrationProperties.AppId)"
+    "{Settings:IdentityExperienceFrameworkAppId}"      = "$($appRegistrations.IEFAppReg.AppRegistrationProperties.AppId)"
     "{Settings:PermissionsAPIUrl}"                     = "$($userInputParams.PermissionsApiFQDN)/api/CustomClaims/permissions"
     "{Settings:RolesAPIUrl}"                           = "$($userInputParams.PermissionsApiFQDN)/api/CustomClaims/roles"
     "{Settings:RESTAPIClientCertificate}"              = "$($trustFrameworkKeySetClientCertificateKeyId.Id)"  
@@ -111,7 +111,7 @@ function New-SaaSIdentityProvider {
       azureAdB2cTenantIdSecretValue = @{ value = $createdTenantGuid }
       permissionsApiHostName = @{ value = $userInputParams.PermissionsApiFQDN }
       permissionsApiCertificateSecretValue = @{ value = $selfSignedCert.PfxString }
-      permissionsApiCertificatePassphraseSecretValue = @{ value = $userInputParams.SelfSignedCertificatePassword }
+      permissionsApiCertificatePassphraseSecretValue = @{ value = ConvertFrom-SecureString -SecureString $userInputParams.SelfSignedCertificatePassword -AsPlainText }
       saasProviderName = @{ value = $userInputParams.ProviderName }
       saasEnvironment = @{ value = $userInputParams.SaasEnvironment }
       saasInstanceNumber = @{ value = $userInputParams.InstanceNumber }
@@ -314,7 +314,7 @@ function New-TrustFrameworkSigningKey {
   $trustFrameworkKeySetName = "TokenSigningKeyContainer"
   try {
     $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
-    New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "Sig"
+    New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "sig"
   } catch {
     Write-Warning "Error on creating new signing key. Error: $_"
   }
@@ -326,7 +326,7 @@ function New-TrustFrameworkEncryptionKey {
   $trustFrameworkKeySetName = "TokenEncryptionKeyContainer"
   try {
     $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
-    New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "Enc"
+    New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "enc"
   } catch {
     Write-Warning "Error on creating new encryption key. Error: $_"
   }
@@ -573,12 +573,13 @@ function New-AppRegistration {
     # Create the app registration using the Microsoft Graph API and store the result. 
     $newApp = New-MgApplication `
       -DisplayName $AppRegistrationData.DisplayName `
-      -Api @{Oauth2PermissionScopes = $AppRegistrationData.OAuth2PermissionScopes } `
+      -Api @{Oauth2PermissionScopes = $AppRegistrationData.OAuth2PermissionScopes; RequestedAccessTokenVersion = $AppRegistrationData.RequestedAccessTokenVersion; } `
       -IdentifierUris $AppRegistrationData.IdentifierUris `
       -RequiredResourceAccess $AppRegistrationData.RequiredResourceAccess `
       -PublicClient $AppRegistrationData.PublicClient `
       -IsFallbackPublicClient:$AppRegistrationData.IsFallbackPublicClient `
       -Web $AppRegistrationData.Web `
+      -SignInAudience $AppRegistrationData.SignInAudience `
       -AppRoles $AppRegistrationData.AppRoles `
     # Sleep to give time for graph consistency to update before moving on
     Start-Sleep -Seconds 3
@@ -811,9 +812,11 @@ function Install-AppRegistrations {
         Value                   = "tenant.read";
       }
     )
+    RequestedAccessTokenVersion = 2
     RequiredResourceAccess = @($msGraphAccess)
     IsFallbackPublicClient = $false 
     PublicClient           = @{}
+    SignInAudience         = "AzureADandPersonalMicrosoftAccount"
     Web                    = @{ 
       ImplicitGrantSettings = @{
         EnableAccessTokenIssuance = $true
@@ -839,6 +842,7 @@ function Install-AppRegistrations {
     DisplayName            = "asdk-signupadmin-app"
     IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
     OAuth2PermissionScopes = @()
+    RequestedAccessTokenVersion = 2
     RequiredResourceAccess = @(@{
         ResourceAppId  = $adminAppReg.AppRegistrationProperties.AppId
         ResourceAccess = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { @{Id = $_.Id; Type = "Scope" } }
@@ -848,6 +852,7 @@ function Install-AppRegistrations {
   
     IsFallbackPublicClient = $false
     PublicClient           = @{ }
+    SignInAudience         = "AzureADandPersonalMicrosoftAccount"
     Web                    = @{ 
       ImplicitGrantSettings = @{
         EnableAccessTokenIssuance = $true
@@ -884,6 +889,7 @@ function Install-AppRegistrations {
     DisplayName            = "asdk-permissions-api"
     IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
     OAuth2PermissionScopes = @()
+    RequestedAccessTokenVersion = 2
     RequiredResourceAccess = @(@{
         ResourceAppId  = $msGraphAccess.ResourceAppId
         ResourceAccess = @(
@@ -902,6 +908,7 @@ function Install-AppRegistrations {
     )
     IsFallbackPublicClient = $false
     PublicClient           = @{}
+    SignInAudience         = "AzureADandPersonalMicrosoftAccount"
     Web                    = @{}
     AppRoles               = @{
 
@@ -929,6 +936,7 @@ function Install-AppRegistrations {
     DisplayName            = "asdk-saas-app"
     IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
     OAuth2PermissionScopes = @()
+    RequestedAccessTokenVersion = 2
     RequiredResourceAccess = @(@{
         ResourceAppId  = $adminAppReg.AppRegistrationProperties.AppId
         ResourceAccess = @($adminAppRegConfig.OAuth2PermissionScopes | Where-Object { $_.Value -eq "tenant.read" } | ForEach-Object { @{Id = $_.Id; Type = "Scope" } })
@@ -937,6 +945,7 @@ function Install-AppRegistrations {
     )
     IsFallbackPublicClient = $false
     PublicClient           = @{ redirectUris = @("$($SaasAppFQDN)/signin-oidc") }
+    SignInAudience         = "AzureADandPersonalMicrosoftAccount"
     Web                    = @{ 
       ImplicitGrantSettings = @{
         EnableAccessTokenIssuance = $true
@@ -974,13 +983,15 @@ function Install-AppRegistrations {
       }
 
     )
+    RequestedAccessTokenVersion = $null
     RequiredResourceAccess = @($msGraphAccess)
     IsFallbackPublicClient = $false
     PublicClient           = @{}
+    SignInAudience         = "AzureADMyOrg"
     Web                    = @{ 
       ImplicitGrantSettings = @{
         EnableAccessTokenIssuance = $false
-        EnableIdTokenIssuance     = $false
+        EnableIdTokenIssuance     = $true
       }
       LogoutUrl             = ""
       RedirectUris          = @("https://$B2CTenantName.b2clogin.com/$B2CTenantName.onmicrosoft.com")
@@ -1001,6 +1012,7 @@ function Install-AppRegistrations {
     DisplayName            = "ProxyIdentityExperienceFramework"
     IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
     OAuth2PermissionScopes = @()
+    RequestedAccessTokenVersion = $null
     RequiredResourceAccess = @(@{
         ResourceAppId  = $iefAppReg.AppRegistrationProperties.AppId
         ResourceAccess = @($iefAppRegConfig.OAuth2PermissionScopes | ForEach-Object { @{Id = $_.Id; Type = "Scope" } })
@@ -1011,6 +1023,7 @@ function Install-AppRegistrations {
     PublicClient           = @{
       redirectUris = @("myapp://auth") 
     }
+    SignInAudience         = "AzureADMyOrg"
     Web                    = @{ 
       ImplicitGrantSettings = @{ }
       LogoutUrl             = ""
