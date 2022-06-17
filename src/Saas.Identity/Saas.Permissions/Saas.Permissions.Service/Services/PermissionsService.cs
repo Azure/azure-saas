@@ -96,8 +96,7 @@ public class PermissionsService : IPermissionsService
 
     }
 
-    // filter not currently implemented.
-    public async Task<ICollection<string>> GetTenantsForUserAsync(string userId, string? filter)
+    public async Task<ICollection<string>> GetTenantsForUserAsync(string userId)
     {
         _logger.LogDebug("{userId} has requested tenants", userId);
         return await _context.Permissions

@@ -137,11 +137,9 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Route("GetTenantsForUser")]
-    public async Task<ICollection<string>> GetTenantsForUser(string userId, string? filter)
+    public async Task<ICollection<string>> GetTenantsForUser(string userId)
     {
-        // filter not currently implemented.
-
-        return await _permissionsService.GetTenantsForUserAsync(userId, filter);
+        return await _permissionsService.GetTenantsForUserAsync(userId);
     }
 
     [HttpGet]

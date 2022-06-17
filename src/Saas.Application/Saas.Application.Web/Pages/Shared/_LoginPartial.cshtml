@@ -1,0 +1,26 @@
+﻿@using Microsoft.Identity.Web
+@if (User?.Identity?.IsAuthenticated ?? false)
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li class="navbar-text">Hello, @User.Identity.Name</li>
+        <!-- The Account controller is not defined in this project. Instead, it is part of Microsoft.Identity.Web.UI nuget package and
+            it defines some well known actions such as SignUp/In, SignOut and EditProfile-->
+        <li class="navbar-btn" style="padding-right:10px">
+        </li>
+        <li class="navbar-btn">
+            <form method="get" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">
+                <button type="submit" class="btn btn-primary">Sign Out</button>
+            </form>
+        </li>
+    </ul>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li class="navbar-btn">
+             <form method="get" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">
+                <button type="submit" class="btn btn-primary">Sign Up/In</button>
+            </form>
+        </li>
+    </ul>
+}

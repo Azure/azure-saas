@@ -47,10 +47,17 @@ builder.Services.AddClaimToRoleTransformer(builder.Configuration, "ClaimToRoleTr
 builder.Services.AddRouteBasedRoleHandler("tenantId");
 builder.Services.AddRouteBasedRoleHandler("userId");
 
+// TODO (SaaS): Add necessary roles to scopes for SaaS App operations
+
 builder.Services.AddAuthorization(options =>
 {
 
     options.AddPolicy(AppConstants.Policies.Authenticated, policyBuilder =>
+    {
+        policyBuilder.RequireAuthenticatedUser();
+    });
+
+    options.AddPolicy(AppConstants.Policies.GlobalAdmin, policyBuilder =>
     {
         policyBuilder.RequireAuthenticatedUser();
         policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,

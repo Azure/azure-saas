@@ -6,6 +6,7 @@ using Microsoft.Identity.Web.UI;
 using Microsoft.IdentityModel.Logging;
 using Saas.SignupAdministration.Web;
 using Microsoft.AspNetCore.HttpOverrides;
+using Saas.Application.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ if (builder.Environment.IsProduction())
     // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix
 
     builder.Configuration.AddAzureKeyVault(
-        new Uri(builder.Configuration["KeyVault:Url"]),
+        new Uri(builder.Configuration[SR.KeyVaultProperty]),
         new DefaultAzureCredential(),
         new CustomPrefixKeyVaultSecretManager("signupadmin"));
 }
@@ -34,7 +35,7 @@ builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection(SR.Ema
 builder.Services.AddMvc();
 
 // Add the workflow object
-builder.Services.AddScoped<OnboardingWorkflow, OnboardingWorkflow>();
+builder.Services.AddScoped<OnboardingWorkflowService, OnboardingWorkflowService>();
 
 // Add this to allow for context to be shared outside of requests
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -64,19 +65,27 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration[SR.AppInsightsConnectionProperty]);
 
-// builder.Configuration to sign-in users with Azure AD B2C
+// Azure AD B2C requires scope config with a fully qualified url along with an identifier. To make configuring it more manageable and less
+// error prone, we store the names of the scopes separately from the base url with identifier and combine them here.
+var adminServiceScopes = builder.Configuration[SR.AdminServiceScopesProperty].Split(" ");
+var adminServiceScopeBaseUrl = builder.Configuration[SR.AdminServiceScopeBaseUrlProperty].Trim('/');
+for (var i = 0; i < adminServiceScopes.Length; i++)
+{
+    adminServiceScopes[i] = String.Format("{0}/{1}", adminServiceScopeBaseUrl, adminServiceScopes[i].Trim('/'));
+}
+
+// Set the newly-constructed form into memory for lookup when contacting Azure AD B2C later
+builder.Configuration[SR.AdminServiceScopesProperty] = string.Join(' ', adminServiceScopes);
+
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, Constants.AzureAdB2C)
-    .EnableTokenAcquisitionToCallDownstreamApi(
-        builder.Configuration["AppSettings:AdminServiceScopes"]
-        .Split(" "))
-    //.Select(scope => builder.Configuration["AppSettings:AdminServiceScopeBaseUrl"] + scope ))
+    .EnableTokenAcquisitionToCallDownstreamApi(adminServiceScopes)
     .AddSessionTokenCaches();
 
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
 // Configuring appsettings section AzureAdB2C, into IOptions
 builder.Services.AddOptions();
-builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection("AzureAdB2C"));
+builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection(SR.AzureAdB2CProperty));
 
 // This is required for auth to work correctly when running in a docker container because of SSL Termination
 // Remove this and the subsequent app.UseForwardedHeaders() line below if you choose to run the app without using containers
@@ -91,8 +100,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
-    IdentityModelEventSource.ShowPII = true;
+    app.UseExceptionHandler("/Error");
 }
 else
 {
@@ -117,16 +125,11 @@ app.UseEndpoints(endpoints =>
 {
                 // admin
                 endpoints.MapControllerRoute(
-        name: "Admin",
-        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    name: "Admin",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
                 // default
                 endpoints.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
-                //if (env.IsDevelopment())
-                //{
-                //    routes.WithMetadata(new AllowAnonymousAttribute());
-
-                //}
 
                 endpoints.MapRazorPages();
 });

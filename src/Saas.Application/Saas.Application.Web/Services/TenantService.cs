@@ -1,21 +1,31 @@
 ﻿using Saas.Application.Web.Interfaces;
-using Saas.Application.Web.Models;
 
 namespace Saas.Application.Web.Services
 {
     public class TenantService : ITenantService
     {
         private HttpClient _client;
-        public TenantService(HttpClient client)
+        private IAdminServiceClient _adminServiceClient;
+        private IOptions<AppSettings> _appSettings;
+        public TenantService(HttpClient client, IAdminServiceClient adminServiceClient, IOptions<AppSettings> appSettings)
         {
             _client = client;
+            _adminServiceClient = adminServiceClient;
+            _appSettings = appSettings;
         }
 
-        public async Task<Tenant> GetTenantByRouteAsync(string routeName)
+        // TODO (SaaS): Define the necessary public tenant information necessary for non-member users
+
+        public async Task<TenantViewModel> GetTenantInfoByRouteAsync(string route)
         {
-            // TODO: Implement admin api and test this route
-            //return await _client.GetFromJsonAsync<Tenant>($"/tenants?routeName={routeName}"); 
-            return new Tenant { Id = 1, Name = routeName };
+            TenantInfoDTO? tenant = null;
+
+            await _adminServiceClient.IsValidPathAsync(route);
+
+            if (route != null)
+                tenant = await _adminServiceClient.TenantinfoAsync(route);
+
+            return new TenantViewModel() { Id = tenant?.Id ?? Guid.Empty, Name = tenant?.Name ?? "Unknown" };
         }
     }
 }

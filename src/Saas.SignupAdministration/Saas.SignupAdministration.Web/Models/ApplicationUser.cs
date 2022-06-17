@@ -1,24 +1,19 @@
-﻿using System.Security.Claims;
-using System.Web;
+﻿using Saas.Application.Web;
+using Saas.SignupAdministration.Web.Utilities;
+using System.Security.Claims;
 
 namespace Saas.SignupAdministration.Web.Models
 {
     public class ApplicationUser : ClaimsIdentity, IApplicationUser
     {
-        private static ClaimsIdentity Identity
-        {
-            get
-            {
-                return AppHttpContext.Current.User.Identity as ClaimsIdentity;
-            }
-        }
+        private static ClaimsIdentity? Identity => AppHttpContext.Current?.User.Identity as ClaimsIdentity;
 
         public string EmailAddress
         {
             get
             {
-                Claim claim = Identity?.FindFirst(SR.EmailAddressClaimType);
-                string emailAddress = claim?.Value;
+                var claim = Identity?.FindFirst(SR.EmailAddressClaimType);
+                string emailAddress = claim?.Value ?? string.Empty;
 
                 return (!string.IsNullOrWhiteSpace(emailAddress) || RegexUtilities.IsValidEmail(emailAddress)) ? emailAddress : (emailAddress == null) ? throw new ArgumentNullException("EmailAddress") : throw new ArgumentException("The email addres must be in a valid format", "EmailAddress");
             }
@@ -28,7 +23,7 @@ namespace Saas.SignupAdministration.Web.Models
         {
             get
             {
-                Claim claim = Identity?.FindFirst(SR.NameIdentifierClaimType);
+                var claim = Identity?.FindFirst(SR.NameIdentifierClaimType);
 
                 return (Guid.TryParse(claim?.Value, out Guid nameIdentifier)) ? nameIdentifier : throw new ArgumentNullException("NameIdentifier");
             }
@@ -38,9 +33,9 @@ namespace Saas.SignupAdministration.Web.Models
         {
             get
             {
-                Claim claim = Identity?.FindFirst(SR.AuthenticationClassReferenceClaimType);
+                var claim = Identity?.FindFirst(SR.AuthenticationClassReferenceClaimType);
 
-                return claim?.Value;
+                return claim?.Value ?? string.Empty;
             }
         }
 
@@ -48,7 +43,7 @@ namespace Saas.SignupAdministration.Web.Models
         {
             get
             {
-                Claim claim = Identity?.FindFirst(SR.AuthenticationTimeClaimType);
+                var claim = Identity?.FindFirst(SR.AuthenticationTimeClaimType);
 
                 bool success = long.TryParse(claim?.Value, out long ticks);
 
@@ -60,7 +55,7 @@ namespace Saas.SignupAdministration.Web.Models
         {
             get
             {
-                Claim claim = Identity?.FindFirst(SR.AuthenticationTimeClaimType);
+                var claim = Identity?.FindFirst(SR.AuthenticationTimeClaimType);
 
                 bool success = long.TryParse(claim?.Value, out long ticks);
 
@@ -72,9 +67,9 @@ namespace Saas.SignupAdministration.Web.Models
         {
             get
             {
-                Claim claim = Identity?.FindFirst(SR.GivenNamClaimType);
+                var claim = Identity?.FindFirst(SR.GivenNamClaimType);
 
-                return claim?.Value;
+                return claim?.Value ?? string.Empty;
             }
         }
 
@@ -82,9 +77,9 @@ namespace Saas.SignupAdministration.Web.Models
         {
             get
             {
-                Claim claim = Identity?.FindFirst(SR.SurnameClaimType);
+                var claim = Identity?.FindFirst(SR.SurnameClaimType);
 
-                return claim?.Value;
+                return claim?.Value ?? string.Empty;
             }
         }
 
@@ -92,7 +87,7 @@ namespace Saas.SignupAdministration.Web.Models
         {
             get
             {
-                Claim claim = Identity?.FindFirst(SR.TenantIdClaimType);
+                var claim = Identity?.FindFirst(SR.TenantIdClaimType);
 
                 return (Guid.TryParse(claim?.Value, out Guid tenantId)) ? tenantId : throw new ArgumentNullException("TenantId");
             }

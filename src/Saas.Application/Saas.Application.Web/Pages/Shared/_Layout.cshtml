@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="https://use.typekit.net/wme0tzj.css"/>
     <link rel="stylesheet" href="~/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/BadgeMeUp.styles.css" asp-append-version="true"/>
+    @*TODO (SaaS): Renaming the VS project file should be automatically picked up here, but if the scoped CSS stops working, consider naming it explicitly*@
+    <link rel="stylesheet" href="~/@(SR.ProjectName).styles.css" asp-append-version="true"/>
 
     <script src="~/js/jquery.min.js"></script>
     <script src="~/js/bootstrap.bundle.min.js"></script>
@@ -23,19 +24,7 @@
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-page="/Index">Welcome</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-page="">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-page="">Register</a>
-                    </li>
-
-            </div>
+            <partial name="_LoginPartial" />
         </div>
     </nav>
 </header>

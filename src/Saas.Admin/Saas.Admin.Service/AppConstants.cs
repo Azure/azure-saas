@@ -5,6 +5,7 @@ public static class AppConstants
     public static class Policies
     {
         public const string Authenticated = "Authenticated";
+        public const string GlobalAdmin = "Global_Admin";
         public const string CreateTenant = "Create_Tenant";
         public const string TenantGlobalRead = "Tenant_Global_Read";
         public const string TenantRead = "Tenant_Read";

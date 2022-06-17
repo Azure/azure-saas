@@ -1,9 +1,8 @@
-﻿namespace Saas.SignupAdministration.Web
-{
-    public interface IPersistenceProvider
-    {
-        public void Persist(string key, object value);
+﻿namespace Saas.SignupAdministration.Web;
 
-        public T Retrieve<T>(string key);
-    }
+public interface IPersistenceProvider
+{
+    public void Persist(string key, object value);
+
+    public T? Retrieve<T>(string key);
 }

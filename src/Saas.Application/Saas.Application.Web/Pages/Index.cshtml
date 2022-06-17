@@ -1,11 +1,24 @@
-﻿@page
+﻿@page "{route?}"
 @using Humanizer
 @model IndexModel
 @{
     ViewData["Title"] = "Welcome";
 }
 
-<div class="container">
+@if (Model.DisplayTenantInfo)
+{
+    @*TODO (SaaS): Replace the basic info for the tenant landing page with your own app's, or redirect to dedicated pages*@
+
+    <h1>Welcome to your app!</h1>
+    <p>This page fetches relevant tenant info based off of the provided route, returning public information available to any valid user of the system.</p>
+    <p>App Tenant ID: @(Model.tenantData?.Id.ToString() ?? "Unknown")</p>
+    <p>Tenant Name: @(Model.tenantData?.Name ?? "Unknown")</p>
+}
+else
+{
+    @*TODO (SaaS): Replace the welcome page when no tenant route is being contacted*@
+
+    <div class="container">
     <section class="row mb-5 pb-md-4">
         <div class="col-md-5">
             <h2 class="display-5 fw-normal">Welcome to Contoso BadgeMeUp!</h2>
@@ -31,22 +44,6 @@
                 given or received the most!
             </p>
         </div>
-@*        <div class="col-md-7 ps-md-5">
-            @foreach(var assignedBadge in Model.BadgeAssignments)
-            {
-                <div>
-                    <b>
-                        <a asp-page="badges/Index" asp-route-id="@assignedBadge.User.PrincipalId">@assignedBadge.User.PrincipalName</a>
-                    </b>
-                    received the
-                    <b>
-                        <a asp-page="badges/Edit" asp-route-id="@assignedBadge.Badge.Id">@assignedBadge.Badge.Name</a>
-                    </b>
-                    badge
-                    @assignedBadge.DateAssigned.Humanize()
-                </div>
-            }
-        </div>*@
     </section>
 
     <section class="row mb-5 pb-md-4">
@@ -106,3 +103,4 @@
         </div>
     </section>
 </div>
+}
