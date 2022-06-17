@@ -23,9 +23,6 @@
         "permissionsApiContainerImageTag": {
             "value": "null"
         },
-        "azureAdUserID": {
-            "value": "null"
-        },
         "saasProviderName": {
             "value": "dvader"
         },

@@ -26,9 +26,6 @@
         "azureAdB2cTenantIdSecretValue": {
             "value": "null"
         },
-        "azureAdUserID": {
-            "value": "null"
-        },
         "permissionsApiHostName": {
             "value": "null"
         },

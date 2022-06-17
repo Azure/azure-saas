@@ -41,10 +41,6 @@ function New-SaaSIdentityProvider {
     -AzureResourceLocation $userInputParams.AzureResourceLocation `
     -AzureResourceGroup $userInputParams.IdentityFrameworkResourceGroupName `
   
-  # Call the init API
-  Invoke-TenantInit `
-    -B2CTenantName $userInputParams.B2CTenantName
-  
   Write-Host "We must now authenticate against the Microsoft Graph Service on your newly created tenant."
   Write-Host "Starting Interactive login to Microsoft Graph. Watch for a newly opened browser window (or device flow instructions) and complete the sign in."
   # Interactive login, so that we don't have to create a separate service principal and handle secrets.
@@ -72,7 +68,6 @@ function New-SaaSIdentityProvider {
     -PermissionsApiAppRegClientId $appRegistrations.PermissionsAppReg.AppRegistrationProperties.AppId `
     -PermissionsApiAppRegClientSecret $appRegistrations.PermissionsAppReg.ClientSecret `
     -PermissionsApiSelfSignedCertThumbprint $selfSignedCert.PfxThumbprint `
-    -AzureAdUserID $userInputParams.UserId `
     -SaasProviderName $userInputParams.ProviderName `
     -SaasEnvironment $userInputParams.SaasEnvironment `
     -SaasInstanceNumber $userInputParams.InstanceNumber `
@@ -102,26 +97,28 @@ function New-SaaSIdentityProvider {
   
     
   # Output parameters.json
-  $outputParams = @{
-    '$Schema' = "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#"
+  $outputParams = [ordered]@{
+    '$schema' = "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#"
     contentVersion = "1.0.0.0"
+    parameters = [ordered]@{
+      adminApiScopes = @{ value = $appRegistrations.AdminAppReg.AppRegistrationConfig.Oauth2PermissionScopes | Join-String -Property Value -Separator " " }
+      adminApiScopeBaseUrl = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.IdentifierUris[0] }
+      azureAdB2cAdminApiClientIdSecretValue = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.AppId }
+      azureAdB2cDomainSecretValue = @{ value = "$($userInputParams.B2CTenantName).onmicrosoft.com" }
+      azureAdB2cInstanceSecretValue = @{ value = "https://$($userInputParams.B2CTenantName).b2clogin.com" }
+      azureAdB2cSignupAdminClientIdSecretValue = @{ value = $appRegistrations.SignupAdminAppReg.AppRegistrationProperties.AppId }
+      azureAdB2cSignupAdminClientSecretSecretValue = @{ value = $appRegistrations.SignupAdminAppReg.ClientSecret }
+      azureAdB2cTenantIdSecretValue = @{ value = $createdTenantGuid }
+      permissionsApiHostName = @{ value = $userInputParams.PermissionsApiFQDN }
+      permissionsApiCertificateSecretValue = @{ value = $selfSignedCert.PfxString }
+      saasProviderName = @{ value = $userInputParams.ProviderName }
+      saasEnvironment = @{ value = $userInputParams.SaasEnvironment }
+      saasInstanceNumber = @{ value = $userInputParams.InstanceNumber }
+      sqlAdministratorLogin = @{ value = $userInputParams.SqlAdministratorLogin }
+      sqlAdministratorLoginPassword = @{ value = ConvertFrom-SecureString -SecureString $userInputParams.SqlAdministratorLoginPassword -AsPlainText }
 
-    AdminApiScopes = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.Oauth2PermissionScopes | Join-String -Property Value -Separator " " }
-    AdminApiScopeBaseUrl = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.IdentifierUris[0] }
-    AzureAdB2cAdminApiClientIdSecretValue = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.AppId }
-    AzureAdB2cDomainSecretValue = @{ value = "$($userInputParams.B2CTenantName).onmicrosoft.com" }
-    AzureAdB2cInstanceSecretValue = @{ value = "https://$($userInputParams.B2CTenantName).b2clogin.com" }
-    AzureAdB2cSignupAdminClientIdSecret = @{ value = $appRegistrations.SignupAdminAppReg.AppRegistrationProperties.AppId }
-    AzureAdB2cSignupAdminClientSecret = @{ value = $appRegistrations.SignupAdminAppReg.ClientSecret }
-    AzureAdB2cTenantIdSecretValue = @{ value = $createdTenantGuid }
-    AzureAdUserID = @{ value = $userInputParams.UserId }
-    PermissionsApiHostName = @{ value = $userInputParams.PermissionsApiFQDN }
-    PermissionsApiCertificateSecretVal = @{ value = $selfSignedCert.PfxString }
-    SaasProviderName = @{ value = $userInputParams.ProviderName }
-    SaasEnvironment = @{ value = $userInputParams.SaasEnvironment }
-    SaasInstanceNumber = @{ value = $userInputParams.InstanceNumber }
-    SqlAdministratorLogin = @{ value = $userInputParams.SqlAdministratorLogin }
-    SqlAdministratorLoginPassword = @{ value = ConvertFrom-SecureString -SecureString $SqlAdministratorPassword -AsPlainText }
+    }
+
   }
 
   Write-OutputFile -OutputParams $outputParams
@@ -135,8 +132,9 @@ function Invoke-Login{
 
   Write-Host "User logged in successfully"
 
-  $AzureSubscriptionId = $(az account show --query "[name, id]" -o tsv)
-  Write-Host "The default subscription from the current account is ${AzureSubscriptionId}"
+  $AzureSubscriptionId = $(az account show --query "id" -o tsv)
+  $AzureSubscriptionName = $(az account show -s $AzureSubscriptionId --query "name" -o tsv)
+  Write-Host "The default subscription from the current account is $AzureSubscriptionName -- $AzureSubscriptionId"
   $UseDefaultSubscriptionId = Read-Host -Prompt "Is this the subscription you'd like to use? (y/n) "
 
   if ($UseDefaultSubscriptionId -eq "n") {
@@ -179,7 +177,6 @@ function Get-UserInputParameters {
     SaasEnvironment = Read-Host "Please enter an environment name. Accepted values are: 'prod', 'staging', 'dev', 'test'"
     ProviderName = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp)"
     InstanceNumber = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
-    UserId = New-Guid #//TODO remove #az account show --query "id" -o tsv
     SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. sqladmin). Note: 'admin' is not allowed and will fail during the deployment step."
     SqlAdministratorLoginPassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account."
     SelfSignedCertificatePassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the self-signed certificate that will be generated."
@@ -239,13 +236,13 @@ function New-AzureADB2CTenant {
   
   if (!$checkRg) {
     Write-Host "Resource Group $AzureResourceGroup does not exist. Creating..."
-    az group create --name $AzureResourceGroup --location $AzureResourceLocation
+    az group create --name $AzureResourceGroup --location $AzureResourceLocation | Out-Null
 
     do {
       Write-Host "Waiting for 15 seconds for Resource Group creation..."
       Start-Sleep -Seconds 15
   
-      az group show --name $AzureResourceGroup
+      az group show --name $AzureResourceGroup | Out-Null
     }
     while ($LastExitCode -ne 0)
   
@@ -290,7 +287,7 @@ function New-AzureADB2CTenant {
 
   Write-Host "Creating B2C tenant $B2CTenantName..."
   # https://docs.microsoft.com/en-us/rest/api/activedirectory/b2c-tenants/create
-  az rest --method PUT --uri "https://management.azure.com$($resourceId)?api-version=2019-01-01-preview" --body $reqBody
+  az rest --method PUT --uri "https://management.azure.com$($resourceId)?api-version=2019-01-01-preview" --body $reqBody | Out-Null
 
   if ($LastExitCode -ne 0) {
     throw "Error on creating new B2C tenant!"
@@ -302,53 +299,37 @@ function New-AzureADB2CTenant {
     Write-Host "Waiting for 30 seconds for B2C tenant creation..."
     Start-Sleep -Seconds 30
 
-    az resource show --id $resourceId
+    az resource show --id $resourceId | Out-Null
   }
   while ($LastExitCode -ne 0)
   $tenantGuid = $(az resource show --id $resourceId --query "properties.tenantId" -o tsv)
   return $tenantGuid
 }
 
-  
-#
-# Finalize initialization of newly created B2C tenant.
-# This function needs to be called once the tenant is created and before any other steps, because it creates the b2c-extensions-app.
-#
-# Required: Azure CLI authenticated with owner permissions for the tenant.
-function Invoke-TenantInit {
-  param (
-    [string] $B2CTenantName
-  )
-  
-  $B2CTenantId = "$($B2CTenantName).onmicrosoft.com"
- 
-  # Get access token for the B2C tenant with audience "management.core.windows.net".
-  $managementAccessToken = $(az account get-access-token --tenant "$($B2CTenantId)" --query accessToken -o tsv)
-  
-  # Invoke tenant initialization which happens through the portal automatically.
-  # Ref: https://stackoverflow.com/questions/67706798/creation-of-the-b2c-extensions-app-by-script
-  Write-Host "Invoking tenant initialization..."
-  Invoke-WebRequest -Uri "https://main.b2cadmin.ext.azure.com/api/tenants/GetAndInitializeTenantPolicy?tenantId=$($B2CTenantId)&skipInitialization=false" `
-    -Method "GET" `
-    -Headers @{
-    "Authorization" = "Bearer $($managementAccessToken)"
-  }
-}
 
 
 function New-TrustFrameworkSigningKey {
   Write-Host "Creating new signing key..."
   $trustFrameworkKeySetName = "TokenSigningKeyContainer"
-  $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
-  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "Sig"
+  try {
+    $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
+    New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "Sig"
+  } catch {
+    Write-Warning "Error on creating new signing key. Error: $_"
+  }
   return $trustFrameworkKeySetName
 }
 
 function New-TrustFrameworkEncryptionKey {
   Write-Host "Creating new encryption key..."
   $trustFrameworkKeySetName = "TokenEncryptionKeyContainer"
-  $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
-  New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "Enc"
+  try {
+    $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
+    New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "Enc"
+  } catch {
+    Write-Warning "Error on creating new encryption key. Error: $_"
+  }
+    
   return $trustFrameworkKeySet
 }
 
@@ -359,12 +340,18 @@ function New-TrustFrameworkClientCertificateKey {
   )
   Write-Host "Creating client certificate policy..."
   $trustFrameworkKeySetName = "RestApiClientCertificate"
-  $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
-  $params = @{
-    Key      = $Key
-    Password = ConvertFrom-SecureString -SecureString $Pswd -AsPlainText
+  try {
+    $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
+    $params = @{
+      Key      = $Key
+      Password = ConvertFrom-SecureString -SecureString $Pswd -AsPlainText
+    }
+    Invoke-MgUploadTrustFrameworkKeySetPkcs12 -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -BodyParameter $params
+
+  } catch {
+    Write-Warning "Error on creating client certificate policy. Error: $_"
   }
-  Invoke-MgUploadTrustFrameworkKeySetPkcs12 -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -BodyParameter $params
+
   return $trustFrameworkKeySet
 }
 
@@ -409,6 +396,8 @@ function Import-IefPolicies {
     New-TrustFrameworkPolicy -PolicyId $basePolicy.Id -PolicyBody $basePolicy[0].Xml.OuterXml
    
      Import-ChildTrustFrameworkPolicies -CustomPolicyList $customPolicyList  -PolicyId $($basePolicy.Id)
+
+     Write-Host "Policy Import Complete"
 
   }
   catch {
@@ -459,7 +448,6 @@ function Invoke-IdentityBicepDeployment {
     [string] $PermissionsApiAppRegClientId,
     [string] $PermissionsApiAppRegClientSecret,
     [string] $PermissionsApiSelfSignedCertThumbprint,
-    [string] $AzureAdUserID,
     [string] $SaasProviderName,
     [string] $SaasEnvironment,
     [string] $SaasInstanceNumber,
@@ -480,7 +468,6 @@ function Invoke-IdentityBicepDeployment {
     azureAdB2cPermissionsApiClientIdSecretValue     = $PermissionsApiAppRegClientId
     azureAdB2cPermissionsApiClientSecretSecretValue = $PermissionsApiAppRegClientSecret
     permissionsApiSslThumbprintSecretValue          = $PermissionsApiSelfSignedCertThumbprint
-    azureAdUserID                                   = $AzureAdUserID
     saasProviderName                                = $SaasProviderName
     saasEnvironment                                 = $SaasEnvironment
     saasInstanceNumber                              = $SaasInstanceNumber
@@ -571,9 +558,10 @@ function New-AppRegistration {
     }
 
     return @{
-      ClientSecret               = $createdAppSecret
+      ClientSecret               = $createdAppSecret.SecretText
       AppRegistrationProperties  = $createdApp
       ServicePrincipalProperties = $createdSp
+      AppRegistrationConfig      = $AppRegistrationData
     }
 
   }
@@ -612,6 +600,7 @@ function New-AppRegistration {
       ClientSecret               = $newAppSecret
       AppRegistrationProperties  = $newApp
       ServicePrincipalProperties = $sp
+      AppRegistrationConfig      = $AppRegistrationData
     }
   }
 }
@@ -1085,9 +1074,9 @@ function Write-OutputFile {
   }
   else {
     Write-Host "No data directory was detected. If running this script via docker, you will need to copy this file out of the container onto your host machine."
+    Write-Host "ie: docker cp <container_id>:/data/parameters.json /host/path/parameters.json"
     $outputJson > "./$OutputFile"
   }
-
 
 }
 
