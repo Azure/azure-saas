@@ -30,9 +30,6 @@ param azureAdB2cSignupAdminClientSecretSecretValue string
 @description('The value of the Azure AD B2C Tenant Id Key Vault Secret.')
 param azureAdB2cTenantIdSecretValue string
 
-@description('The object ID of the logged in Azure Active Directory User.')
-param azureAdUserID string
-
 @description('The URL for the container registry to pull the docker images from')
 param containerRegistryUrl string = 'https://ghcr.io'
 
@@ -63,12 +60,12 @@ param signupAdminContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-signu
 @description('The SaaS Provider name.')
 param saasProviderName string
 
-@description('The deployment environment (e.g. prod, dev, test).')
+@description('The deployment environment (e.g. prd, dev, tst).')
 @allowed([
-  'prod'
-  'staging'
+  'prd'
+  'stg'
   'dev'
-  'test'
+  'tst'
 ])
 param saasEnvironment string = 'dev'
 
@@ -207,7 +204,6 @@ module keyVaultAccessPolicyModule 'keyVaultAccessPolicies.bicep' = {
   name: 'keyVaultAccessPolicyDeployment'
   params: {
     adminApiPrincipalId: adminApiModule.outputs.systemAssignedManagedIdentityPrincipalId
-    azureAdUserID: azureAdUserID
     keyVaultName: keyVaultName
     modulesToDeploy: modulesToDeploy
     signupAdminAppServicePrincipalId: signupAdminAppServiceModule.outputs.systemAssignedManagedIdentityPrincipalId

@@ -30,14 +30,15 @@ param permissionsApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-pe
 param location string = resourceGroup().location
 
 @description('The SaaS Provider name.')
+@maxLength(8)
 param saasProviderName string
 
-@description('The deployment environment (e.g. prod, dev, test).')
+@description('The deployment environment (e.g. prd, dev, tst).')
 @allowed([
-  'prod'
-  'staging'
+  'prd'
+  'stg'
   'dev'
-  'test'
+  'tst'
 ])
 param saasEnvironment string = 'dev'
 
