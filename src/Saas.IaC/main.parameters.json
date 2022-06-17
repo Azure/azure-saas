@@ -32,6 +32,9 @@
         "permissionsApiCertificateSecretValue": {
             "value": "null"
         },  
+        "permissionsApiCertificatePassphraseSecretValue": {
+            "value": "null"
+        },  
         "saasProviderName": {
             "value": "dvader"
         },

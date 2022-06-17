@@ -64,6 +64,13 @@ param permissionsApiCertificateSecretName string = 'admin-KeyVault--PermissionsA
 param permissionsApiCertificateSecretValue string
 
 
+@description('The name of the Permissions Api Certificate Passphrase Key Vault Secret.')
+param permissionsApiCertificatePassphraseSecretName string = 'admin-KeyVault--PermissionsApiCertPassphrase'
+
+@description('The value of the Permissions Api Certificate Passphrase Key Vault Secret.')
+param permissionsApiCertificatePassphraseSecretValue string
+
+
 // Resource - Key Vault
 //////////////////////////////////////////////////
 resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
@@ -91,6 +98,16 @@ resource permissionsApiCertificateSecret 'Microsoft.KeyVault/vaults/secrets@2021
   name: permissionsApiCertificateSecretName
   properties: {
     value: permissionsApiCertificateSecretValue
+  }
+}
+
+// Resource - Key Vault - Secret - Permissions Api Certificate Passphrase
+//////////////////////////////////////////////////
+resource permissionsApiCertificatePassphraseSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+  parent: keyVault
+  name: permissionsApiCertificatePassphraseSecretName
+  properties: {
+    value: permissionsApiCertificatePassphraseSecretValue
   }
 }
 

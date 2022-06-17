@@ -54,6 +54,9 @@ param permissionsApiHostName string
 @description('The base64 encoded certificate to save in the keyvault for securing communication with the permissions API.')
 param permissionsApiCertificateSecretValue string
 
+@description('The passphrase fopr the  certificate to save in the keyvault for securing communication with the permissions API.')
+param permissionsApiCertificatePassphraseSecretValue string
+
 @description('The tag of the container image to deploy to the SignupAdmin app service.')
 param signupAdminContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-signup:latest'
 
@@ -149,6 +152,7 @@ module keyVaultModule 'keyVault.bicep' = {
     keyVaultName: keyVaultName
     location: location
     permissionsApiCertificateSecretValue: permissionsApiCertificateSecretValue
+    permissionsApiCertificatePassphraseSecretValue: permissionsApiCertificatePassphraseSecretValue
   }
 }
 

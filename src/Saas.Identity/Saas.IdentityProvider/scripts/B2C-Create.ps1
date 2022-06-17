@@ -80,7 +80,7 @@ function New-SaaSIdentityProvider {
   $trustFrameworkKeySetEncryptionKeyId = New-TrustFrameworkEncryptionKey
   
   # Upload cert to b2c here
-  $trustFrameworkKeySetClientCertificateKeyId = New-TrustFrameworkClientCertificateKey -Key $selfSignedCert.PfxString -Pswd $userInputParams.SelfSignedCertificatePassword
+  $trustFrameworkKeySetClientCertificateKeyId = New-TrustFrameworkClientCertificateKey -CertificateString $selfSignedCert.PfxString -Pswd $userInputParams.SelfSignedCertificatePassword
 
   # Upload policies
   $configTokens = @{
@@ -111,6 +111,7 @@ function New-SaaSIdentityProvider {
       azureAdB2cTenantIdSecretValue = @{ value = $createdTenantGuid }
       permissionsApiHostName = @{ value = $userInputParams.PermissionsApiFQDN }
       permissionsApiCertificateSecretValue = @{ value = $selfSignedCert.PfxString }
+      permissionsApiCertificatePassphraseSecretValue = @{ value = $userInputParams.SelfSignedCertificatePassword }
       saasProviderName = @{ value = $userInputParams.ProviderName }
       saasEnvironment = @{ value = $userInputParams.SaasEnvironment }
       saasInstanceNumber = @{ value = $userInputParams.InstanceNumber }
@@ -335,7 +336,7 @@ function New-TrustFrameworkEncryptionKey {
 
 function New-TrustFrameworkClientCertificateKey {
   param (
-    [string] $Key = "",
+    [string] $CertificateString,
     [Security.SecureString] $Pswd
   )
   Write-Host "Creating client certificate policy..."
@@ -343,7 +344,7 @@ function New-TrustFrameworkClientCertificateKey {
   try {
     $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
     $params = @{
-      Key      = $Key
+      Key      = $CertificateString
       Password = ConvertFrom-SecureString -SecureString $Pswd -AsPlainText
     }
     Invoke-MgUploadTrustFrameworkKeySetPkcs12 -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -BodyParameter $params
