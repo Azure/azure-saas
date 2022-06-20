@@ -25,12 +25,12 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/quick-start/" /><meta property="article:section" content="" />
 
-<meta property="article:modified_time" content="2022-06-07T19:23:29-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-06-20T11:36:59-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Quick Start">
 <meta itemprop="description" content="Getting Started with the Azure SaaS Dev Kit">
-<meta itemprop="dateModified" content="2022-06-07T19:23:29-04:00" />
-<meta itemprop="wordCount" content="910">
+<meta itemprop="dateModified" content="2022-06-20T11:36:59-04:00" />
+<meta itemprop="wordCount" content="1040">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Quick Start"/>
 <meta name="twitter:description" content="Getting Started with the Azure SaaS Dev Kit"/>
@@ -182,7 +182,11 @@
 
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
-    <li><a href="#1-setup-identity-framework">1. Setup Identity Framework</a></li>
+    <li><a href="#1-setup-identity-framework">1. Setup Identity Framework</a>
+      <ul>
+        <li><a href="#11-setup-identity-framework---docker-recommended">1.1. Setup Identity Framework - Docker (Recommended)</a></li>
+      </ul>
+    </li>
     <li><a href="#2a-running-the-dev-kit-in-your-local-dev-environment">2.a. Running the Dev Kit in your local dev environment</a>
       <ul>
         <li><a href="#app-settings">App Settings</a></li>
@@ -260,11 +264,19 @@
 </blockquote>
 <h2 id="1-setup-identity-framework">1. Setup Identity Framework</h2>
 <p>This project uses <a href="https://docs.microsoft.com/azure/active-directory-b2c/overview">Azure Active Directory B2C</a> for an IdP (Identity Provider). The first step in setting up this project is to configure a new Azure AD B2C instance to house your local user accounts. You will also need to deploy the <a href="../components/identity/permissions-service">Permissions API</a>, as Azure AD B2C will have a dependency on it.</p>
+<p>To setup the Identity Framework, we have provided an interactive PowerShell script that automates the setup for you. Upon running, it will ask you to sign into your home azure account, ask you a few questions, and then begin the setup process. This PowerShell script will output a parameters file that you&rsquo;ll need to provide when deploying the solution to Azure in step 2.b.</p>
+<h3 id="11-setup-identity-framework---docker-recommended">1.1. Setup Identity Framework - Docker (Recommended)</h3>
+<p>Requirements:</p>
+<ul>
+<li><a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a></li>
+</ul>
+<p>Running our pre-built docker image is the recommended way to set up the identity framework, as the image comes pre-installed with all the dependencies necessary for execution. To start, run the following command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -it -v <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>pwd<span style="color:#66d9ef">)</span><span style="color:#e6db74">:/data&#34;</span> --name asdk-b2c-deployment ghcr.io/azure/azure-saas/asdk-identity-setup:latest
+</code></pre></div><p>This will automatically pull and run the container image and its entrypoint is the <a href="https://github.com/Azure/azure-saas/blob/main/src/Saas.Identity/Saas.IdentityProvider/scripts/B2C-Create.ps1">B2C-Create</a> powershell script.</p>
 <blockquote>
-<p><strong>Important!</strong> This section is currently here as a placeholder as we are actively working on creating an automated solution for deploying all components of this project to Azure, including automatically configuring the Identity Provider. Until then, feel free to clone or fork the repository and take a look at the code. Check out the <a href="https://github.com/Azure/azure-saas/issues/171">GitHub Issue</a> on this work for the latest updates, and be sure to subscribe to notifications on the issue so you can receive a notification when it&rsquo;s ready for use!</p>
+<p>Note: The <code>-v</code> flag on this command will mount your present working directory to the <code>/data</code> directory inside this container. This is the directory that the <code>main.parameters.json</code> file will be output to upon the script completion. If you choose to exclude this flag, the container will still execute but you will need to copy this file out of the container afterwards using the <a href="https://docs.docker.com/engine/reference/commandline/cp/">docker cp</a> command as you will need it in step 2.b.</p>
 </blockquote>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<p>After finishing the identity framework setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.</p>
 <h2 id="2a-running-the-dev-kit-in-your-local-dev-environment">2.a. Running the Dev Kit in your local dev environment</h2>
 <ul>
 <li>Install the latest version of <a href="https://visualstudio.microsoft.com/vs/">Visual Studio 2022</a>. You may also use Visual Studio Code, but the solution and projects are targeted at VS2022.</li>
@@ -280,11 +292,17 @@
 <p>Make sure you check out the <a href="#more-info">readme files</a> in each project&rsquo;s directory for a description of the app settings &amp; secrets you&rsquo;ll need to set in order to run the respective project.</p>
 <h2 id="2b-deploying-to-azure---entire-solution">2.b. Deploying to Azure - Entire Solution</h2>
 <p>Deploying to Azure is easy thanks to our pre-configured ARM (Azure Resource Manager) templates.</p>
-<p>This button will take you to the Azure portal and passing it the template. You&rsquo;ll be asked a few questions, and then the solution will be up and running in just a few minutes. You will need your Azure AD B2C configuration values and secrets from step 1.</p>
-<blockquote>
-<p><strong>Important!</strong> This section is currently here as a placeholder as we are actively working on creating an automated solution for deploying all components of this project to Azure, including automatically configuring the Identity Provider. Until then, feel free to clone or fork the repository and take a look at the code. Check out the <a href="https://github.com/Azure/azure-saas/issues/171">GitHub Issue</a> on this work for the latest updates, and be sure to subscribe to notifications on the issue so you can receive a notification when it&rsquo;s ready for use!</p>
-</blockquote>
-<!-- raw HTML omitted -->
+<p>This button will take you to the Azure portal and will pass it the ARM template. You will need the parameters file output from step 1.</p>
+<ol>
+<li>Click here: <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontentcom%2FAzure%2Fazure-saas%2Fusers%2Fchixcancode%2Fb2cpowershell%2Fsrc%2FSaas.IaC%2Fmain.json"><img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"></a>.</li>
+<li>Select &ldquo;Edit Parameters&rdquo;.</li>
+<li>Select &ldquo;Load File&rdquo; and upload the <code>parameters.json</code> file output from the Identity Framework Deployment (step 1 above). Click &ldquo;Save&rdquo;.</li>
+<li>From the dropdown, select the subscription and resource group you&rsquo;d like to deploy the resources to.</li>
+<li>Click &ldquo;Review and Create&rdquo;.</li>
+<li>Review the provided values and click &ldquo;Create&rdquo;.</li>
+<li>Wait for the deployment to finish.</li>
+</ol>
+<p>After everything finishes deploying, you can navigate to the frontend applications found in your resource group (<code>appsignup{providername}</code> and <code>appapplication{providername}</code>). They may take a couple minutes to start up after the deployment is complete.</p>
 <h3 id="how-does-this-work">How does this work?</h3>
 <p>This solution uses a Bicep template which is checked into source control. Whenever changes are detected, a GitHub pipeline compiles the template into an ARM template.</p>
 <blockquote>
@@ -315,7 +333,7 @@ Bicep is a domain-specific language (DSL) that uses declarative syntax to deploy
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified June 7, 2022: <a href="https://github.com/Azure/azure-saas/commit/c160870491b27cdef318f03b2c842fadb347a49b">insert message about deployments not ready yet (c160870)</a>
+  Last modified June 20, 2022: <a href="https://github.com/Azure/azure-saas/commit/f4f8e0500fbf40919e466908585fdfae55083f93">minor fixes (f4f8e05)</a>
 </div>
 
 </div>
