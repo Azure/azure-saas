@@ -98,25 +98,25 @@ function New-SaaSIdentityProvider {
     
   # Output parameters.json
   $outputParams = [ordered]@{
-    '$schema' = "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#"
+    '$schema'      = "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#"
     contentVersion = "1.0.0.0"
-    parameters = [ordered]@{
-      adminApiScopes = @{ value = $appRegistrations.AdminAppReg.AppRegistrationConfig.Oauth2PermissionScopes | Join-String -Property Value -Separator " " }
-      adminApiScopeBaseUrl = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.IdentifierUris[0] }
-      azureAdB2cAdminApiClientIdSecretValue = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.AppId }
-      azureAdB2cDomainSecretValue = @{ value = "$($userInputParams.B2CTenantName).onmicrosoft.com" }
-      azureAdB2cInstanceSecretValue = @{ value = "https://$($userInputParams.B2CTenantName).b2clogin.com" }
-      azureAdB2cSignupAdminClientIdSecretValue = @{ value = $appRegistrations.SignupAdminAppReg.AppRegistrationProperties.AppId }
-      azureAdB2cSignupAdminClientSecretSecretValue = @{ value = $appRegistrations.SignupAdminAppReg.ClientSecret }
-      azureAdB2cTenantIdSecretValue = @{ value = $createdTenantGuid }
-      permissionsApiHostName = @{ value = $userInputParams.PermissionsApiFQDN }
-      permissionsApiCertificateSecretValue = @{ value = $selfSignedCert.PfxString }
+    parameters     = [ordered]@{
+      adminApiScopes                                 = @{ value = $appRegistrations.AdminAppReg.AppRegistrationConfig.Oauth2PermissionScopes | Join-String -Property Value -Separator " " }
+      adminApiScopeBaseUrl                           = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.IdentifierUris[0] }
+      azureAdB2cAdminApiClientIdSecretValue          = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.AppId }
+      azureAdB2cDomainSecretValue                    = @{ value = "$($userInputParams.B2CTenantName).onmicrosoft.com" }
+      azureAdB2cInstanceSecretValue                  = @{ value = "https://$($userInputParams.B2CTenantName).b2clogin.com" }
+      azureAdB2cSignupAdminClientIdSecretValue       = @{ value = $appRegistrations.SignupAdminAppReg.AppRegistrationProperties.AppId }
+      azureAdB2cSignupAdminClientSecretSecretValue   = @{ value = $appRegistrations.SignupAdminAppReg.ClientSecret }
+      azureAdB2cTenantIdSecretValue                  = @{ value = $createdTenantGuid }
+      permissionsApiHostName                         = @{ value = $userInputParams.PermissionsApiFQDN }
+      permissionsApiCertificateSecretValue           = @{ value = $selfSignedCert.PfxString }
       permissionsApiCertificatePassphraseSecretValue = @{ value = ConvertFrom-SecureString -SecureString $userInputParams.SelfSignedCertificatePassword -AsPlainText }
-      saasProviderName = @{ value = $userInputParams.ProviderName }
-      saasEnvironment = @{ value = $userInputParams.SaasEnvironment }
-      saasInstanceNumber = @{ value = $userInputParams.InstanceNumber }
-      sqlAdministratorLogin = @{ value = $userInputParams.SqlAdministratorLogin }
-      sqlAdministratorLoginPassword = @{ value = ConvertFrom-SecureString -SecureString $userInputParams.SqlAdministratorLoginPassword -AsPlainText }
+      saasProviderName                               = @{ value = $userInputParams.ProviderName }
+      saasEnvironment                                = @{ value = $userInputParams.SaasEnvironment }
+      saasInstanceNumber                             = @{ value = $userInputParams.InstanceNumber }
+      sqlAdministratorLogin                          = @{ value = $userInputParams.SqlAdministratorLogin }
+      sqlAdministratorLoginPassword                  = @{ value = ConvertFrom-SecureString -SecureString $userInputParams.SqlAdministratorLoginPassword -AsPlainText }
 
     }
 
@@ -125,7 +125,7 @@ function New-SaaSIdentityProvider {
   Write-OutputFile -OutputParams $outputParams
 }
 
-function Invoke-Login{
+function Invoke-Login {
 
   Write-Host "We will need to log into azure twice. Once for your home tenant where your resources will be deployed, and once to your newly created b2c tenant"
   Write-Host "Logging user into azure home tenant"
@@ -162,25 +162,25 @@ function Invoke-Login{
   
   return @{
     SubscriptionId = $AzureSubscriptionId
-    AccountId  = $accountId
-    AccessToken = $accessToken
+    AccountId      = $accountId
+    AccessToken    = $accessToken
   }
 
 }
 function Get-UserInputParameters {
  
   $userInputParams = @{
-    B2CTenantName = Read-Host "Please enter a name for the B2C tenant without the onmicrosoft.com suffix. (e.g. mytenant). Please note that tenant names must be globally unique."
-    B2CTenantLocation = Read-Host "Please enter the location for the B2C Tenant to be created in. (United States', 'Europe', 'Asia Pacific', 'Australia)"
-    CountryCode = Read-Host "Please enter the two letter country code for the B2C Tenant data to be stored in (e.g. 'US', 'CZ', 'DE'). See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available country codes."
-    AzureResourceLocation = Read-Host "Please enter the location for the Azure Resources to be deployed (e.g. 'eastus', 'westus2', 'centraleurope'). Please run az account list-locations to see the available locations for your account."
+    B2CTenantName                      = Read-Host "Please enter a name for the B2C tenant without the onmicrosoft.com suffix. (e.g. mytenant). Please note that tenant names must be globally unique."
+    B2CTenantLocation                  = Read-Host "Please enter the location for the B2C Tenant to be created in. (United States', 'Europe', 'Asia Pacific', 'Australia)"
+    CountryCode                        = Read-Host "Please enter the two letter country code for the B2C Tenant data to be stored in (e.g. 'US', 'CZ', 'DE'). See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available country codes."
+    AzureResourceLocation              = Read-Host "Please enter the location for the Azure Resources to be deployed (e.g. 'eastus', 'westus2', 'centraleurope'). Please run az account list-locations to see the available locations for your account."
     IdentityFrameworkResourceGroupName = Read-Host "Please enter the name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist."
-    SaasEnvironment = Read-Host "Please enter an environment name. Accepted values are: 'prd', 'stg', 'dev', 'tst'"
-    ProviderName = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp). Max Length is 8 characters."
-    InstanceNumber = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
-    SqlAdministratorLogin = Read-Host "Please enter the desired username for the SQL administrator account (e.g. sqladmin). Note: 'admin' is not allowed and will fail during the deployment step."
-    SqlAdministratorLoginPassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account."
-    SelfSignedCertificatePassword = Read-Host -AsSecureString -Prompt "Please enter the desired password for the self-signed certificate that will be generated."
+    SaasEnvironment                    = Read-Host "Please enter an environment name. Accepted values are: 'prd', 'stg', 'dev', 'tst'"
+    ProviderName                       = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp). Max Length is 8 characters."
+    InstanceNumber                     = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
+    SqlAdministratorLogin              = Read-Host "Please enter the desired username for the SQL administrator account (e.g. sqladmin). Note: 'admin' is not allowed and will fail during the deployment step."
+    SqlAdministratorLoginPassword      = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account."
+    SelfSignedCertificatePassword      = Read-Host -AsSecureString -Prompt "Please enter the desired password for the self-signed certificate that will be generated."
   }
 
   $userInputParams.Add("SaasAppFQDN", "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
@@ -315,7 +315,8 @@ function New-TrustFrameworkSigningKey {
   try {
     $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
     New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "sig"
-  } catch {
+  }
+  catch {
     Write-Warning "Error on creating new signing key. Error: $_"
   }
   return $trustFrameworkKeySetName
@@ -327,7 +328,8 @@ function New-TrustFrameworkEncryptionKey {
   try {
     $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
     New-MgTrustFrameworkKeySetKey -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -Kty "RSA" -Use "enc"
-  } catch {
+  }
+  catch {
     Write-Warning "Error on creating new encryption key. Error: $_"
   }
     
@@ -349,7 +351,8 @@ function New-TrustFrameworkClientCertificateKey {
     }
     Invoke-MgUploadTrustFrameworkKeySetPkcs12 -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -BodyParameter $params
 
-  } catch {
+  }
+  catch {
     Write-Warning "Error on creating client certificate policy. Error: $_"
   }
 
@@ -396,9 +399,9 @@ function Import-IefPolicies {
     
     New-TrustFrameworkPolicy -PolicyId $basePolicy.Id -PolicyBody $basePolicy[0].Xml.OuterXml
    
-     Import-ChildTrustFrameworkPolicies -CustomPolicyList $customPolicyList  -PolicyId $($basePolicy.Id)
+    Import-ChildTrustFrameworkPolicies -CustomPolicyList $customPolicyList  -PolicyId $($basePolicy.Id)
 
-     Write-Host "Policy Import Complete"
+    Write-Host "Policy Import Complete"
 
   }
   catch {
@@ -419,7 +422,7 @@ function Import-ChildTrustFrameworkPolicies {
 
 }
 
-function New-TrustFrameworkPolicy{
+function New-TrustFrameworkPolicy {
   param (
     [string] $PolicyId,
     [string] $PolicyBody
@@ -427,17 +430,23 @@ function New-TrustFrameworkPolicy{
   Write-Host "Uploading policy $($PolicyId)..."
 
   $policy = Get-MgTrustFrameworkPolicy -Filter "Id eq '$($PolicyId)'" -Top 1
-  if($null -eq $policy)
-  {
+  try {
 
-    Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/trustFramework/policies" -Body $PolicyBody -ContentType "application/xml" -Method "POST"
+  
+    if ($null -eq $policy) {
+
+      Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/trustFramework/policies" -Body $PolicyBody -ContentType "application/xml" -Method "POST"
+    }
+    else {
+      Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/trustFramework/policies/$($PolicyId)" -Body $PolicyBody -ContentType "application/xml" -Method "PUT"
+    }
+
   }
-  else 
-  {
-    Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/trustFramework/policies/$($PolicyId)" -Body $PolicyBody -ContentType "application/xml" -Method "PUT"
+  catch {
+    Write-Host "An error occurred uploading the policy $PolicyId : $_.Exception.Message"
   }
- 
 }
+
 #Executes the Bicep template to install
 function Invoke-IdentityBicepDeployment {
   param (
@@ -581,8 +590,8 @@ function New-AppRegistration {
       -Web $AppRegistrationData.Web `
       -SignInAudience $AppRegistrationData.SignInAudience `
       -AppRoles $AppRegistrationData.AppRoles `
-    # Sleep to give time for graph consistency to update before moving on
-    Start-Sleep -Seconds 3
+      # Sleep to give time for graph consistency to update before moving on
+      Start-Sleep -Seconds 3
 
     $newAppSecret = $null
     if ($CreateSecret) {
@@ -607,7 +616,7 @@ function New-AppRegistration {
   }
 }
 
-function New-SPAppRoleAssignment{
+function New-SPAppRoleAssignment {
   param(
     [Parameter(Mandatory = $true, HelpMessage = "The identifier of the application that consent is being granted on.")]
     [string] $ServicePrincipalId,
@@ -620,19 +629,19 @@ function New-SPAppRoleAssignment{
   )
   
   $appRoleAssignment = @{
-    "principalId"= $ServicePrincipalId
-    "resourceId"= $ResourceId
-    "appRoleId"= $AppRoleId
-    }
-    try {
-      New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $ServicePrincipalId -BodyParameter $appRoleAssignment | Format-List
-    } catch {
-      Write-Warning "There was an error when attempting to grant consent on the service principal with the ID of $ServicePrincipalId. It is most likely because this script has been run twice and the permission already exists. 
+    "principalId" = $ServicePrincipalId
+    "resourceId"  = $ResourceId
+    "appRoleId"   = $AppRoleId
+  }
+  try {
+    New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $ServicePrincipalId -BodyParameter $appRoleAssignment | Format-List
+  } catch {
+    Write-Warning "There was an error when attempting to grant consent on the service principal with the ID of $ServicePrincipalId. It is most likely because this script has been run twice and the permission already exists. 
       If not, you will need to manually grant consent in the B2C Admin portal. Error: $_"
-    }
+  }
   
 }
-function New-UserAppRoleAssignment{
+function New-UserAppRoleAssignment {
   param(
     [Parameter(Mandatory = $true, HelpMessage = "The identifier of the application that consent is being granted on.")]
     [string] $UserId,
@@ -644,18 +653,18 @@ function New-UserAppRoleAssignment{
   )
   
   $appRoleAssignment = @{
-    "principalId"= $UserId
-    "resourceId"= $ResourceId
-    "appRoleId"= $AppRoleId
-    }
+    "principalId" = $UserId
+    "resourceId"  = $ResourceId
+    "appRoleId"   = $AppRoleId
+  }
   try {
 
     New-MgUserAppRoleAssignment -UserId $UserId -BodyParameter $appRoleAssignment | Format-List
   }
- catch {
-  Write-Warning "There was an error when attempting to grant consent on the User with the ID of $UserId. It is most likely because this script has been run twice and the permission already exists. 
+  catch {
+    Write-Warning "There was an error when attempting to grant consent on the User with the ID of $UserId. It is most likely because this script has been run twice and the permission already exists. 
   If not, you will need to manually grant consent in the B2C Admin portal. Error: $_"
-}
+  }
 }
 # Helper Function called by Install-AppRegistrations
 function New-AdminConsent {
@@ -685,8 +694,8 @@ function New-AdminConsent {
     ClientId    = $ClientObjectId 
     ResourceId  = $ApiObjectId
     Scope       = $ApiScopes -Join " " #"tenant.delete tenant.write tenant.global.delete tenant.global.write tenant.read tenant.global.read"
-    StartTime = $StartTime
-    ExpiryTime = $ExpiryTime
+    StartTime   = $StartTime
+    ExpiryTime  = $ExpiryTime
     
   }
 
@@ -766,9 +775,9 @@ function Install-AppRegistrations {
   ############## Admin API App Registration ##############
 
   $adminAppRegConfig = @{
-    DisplayName            = "asdk-admin-api"
-    IdentifierUris         = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
-    OAuth2PermissionScopes = @(
+    DisplayName                 = "asdk-admin-api"
+    IdentifierUris              = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
+    OAuth2PermissionScopes      = @(
       @{
         AdminConsentDisplayName = "Allows deletion of tenants";
         AdminConsentDescription = "Allows deletion of tenants";
@@ -813,11 +822,11 @@ function Install-AppRegistrations {
       }
     )
     RequestedAccessTokenVersion = 2
-    RequiredResourceAccess = @($msGraphAccess)
-    IsFallbackPublicClient = $false 
-    PublicClient           = @{}
-    SignInAudience         = "AzureADandPersonalMicrosoftAccount"
-    Web                    = @{ 
+    RequiredResourceAccess      = @($msGraphAccess)
+    IsFallbackPublicClient      = $false 
+    PublicClient                = @{}
+    SignInAudience              = "AzureADandPersonalMicrosoftAccount"
+    Web                         = @{ 
       ImplicitGrantSettings = @{
         EnableAccessTokenIssuance = $true
         EnableIdTokenIssuance     = $true
@@ -825,7 +834,7 @@ function Install-AppRegistrations {
       LogoutUrl             = ""
       RedirectUris          = @()
     }
-    AppRoles               = @{}
+    AppRoles                    = @{}
   }
 
   # Create the App Registration
@@ -839,21 +848,21 @@ function Install-AppRegistrations {
 
   $GlobalAdminAppRoleId = New-Guid
   $signupAdminAppRegConfig = @{
-    DisplayName            = "asdk-signupadmin-app"
-    IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
-    OAuth2PermissionScopes = @()
+    DisplayName                 = "asdk-signupadmin-app"
+    IdentifierUri               = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
+    OAuth2PermissionScopes      = @()
     RequestedAccessTokenVersion = 2
-    RequiredResourceAccess = @(@{
+    RequiredResourceAccess      = @(@{
         ResourceAppId  = $adminAppReg.AppRegistrationProperties.AppId
         ResourceAccess = $adminAppRegConfig.OAuth2PermissionScopes | ForEach-Object { @{Id = $_.Id; Type = "Scope" } }
       },
       $msGraphAccess # Add Default Microsoft Graph permissions
     )
   
-    IsFallbackPublicClient = $false
-    PublicClient           = @{ }
-    SignInAudience         = "AzureADandPersonalMicrosoftAccount"
-    Web                    = @{ 
+    IsFallbackPublicClient      = $false
+    PublicClient                = @{ }
+    SignInAudience              = "AzureADandPersonalMicrosoftAccount"
+    Web                         = @{ 
       ImplicitGrantSettings = @{
         EnableAccessTokenIssuance = $true
         EnableIdTokenIssuance     = $true
@@ -861,7 +870,7 @@ function Install-AppRegistrations {
       LogoutUrl             = "$($SignupAdminFQDN)/signout-oidc"
       RedirectUris          = @("$($SignupAdminFQDN)/signin-oidc")
     }
-    AppRoles               = @(
+    AppRoles                    = @(
       @{
         AllowedMemberTypes = @("User")
         Description        = "Global Admin - Web"
@@ -886,11 +895,11 @@ function Install-AppRegistrations {
   ############## Permissions API Registration ##############
 
   $permissionsAppRegConfig = @{
-    DisplayName            = "asdk-permissions-api"
-    IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
-    OAuth2PermissionScopes = @()
+    DisplayName                 = "asdk-permissions-api"
+    IdentifierUri               = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
+    OAuth2PermissionScopes      = @()
     RequestedAccessTokenVersion = 2
-    RequiredResourceAccess = @(@{
+    RequiredResourceAccess      = @(@{
         ResourceAppId  = $msGraphAccess.ResourceAppId
         ResourceAccess = @(
           @{
@@ -906,11 +915,11 @@ function Install-AppRegistrations {
         )
       }
     )
-    IsFallbackPublicClient = $false
-    PublicClient           = @{}
-    SignInAudience         = "AzureADandPersonalMicrosoftAccount"
-    Web                    = @{}
-    AppRoles               = @{
+    IsFallbackPublicClient      = $false
+    PublicClient                = @{}
+    SignInAudience              = "AzureADandPersonalMicrosoftAccount"
+    Web                         = @{}
+    AppRoles                    = @{
 
 
     }
@@ -925,7 +934,7 @@ function Install-AppRegistrations {
     -ApiObjectId $msGraphServicePrincipal.Id `
     -ApiScopes @("offline_access", "openid") `
     # -AppRoles $permissionsAppRegGraphAppRoles `
-  New-SPAppRoleAssignment -ServicePrincipalId $permissionsAppReg.ServicePrincipalProperties.Id -ResourceId $msGraphServicePrincipal.Id -AppRoleId "df021288-bdef-4463-88db-98f22de89214"
+    New-SPAppRoleAssignment -ServicePrincipalId $permissionsAppReg.ServicePrincipalProperties.Id -ResourceId $msGraphServicePrincipal.Id -AppRoleId "df021288-bdef-4463-88db-98f22de89214"
   New-SPAppRoleAssignment -ServicePrincipalId $permissionsAppReg.ServicePrincipalProperties.Id -ResourceId $msGraphServicePrincipal.Id -AppRoleId "9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30"
   New-UserAppRoleAssignment -UserId  $CurrentB2CUserId -ResourceId $permissionsAppReg.ServicePrincipalProperties.Id -AppRoleId "00000000-0000-0000-0000-000000000000"
 
@@ -933,20 +942,20 @@ function Install-AppRegistrations {
   ############## SaaS App App Registration ##############
 
   $saasAppAppRegConfig = @{
-    DisplayName            = "asdk-saas-app"
-    IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
-    OAuth2PermissionScopes = @()
+    DisplayName                 = "asdk-saas-app"
+    IdentifierUri               = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
+    OAuth2PermissionScopes      = @()
     RequestedAccessTokenVersion = 2
-    RequiredResourceAccess = @(@{
+    RequiredResourceAccess      = @(@{
         ResourceAppId  = $adminAppReg.AppRegistrationProperties.AppId
         ResourceAccess = @($adminAppRegConfig.OAuth2PermissionScopes | Where-Object { $_.Value -eq "tenant.read" } | ForEach-Object { @{Id = $_.Id; Type = "Scope" } })
       },
       $msGraphAccess # Add Default Microsoft Graph permissions
     )
-    IsFallbackPublicClient = $false
-    PublicClient           = @{ redirectUris = @("$($SaasAppFQDN)/signin-oidc") }
-    SignInAudience         = "AzureADandPersonalMicrosoftAccount"
-    Web                    = @{ 
+    IsFallbackPublicClient      = $false
+    PublicClient                = @{ redirectUris = @("$($SaasAppFQDN)/signin-oidc") }
+    SignInAudience              = "AzureADandPersonalMicrosoftAccount"
+    Web                         = @{ 
       ImplicitGrantSettings = @{
         EnableAccessTokenIssuance = $true
         EnableIdTokenIssuance     = $true
@@ -954,7 +963,7 @@ function Install-AppRegistrations {
       LogoutUrl             = "$($SaasAppFQDN)/signout-oidc"
       RedirectUris          = @("$($SaasAppFQDN)/signin-oidc")
     }
-    AppRoles               = @{}
+    AppRoles                    = @{}
 
   }
 
@@ -971,9 +980,9 @@ function Install-AppRegistrations {
   ############# Create the IEF App Registration ##############
 
   $iefAppRegConfig = @{
-    DisplayName            = "IdentityExperienceFramework"
-    IdentifierUris         = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
-    OAuth2PermissionScopes = @(
+    DisplayName                 = "IdentityExperienceFramework"
+    IdentifierUris              = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
+    OAuth2PermissionScopes      = @(
       @{
         AdminConsentDisplayName = "Access IdentityExperienceFramework";
         AdminConsentDescription = "Allow the application to access IdentityExperienceFramework on behalf of the signed-in user.";
@@ -984,11 +993,11 @@ function Install-AppRegistrations {
 
     )
     RequestedAccessTokenVersion = $null
-    RequiredResourceAccess = @($msGraphAccess)
-    IsFallbackPublicClient = $false
-    PublicClient           = @{}
-    SignInAudience         = "AzureADMyOrg"
-    Web                    = @{ 
+    RequiredResourceAccess      = @($msGraphAccess)
+    IsFallbackPublicClient      = $false
+    PublicClient                = @{}
+    SignInAudience              = "AzureADMyOrg"
+    Web                         = @{ 
       ImplicitGrantSettings = @{
         EnableAccessTokenIssuance = $false
         EnableIdTokenIssuance     = $true
@@ -996,7 +1005,7 @@ function Install-AppRegistrations {
       LogoutUrl             = ""
       RedirectUris          = @("https://$B2CTenantName.b2clogin.com/$B2CTenantName.onmicrosoft.com")
     }
-    AppRoles               = @{}
+    AppRoles                    = @{}
   }
 
   # Create the App Registration
@@ -1009,27 +1018,27 @@ function Install-AppRegistrations {
 
 
   $iefProxyAppRegConfig = @{
-    DisplayName            = "ProxyIdentityExperienceFramework"
-    IdentifierUri          = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
-    OAuth2PermissionScopes = @()
+    DisplayName                 = "ProxyIdentityExperienceFramework"
+    IdentifierUri               = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
+    OAuth2PermissionScopes      = @()
     RequestedAccessTokenVersion = $null
-    RequiredResourceAccess = @(@{
+    RequiredResourceAccess      = @(@{
         ResourceAppId  = $iefAppReg.AppRegistrationProperties.AppId
         ResourceAccess = @($iefAppRegConfig.OAuth2PermissionScopes | ForEach-Object { @{Id = $_.Id; Type = "Scope" } })
       },
       $msGraphAccess # Add Default Microsoft Graph permissions
     )
-    IsFallbackPublicClient = $true
-    PublicClient           = @{
+    IsFallbackPublicClient      = $true
+    PublicClient                = @{
       redirectUris = @("myapp://auth") 
     }
-    SignInAudience         = "AzureADMyOrg"
-    Web                    = @{ 
+    SignInAudience              = "AzureADMyOrg"
+    Web                         = @{ 
       ImplicitGrantSettings = @{ }
       LogoutUrl             = ""
       RedirectUris          = @()
     }
-    AppRoles               = @{}
+    AppRoles                    = @{}
 
   }
 
