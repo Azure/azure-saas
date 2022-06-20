@@ -50,8 +50,8 @@ After finishing the identity framework setup, you may choose to either run the p
 **Instructions**:
 1. Install all dependencies listed above
 2. Clone the Azure SaaS Dev Kit repository to your local machine
-3. Open a powershell window (`pwsh` command on Mac OS or Linux) and change your working directory to `src/Saas.Identity`
-4. Run the script from the powershell window with the command:
+3. Open a powershell window (`pwsh` command on Mac OS or Linux) and change your working directory to `src/Saas.Identity`. The script must be run from this directory to execute properly.
+4. Run the script from the powershell window with the following command:
     ```powershell
     ./Saas.IdentityProvider/scripts/B2C-Create.ps1
     ```
