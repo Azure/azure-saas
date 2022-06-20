@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.18.56646",
-      "templateHash": "2919876876070626919"
+      "templateHash": "12121463558890131865"
     }
   },
   "parameters": {
@@ -126,7 +126,7 @@
       }
     },
     "permissionsApiCertificatePassphraseSecretValue": {
-      "type": "string",
+      "type": "secureString",
       "metadata": {
         "description": "The passphrase fopr the  certificate to save in the keyvault for securing communication with the permissions API."
       }

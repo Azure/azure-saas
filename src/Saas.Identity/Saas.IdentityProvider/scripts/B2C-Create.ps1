@@ -152,7 +152,7 @@ function Invoke-Login{
   $accessTokenResponse = $(az account get-access-token --output json) | ConvertFrom-Json
   $accessToken = $accessTokenResponse.accessToken
 
-  Write-Host "Logging in to Az PowerShell"
+  Write-Host "Logging in to Az PowerShell. If you have a large amount of subscriptions or tenants, this can take a moment..."
 
   Connect-AzAccount -AccountId $accountId -AccessToken $accessToken -Subscription $AzureSubscriptionId
 

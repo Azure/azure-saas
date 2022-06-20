@@ -55,6 +55,7 @@ param permissionsApiHostName string
 param permissionsApiCertificateSecretValue string
 
 @description('The passphrase fopr the  certificate to save in the keyvault for securing communication with the permissions API.')
+@secure()
 param permissionsApiCertificatePassphraseSecretValue string
 
 @description('The tag of the container image to deploy to the SignupAdmin app service.')
