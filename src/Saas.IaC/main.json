@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.6.18.56646",
-      "templateHash": "12121463558890131865"
+      "templateHash": "7879559166314876750"
     }
   },
   "parameters": {
@@ -899,7 +899,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.18.56646",
-              "templateHash": "11779378853307237337"
+              "templateHash": "12940043457851371009"
             }
           },
           "parameters": {
@@ -964,6 +964,7 @@
                 "serverFarmId": "[parameters('appServicePlanId')]",
                 "httpsOnly": true,
                 "siteConfig": {
+                  "alwaysOn": true,
                   "linuxFxVersion": "[format('DOCKER|{0}', parameters('adminApiContainerImageTag'))]",
                   "appSettings": [
                     {
@@ -1073,7 +1074,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.18.56646",
-              "templateHash": "11515195673093461687"
+              "templateHash": "17028686214849389794"
             }
           },
           "parameters": {
@@ -1143,6 +1144,7 @@
                 "serverFarmId": "[parameters('appServicePlanId')]",
                 "httpsOnly": true,
                 "siteConfig": {
+                  "alwaysOn": true,
                   "linuxFxVersion": "[format('DOCKER|{0}', parameters('signupAdminApiContainerImageTag'))]",
                   "appSettings": [
                     {
@@ -1245,7 +1247,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.6.18.56646",
-              "templateHash": "12082804660581100163"
+              "templateHash": "2697376532598115904"
             }
           },
           "parameters": {
@@ -1291,6 +1293,7 @@
                 "serverFarmId": "[parameters('appServicePlanId')]",
                 "httpsOnly": true,
                 "siteConfig": {
+                  "alwaysOn": true,
                   "linuxFxVersion": "[format('DOCKER|{0}', parameters('applicationApiContainerImageTag'))]",
                   "appSettings": [
                     {

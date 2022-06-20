@@ -37,6 +37,7 @@ resource signupAdminAppService 'Microsoft.Web/sites@2021-03-01' = {
     serverFarmId: appServicePlanId
     httpsOnly: true
     siteConfig: {
+      alwaysOn: true
       linuxFxVersion: 'DOCKER|${signupAdminApiContainerImageTag}'
       appSettings: [
         {

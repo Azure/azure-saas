@@ -30,6 +30,7 @@ resource permissionsApi 'Microsoft.Web/sites@2021-03-01' = {
     clientCertEnabled: true
     clientCertMode: 'Required'
     siteConfig: {
+      alwaysOn: true
       linuxFxVersion: 'DOCKER|${permissionsApiContainerImageTag}'
       appSettings: [
         {
