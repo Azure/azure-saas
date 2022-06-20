@@ -466,11 +466,6 @@ function Invoke-IdentityBicepDeployment {
     
   )
 
-  # # If running inside the docker container, fix the path
-  # if ($null -eq $env:DOCKER -and $env:DOCKER -eq "true") {
-  #   $BicepTemplatePath = "Saas.Identity.IaC/main.bicep"
-  # }
-
   $params = @{
     azureAdB2cDomainSecretValue                     = $B2CDomain
     azureAdB2cInstanceSecretValue                   = $B2CInstanceName
@@ -1099,6 +1094,7 @@ function Write-OutputFile {
     Write-Host "No data directory was detected. If running this script via docker, you will need to copy this file out of the container onto your host machine."
     Write-Host "ie: docker cp <container_id>:/data/parameters.json /host/path/parameters.json"
     $outputJson > "./$OutputFile"
+    Write-Host "Output file written to ./$OutputFile"
   }
 
 }

@@ -16,7 +16,7 @@ This project uses [Azure Active Directory B2C](https://docs.microsoft.com/azure/
 
 To setup the Identity Framework, we have provided an interactive PowerShell script that automates the setup for you. Upon running, it will ask you to sign into your home azure account, ask you a few questions, and then begin the setup process. This PowerShell script will output a parameters file that you'll need to provide when deploying the solution to Azure in step 2.b.
 
-### 1.1. Setup Identity Framework - Docker (Recommended)
+### Option 1: Setup Identity Framework - Docker (Recommended)
 
 Requirements:
 
@@ -32,6 +32,30 @@ docker run -it -v "$(pwd):/data" --name asdk-b2c-deployment ghcr.io/azure/azure-
 This will automatically pull and run the container image and its entrypoint is the [B2C-Create](https://github.com/Azure/azure-saas/blob/main/src/Saas.Identity/Saas.IdentityProvider/scripts/B2C-Create.ps1) powershell script.
 
 > Note: The `-v` flag on this command will mount your present working directory to the `/data` directory inside this container. This is the directory that the `main.parameters.json` file will be output to upon the script completion. If you choose to exclude this flag, the container will still execute but you will need to copy this file out of the container afterwards using the [docker cp](https://docs.docker.com/engine/reference/commandline/cp/) command as you will need it in step 2.b.
+
+After finishing the identity framework setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
+
+### Option 2: Setup Identity Framework - Powershell (Advanced)
+
+**Requirements**: 
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/)
+- [Open SSL](https://www.openssl.org/)
+- [Powershell Core (v7.0+)](https://github.com/PowerShell/PowerShell)
+- Powershell Modules:
+  - [Microsoft.Graph](https://www.powershellgallery.com/packages/Microsoft.Graph/1.5.0)
+  - [Microsoft.Graph.Applications](https://www.powershellgallery.com/packages/Microsoft.Graph.Applications/1.9.6)
+  - [Az.Resources](https://www.powershellgallery.com/packages/Az.Resources/6.0.0)
+  - [Az.Accounts](https://www.powershellgallery.com/packages/Az.Accounts/2.8.0)
+
+**Instructions**:
+1. Install all dependencies listed above
+2. Clone the Azure SaaS Dev Kit repository to your local machine
+3. Open a powershell window (`pwsh` command on Mac OS or Linux) and change your working directory to `src/Saas.Identity`
+4. Run the script from the powershell window with the command:
+    ```powershell
+    ./Saas.IdentityProvider/scripts/B2C-Create.ps1
+    ```
+5. Follow the prompts in the script to sign into Azure and deploy the Identity Framework.
 
 After finishing the identity framework setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
 
