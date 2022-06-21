@@ -81,4 +81,4 @@ The 2 methods are:
 - public void Persist(string key, object value);
 - public T Retrieve<T>(string key);
 
-The included implementation simply stores the session data within memory of the server app, making it highly unsuitable at scale or when multiple app instances are deployed. A caching service able to perform realtime updates is ideal to maximize scalability. Consider session management through industry standard tools such as [Redis](https://redis.com/solutions/use-cases/session-management/).
+The included implementation simply stores the session data within memory of the server app, making unsuitable at scale or when multiple app instances are deployed. A caching service able to perform realtime updates is ideal to maximize scalability. Consider replacing the implementation of the JsonSessionPersistenceProvider class with a new implementation using something like [Azure Cache for Redis](https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-overview). Alternatively, you can configure session persistence to ensure your users are always routed to the same server.
