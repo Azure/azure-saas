@@ -21,4 +21,4 @@ jobs:
     if: needs.build-image.result == 'success'
     uses: Azure/azure-saas/.github/workflows/template-container-image-webhook.yml@main
     secrets:
-      WEBHOOK_URL: ${{ secrets.ASDK_WEB_DEV_WEBHOOK_URL }}
+      WEBHOOK_URL: ${{ secrets.ASDK_SAAS_WEB_DEV_WEBHOOK_URL }}

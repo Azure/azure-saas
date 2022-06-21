@@ -3,7 +3,7 @@ on:
     branches:
       - main
     paths:
-      - "src/Saas.Admin/**"
+      - "src/Saas.Application/**"
       - ".github/**"
 
 name: CI/CD - PR - Container Image Build and Webhook - Saas.Application.Web
