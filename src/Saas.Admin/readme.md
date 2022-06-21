@@ -10,7 +10,7 @@ The SaaS Admin Service is an API that is reponsible for tenant management operat
 
 ## 1. Module Overview
 
-This project hosts a service api which serves as a gateway to administrate the SaaS ecosystem of Tenants. It is fully self-contained such that it includes complete copies of all necessary classes for operation. Since it contains no direct references to the other projects, it can be extracted to launch in isolation insofar as expected substitutes are configured.
+This project hosts a service api which serves as a gateway to administrate the SaaS ecosystem of Tenants. It is fully self-contained such that it includes complete copies of all necessary classes for operation. Since it contains no direct references to the other projects, it can be extracted to launch in isolation. However, keep in mind that some functionality within the API does have [dependencies](https://azure.github.io/azure-saas/components/admin-service/#dependencies) on other services.
 
 For a complete overview, please see the [SaaS.Admin.Service](https://azure.github.io/azure-saas/components/admin-service/) page in our documentation site.
 
