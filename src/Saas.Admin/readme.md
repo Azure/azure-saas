@@ -29,7 +29,7 @@ To run the web api, you must have the following installed on your machine:
     - [Local DB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver15) (Windows Only) - See `Additional Resources` below for basic config secret
     - [SQL Server Docker Container](https://hub.docker.com/_/microsoft-mssql-server)
     - [SQL Server Developer Edition](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
-- A user store compatible with Microsoft Identity
+- A deployed [Identity Framework](https://azure.github.io/azure-saas/quick-start/) instance
     - [Azure AD B2C](https://azure.microsoft.com/en-us/services/active-directory/external-identities/b2c/) - created automatically with Bicep deployment
 
 ### ii. Development Tools
@@ -65,7 +65,7 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 | Logging:LogLevel:Default                   | Logging level when no configured provider is matched                                                                                    | false  | Information                           |
 | Logging:LogLevel:Microsoft.AspNetCore      | Logging level for AspNetCore logging                                                                                                    | false  | Warning                               |
 | PermissionsApi:BaseUrl                     | URL for downstream [Permissions API](../Saas.Identity/Saas.Permissions/readme.md)                                                       | false  |                                       |
-| PermissionsApi:LocalCertificate            | A Base64 encoded certificate (.CER) used to authenticate with the permissions API.                      | true   |                                       |
+| PermissionsApi:LocalCertificate            | A Base64 encoded certificate (.CER) used to authenticate with the permissions API.                                                      | true   |                                       |
 
 ### iv. Starting the App
 

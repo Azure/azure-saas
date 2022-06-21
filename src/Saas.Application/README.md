@@ -37,7 +37,7 @@ To run the web api, you must have the following installed on your machine:
 - [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 - [ASP.NET Core 6.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-6.0)
 - (Reccomended) [Visual Studio](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download)
-- A user store compatible with Microsoft Identity
+- A deployed [Identity Framework](https://azure.github.io/azure-saas/quick-start/) instance
     - [Azure AD B2C](https://azure.microsoft.com/en-us/services/active-directory/external-identities/b2c/) - created automatically with Bicep deployment
 
 ### ii. Development Tools
@@ -68,10 +68,6 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 | AzureAdB2C:SignedOutCallbackPath            | Callback path (not full url) contacted after signout                           | false  | /signout/B2C_1A_SIGNUP_SIGNIN  |
 | AzureAdB2C:SignUpSignInPolicyId             | Name of signup/signin policy                                                   | false  | B2C_1A_SIGNUP_SIGNIN           |
 | AzureAdB2C:TenantId                         | Identifier for the overall Azure AD B2C tenant for the overall SaaS ecosystem  | true   |                                |
-| EmailOptions:Body                           | Signup notification email body text                                            | false  |                                |
-| EmailOptions:EndPoint                       | Service endpoint to send confirmation email                                    | true   |                                |
-| EmailOptions:FromAddress                    | Signup notification email source                                               | false  |                                |
-| EmailOptions:Subject                        | Signup notification email subject line                                         | false  |                                |
 | KeyVault:Url                                | KeyVault URL to pull secret values from in production                          | false  |                                |
 | Logging:LogLevel:Default                    | Logging level when no configured provider is matched                           | false  | Information                    |
 | Logging:LogLevel:Microsoft                  | Logging level for Microsoft logging                                            | false  | Warning                        |
