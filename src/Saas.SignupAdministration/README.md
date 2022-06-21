@@ -2,7 +2,7 @@
 
 ## 1. Module Overview
 
-This project hosts an application for the administration of new tenants in your SaaS ecosystem. It is fully self-contained such that it includes complete copies of all necessary classes for operation. Since it contains no direct references to the other projects, it can be extracted to launch in isolation insofar as expected substitutes are configured.
+This project hosts an application for the onboarding and administration of new tenants in your SaaS ecosystem. It is fully self-contained such that it includes complete copies of all necessary classes for operation. However, keep in mind that some functionality within the app does have [dependencies](https://azure.github.io/azure-saas/components/signup-administration#dependencies) on other services
 
 For a complete overview, please see the [SaaS.SignupAdministration.Web](https://azure.github.io/azure-saas/components/signup-administration/) page in our documentation site.
 
