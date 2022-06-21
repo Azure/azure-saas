@@ -65,7 +65,7 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 | Logging:LogLevel:Default                   | Logging level when no configured provider is matched                                                                                    | false  | Information                           |
 | Logging:LogLevel:Microsoft.AspNetCore      | Logging level for AspNetCore logging                                                                                                    | false  | Warning                               |
 | PermissionsApi:BaseUrl                     | URL for downstream [Permissions API](../Saas.Identity/Saas.Permissions/readme.md)                                                       | false  |                                       |
-| PermissionsApi:LocalCertificate            | A Base64 encoded certificate (.CER) used to authenticate with the permissions API. Only used for local development.                     | true   |                                       |
+| PermissionsApi:LocalCertificate            | A Base64 encoded certificate (.CER) used to authenticate with the permissions API.                      | true   |                                       |
 
 ### iv. Starting the App
 
