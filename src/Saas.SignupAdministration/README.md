@@ -41,7 +41,7 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 | ------------------------------------------- | ------------------------------------------------------------------------------ | ------ | ------------------------------ |
 | AllowedHosts                                | Allowed app host names, semicolon delimited, asterisk is wildcard              | false  | *                              |
 | AppSettings:AdminServiceBaseUrl             | URL for downstream admin service                                               | false  | https://localhost:7041/        |
-| AppSettings:AdminServiceScopeBaseUrl        | The B2C URL for the admin service scope                                        | false  |                                |
+| AppSettings:AdminServiceScopeBaseUrl        | The Base URL/Prefix for the scopes to request an access token on the downstream admin service for.                                       | false  |                                |
 | AppSettings:AdminServiceScopes              | List of scopes to authorize user for on the admin service. Space delimited     | false  |                                |
 | AzureAdB2C:ClientId                         | The service client corresponding to the Signup Admin application               | true   |                                |
 | AzureAdB2C:ClientSecret                     | Unique secret for the application client provided to authenticate the app      | true   |                                |
