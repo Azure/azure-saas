@@ -26,8 +26,8 @@ function New-SaaSIdentityProvider {
   Write-Host "Changing Graph Powershell SDK to Beta..."
   Select-MgProfile -Name "beta"
 
-  $userSettings = Invoke-Login
   $userInputParams = Get-UserInputParameters
+  $userSettings = Invoke-Login
   
   #get current signed in user
   $adSignedInUser = az account show --query "user.name" -o tsv
@@ -173,7 +173,7 @@ function Get-UserInputParameters {
     B2CTenantName                      = Read-Host "Please enter a name for the B2C tenant without the onmicrosoft.com suffix. (e.g. mytenant). Please note that tenant names must be globally unique."
     B2CTenantLocation                  = Read-Host "Please enter the location for the B2C Tenant to be created in. (United States', 'Europe', 'Asia Pacific', 'Australia)"
     CountryCode                        = Read-Host "Please enter the two letter country code for the B2C Tenant data to be stored in (e.g. 'US', 'CZ', 'DE'). See https://docs.microsoft.com/en-us/azure/active-directory-b2c/data-residency for the list of available country codes."
-    AzureResourceLocation              = Read-Host "Please enter the location for the Azure Resources to be deployed (e.g. 'eastus', 'westus2', 'centraleurope'). Please run az account list-locations to see the available locations for your account."
+    AzureResourceLocation              = Read-Host "Please enter the location for the Azure Resources to be deployed (e.g. 'eastus', 'westus2', 'westeurope'). Please run az account list-locations to see the available locations for your account."
     IdentityFrameworkResourceGroupName = Read-Host "Please enter the name of the Azure Resource Group to put the Identity Framework resources into. Will be created if it does not exist."
     SaasEnvironment                    = Read-Host "Please enter an environment name. Accepted values are: 'prd', 'stg', 'dev', 'tst'"
     ProviderName                       = Read-Host "Please enter a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp). Max Length is 8 characters."
@@ -187,8 +187,69 @@ function Get-UserInputParameters {
   $userInputParams.Add("SignupAdminFQDN", "https://appsignup$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
   $userInputParams.Add("PermissionsApiFQDN", "https://apipermissions$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
 
+  Confirm-UserInputParameters `
+  -B2CTenantName $userInputParams.B2CTenantName `
+  -B2CTenantLocation $userInputParams.B2CTenantLocation `
+  -CountryCode $userInputParams.CountryCode `
+  -AzureResourceLocation $userInputParams.AzureResourceLocation `
+  -IdentityFrameworkResourceGroupName $userInputParams.IdentityFrameworkResourceGroupName `
+  -SaasEnvironment $userInputParams.SaasEnvironment `
+  -ProviderName $userInputParams.ProviderName `
+  -InstanceNumber $userInputParams.InstanceNumber `
+  -SqlAdministratorLogin $userInputParams.SqlAdministratorLogin `
+  -SqlAdministratorLoginPassword $userInputParams.SqlAdministratorLoginPassword `
+  -SelfSignedCertificatePassword $userInputParams.SelfSignedCertificatePassword `
+
   return $userInputParams
 
+}
+
+# Validate Input Parameters
+function Confirm-UserInputParameters {
+  param(
+    [Parameter(Mandatory=$true)]
+    [ValidateLength(1, 27)]
+    [string] $B2CTenantName,
+
+    [Parameter(Mandatory=$true)]
+    [ValidateSet("United States", "Europe", "Asia Pacific", "Australia")]
+    [string] $B2CTenantLocation,
+
+    [Parameter(Mandatory=$true)]
+    [ValidateLength(2, 2)]
+    [string] $CountryCode,
+
+    [Parameter(Mandatory=$true)]
+    [string] $AzureResourceLocation,
+
+    [Parameter(Mandatory=$true)]
+    [ValidateLength(1, 90)]
+    [string] $IdentityFrameworkResourceGroupName,
+
+    [Parameter(Mandatory=$true)]
+    [ValidateSet('dev', 'tst', 'stg', 'prd')]
+    [string] $SaasEnvironment,
+
+    [Parameter(Mandatory=$true)]
+    [ValidateLength(1, 8)]
+    [string] $ProviderName,
+
+    [Parameter(Mandatory=$true)]
+    [ValidateLength(1, 3)]
+    [string] $InstanceNumber,
+
+    [Parameter(Mandatory=$true)]
+    [ValidatePattern("^(?!.*\badmin\b).*$")]
+    [string] $SqlAdministratorLogin,
+
+    [Parameter(Mandatory=$true)]
+    [securestring] $SqlAdministratorLoginPassword,
+
+    [Parameter(Mandatory=$true)]
+    [securestring] $SelfSignedCertificatePassword
+
+  )
+  return
 }
 
 function New-AzureADB2CTenant {
