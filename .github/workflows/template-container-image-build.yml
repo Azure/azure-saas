@@ -1,0 +1,51 @@
+on:
+  workflow_call:
+      inputs:
+        image_to_push:
+          required: true
+          type: string
+        tag_name:
+          required: true
+          type: string
+        tag_latest:
+          required: false
+          type: boolean
+          default: false
+
+name: Container Image Publishing - Build
+
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v2
+
+      - name: Log in to Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
+      - name: Build Docker Image
+        run: |
+          docker-compose build ${{ inputs.image_to_push }}
+
+      - name: Create Tag
+        run: |
+          GH_IMAGE_PATH="ghcr.io/${{ github.repository }}/${{ inputs.image_to_push }}"
+          GH_TAG=$GH_IMAGE_PATH:${{ inputs.tag_name }}
+        
+      - name: Tag Latest
+        if: ${{ inputs.tag_latest }}
+        run: |
+          GH_TAG=$GH_TAG $GH_IMAGE_PATH:latest
+        
+      - name: Publish Image
+        run: |
+          # Make characters lowercase
+          GH_TAG=$(echo $GH_TAG | tr '[:upper:]' '[:lower:]')
+        
+          echo "Tagging ${{ inputs.image_to_push }} with GitHub Container Registry"
+          docker tag ${{ inputs.image_to_push }} $GH_TAG
+
+          echo "Pushing ${{ inputs.image_to_push }} to GitHub Container Registry"
+          docker push $GH_TAG
