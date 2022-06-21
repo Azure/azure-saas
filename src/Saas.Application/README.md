@@ -10,7 +10,7 @@ Contoso BadgeMeUp is a simple SaaS B2B application that Contoso sells to compani
 
 ## 1. Module Overview
 
-This project hosts an application for providing the intended SaaS functions to valid Tenants. It is fully self-contained such that it includes complete copies of all necessary classes for operation. Since it contains no direct references to the other projects, it can be extracted to launch in isolation insofar as expected substitutes are configured.
+This project hosts an application for providing the intended SaaS functions to valid Tenants. It is fully self-contained such that it includes complete copies of all necessary classes for operation. However, keep in mind that some functionality within the app does have [dependencies](https://azure.github.io/azure-saas/components/saas-application/#dependencies) on other services.
 
 For a design overview, please see the [SaaS.Application.Web](https://azure.github.io/azure-saas/components/saas-application/) page in our documentation site.
 
