@@ -50,12 +50,18 @@ namespace Saas.SignupAdministration.Web.Services
             Initialize();
         }
 
+        public OnboardingWorkflowItem(string userId)
+        {
+            Id = Guid.NewGuid();
+            OnboardingWorkflowName = SR.OnboardingWorkflowName;
+            UserId = userId;
+            Created = DateTime.Now;
+        }
+
         private void Initialize()
         {
             Id = Guid.NewGuid();
             OnboardingWorkflowName = SR.OnboardingWorkflowName;
-
-            // TODO: UserId needs to be replaced with value from SSO
             UserId = Guid.NewGuid().ToString();
             Created = DateTime.Now;
         }
