@@ -27,3 +27,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    //TODO (SaaS): This redirects to fetch a fresh user token with the new claims generated for the created tenant permission, 
+    // other persistence provider implementations may be able to transfer inter session information through other mechanisms
+    setTimeout(function () {
+        window.location.href = '@Url.Action("SignIn", "Account", new { area = "MicrosoftIdentity" })';
+    }, 3000);
+</script>
