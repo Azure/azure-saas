@@ -19,11 +19,25 @@ As part of `build-artifacts.yml` each of the modules is built as a [Docker](http
 
 ### ii. Pushing Image
 
- The necessary identifiers have been included so that each new version will supplant all others as `latest`. The constructed images and identifiers are then pushed to the GitHub Container Registry service for future instances of the application modules to pull when relevant. No publishing action is necessary at this point and existing container instances will continue running their contained version without issue.
+Containers are published at three times in the project's workflows:
+
+1. **Merge**: Whenever a merge occurs on `main` then [build-artifacts.yml](https://github.com/Azure/azure-saas/blob/main/.github/workflows/build-artifacts.yml) is run. This workflow builds all of the images registered in the [docker-compose.yml](https://github.com/Azure/azure-saas/blob/main/docker-compose.yml) file. It will push each image tagged as `latest` to the GitHub Container Registry.
+2. **Tag**: When a tag is created on the project then four corresponding actions are triggered which build a module and push an image tagged with the newly-created repo tag. These scripts are:
+    - [container-image-build-saas-admin-tag.yml](https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-admin-tag.yml)
+    - [container-image-build-saas-application-tag.yml](https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-application-tag.yml)
+    - [container-image-build-saas-permissions-tag.yml](https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-permissions-tag.yml)
+    - [container-image-build-saas-signupadministration-tag.yml](https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-signupadministration-tag.yml)
+3. **PR**: When a PR is opened, synchronized, or reopened targeting `main`, then four corresponding actions are triggered which build a module and push an image tagged with the PR number. These scripts are:
+    - [container-image-build-saas-admin-pr.yml](https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-admin-pr.yml)
+    - [container-image-build-saas-application-pr.yml](https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-application-pr.yml)
+    - [container-image-build-saas-permissions-pr.yml](https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-permissions-pr.yml)
+    - [container-image-build-saas-signupadministration-pr.yml](https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-signupadministration-pr.yml)
+
+The constructed images and identifiers are then pushed to the GitHub Container Registry service for future instances of the application modules to pull when relevant. No publishing action is necessary at this point and existing container instances will continue running their contained version without issue.
 
 ### iii. Pulling Image
 
-Active containers can be prompted to update by [posting to a webhook created in the Docker Compose file](https://docs.microsoft.com/en-us/azure/app-service/deploy-ci-cd-custom-container?tabs=private&pivots=container-linux#4-enable-cicd) when the relevant module image is published, at which point they can pull the latest image when appropriate.
+Continuous Delivery has been enabled via the Tag and PR workflows to enable testing and dev environment automatic update. These scripts are configured to fetch a webhook url secret from the repository corresponding to an environment and the given module. It will then issue an `HTTP POST` against this endpoint so that it can be alerted that a new image version has become available. The endpoint in use with the existing repository is the provided CI/CD webhook for the Azure Web App [custom container image](https://docs.microsoft.com/en-us/azure/app-service/deploy-ci-cd-custom-container?tabs=private&pivots=container-linux#4-enable-cicd) endpoint.
 
 ## Scripts and Variables
 
@@ -60,3 +74,17 @@ Each module directory contains a corresponding [Dockerfile](https://docs.docker.
 | app_path    | Shared  | Path to project directory from context defined in compose specification.       |         |
 | dll_name    | Stage 2 | Name of the dll in output directory                                            |         |
 | ENTRYPOINT  | Stage 2 | Command which directs the container to the path and dll as entry to the image. |         |
+
+### iv. GitHub Action Secrets
+
+The following secrets are referenced by the GitHub Actions CI/CD workflows to issue a POST alerting deployed apps of newly-available container images.
+
+| Variable                         | Environment | Module                         |
+| -------------------------------- | ----------- | ------------------------------ |
+| ASDK_ADMIN_DEV_WEBHOOK_URL       | Dev         | Saas.Admin.Service             |
+| ASDK_WEB_DEV_WEBHOOK_URL         | Dev         | Saas.Application.Web           |
+| ASDK_PERMISSIONS_DEV_WEBHOOK_URL | Dev         | Saas.Permissions.Service       |
+| ASDK_SIGNUP_DEV_WEBHOOK_URL      | Dev         | Saas.SignupAdministration.Web  |
+
+
+
