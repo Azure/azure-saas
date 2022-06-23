@@ -40,7 +40,7 @@ jobs:
           IMAGE_PATH="${{inputs.image_repository}}/${{ inputs.image_to_push }}"
           IMAGE_TAG=$IMAGE_PATH:${{ inputs.tag_name }}
           # Make characters lowercase
-          IMAGE_TAG=$(echo $GH_TAG | tr '[:upper:]' '[:lower:]')
+          IMAGE_TAG=$(echo $IMAGE_TAG | tr '[:upper:]' '[:lower:]')
           echo "Tagging ${{ inputs.image_to_push }} with $IMAGE_TAG in GitHub Container Registry"
           docker tag ${{ inputs.image_to_push }} $IMAGE_TAG
         
