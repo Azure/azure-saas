@@ -156,7 +156,7 @@ module keyVaultModule 'keyVault.bicep' = {
     azureAdB2cAdminApiClientIdSecretValue: azureAdB2cAdminApiClientIdSecretValue
     azureAdB2cDomainSecretValue: azureAdB2cDomainSecretValue
     azureAdB2cInstanceSecretValue: azureAdB2cInstanceSecretValue
-	azureAdB2cSaasAppClientIdSecretValue: azureAdB2cSaasAppClientIdSecretValue
+    azureAdB2cSaasAppClientIdSecretValue: azureAdB2cSaasAppClientIdSecretValue
     azureAdB2cSaasAppClientSecretSecretValue: azureAdB2cSaasAppClientSecretSecretValue
     azureAdB2cSignupAdminClientIdSecretValue: azureAdB2cSignupAdminClientIdSecretValue
     azureAdB2cSignupAdminClientSecretSecretValue: azureAdB2cSignupAdminClientSecretSecretValue
@@ -206,12 +206,12 @@ module signupAdminAppServiceModule 'signupAdminWeb.bicep' = if (modulesToDeploy.
 module applicationAppServiceModule 'applicationWeb.bicep' = if (modulesToDeploy.applicationWeb) {
   name: 'applicationAppServiceDeployment'
   params: {
-	adminApiHostName: (modulesToDeploy.adminService) ? adminApiModule.outputs.adminApiHostName : messageToUpdate
-	adminApiScopes: saasAppApiScopes
+    adminApiHostName: (modulesToDeploy.adminService) ? adminApiModule.outputs.adminApiHostName : messageToUpdate
+    saasAppApiScopes: saasAppApiScopes
     adminApiScopeBaseUrl: adminApiScopeBaseUrl
     applicationAppServiceName: applicationAppServiceName
     appServicePlanId: appServicePlanModule.outputs.appServicePlanId
-	keyVaultUri: keyVaultModule.outputs.keyVaultUri
+    keyVaultUri: keyVaultModule.outputs.keyVaultUri
     location: location
     applicationApiContainerImageTag: applicationContainerImageTag
     containerRegistryUrl: containerRegistryUrl
@@ -226,7 +226,7 @@ module keyVaultAccessPolicyModule 'keyVaultAccessPolicies.bicep' = {
     adminApiPrincipalId: adminApiModule.outputs.systemAssignedManagedIdentityPrincipalId
     keyVaultName: keyVaultName
     modulesToDeploy: modulesToDeploy
-	applicationAppServicePrincipalId: applicationAppServiceModule.outputs.systemAssignedManagedIdentityPrincipalId
+    applicationAppServicePrincipalId: applicationAppServiceModule.outputs.systemAssignedManagedIdentityPrincipalId
     signupAdminAppServicePrincipalId: signupAdminAppServiceModule.outputs.systemAssignedManagedIdentityPrincipalId
   }
 }

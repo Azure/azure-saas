@@ -114,7 +114,7 @@ function New-SaaSIdentityProvider {
       permissionsApiHostName                         = @{ value = $userInputParams.PermissionsApiFQDN }
       permissionsApiCertificateSecretValue           = @{ value = $selfSignedCert.PfxString }
       permissionsApiCertificatePassphraseSecretValue = @{ value = ConvertFrom-SecureString -SecureString $userInputParams.SelfSignedCertificatePassword -AsPlainText }
-	  saasAppApiScopes                               = @{ value = $appRegistrations.SaasAppAppReg.AdminScopesForSaasApp }
+	  saasAppApiScopes                               = @{ value = $appRegistrations.SaasAppAppReg.AdminScopesForSaasApp -join " " }
       saasProviderName                               = @{ value = $userInputParams.ProviderName }
       saasEnvironment                                = @{ value = $userInputParams.SaasEnvironment }
       saasInstanceNumber                             = @{ value = $userInputParams.InstanceNumber }

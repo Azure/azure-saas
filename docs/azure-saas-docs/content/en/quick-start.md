@@ -14,7 +14,9 @@ On this page, you will find instructions for how to run the dev kit in your loca
 
 This project uses [Azure Active Directory B2C](https://docs.microsoft.com/azure/active-directory-b2c/overview) for an IdP (Identity Provider). The first step in setting up this project is to configure a new Azure AD B2C instance to house your local user accounts. You will also need to deploy the [Permissions API](../components/identity/permissions-service), as Azure AD B2C will have a dependency on it.
 
-To setup the Identity Framework, we have provided an interactive PowerShell script that automates the setup for you. Upon running, it will ask you to sign into your home azure account, ask you a few questions, and then begin the setup process. This PowerShell script will output a parameters file that you'll need to provide when deploying the solution to Azure in step 2.b.
+To setup the Identity Framework, we have provided an interactive PowerShell script that automates the setup for you by calling the neccesary Micrsoft Graph API endpoints. Upon running, it will ask you to sign into your home azure account, ask you a few questions, and then begin the setup process. This PowerShell script will output a parameters file that you'll need to provide when deploying the solution to Azure in step 2.b.
+
+> NOTE: The Microsoft Graph API endpoints used to perform this setup are still in beta and are subject to change. As a result, it is possible you may see issues during setup. Please report any issues with as much detail as possible by opening an issue on our [GitHub repo](https://github.com/Azure/azure-saas/issues). As a fallback, you can also create the Identity Framework manually by following the instructions below.
 
 ### Option 1: Setup Identity Framework - Docker (Recommended)
 

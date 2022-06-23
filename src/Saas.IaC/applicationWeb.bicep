@@ -30,9 +30,49 @@ resource applicationAppService 'Microsoft.Web/sites@2021-03-01' = {
       linuxFxVersion: 'DOCKER|${applicationApiContainerImageTag}'
       appSettings: [
         {
+          name: 'AllowedHosts'
+          value: '*'
+        }
+        {
+          name: 'AdminServiceBaseUrl'
+          value: adminApiHostName
+        }
+        {
+          name: AdminServiceScopeBaseUrl
+          value: adminApiScopeBaseUrl
+        }
+        {
+          name: AdminServiceScopes
+          value: saasAppApiScopes
+        }
+        {
+          name: 'AzureAdB2C__SignedOutCallbackPath'
+          value: '/signout/B2C_1A_SIGNUP_SIGNIN'
+        }        
+        {
+          name: 'AzureAdB2C__SignUpSignInPolicyId'
+          value: 'B2C_1A_SIGNUP_SIGNIN'
+        }
+        {
           name: 'DOCKER_REGISTRY_SERVER_URL'
           value: containerRegistryUrl
-        }     
+        }
+        {
+          name: 'KeyVault__Url'
+          value: keyVaultUri
+        }
+        {
+          name: 'Logging__LogLevel__Default'
+          value: 'Information'
+        }
+        {
+          name: 'Logging__LogLevel__Microsoft'
+          value: 'Warning'
+        }
+        {
+          name: 'Logging__LogLevel__Microsoft.Hosting.Lifetime'
+          value: 'Information'
+        }
       ]
     }
   }
