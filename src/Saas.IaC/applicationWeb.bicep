@@ -30,10 +30,6 @@ resource applicationAppService 'Microsoft.Web/sites@2021-03-01' = {
       linuxFxVersion: 'DOCKER|${applicationApiContainerImageTag}'
       appSettings: [
         {
-          name: 'AllowedHosts'
-          value: '*'
-        }
-        {
           name: 'AdminServiceBaseUrl'
           value: adminApiHostName
         }
