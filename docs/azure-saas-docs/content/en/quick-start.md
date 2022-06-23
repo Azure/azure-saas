@@ -14,11 +14,50 @@ On this page, you will find instructions for how to run the dev kit in your loca
 
 This project uses [Azure Active Directory B2C](https://docs.microsoft.com/azure/active-directory-b2c/overview) for an IdP (Identity Provider). The first step in setting up this project is to configure a new Azure AD B2C instance to house your local user accounts. You will also need to deploy the [Permissions API](../components/identity/permissions-service), as Azure AD B2C will have a dependency on it.
 
-> **Important!** This section is currently here as a placeholder as we are actively working on creating an automated solution for deploying all components of this project to Azure, including automatically configuring the Identity Provider. Until then, feel free to clone or fork the repository and take a look at the code. Check out the [GitHub Issue](https://github.com/Azure/azure-saas/issues/171) on this work for the latest updates, and be sure to subscribe to notifications on the issue so you can receive a notification when it's ready for use!
+To setup the Identity Framework, we have provided an interactive PowerShell script that automates the setup for you. Upon running, it will ask you to sign into your home azure account, ask you a few questions, and then begin the setup process. This PowerShell script will output a parameters file that you'll need to provide when deploying the solution to Azure in step 2.b.
 
-<!-- To setup the Identity Framework, we have provided a PowerShell script [here]() that automates the setup for you. This PowerShell script will output a parameters file that you'll need to provide when deploying the solution to Azure in step 2.b.
+### Option 1: Setup Identity Framework - Docker (Recommended)
 
-After finishing the IDP setup, you may choose to either run the project locally first or immediately deploy the solution to Azure. -->
+Requirements:
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+Running our pre-built docker image is the recommended way to set up the identity framework, as the image comes pre-installed with all the dependencies necessary for execution. To start, run the following commands:
+
+```bash
+docker pull ghcr.io/azure/azure-saas/asdk-identity-setup:latest
+docker run -it -v "$(pwd):/data" --name asdk-b2c-deployment ghcr.io/azure/azure-saas/asdk-identity-setup:latest
+```
+
+This will automatically pull and run the container image and its entrypoint is the [B2C-Create](https://github.com/Azure/azure-saas/blob/main/src/Saas.Identity/Saas.IdentityProvider/scripts/B2C-Create.ps1) powershell script.
+
+> Note: The `-v` flag on this command will mount your present working directory to the `/data` directory inside this container. This is the directory that the `main.parameters.json` file will be output to upon the script completion. If you choose to exclude this flag, the container will still execute but you will need to copy this file out of the container afterwards using the [docker cp](https://docs.docker.com/engine/reference/commandline/cp/) command as you will need it in step 2.b.
+
+After finishing the identity framework setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
+
+### Option 2: Setup Identity Framework - Powershell (Advanced)
+
+**Requirements**: 
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/)
+- [Open SSL](https://www.openssl.org/)
+- [Powershell Core (v7.0+)](https://github.com/PowerShell/PowerShell)
+- Powershell Modules:
+  - [Microsoft.Graph](https://www.powershellgallery.com/packages/Microsoft.Graph/1.5.0)
+  - [Microsoft.Graph.Applications](https://www.powershellgallery.com/packages/Microsoft.Graph.Applications/1.9.6)
+  - [Az.Resources](https://www.powershellgallery.com/packages/Az.Resources/6.0.0)
+  - [Az.Accounts](https://www.powershellgallery.com/packages/Az.Accounts/2.8.0)
+
+**Instructions**:
+1. Install all dependencies listed above
+2. Clone the Azure SaaS Dev Kit repository to your local machine
+3. Open a PowerShell window (`pwsh` command on Mac OS or Linux) and change your working directory to `src/Saas.Identity`. The script must be run from this directory to execute properly.
+4. Run the script from the PowerShell window with the following command:
+    ```powershell
+    ./Saas.IdentityProvider/scripts/B2C-Create.ps1
+    ```
+5. Follow the prompts in the script to sign into Azure and deploy the identity framework.
+
+After finishing the identity framework setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
 
 ## 2.a. Running the Dev Kit in your local dev environment
 
@@ -34,17 +73,22 @@ After finishing the IDP setup, you may choose to either run the project locally 
 
 Make sure you check out the [readme files](#more-info) in each project's directory for a description of the app settings & secrets you'll need to set in order to run the respective project.
 
-
 ## 2.b. Deploying to Azure - Entire Solution
 
 Deploying to Azure is easy thanks to our pre-configured ARM (Azure Resource Manager) templates.
 
-This button will take you to the Azure portal and passing it the template. You'll be asked a few questions, and then the solution will be up and running in just a few minutes. You will need your Azure AD B2C configuration values and secrets from step 1.
+This button will take you to the Azure portal and will pass it the ARM template. You will need the parameters file output from step 1.
 
-> **Important!** This section is currently here as a placeholder as we are actively working on creating an automated solution for deploying all components of this project to Azure, including automatically configuring the Identity Provider. Until then, feel free to clone or fork the repository and take a look at the code. Check out the [GitHub Issue](https://github.com/Azure/azure-saas/issues/171) on this work for the latest updates, and be sure to subscribe to notifications on the issue so you can receive a notification when it's ready for use!
+1. Click here: [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https%3A%2F%2Fportal.azure.com%2F%23create%2FMicrosoft.Template%2Furi%2Fhttps%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.IaC%2Fmain.json).
+2. Select "Edit Parameters".
+3. Select "Load File" and upload the `parameters.json` file output from the Identity Framework Deployment (step 1 above). Click "Save". 
+4. From the dropdown, select the subscription and resource group you'd like to deploy the resources to.
+5. Click "Review and Create".
+6. Review the provided values and click "Create".
+7. Wait for the deployment to finish.
 
-<!-- [![Deploy to Azure](https://www.azuresaas.net/assets/images/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2Fazuredeploy.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fmain%2Fsrc%2FSaas.Deployment%2FSaas.Deployment.Root%2FcreateUiDefinition.json) -->
 
+After everything finishes deploying, you can navigate to the frontend applications found in your resource group (`appsignup{providername}` and `appapplication{providername}`). They may take a couple minutes to start up after the deployment is complete.
 
 ### How does this work?
 

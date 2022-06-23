@@ -42,4 +42,10 @@ services:
       - "80"
     ports:
       - "8083:80"
+  asdk-identity-setup:
+    image: asdk-identity-setup
+    container_name: asdk-identity-setup
+    build:
+      context: ./src/Saas.Identity
+      dockerfile: ./Saas.IdentityProvider/scripts/Dockerfile
     
