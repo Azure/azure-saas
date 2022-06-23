@@ -25,11 +25,11 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/quick-start/" /><meta property="article:section" content="" />
 
-<meta property="article:modified_time" content="2022-06-23T09:24:29-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-06-23T16:31:40-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Quick Start">
 <meta itemprop="description" content="Getting Started with the Azure SaaS Dev Kit">
-<meta itemprop="dateModified" content="2022-06-23T09:24:29-04:00" />
+<meta itemprop="dateModified" content="2022-06-23T16:31:40-04:00" />
 <meta itemprop="wordCount" content="1162">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Quick Start"/>
@@ -272,8 +272,8 @@
 <li><a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a></li>
 </ul>
 <p>Running our pre-built docker image is the recommended way to set up the identity framework, as the image comes pre-installed with all the dependencies necessary for execution. To start, run the following commands:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker pull ghcr.io/azure/azure-saas/asdk-identity-setup:latest
-docker run -it -v <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>pwd<span style="color:#66d9ef">)</span><span style="color:#e6db74">:/data&#34;</span> --name asdk-b2c-deployment ghcr.io/azure/azure-saas/asdk-identity-setup:latest
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker pull ghcr.io/azure/azure-saas/asdk-identity-setup:v1.0
+docker run -it -v <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>pwd<span style="color:#66d9ef">)</span><span style="color:#e6db74">:/data&#34;</span> --name asdk-b2c-deployment ghcr.io/azure/azure-saas/asdk-identity-setup:v1.0
 </code></pre></div><p>This will automatically pull and run the container image and its entrypoint is the <a href="https://github.com/Azure/azure-saas/blob/main/src/Saas.Identity/Saas.IdentityProvider/scripts/B2C-Create.ps1">B2C-Create</a> powershell script.</p>
 <blockquote>
 <p>Note: The <code>-v</code> flag on this command will mount your present working directory to the <code>/data</code> directory inside this container. This is the directory that the <code>main.parameters.json</code> file will be output to upon the script completion. If you choose to exclude this flag, the container will still execute but you will need to copy this file out of the container afterwards using the <a href="https://docs.docker.com/engine/reference/commandline/cp/">docker cp</a> command as you will need it in step 2.b.</p>
@@ -361,7 +361,7 @@ Bicep is a domain-specific language (DSL) that uses declarative syntax to deploy
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified June 23, 2022: <a href="https://github.com/Azure/azure-saas/commit/c641cc7e8c90572c527b5671a8acc8e4a74a2ff9">fix url (c641cc7)</a>
+  Last modified June 23, 2022: <a href="https://github.com/Azure/azure-saas/commit/62c75a6d84b0f7ce0d567f091948a41495dce74c">change docker version on docs (62c75a6)</a>
 </div>
 
 </div>
