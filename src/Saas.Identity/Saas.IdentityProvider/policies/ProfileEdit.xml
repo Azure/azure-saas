@@ -5,33 +5,24 @@
   xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06"
   PolicySchemaVersion="0.3.0.0"
   TenantId="{Settings:Tenant}"
-  PolicyId="B2C_1A_signup_signin"
-  PublicPolicyUri="http://{Settings:Tenant}/B2C_1A_signup_signin">
-   
-   <BasePolicy>
+  PolicyId="B2C_1A_ProfileEdit"
+  PublicPolicyUri="http://{Settings:Tenant}/B2C_1A_ProfileEdit">
+
+  <BasePolicy>
     <TenantId>{Settings:Tenant}</TenantId>
     <PolicyId>B2C_1A_TrustFrameworkExtensions</PolicyId>
   </BasePolicy>
 
   <RelyingParty>
-    <DefaultUserJourney ReferenceId="SignUpOrSignIn" />
+    <DefaultUserJourney ReferenceId="ProfileEdit" />
     <TechnicalProfile Id="PolicyProfile">
       <DisplayName>PolicyProfile</DisplayName>
       <Protocol Name="OpenIdConnect" />
       <OutputClaims>
-        <OutputClaim ClaimTypeReferenceId="displayName" />
-        <OutputClaim ClaimTypeReferenceId="givenName" />
-        <OutputClaim ClaimTypeReferenceId="surname" />
-        <OutputClaim ClaimTypeReferenceId="signInNames.emailAddress" PartnerClaimType="email" />
         <OutputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="sub"/>
         <OutputClaim ClaimTypeReferenceId="tenantId" AlwaysUseDefaultValue="true" DefaultValue="{Policy:TenantObjectId}" />
-        <OutputClaim ClaimTypeReferenceId="permissions" DefaultValue=""/>
-        <OutputClaim ClaimTypeReferenceId="roles" DefaultValue=""/>
       </OutputClaims>
       <SubjectNamingInfo ClaimType="sub" />
     </TechnicalProfile>
   </RelyingParty>
 </TrustFrameworkPolicy>
-
-
-

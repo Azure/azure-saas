@@ -3,6 +3,9 @@
 @description('Scopes to authorize user for the admin service.')
 param adminApiScopes string
 
+@description('The base url for the app registration that the scopes belong to.')
+param adminApiScopeBaseUrl string
+
 @description('The tag of the container image to deploy to the Admin api app service.')
 param adminApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-admin:latest'
 
@@ -26,9 +29,6 @@ param azureAdB2cSignupAdminClientSecretSecretValue string
 
 @description('The value of the Azure AD B2C Tenant Id Key Vault Secret.')
 param azureAdB2cTenantIdSecretValue string
-
-@description('The object ID of the logged in Azure Active Directory User.')
-param azureAdUserID string
 
 @description('The URL for the container registry to pull the docker images from')
 param containerRegistryUrl string = 'https://ghcr.io'
@@ -54,18 +54,22 @@ param permissionsApiHostName string
 @description('The base64 encoded certificate to save in the keyvault for securing communication with the permissions API.')
 param permissionsApiCertificateSecretValue string
 
+@description('The passphrase fopr the  certificate to save in the keyvault for securing communication with the permissions API.')
+@secure()
+param permissionsApiCertificatePassphraseSecretValue string
+
 @description('The tag of the container image to deploy to the SignupAdmin app service.')
 param signupAdminContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-signup:latest'
 
 @description('The SaaS Provider name.')
 param saasProviderName string
 
-@description('The deployment environment (e.g. prod, dev, test).')
+@description('The deployment environment (e.g. prd, dev, tst).')
 @allowed([
-  'prod'
-  'staging'
+  'prd'
+  'stg'
   'dev'
-  'test'
+  'tst'
 ])
 param saasEnvironment string = 'dev'
 
@@ -149,6 +153,7 @@ module keyVaultModule 'keyVault.bicep' = {
     keyVaultName: keyVaultName
     location: location
     permissionsApiCertificateSecretValue: permissionsApiCertificateSecretValue
+    permissionsApiCertificatePassphraseSecretValue: permissionsApiCertificatePassphraseSecretValue
   }
 }
 
@@ -175,6 +180,7 @@ module signupAdminAppServiceModule 'signupAdminWeb.bicep' = if (modulesToDeploy.
   params: {
     adminApiHostName: (modulesToDeploy.adminService) ? adminApiModule.outputs.adminApiHostName : messageToUpdate
     adminApiScopes: adminApiScopes
+    adminApiScopeBaseUrl: adminApiScopeBaseUrl
     appServicePlanId: appServicePlanModule.outputs.appServicePlanId
     keyVaultUri: keyVaultModule.outputs.keyVaultUri
     location: location
@@ -203,7 +209,6 @@ module keyVaultAccessPolicyModule 'keyVaultAccessPolicies.bicep' = {
   name: 'keyVaultAccessPolicyDeployment'
   params: {
     adminApiPrincipalId: adminApiModule.outputs.systemAssignedManagedIdentityPrincipalId
-    azureAdUserID: azureAdUserID
     keyVaultName: keyVaultName
     modulesToDeploy: modulesToDeploy
     signupAdminAppServicePrincipalId: signupAdminAppServiceModule.outputs.systemAssignedManagedIdentityPrincipalId

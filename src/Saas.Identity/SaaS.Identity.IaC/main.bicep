@@ -26,21 +26,19 @@ param containerRegistryUrl string = 'https://ghcr.io'
 @description('The tag of the container image to deploy to the permissions api app service.')
 param permissionsApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-permissions:latest'
 
-@description('The object ID of the logged in Azure Active Directory User.')
-param azureAdUserID string
-
 @description('The location for all resources.')
 param location string = resourceGroup().location
 
 @description('The SaaS Provider name.')
+@maxLength(8)
 param saasProviderName string
 
-@description('The deployment environment (e.g. prod, dev, test).')
+@description('The deployment environment (e.g. prd, dev, tst).')
 @allowed([
-  'prod'
-  'staging'
+  'prd'
+  'stg'
   'dev'
-  'test'
+  'tst'
 ])
 param saasEnvironment string = 'dev'
 
@@ -124,7 +122,6 @@ module permissionsApiModule 'permissionsApi.bicep' = {
 module keyVaultAccessPolicyModule 'identityKeyVaultAccessPolicies.bicep' = {
   name: 'keyVaultAccessPolicyDeployment'
   params: {
-    azureAdUserID: azureAdUserID
     keyVaultName: identityKeyVaultName
     permissionApiPrincipalId: permissionsApiModule.outputs.systemAssignedManagedIdentityPrincipalId
   }

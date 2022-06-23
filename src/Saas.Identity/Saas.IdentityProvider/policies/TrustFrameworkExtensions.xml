@@ -63,7 +63,7 @@
             <Item Key="AllowInsecureAuthInProduction">true</Item>
           </Metadata>
           <CryptographicKeys>
-            <Key Id="ClientCertificate" StorageReferenceId="B2C_1A_RestApiClientCertificate" />
+            <Key Id="ClientCertificate" StorageReferenceId="{Settings:RESTAPIClientCertificate}" />
           </CryptographicKeys>
           <InputClaims>
             <!-- Claims sent to your REST API -->
@@ -90,7 +90,7 @@
             <Item Key="AllowInsecureAuthInProduction">true</Item>
           </Metadata>
           <CryptographicKeys>
-            <Key Id="ClientCertificate" StorageReferenceId="B2C_1A_RestApiClientCertificate" />
+            <Key Id="ClientCertificate" StorageReferenceId="{Settings:RESTAPIClientCertificate}" />
           </CryptographicKeys>
           <InputClaims>
             <!-- Claims sent to your REST API -->

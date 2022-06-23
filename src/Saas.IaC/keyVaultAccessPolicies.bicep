@@ -6,9 +6,6 @@ param keyVaultName string
 @description('The Principal Id of the Admin Api System Assigned Managed Identity.')
 param adminApiPrincipalId string
 
-@description('The object ID of the logged in Azure Active Directory User.')
-param azureAdUserID string
-
 @description('The ASDK modules to deploy.')
 param modulesToDeploy object
 
@@ -28,24 +25,6 @@ resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-previ
   name: 'add'
   properties: {
     accessPolicies: [
-      {
-        objectId: azureAdUserID
-        tenantId: subscription().tenantId
-        permissions: {
-          keys: [
-            'all'
-            'purge'
-          ]
-          secrets: [
-            'all'
-            'purge'
-          ]
-          certificates: [
-            'all'
-            'purge'
-          ]
-        }
-      }
       (modulesToDeploy.adminService) ? {
         objectId: adminApiPrincipalId
         tenantId: subscription().tenantId

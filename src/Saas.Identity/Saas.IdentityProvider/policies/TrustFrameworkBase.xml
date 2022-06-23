@@ -100,7 +100,6 @@
         </Restriction>
       </ClaimType>
       <!-- The password regular expression above is constructed for AAD passwords based on restrictions at https://msdn.microsoft.com/en-us/library/azure/jj943764.aspx
-
         ^( # one of the following four combinations must appear in the password
          (?=.*[a-z])(?=.*[A-Z])(?=.*\d) |            # matches lower case, upper case or digit
          (?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]) |  # matches lower case, upper case or special character (i.e. non-alpha or digit)
@@ -111,7 +110,6 @@
          [A-Za-z\d@#$%^&*\-_+=[\]{}|\\:',?/`~"();!] |   # The list of all acceptable characters (without .)
          \.(?!@)                                        # or . can appear as long as not followed by @
         ) {8,16}$                                       # the length must be between 8 and 16 chars inclusive
-
       -->
 
       <ClaimType Id="reenterPassword">

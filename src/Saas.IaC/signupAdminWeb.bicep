@@ -6,6 +6,9 @@ param adminApiHostName string
 @description('Scopes to authorize user for the admin service.')
 param adminApiScopes string
 
+@description('The base url for the app registration that the scopes belong to.')
+param adminApiScopeBaseUrl string
+
 @description('The App Service Plan ID.')
 param appServicePlanId string
 
@@ -34,6 +37,7 @@ resource signupAdminAppService 'Microsoft.Web/sites@2021-03-01' = {
     serverFarmId: appServicePlanId
     httpsOnly: true
     siteConfig: {
+      alwaysOn: true
       linuxFxVersion: 'DOCKER|${signupAdminApiContainerImageTag}'
       appSettings: [
         {
@@ -43,6 +47,10 @@ resource signupAdminAppService 'Microsoft.Web/sites@2021-03-01' = {
         {
           name: 'AppSettings__AdminServiceBaseUrl'
           value: adminApiHostName
+        }
+        {
+          name: 'AppSettings__AdminServiceScopeBaseUrl'
+          value: adminApiScopeBaseUrl
         }
         {
           name: 'AppSettings__AdminServiceScopes'
