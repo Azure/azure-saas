@@ -33,19 +33,21 @@ jobs:
         run: |
           GH_IMAGE_PATH="ghcr.io/${{ github.repository }}/${{ inputs.image_to_push }}"
           GH_TAG=$GH_IMAGE_PATH:${{ inputs.tag_name }}
+          # Make characters lowercase
+          GH_TAG=$(echo $GH_TAG | tr '[:upper:]' '[:lower:]')
+          echo "Tagging ${{ inputs.image_to_push }} with $GH_TAG in GitHub Container Registry"
+          docker tag ${{ inputs.image_to_push }} $GH_TAG
         
       - name: Tag Latest
         if: ${{ inputs.tag_latest }}
         run: |
-          GH_TAG=$GH_TAG $GH_IMAGE_PATH:latest
+          GH_TAG_LATEST=$GH_IMAGE_PATH:latest
+          # Make characters lowercase
+          GH_TAG_LATEST=$(echo $GH_TAG_LATEST | tr '[:upper:]' '[:lower:]')
+          echo "Tagging ${{ inputs.image_to_push }} with $GH_TAG_LATEST in GitHub Container Registry"
+          docker tag ${{ inputs.image_to_push }} $GH_TAG_LATEST
         
       - name: Publish Image
-        run: |
-          # Make characters lowercase
-          GH_TAG=$(echo $GH_TAG | tr '[:upper:]' '[:lower:]')
-        
-          echo "Tagging ${{ inputs.image_to_push }} with GitHub Container Registry"
-          docker tag ${{ inputs.image_to_push }} $GH_TAG
-
+        run: | 
           echo "Pushing ${{ inputs.image_to_push }} to GitHub Container Registry"
-          docker push $GH_TAG
+          docker push --all-tags $GH_IMAGE_PATH
