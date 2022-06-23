@@ -11,6 +11,11 @@ on:
           required: false
           type: boolean
           default: false
+        # Change this input if you'd like to publish the containers to a repository other than github packages.
+        image_repository:
+          required: false
+          type: string
+          default: ghcr.io/${{ github.repository }}
 
 name: Container Image Publishing - Build
 
@@ -22,6 +27,7 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v2
 
+      # Replace this login step if you use a container repository other than github packages.
       - name: Log in to Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
 
@@ -31,23 +37,23 @@ jobs:
 
       - name: Create Tag
         run: |
-          GH_IMAGE_PATH="ghcr.io/${{ github.repository }}/${{ inputs.image_to_push }}"
-          GH_TAG=$GH_IMAGE_PATH:${{ inputs.tag_name }}
+          IMAGE_PATH="${{inputs.image_repository}}/${{ inputs.image_to_push }}"
+          IMAGE_TAG=$IMAGE_PATH:${{ inputs.tag_name }}
           # Make characters lowercase
-          GH_TAG=$(echo $GH_TAG | tr '[:upper:]' '[:lower:]')
-          echo "Tagging ${{ inputs.image_to_push }} with $GH_TAG in GitHub Container Registry"
-          docker tag ${{ inputs.image_to_push }} $GH_TAG
+          IMAGE_TAG=$(echo $GH_TAG | tr '[:upper:]' '[:lower:]')
+          echo "Tagging ${{ inputs.image_to_push }} with $IMAGE_TAG in GitHub Container Registry"
+          docker tag ${{ inputs.image_to_push }} $IMAGE_TAG
         
       - name: Tag Latest
         if: ${{ inputs.tag_latest }}
         run: |
-          GH_TAG_LATEST=$GH_IMAGE_PATH:latest
+          IMAGE_TAG_LATEST=$IMAGE_PATH:latest
           # Make characters lowercase
-          GH_TAG_LATEST=$(echo $GH_TAG_LATEST | tr '[:upper:]' '[:lower:]')
-          echo "Tagging ${{ inputs.image_to_push }} with $GH_TAG_LATEST in GitHub Container Registry"
-          docker tag ${{ inputs.image_to_push }} $GH_TAG_LATEST
+          IMAGE_TAG_LATEST=$(echo $IMAGE_TAG_LATEST | tr '[:upper:]' '[:lower:]')
+          echo "Tagging ${{ inputs.image_to_push }} with $IMAGE_TAG_LATEST in GitHub Container Registry"
+          docker tag ${{ inputs.image_to_push }} $IMAGE_TAG_LATEST
         
       - name: Publish Image
         run: | 
           echo "Pushing ${{ inputs.image_to_push }} to GitHub Container Registry"
-          docker push --all-tags $GH_IMAGE_PATH
+          docker push --all-tags $IMAGE_PATH

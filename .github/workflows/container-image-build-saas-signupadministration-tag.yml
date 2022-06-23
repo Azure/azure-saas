@@ -14,10 +14,10 @@ jobs:
       tag_name: ${GITHUB_REF/refs\/tags\//}
 
   # Add webhook jobs below here for each environment you want to automatically update
-  webhook-dev:
-    name: Image Build Webhook - Dev
-    needs: build-image
-    if: needs.build-image.result == 'success'
-    uses: Azure/azure-saas/.github/workflows/template-container-image-webhook.yml@main
-    secrets:
-      WEBHOOK_URL: ${{ secrets.ASDK_SIGNUP_DEV_WEBHOOK_URL }}
+  # webhook-dev:
+  #   name: Image Build Webhook - Dev
+  #   needs: build-image
+  #   if: needs.build-image.result == 'success'
+  #   uses: Azure/azure-saas/.github/workflows/template-container-image-webhook.yml@main
+  #   secrets:
+  #     WEBHOOK_URL: ${{ secrets.ASDK_SIGNUP_DEV_WEBHOOK_URL }}
