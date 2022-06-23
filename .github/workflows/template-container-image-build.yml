@@ -58,4 +58,6 @@ jobs:
       - name: Publish Image
         run: | 
           echo "Pushing ${{ inputs.image_to_push }} to GitHub Container Registry"
-          docker push --all-tags $IMAGE_PATH
+          # Make characters lowercase
+          IMAGE_PUSH_PATH=$(echo $IMAGE_PATH | tr '[:upper:]' '[:lower:]')
+          docker push --all-tags $IMAGE_PUSH_PATH
