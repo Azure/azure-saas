@@ -106,12 +106,15 @@ function New-SaaSIdentityProvider {
       azureAdB2cAdminApiClientIdSecretValue          = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.AppId }
       azureAdB2cDomainSecretValue                    = @{ value = "$($userInputParams.B2CTenantName).onmicrosoft.com" }
       azureAdB2cInstanceSecretValue                  = @{ value = "https://$($userInputParams.B2CTenantName).b2clogin.com" }
+	  azureAdB2cSaasAppClientIdSecretValue           = @{ value = $appRegistrations.SaasAppAppReg.AppRegistrationProperties.AppId }
+      azureAdB2cSaasAppClientSecretSecretValue       = @{ value = $appRegistrations.SaasAppAppReg.ClientSecret }
       azureAdB2cSignupAdminClientIdSecretValue       = @{ value = $appRegistrations.SignupAdminAppReg.AppRegistrationProperties.AppId }
       azureAdB2cSignupAdminClientSecretSecretValue   = @{ value = $appRegistrations.SignupAdminAppReg.ClientSecret }
-      azureAdB2cTenantIdSecretValue                  = @{ value = $createdTenantGuid }
+	  azureAdB2cTenantIdSecretValue                  = @{ value = $createdTenantGuid }
       permissionsApiHostName                         = @{ value = $userInputParams.PermissionsApiFQDN }
       permissionsApiCertificateSecretValue           = @{ value = $selfSignedCert.PfxString }
       permissionsApiCertificatePassphraseSecretValue = @{ value = ConvertFrom-SecureString -SecureString $userInputParams.SelfSignedCertificatePassword -AsPlainText }
+	  saasAppApiScopes                               = @{ value = $appRegistrations.SaasAppAppReg.AdminScopesForSaasApp }
       saasProviderName                               = @{ value = $userInputParams.ProviderName }
       saasEnvironment                                = @{ value = $userInputParams.SaasEnvironment }
       saasInstanceNumber                             = @{ value = $userInputParams.InstanceNumber }
@@ -1000,7 +1003,7 @@ function Install-AppRegistrations {
   $saasAppAppRegConfig = @{
     DisplayName                 = "asdk-saas-app"
     IdentifierUri               = @("https://$($B2CTenantName).onmicrosoft.com/$(New-Guid)")
-    OAuth2PermissionScopes      = @()
+	OAuth2PermissionScopes      = @()
     RequestedAccessTokenVersion = 2
     RequiredResourceAccess      = @(@{
         ResourceAppId  = $adminAppReg.AppRegistrationProperties.AppId
@@ -1027,6 +1030,7 @@ function Install-AppRegistrations {
   $saasAppAppReg = New-AppRegistration -AppRegistrationData $saasAppAppRegConfig -CreateSecret $true
   # Get the scopes from the admin app registration
   $adminScopesForSaasApp = @($adminAppRegConfig.OAuth2PermissionScopes | Where-Object { $_.Value -eq "tenant.read" } | ForEach-Object { $_.Value })
+  $saasAppAppReg.AdminScopesForSaasApp = $adminScopesForSaasApp
  
   # Grant admin consent on the saas app app for the admin scopes
   New-AdminConsent -ClientObjectId $saasAppAppReg.ServicePrincipalProperties.Id -ApiObjectId $adminAppReg.ServicePrincipalProperties.Id -ApiScopes $adminScopesForSaasApp

@@ -21,6 +21,12 @@ param azureAdB2cDomainSecretValue string
 @description('The value of the Azure AD B2C Instance Key Vault Secret.')
 param azureAdB2cInstanceSecretValue string
 
+@description('The value of the Azure AD B2C SaaS App Client Id Key Vault Secret.')
+param azureAdB2cSaasAppClientIdSecretValue string
+
+@description('The value of the Azure AD B2C SaaS App Client Secret Key Vault Secret.')
+param azureAdB2cSaasAppClientSecretSecretValue string
+
 @description('The value of the Azure AD B2C Signup Admin Client Id Key Vault Secret.')
 param azureAdB2cSignupAdminClientIdSecretValue string
 
@@ -57,6 +63,9 @@ param permissionsApiCertificateSecretValue string
 @description('The passphrase fopr the  certificate to save in the keyvault for securing communication with the permissions API.')
 @secure()
 param permissionsApiCertificatePassphraseSecretValue string
+
+@description('Scopes to authorize SaaS App user for the admin service.')
+param saasAppApiScopes string
 
 @description('The tag of the container image to deploy to the SignupAdmin app service.')
 param signupAdminContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-signup:latest'
@@ -147,6 +156,8 @@ module keyVaultModule 'keyVault.bicep' = {
     azureAdB2cAdminApiClientIdSecretValue: azureAdB2cAdminApiClientIdSecretValue
     azureAdB2cDomainSecretValue: azureAdB2cDomainSecretValue
     azureAdB2cInstanceSecretValue: azureAdB2cInstanceSecretValue
+	azureAdB2cSaasAppClientIdSecretValue: azureAdB2cSaasAppClientIdSecretValue
+    azureAdB2cSaasAppClientSecretSecretValue: azureAdB2cSaasAppClientSecretSecretValue
     azureAdB2cSignupAdminClientIdSecretValue: azureAdB2cSignupAdminClientIdSecretValue
     azureAdB2cSignupAdminClientSecretSecretValue: azureAdB2cSignupAdminClientSecretSecretValue
     azureAdB2cTenantIdSecretValue: azureAdB2cTenantIdSecretValue
@@ -195,8 +206,12 @@ module signupAdminAppServiceModule 'signupAdminWeb.bicep' = if (modulesToDeploy.
 module applicationAppServiceModule 'applicationWeb.bicep' = if (modulesToDeploy.applicationWeb) {
   name: 'applicationAppServiceDeployment'
   params: {
+	adminApiHostName: (modulesToDeploy.adminService) ? adminApiModule.outputs.adminApiHostName : messageToUpdate
+	adminApiScopes: saasAppApiScopes
+    adminApiScopeBaseUrl: adminApiScopeBaseUrl
     applicationAppServiceName: applicationAppServiceName
     appServicePlanId: appServicePlanModule.outputs.appServicePlanId
+	keyVaultUri: keyVaultModule.outputs.keyVaultUri
     location: location
     applicationApiContainerImageTag: applicationContainerImageTag
     containerRegistryUrl: containerRegistryUrl
@@ -211,6 +226,7 @@ module keyVaultAccessPolicyModule 'keyVaultAccessPolicies.bicep' = {
     adminApiPrincipalId: adminApiModule.outputs.systemAssignedManagedIdentityPrincipalId
     keyVaultName: keyVaultName
     modulesToDeploy: modulesToDeploy
+	applicationAppServicePrincipalId: applicationAppServiceModule.outputs.systemAssignedManagedIdentityPrincipalId
     signupAdminAppServicePrincipalId: signupAdminAppServiceModule.outputs.systemAssignedManagedIdentityPrincipalId
   }
 }
