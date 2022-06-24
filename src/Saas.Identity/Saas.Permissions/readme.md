@@ -8,7 +8,7 @@ For a complete overview, please see the [SaaS.Permissions.Service](https://azure
 
 ## 2. How to Run Locally
 
-Once configured, this app presents an api service which manages authorization of actions issued to the Admin service. It may be run locally during development of service logic and for regenerating its included NSwag api client. (An NSwag file is included in the Admin project to generate its client.)
+Once configured, this app presents an api service which exposes endpoints to perform CRUD operations on user permission data. It may be run locally during development of service logic and for regenerating its included NSwag api client. (An NSwag file is included in the Admin project to generate its client.)
 
 ### i. Requirements
 
