@@ -2,13 +2,13 @@
 
 ## 1. Module Overview
 
-This project hosts a service api for the role-based authorization of user actions. It is fully self-contained such that it includes complete copies of all necessary classes for operation. Since it contains no direct references to the other projects, it can be extracted to launch in isolation insofar as expected substitutes are configured.
+This project hosts a service api for the role-based authorization of user actions. It is fully self-contained such that it includes complete copies of all necessary classes for operation. However, keep in mind that some functionality within the API does have [dependencies](https://azure.github.io/azure-saas/components/identity/permissions-service#dependencies) on other services.
 
 For a complete overview, please see the [SaaS.Permissions.Service](https://azure.github.io/azure-saas/components/identity/permissions-service/) page in our documentation site.
 
 ## 2. How to Run Locally
 
-Once configured, this app presents an api service which manages authorization of actions issued to the Admin service. It may be run locally during development of service logic and for regenerating its included NSwag api client. (An NSwag file is included in the Admin project to generate its client.)
+Once configured, this app presents an api service which exposes endpoints to perform CRUD operations on user permission data. It may be run locally during development of service logic and for regenerating its included NSwag api client. (An NSwag file is included in the Admin project to generate its client.)
 
 ### i. Requirements
 
