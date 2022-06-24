@@ -57,7 +57,6 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 
 | AppSetting Key                              | Description                                                                    | Secret | Default Value                  |
 | ------------------------------------------- | ------------------------------------------------------------------------------ | ------ | ------------------------------ |
-| AllowedHosts                                | Allowed app host names, semicolon delimited, asterisk is wildcard              | false  | *                              |
 | AppSettings:AdminServiceBaseUrl             | URL for downstream admin service                                               | false  | https://localhost:7041/        |
 | AppSettings:AdminServiceScopeBaseUrl        | The B2C URL for the admin service scope                                        | false  |                                |
 | AppSettings:AdminServiceScopes              | List of scopes to authorize user for on the admin service. Space delimited     | false  |                                |
