@@ -21,6 +21,12 @@ param azureAdB2cSignupAdminDomainSecretName string = 'signupadmin-AzureAdB2C--Do
 @description('The value of the Azure AD B2C Domain Key Vault Secret.')
 param azureAdB2cDomainSecretValue string
 
+@description('The name of the Azure AD B2C SaaS App Client Id Key Vault Secret.')
+param azureAdB2cSaasApplicationClientIdSecretName string = 'saasapplication-AzureAdB2C--ClientId'
+
+@description('The name of the Azure AD B2C Instance Key Vault Secret for the Saas App Site.')
+param azureAdB2cSaasApplicationInstanceSecretName string = 'saasapplication-AzureAdB2C--Instance'
+
 @description('The name of the Azure AD B2C Instance Key Vault Secre for the Admin Api.')
 param azureAdB2cAdminApiInstanceSecretName string = 'admin-AzureAdB2C--Instance'
 
