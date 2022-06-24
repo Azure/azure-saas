@@ -58,7 +58,7 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 | ClaimToRoleTransformer:AuthenticationType  | Indicates the Authentication type for new identity                                                                                      | false  | MyCustomRoleAuth                      |
 | ClaimToRoleTransformer:RoleClaimtype       | Type of the claim to use in the new Identity, works alongside built-in                                                                  | false  | MyCustomRoles                         |
 | ClaimToRoleTransformer:SourceClaimType     | Name of the claim custom roles are in                                                                                                   | false  | permissions                           |
-| ConnectionStrings:TenantsContext           | Connection String to SQL server database used to store permission data.                                                                 | true   |                                       |
+| ConnectionStrings:TenantsContext           | Connection String to SQL server database used to store permission data.                                                                 | true   | (localdb connnection string)          |
 | KeyVault:PermissionsApiCert                | The name of the secret in Azure Key Vault that contains a base64 encoded certificate to use for authentication with the permissions api | false  |                                       |
 | KeyVault:Url                               | KeyVault URL to pull secret values from in production                                                                                   | false  |                                       |
 | Logging:LogLevel:Default                   | Logging level when no configured provider is matched                                                                                    | false  | Information                           |
@@ -75,6 +75,3 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 
 ### i. LocalDB
 If using the LocalDB persistance for local development, tables and data can be interacted with directly through Visual Studio. Under the `View` menu, find `SQL Server Object Explorer`. Additional documentation is available [here](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver16)
-
-Configure the following in your managed secrets to use LocalDB:
->"ConnectionStrings:TenantsContext": "Server=(localdb)\\mssqllocaldb;Database=TenantsContext;Trusted_Connection=True;MultipleActiveResultSets=true"

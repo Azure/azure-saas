@@ -84,4 +84,4 @@ These instructions cover running the app using its existing implementations and 
 ## 3. Additional Resources
 
 ### i. Azure AD B2C
-You'll need to configure your B2C instance for an external authentication provider. Additional documentation is available [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-azure-ad-multi-tenant?pivots=b2c-user-flow).
+You'll need to configure your B2C instance for an external authentication provider. Additional documentation is available [here](https://azure.github.io/azure-saas/components/identity/).

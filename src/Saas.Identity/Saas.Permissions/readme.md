@@ -45,7 +45,7 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 | AzureAdB2C:SignedOutCallbackPath      | Callback path (not full url) contacted after signout                                                         | false  | /signout/B2C_1A_SIGNUP_SIGNIN |
 | AzureAdB2C:SignUpSignInPolicyId       | Name of signup/signin policy                                                                                 | false  | B2C_1A_SIGNUP_SIGNIN          |
 | AzureAdB2C:TenantId                   | Identifier for the overall Azure AD B2C tenant for the overall SaaS ecosystem                                | true   |                               |
-| ConnectionStrings:PermissionsContext  | Connection String to SQL server database used to store permission data.                                      | true   |                               |
+| ConnectionStrings:PermissionsContext  | Connection String to SQL server database used to store permission data.                                      | true   | (localdb connnection string)  |
 | KeyVault:Url                          | KeyVault URL to pull secret values from in production                                                        | false  |                               |
 | Logging:LogLevel:Default              | Logging level when no configured provider is matched                                                         | false  | Information                   |
 | Logging:LogLevel:Microsoft.AspNetCore | Logging level for AspNetCore logging                                                                         | false  | Warning                       |
@@ -61,6 +61,3 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 
 ### i. LocalDB
 If using the LocalDB persistance for local development, tables and data can be interacted with directly through Visual Studio. Under the `View` menu, find `SQL Server Object Explorer`. Additional documentation is available [here](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver16)
-
-Configure the following in your managed secrets to use LocalDB:
->"ConnectionStrings:PermissionsContext": "Server=(localdb)\\mssqllocaldb;Database=Saas.Permissions.Sql;Trusted_Connection=True;MultipleActiveResultSets=true"
