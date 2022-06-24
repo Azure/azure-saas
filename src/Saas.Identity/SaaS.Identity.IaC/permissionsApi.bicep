@@ -42,10 +42,6 @@ resource permissionsApi 'Microsoft.Web/sites@2021-03-01' = {
           value: keyVaultUri
         }
         {
-          name: 'AllowedHosts'
-          value: '*'
-        }
-        {
           name: 'Logging__LogLevel__Default'
           value: 'Information'
         }
