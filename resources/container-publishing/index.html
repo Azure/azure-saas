@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.91.2" />
+<meta name="robots" content="index, follow">
+
+
+<link rel="shortcut icon" href="/azure-saas/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/azure-saas/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/azure-saas/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/azure-saas/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/azure-saas/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/azure-saas/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/azure-saas/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/azure-saas/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/azure-saas/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/azure-saas/favicons/android-192x192.png" sizes="192x192">
+
+<title>Container Publishing | Azure SaaS Dev Kit Docs</title>
+<meta name="description" content="Containers offer a high degree of platform flexibility and scalability necessary for SaaS ecosystems, and this project has been made container-ready …">
+<meta property="og:title" content="Container Publishing" />
+<meta property="og:description" content="Containers offer a high degree of platform flexibility and scalability necessary for SaaS ecosystems, and this project has been made container-ready for this reason. The .github/workflows directory hosts Yaml files utilized as part of GitHub Workflows. Actions triggered by PR creation targeting the main branch handle publishing of container images to Github Container Registry. These container images are then pulled by the app services running the modules (if you followed the instructions listed in our Quick Start guide)." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://azure.github.io/azure-saas/resources/container-publishing/" /><meta property="article:section" content="resources" />
+
+<meta property="article:modified_time" content="2022-06-27T10:10:29-05:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+
+<meta itemprop="name" content="Container Publishing">
+<meta itemprop="description" content="Containers offer a high degree of platform flexibility and scalability necessary for SaaS ecosystems, and this project has been made container-ready for this reason. The .github/workflows directory hosts Yaml files utilized as part of GitHub Workflows. Actions triggered by PR creation targeting the main branch handle publishing of container images to Github Container Registry. These container images are then pulled by the app services running the modules (if you followed the instructions listed in our Quick Start guide).">
+<meta itemprop="dateModified" content="2022-06-27T10:10:29-05:00" />
+<meta itemprop="wordCount" content="827">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Container Publishing"/>
+<meta name="twitter:description" content="Containers offer a high degree of platform flexibility and scalability necessary for SaaS ecosystems, and this project has been made container-ready for this reason. The .github/workflows directory hosts Yaml files utilized as part of GitHub Workflows. Actions triggered by PR creation targeting the main branch handle publishing of container images to Github Container Registry. These container images are then pulled by the app services running the modules (if you followed the instructions listed in our Quick Start guide)."/>
+
+
+
+
+<link rel="preload" href="/azure-saas/scss/main.min.01c7095646f7a5d136fb587e37c85d2417a71539f94cd281b6c32ecdf0171086.css" as="style">
+<link href="/azure-saas/scss/main.min.01c7095646f7a5d136fb587e37c85d2417a71539f94cd281b6c32ecdf0171086.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK"
+  crossorigin="anonymous"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(() => {
+    $(".language-mermaid").wrapInner("<div class=\"mermaid\"></div>");
+    mermaid.init();
+
+    
+    const svg = $(".mermaid svg");
+		svg.removeAttr('height');
+  });
+</script>
+
+
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        <a class="navbar-brand" href="/azure-saas/">
+		<span class="navbar-logo"></span><span class="font-weight-bold">Azure SaaS Dev Kit Docs</span>
+	</a>
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/azure-saas/#" ><span>Homepage</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="https://github.com/Azure/azure-saas" target="_blank" ><span>GitHub</span></a>
+			</li>
+			
+			
+			
+		</ul>
+	</div>
+	<div class="navbar-nav d-none d-lg-block"></div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    <ul class="td-sidebar-nav__section pr-md-3 ul-0">
+      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-azure-saas-li">
+  <a href="/azure-saas/" title="" class="align-left pl-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-azure-saas"><span class="">Introduction</span></a>
+  <ul class="ul-1">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasquick-start-li">
+  <a href="/azure-saas/quick-start/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasquick-start"><span class="">Quick Start</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasdiagrams-li">
+  <a href="/azure-saas/diagrams/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasdiagrams"><span class="">Architecture Diagrams</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-azure-saascomponents-li">
+  <a href="/azure-saas/components/" title="Azure SaaS Dev Kit Components" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-azure-saascomponents"><span class="">Components</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-azure-saascomponentsidentity-li">
+  <a href="/azure-saas/components/identity/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-azure-saascomponentsidentity"><span class="">Identity Framework</span></a>
+  <ul class="ul-3 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-provider-li">
+  <a href="/azure-saas/components/identity/identity-provider/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-provider"><span class="">Identity Provider</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitypermissions-service-li">
+  <a href="/azure-saas/components/identity/permissions-service/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitypermissions-service"><span class="">SaaS.Permissions.Service</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentityidentity-flows-li">
+  <a href="/azure-saas/components/identity/identity-flows/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentityidentity-flows"><span class="">Identity Flows</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsidentitycaveats-li">
+  <a href="/azure-saas/components/identity/caveats/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsidentitycaveats"><span class="">Caveats &amp; Limitations</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentsadmin-service-li">
+  <a href="/azure-saas/components/admin-service/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentsadmin-service"><span class="">SaaS.Admin.Service</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssignup-administration-li">
+  <a href="/azure-saas/components/signup-administration/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssignup-administration"><span class="">SaaS.SignupAdministration.Web</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssaas-application-li">
+  <a href="/azure-saas/components/saas-application/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-application"><span class="">SaaS.Application.Web</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saascomponentssaas-notifications-li">
+  <a href="/azure-saas/components/saas-notifications/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saascomponentssaas-notifications"><span class="">SaaS.Notifications</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-azure-saasresources-li">
+  <a href="/azure-saas/resources/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-azure-saasresources"><span class="">Resources</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesbranding-considerations-for-saas-li">
+  <a href="/azure-saas/resources/branding-considerations-for-saas/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesbranding-considerations-for-saas"><span class="">SaaS Branding Considerations</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcescontoso-badgemeup-li">
+  <a href="/azure-saas/resources/contoso-badgemeup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontoso-badgemeup"><span class="">Contoso BadgeMeUp</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesterminology-li">
+  <a href="/azure-saas/resources/terminology/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesterminology"><span class="">Terminology</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-azure-saasresourcesadditional-recommended-resources-li">
+  <a href="/azure-saas/resources/additional-recommended-resources/" title="Azure Recommended Resources" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcesadditional-recommended-resources"><span class="">Additional Recommended Resources</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-azure-saasresourcescontainer-publishing-li">
+  <a href="/azure-saas/resources/container-publishing/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-azure-saasresourcescontainer-publishing"><span class="td-sidebar-nav-active-item">Container Publishing</span></a>
+</li>
+  </ul>
+</li>
+  </ul>
+</li>
+    </ul>
+  </nav>
+</div>
+
+          </aside>
+          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
+            
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+<a href="https://github.com/Azure/azure-saas/tree/main/docs/azure-saas-docs/content/en/resources/container-publishing.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa fa-file-alt fa-fw"></i> View page source</a>
+  <a href="https://github.com/Azure/azure-saas/edit/main/docs/azure-saas-docs/content/en/resources/container-publishing.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/Azure/azure-saas/new/main/docs/azure-saas-docs/content/en/resources/container-publishing.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Create child page</a>
+  <a href="https://github.com/Azure/azure-saas/issues/new?title=Container%20Publishing" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+  
+</div>
+
+            
+
+
+<div class="td-toc"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#pull-based-vs-push-based-deployments">Pull-Based vs Push-Based Deployments</a>
+      <ul>
+        <li><a href="#i-building-images">i. Building Images</a></li>
+        <li><a href="#ii-pushing-image">ii. Pushing Image</a></li>
+        <li><a href="#iii-pulling-image">iii. Pulling Image</a></li>
+      </ul>
+    </li>
+    <li><a href="#scripts-and-variables">Scripts and Variables</a>
+      <ul>
+        <li><a href="#i-build-artifacts">i. Build Artifacts</a></li>
+        <li><a href="#ii-docker-compose">ii. Docker Compose</a></li>
+        <li><a href="#iii-dockerfile">iii. Dockerfile</a></li>
+        <li><a href="#iv-github-action-secrets">iv. GitHub Action Secrets</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+
+
+
+            
+
+	
+		
+
+
+
+  
+  
+
+	
+		
+
+
+
+  
+  
+
+	
+
+          </aside>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="td-breadcrumbs">
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="https://azure.github.io/azure-saas/resources/">Resources</a>
+  </li>
+  <li class="breadcrumb-item active" aria-current="page">
+    <a href="https://azure.github.io/azure-saas/resources/container-publishing/">Container Publishing</a>
+  </li>
+  </ol>
+</nav>
+            
+<div class="td-content">
+	<h1>Container Publishing</h1>
+	
+	<header class="article-meta">
+		
+
+  
+    
+
+
+  
+    
+
+
+  
+
+		
+	</header>    
+	<p><a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/container-docker-introduction/">Containers</a> offer a high degree of platform flexibility and scalability necessary for SaaS ecosystems, and this project has been made container-ready for this reason. The <a href="https://github.com/Azure/azure-saas/tree/main/.github/workflows">.github/workflows</a> directory hosts Yaml files utilized as part of <a href="https://docs.github.com/en/actions/using-workflows/about-workflows">GitHub Workflows</a>. Actions triggered by PR creation targeting the <code>main</code> branch handle publishing of container images to <a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry">Github Container Registry</a>. These container images are then pulled by the app services running the modules (if you followed the instructions listed in our <a href="https://azure.github.io/azure-saas/quick-start/">Quick Start</a> guide).</p>
+<p>These processes are <a href="https://docs.github.com/en/actions/using-workflows/triggering-a-workflow">defined by files</a> that GitHub will automatically recognize, and so comitting them to a GitHub repo will include them for use in your own project. Here are some key files and attributes to familiarize yourself with the publishing process:</p>
+<h2 id="pull-based-vs-push-based-deployments">Pull-Based vs Push-Based Deployments</h2>
+<p>Using containers changes the way a traditional CI/CD process works, and moves away from a &ldquo;push-based&rdquo; deployment into a &ldquo;pull-based&rdquo; deployment. This means that in order to release code using containers, you will first need to build and publish your container (with your code and runtime inside), and then trigger your hosting environment to pull the new version of your container on your instance. See our <a href="https://docs.microsoft.com/en-us/azure/app-service/deploy-ci-cd-custom-container">CI/CD for custom containers</a> documentation for a more thorough explanation of how this process works using Azure App Service.</p>
+<h3 id="i-building-images">i. Building Images</h3>
+<p>As part of <code>build-artifacts.yml</code> each of the modules is built as a <a href="https://docs.docker.com/get-started/overview/">Docker</a> image by invoking <code>docker-compose.yml</code>. The compose script defines the overall execution parameters of each module and identifies a corresponding <code>Dockerfile</code> to define how a given module is built for use in a container.</p>
+<h3 id="ii-pushing-image">ii. Pushing Image</h3>
+<p>Containers are published at three times in the project&rsquo;s workflows:</p>
+<ol>
+<li><strong>Merge</strong>: Whenever a merge occurs on <code>main</code> then <a href="https://github.com/Azure/azure-saas/blob/main/.github/workflows/build-artifacts.yml">build-artifacts.yml</a> is run. This workflow builds all of the images registered in the <a href="https://github.com/Azure/azure-saas/blob/main/docker-compose.yml">docker-compose.yml</a> file. It will push each image tagged as <code>latest</code> to the GitHub Container Registry.</li>
+<li><strong>Tag</strong>: When a tag is created on the project then four corresponding actions are triggered which build a module and push an image tagged with the newly-created repo tag. These scripts are:
+<ul>
+<li><a href="https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-admin-tag.yml">container-image-build-saas-admin-tag.yml</a></li>
+<li><a href="https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-application-tag.yml">container-image-build-saas-application-tag.yml</a></li>
+<li><a href="https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-permissions-tag.yml">container-image-build-saas-permissions-tag.yml</a></li>
+<li><a href="https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-signupadministration-tag.yml">container-image-build-saas-signupadministration-tag.yml</a></li>
+</ul>
+</li>
+<li><strong>PR</strong>: When a PR is opened, synchronized, or reopened targeting <code>main</code>, then four corresponding actions are triggered which build a module and push an image tagged with the PR number. These scripts are:
+<ul>
+<li><a href="https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-admin-pr.yml">container-image-build-saas-admin-pr.yml</a></li>
+<li><a href="https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-application-pr.yml">container-image-build-saas-application-pr.yml</a></li>
+<li><a href="https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-permissions-pr.yml">container-image-build-saas-permissions-pr.yml</a></li>
+<li><a href="https://github.com/Azure/azure-saas/blob/feature/Julian/PullBasedContainerPublishingActions/.github/workflows/container-image-build-saas-signupadministration-pr.yml">container-image-build-saas-signupadministration-pr.yml</a></li>
+</ul>
+</li>
+</ol>
+<p>The constructed images and identifiers are then pushed to the GitHub Container Registry service for future instances of the application modules to pull when relevant. No publishing action is necessary at this point and existing container instances will continue running their contained version without issue.</p>
+<h3 id="iii-pulling-image">iii. Pulling Image</h3>
+<p>Continuous Delivery has been enabled via the Tag and PR workflows to enable testing and dev environment automatic update. These scripts are configured to fetch a webhook url secret from the repository corresponding to an environment and the given module. It will then issue an <code>HTTP POST</code> against this endpoint so that it can be alerted that a new image version has become available. The endpoint in use with the existing repository is the provided CI/CD webhook for the Azure Web App <a href="https://docs.microsoft.com/en-us/azure/app-service/deploy-ci-cd-custom-container?tabs=private&amp;pivots=container-linux#4-enable-cicd">custom container image</a> endpoint.</p>
+<h2 id="scripts-and-variables">Scripts and Variables</h2>
+<h3 id="i-build-artifacts">i. Build Artifacts</h3>
+<p>The <a href="https://github.com/Azure/azure-saas/blob/main/.github/workflows/build-artifacts.yml">build-artifacts.yml</a> script is invoked whenever there is a PR issued against the <code>main</code> branch. It defines two steps for building and publishing the module Docker images.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IMAGES_TO_PUSH</td>
+<td>Quoted and space-delimited list of images to push.</td>
+<td>(&ldquo;asdk-admin&rdquo; &ldquo;asdk-web&rdquo; &ldquo;asdk-permissions&rdquo; &ldquo;asdk-signup&rdquo;)</td>
+</tr>
+<tr>
+<td>GH_TAG</td>
+<td>Tag applied to image to identify it and indicate its version. Currently version is always set to <code>latest</code>.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="ii-docker-compose">ii. Docker Compose</h3>
+<p>The <code>docker-compose build</code> command in the build artifacts script finds and invokes the <a href="https://docs.docker.com/compose/compose-file/">Docker Compose specification</a> script <a href="https://github.com/Azure/azure-saas/blob/main/docker-compose.yml">docker-compose.yml</a> in the project root. This lists out the images to construct and indicates a corresponding <code>Dockerfile</code> for an image.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Section</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>image</td>
+<td></td>
+<td>The image identifier, must match with the image name variable in <code>build-artifacts.yaml</code> to be tagged and pushed into container repository.</td>
+<td></td>
+</tr>
+<tr>
+<td>container_name</td>
+<td></td>
+<td>Container identifier, distinct from the image it is started from.</td>
+<td></td>
+</tr>
+<tr>
+<td>context</td>
+<td>build</td>
+<td>Defines the directory context from project root other relative paths are searched against</td>
+<td>./src</td>
+</tr>
+<tr>
+<td>dockerfile</td>
+<td>build</td>
+<td>Path relative to context to the Dockerfile for a given image specification</td>
+<td></td>
+</tr>
+<tr>
+<td>expose</td>
+<td></td>
+<td>Defines the ports that must be exposed from container.</td>
+<td>80</td>
+</tr>
+<tr>
+<td>ports</td>
+<td></td>
+<td>Container ports to expose for access.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="iii-dockerfile">iii. Dockerfile</h3>
+<p>Each module directory contains a corresponding <a href="https://docs.docker.com/engine/reference/builder/">Dockerfile</a> referenced by <code>docker-commpose.yml</code> which contains the commands necessary to construct its container image.</p>
+<ul>
+<li><a href="https://github.com/Azure/azure-saas/blob/main/src/Saas.Admin/Saas.Admin.Service/Dockerfile">Admin Service</a></li>
+<li><a href="https://github.com/Azure/azure-saas/blob/main/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Dockerfile">Permissions Service</a></li>
+<li><a href="https://github.com/Azure/azure-saas/blob/main/src/Saas.SignupAdministration/Saas.SignupAdministration.Web/Dockerfile">Signup Application Web</a></li>
+<li><a href="https://github.com/Azure/azure-saas/blob/main/src/Saas.Application/Saas.Application.Web/Dockerfile">SaaS Application Web</a></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Section</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>app_name</td>
+<td>Shared</td>
+<td>Informal identifier</td>
+<td></td>
+</tr>
+<tr>
+<td>app_path</td>
+<td>Shared</td>
+<td>Path to project directory from context defined in compose specification.</td>
+<td></td>
+</tr>
+<tr>
+<td>dll_name</td>
+<td>Stage 2</td>
+<td>Name of the dll in output directory</td>
+<td></td>
+</tr>
+<tr>
+<td>ENTRYPOINT</td>
+<td>Stage 2</td>
+<td>Command which directs the container to the path and dll as entry to the image.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="iv-github-action-secrets">iv. GitHub Action Secrets</h3>
+<p>The following secrets are referenced by the GitHub Actions CI/CD workflows to issue a POST alerting deployed apps of newly-available container images.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Environment</th>
+<th>Module</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ASDK_ADMIN_DEV_WEBHOOK_URL</td>
+<td>Dev</td>
+<td>Saas.Admin.Service</td>
+</tr>
+<tr>
+<td>ASDK_WEB_DEV_WEBHOOK_URL</td>
+<td>Dev</td>
+<td>Saas.Application.Web</td>
+</tr>
+<tr>
+<td>ASDK_PERMISSIONS_DEV_WEBHOOK_URL</td>
+<td>Dev</td>
+<td>Saas.Permissions.Service</td>
+</tr>
+<tr>
+<td>ASDK_SIGNUP_DEV_WEBHOOK_URL</td>
+<td>Dev</td>
+<td>Saas.SignupAdministration.Web</td>
+</tr>
+</tbody>
+</table>
+
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">
+  Last modified June 27, 2022: <a href="https://github.com/Azure/azure-saas/commit/e4dec86ae16a585c23c797a997f9394626421537">Module Readme Revisions (#176) (e4dec86)</a>
+</div>
+
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-5 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-4 text-xs-center order-sm-2">
+        
+      </div>
+      <div class="col-6 col-sm-4 text-right text-xs-center order-sm-3">
+        
+      </div>
+      <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
+        
+        
+	
+		
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
+    integrity="sha512-UR25UO94eTnCVwjbXozyeVd6ZqpaAE9naiEUBK/A+QDbfSTQFhPGj5lOR6d8tsgbBk84Ggb5A3EkjsOgPRPcKA=="
+    crossorigin="anonymous"></script>
+
+
+
+
+
+<script src='/azure-saas/js/tabpane-persist.js'></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/azure-saas/js/main.min.6cc4f2e68c1bae5b137f756ede53aa026afaae43271828491e233d4350630be1.js" integrity="sha256-bMTy5owbrlsTf3Vu3lOqAmr6rkMnGChJHiM9Q1BjC&#43;E=" crossorigin="anonymous"></script>
+
+
+
+
+  </body>
+</html>
