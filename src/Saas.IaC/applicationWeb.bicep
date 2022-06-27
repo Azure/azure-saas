@@ -3,6 +3,15 @@
 @description('The App Service Plan ID.')
 param appServicePlanId string
 
+@description('The Admin Api host name.')
+param adminApiHostName string
+
+@description('Scopes to authorize user for the admin service.')
+param saasAppApiScopes string
+
+@description('The base url for the app registration that the scopes belong to.')
+param adminApiScopeBaseUrl string
+
 @description('The location for all resources.')
 param location string
 
@@ -30,15 +39,15 @@ resource applicationAppService 'Microsoft.Web/sites@2021-03-01' = {
       linuxFxVersion: 'DOCKER|${applicationApiContainerImageTag}'
       appSettings: [
         {
-          name: 'AdminServiceBaseUrl'
+          name: 'AppSettings__AdminServiceBaseUrl'
           value: adminApiHostName
         }
         {
-          name: AdminServiceScopeBaseUrl
+          name: 'AppSettings__AdminServiceScopeBaseUrl'
           value: adminApiScopeBaseUrl
         }
         {
-          name: AdminServiceScopes
+          name: 'AppSettings__AdminServiceScopes'
           value: saasAppApiScopes
         }
         {

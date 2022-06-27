@@ -137,6 +137,16 @@ resource azureAdB2cSignupAdminInstanceSecret 'Microsoft.KeyVault/vaults/secrets@
   }
 }
 
+// Resource - Key Vault - Secret - Azure AD B2C Instance SaaS Application
+//////////////////////////////////////////////////
+resource azureAdB2cSignupSaasApplicationSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+  parent: keyVault
+  name: azureAdB2cSaasApplicationInstanceSecretName
+  properties: {
+    value: azureAdB2cInstanceSecretValue
+  }
+}
+
 // Resource - Key Vault - Secret - Azure AD B2C Domain Admin Api
 //////////////////////////////////////////////////
 resource azureAdB2cAdminApiDomainSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
@@ -203,6 +213,16 @@ resource adminSqlConnectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2021-
 resource azureAdB2cSignupAdminClientIdSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   parent: keyVault
   name: azureAdB2cSignupAdminClientIdSecretName
+  properties: {
+    value: azureAdB2cSignupAdminClientIdSecretValue
+  }
+}
+
+// Resource - Key Vault - Secret - Azure AD B2C SaaS Application Client Id
+//////////////////////////////////////////////////
+resource azureAdB2cSignupAdminClientIdSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+  parent: keyVault
+  name: azureAdB2cSaasApplicationClientIdSecretName
   properties: {
     value: azureAdB2cSignupAdminClientIdSecretValue
   }
