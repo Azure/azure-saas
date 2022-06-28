@@ -108,6 +108,11 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseForwardedHeaders();
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    Secure = CookieSecurePolicy.Always
+});
 
 app.UseEndpoints(endpoints =>
 {

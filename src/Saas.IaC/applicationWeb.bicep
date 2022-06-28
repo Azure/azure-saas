@@ -3,6 +3,18 @@
 @description('The App Service Plan ID.')
 param appServicePlanId string
 
+@description('The Admin Api host name.')
+param adminApiHostName string
+
+@description('Scopes to authorize user for the admin service.')
+param saasAppApiScopes string
+
+@description('The base url for the app registration that the scopes belong to.')
+param adminApiScopeBaseUrl string
+
+@description('The URL for the keyvault that contains the application secrets')
+param keyVaultUri string
+
 @description('The location for all resources.')
 param location string
 
@@ -30,11 +42,50 @@ resource applicationAppService 'Microsoft.Web/sites@2021-03-01' = {
       linuxFxVersion: 'DOCKER|${applicationApiContainerImageTag}'
       appSettings: [
         {
+          name: 'AppSettings__AdminServiceBaseUrl'
+          value: adminApiHostName
+        }
+        {
+          name: 'AppSettings__AdminServiceScopeBaseUrl'
+          value: adminApiScopeBaseUrl
+        }
+        {
+          name: 'AppSettings__AdminServiceScopes'
+          value: saasAppApiScopes
+        }
+        {
+          name: 'AzureAdB2C__SignedOutCallbackPath'
+          value: '/signout/B2C_1A_SIGNUP_SIGNIN'
+        }        
+        {
+          name: 'AzureAdB2C__SignUpSignInPolicyId'
+          value: 'B2C_1A_SIGNUP_SIGNIN'
+        }
+        {
           name: 'DOCKER_REGISTRY_SERVER_URL'
           value: containerRegistryUrl
-        }     
+        }
+        {
+          name: 'KeyVault__Url'
+          value: keyVaultUri
+        }
+        {
+          name: 'Logging__LogLevel__Default'
+          value: 'Information'
+        }
+        {
+          name: 'Logging__LogLevel__Microsoft'
+          value: 'Warning'
+        }
+        {
+          name: 'Logging__LogLevel__Microsoft.Hosting.Lifetime'
+          value: 'Information'
+        }
       ]
     }
+  }
+  identity: {
+    type: 'SystemAssigned'
   }
 }
 
@@ -51,3 +102,4 @@ resource applicationAppService 'Microsoft.Web/sites@2021-03-01' = {
 // Outputs
 //////////////////////////////////////////////////
 output applicationAppServiceHostName string = applicationAppService.properties.defaultHostName
+output systemAssignedManagedIdentityPrincipalId string = applicationAppService.identity.principalId

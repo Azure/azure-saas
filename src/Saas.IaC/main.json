@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.6.18.56646",
-      "templateHash": "7879559166314876750"
+      "version": "0.7.4.23292",
+      "templateHash": "7285554353607664512"
     }
   },
   "parameters": {
@@ -23,14 +23,14 @@
     },
     "adminApiContainerImageTag": {
       "type": "string",
-      "defaultValue": "ghcr.io/azure/azure-saas/asdk-admin:latest",
+      "defaultValue": "ghcr.io/azure/azure-saas/asdk-admin:v1.0",
       "metadata": {
         "description": "The tag of the container image to deploy to the Admin api app service."
       }
     },
     "applicationContainerImageTag": {
       "type": "string",
-      "defaultValue": "ghcr.io/azure/azure-saas/asdk-web:latest",
+      "defaultValue": "ghcr.io/azure/azure-saas/asdk-web:v1.0",
       "metadata": {
         "description": "The tag of the container image to deploy to the SaaS Application api app service."
       }
@@ -51,6 +51,18 @@
       "type": "string",
       "metadata": {
         "description": "The value of the Azure AD B2C Instance Key Vault Secret."
+      }
+    },
+    "azureAdB2cSaasAppClientIdSecretValue": {
+      "type": "string",
+      "metadata": {
+        "description": "The value of the Azure AD B2C SaaS App Client Id Key Vault Secret."
+      }
+    },
+    "azureAdB2cSaasAppClientSecretSecretValue": {
+      "type": "string",
+      "metadata": {
+        "description": "The value of the Azure AD B2C SaaS App Client Secret Key Vault Secret."
       }
     },
     "azureAdB2cSignupAdminClientIdSecretValue": {
@@ -131,9 +143,15 @@
         "description": "The passphrase fopr the  certificate to save in the keyvault for securing communication with the permissions API."
       }
     },
+    "saasAppApiScopes": {
+      "type": "string",
+      "metadata": {
+        "description": "Scopes to authorize SaaS App user for the admin service."
+      }
+    },
     "signupAdminContainerImageTag": {
       "type": "string",
-      "defaultValue": "ghcr.io/azure/azure-saas/asdk-signup:latest",
+      "defaultValue": "ghcr.io/azure/azure-saas/asdk-signup:v1.0",
       "metadata": {
         "description": "The tag of the container image to deploy to the SignupAdmin app service."
       }
@@ -219,8 +237,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.6.18.56646",
-              "templateHash": "15262476417635004629"
+              "version": "0.7.4.23292",
+              "templateHash": "15590660116437762573"
             }
           },
           "parameters": {
@@ -284,8 +302,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.6.18.56646",
-              "templateHash": "12173278180151630714"
+              "version": "0.7.4.23292",
+              "templateHash": "1702688739756527850"
             }
           },
           "parameters": {
@@ -399,8 +417,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.6.18.56646",
-              "templateHash": "12422275521465781864"
+              "version": "0.7.4.23292",
+              "templateHash": "9206951299448798428"
             }
           },
           "parameters": {
@@ -508,6 +526,12 @@
           "azureAdB2cInstanceSecretValue": {
             "value": "[parameters('azureAdB2cInstanceSecretValue')]"
           },
+          "azureAdB2cSaasAppClientIdSecretValue": {
+            "value": "[parameters('azureAdB2cSaasAppClientIdSecretValue')]"
+          },
+          "azureAdB2cSaasAppClientSecretSecretValue": {
+            "value": "[parameters('azureAdB2cSaasAppClientSecretSecretValue')]"
+          },
           "azureAdB2cSignupAdminClientIdSecretValue": {
             "value": "[parameters('azureAdB2cSignupAdminClientIdSecretValue')]"
           },
@@ -536,8 +560,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.6.18.56646",
-              "templateHash": "12077530569314546565"
+              "version": "0.7.4.23292",
+              "templateHash": "10345434415902719005"
             }
           },
           "parameters": {
@@ -585,6 +609,53 @@
               "type": "string",
               "metadata": {
                 "description": "The value of the Azure AD B2C Domain Key Vault Secret."
+              }
+            },
+            "azureAdB2cSaasAppClientIdSecretName": {
+              "type": "string",
+              "defaultValue": "saasapplication-AzureAdB2C--ClientId",
+              "metadata": {
+                "description": "The name of the Azure AD B2C SaaS App Client Id Key Vault Secret."
+              }
+            },
+            "azureAdB2cSaasAppClientIdSecretValue": {
+              "type": "string",
+              "metadata": {
+                "description": "The value of the Azure AD B2C SaaS App Client Id Key Vault Secret."
+              }
+            },
+            "azureAdB2cSaasAppClientSecretSecretName": {
+              "type": "string",
+              "defaultValue": "saasapplication-AzureAdB2C--ClientSecret",
+              "metadata": {
+                "description": "The name of the Azure AD B2C SaaS App Client Secret Key Vault Secret."
+              }
+            },
+            "azureAdB2cSaasAppClientSecretSecretValue": {
+              "type": "string",
+              "metadata": {
+                "description": "The value of the Azure AD B2C SaaS App Client Secret Key Vault Secret."
+              }
+            },
+            "azureAdB2cSaasAppDomainSecretName": {
+              "type": "string",
+              "defaultValue": "saasapplication-AzureAdB2C--Domain",
+              "metadata": {
+                "description": "The name of the Azure AD B2C Domain Key Vault Secret for the Saas App Site."
+              }
+            },
+            "azureAdB2cSaasAppInstanceSecretName": {
+              "type": "string",
+              "defaultValue": "saasapplication-AzureAdB2C--Instance",
+              "metadata": {
+                "description": "The name of the Azure AD B2C Instance Key Vault Secret for the Saas App Site."
+              }
+            },
+            "azureAdB2cSaasAppTenantIdSecretName": {
+              "type": "string",
+              "defaultValue": "saasapplication-AzureAdB2C--TenantId",
+              "metadata": {
+                "description": "The name of the Azure AD B2C Tenant Id Key Vault Secret for the SignupAdmin site."
               }
             },
             "azureAdB2cAdminApiInstanceSecretName": {
@@ -757,6 +828,61 @@
             {
               "type": "Microsoft.KeyVault/vaults/secrets",
               "apiVersion": "2021-11-01-preview",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('azureAdB2cSaasAppClientIdSecretName'))]",
+              "properties": {
+                "value": "[parameters('azureAdB2cSaasAppClientIdSecretValue')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2021-11-01-preview",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('azureAdB2cSaasAppClientSecretSecretName'))]",
+              "properties": {
+                "value": "[parameters('azureAdB2cSaasAppClientSecretSecretValue')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2021-11-01-preview",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('azureAdB2cSaasAppDomainSecretName'))]",
+              "properties": {
+                "value": "[parameters('azureAdB2cDomainSecretValue')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2021-11-01-preview",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('azureAdB2cSaasAppInstanceSecretName'))]",
+              "properties": {
+                "value": "[parameters('azureAdB2cInstanceSecretValue')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2021-11-01-preview",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('azureAdB2cSaasAppTenantIdSecretName'))]",
+              "properties": {
+                "value": "[parameters('azureAdB2cTenantIdSecretValue')]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2021-11-01-preview",
               "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('azureAdB2cAdminApiDomainSecretName'))]",
               "properties": {
                 "value": "[parameters('azureAdB2cDomainSecretValue')]"
@@ -898,8 +1024,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.6.18.56646",
-              "templateHash": "12940043457851371009"
+              "version": "0.7.4.23292",
+              "templateHash": "10582410122468361621"
             }
           },
           "parameters": {
@@ -992,10 +1118,6 @@
                       "value": "[parameters('permissionsApiHostName')]"
                     },
                     {
-                      "name": "AllowedHosts",
-                      "value": "*"
-                    },
-                    {
                       "name": "Logging__LogLevel__Default",
                       "value": "Information"
                     },
@@ -1073,8 +1195,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.6.18.56646",
-              "templateHash": "17028686214849389794"
+              "version": "0.7.4.23292",
+              "templateHash": "5826269692359710308"
             }
           },
           "parameters": {
@@ -1176,10 +1298,6 @@
                       "value": "[parameters('keyVaultUri')]"
                     },
                     {
-                      "name": "AllowedHosts",
-                      "value": "*"
-                    },
-                    {
                       "name": "Logging__LogLevel__Default",
                       "value": "Information"
                     },
@@ -1224,11 +1342,23 @@
         },
         "mode": "Incremental",
         "parameters": {
+          "adminApiHostName": {
+            "value": "[if(variables('modulesToDeploy').adminService, reference(resourceId('Microsoft.Resources/deployments', 'adminApiDeployment'), '2020-10-01').outputs.adminApiHostName.value, variables('messageToUpdate'))]"
+          },
+          "saasAppApiScopes": {
+            "value": "[parameters('saasAppApiScopes')]"
+          },
+          "adminApiScopeBaseUrl": {
+            "value": "[parameters('adminApiScopeBaseUrl')]"
+          },
           "applicationAppServiceName": {
             "value": "[variables('applicationAppServiceName')]"
           },
           "appServicePlanId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appServicePlanDeployment')).outputs.appServicePlanId.value]"
+          },
+          "keyVaultUri": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyVaultDeployment')).outputs.keyVaultUri.value]"
           },
           "location": {
             "value": "[parameters('location')]"
@@ -1246,8 +1376,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.6.18.56646",
-              "templateHash": "2697376532598115904"
+              "version": "0.7.4.23292",
+              "templateHash": "13957793124538660249"
             }
           },
           "parameters": {
@@ -1255,6 +1385,30 @@
               "type": "string",
               "metadata": {
                 "description": "The App Service Plan ID."
+              }
+            },
+            "adminApiHostName": {
+              "type": "string",
+              "metadata": {
+                "description": "The Admin Api host name."
+              }
+            },
+            "saasAppApiScopes": {
+              "type": "string",
+              "metadata": {
+                "description": "Scopes to authorize user for the admin service."
+              }
+            },
+            "adminApiScopeBaseUrl": {
+              "type": "string",
+              "metadata": {
+                "description": "The base url for the app registration that the scopes belong to."
+              }
+            },
+            "keyVaultUri": {
+              "type": "string",
+              "metadata": {
+                "description": "The URL for the keyvault that contains the application secrets"
               }
             },
             "location": {
@@ -1297,11 +1451,50 @@
                   "linuxFxVersion": "[format('DOCKER|{0}', parameters('applicationApiContainerImageTag'))]",
                   "appSettings": [
                     {
+                      "name": "AppSettings__AdminServiceBaseUrl",
+                      "value": "[parameters('adminApiHostName')]"
+                    },
+                    {
+                      "name": "AppSettings__AdminServiceScopeBaseUrl",
+                      "value": "[parameters('adminApiScopeBaseUrl')]"
+                    },
+                    {
+                      "name": "AppSettings__AdminServiceScopes",
+                      "value": "[parameters('saasAppApiScopes')]"
+                    },
+                    {
+                      "name": "AzureAdB2C__SignedOutCallbackPath",
+                      "value": "/signout/B2C_1A_SIGNUP_SIGNIN"
+                    },
+                    {
+                      "name": "AzureAdB2C__SignUpSignInPolicyId",
+                      "value": "B2C_1A_SIGNUP_SIGNIN"
+                    },
+                    {
                       "name": "DOCKER_REGISTRY_SERVER_URL",
                       "value": "[parameters('containerRegistryUrl')]"
+                    },
+                    {
+                      "name": "KeyVault__Url",
+                      "value": "[parameters('keyVaultUri')]"
+                    },
+                    {
+                      "name": "Logging__LogLevel__Default",
+                      "value": "Information"
+                    },
+                    {
+                      "name": "Logging__LogLevel__Microsoft",
+                      "value": "Warning"
+                    },
+                    {
+                      "name": "Logging__LogLevel__Microsoft.Hosting.Lifetime",
+                      "value": "Information"
                     }
                   ]
                 }
+              },
+              "identity": {
+                "type": "SystemAssigned"
               }
             }
           ],
@@ -1309,12 +1502,18 @@
             "applicationAppServiceHostName": {
               "type": "string",
               "value": "[reference(resourceId('Microsoft.Web/sites', parameters('applicationAppServiceName'))).defaultHostName]"
+            },
+            "systemAssignedManagedIdentityPrincipalId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Web/sites', parameters('applicationAppServiceName')), '2021-03-01', 'full').identity.principalId]"
             }
           }
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'appServicePlanDeployment')]"
+        "[resourceId('Microsoft.Resources/deployments', 'adminApiDeployment')]",
+        "[resourceId('Microsoft.Resources/deployments', 'appServicePlanDeployment')]",
+        "[resourceId('Microsoft.Resources/deployments', 'keyVaultDeployment')]"
       ]
     },
     {
@@ -1336,6 +1535,9 @@
           "modulesToDeploy": {
             "value": "[variables('modulesToDeploy')]"
           },
+          "applicationAppServicePrincipalId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'applicationAppServiceDeployment'), '2020-10-01').outputs.systemAssignedManagedIdentityPrincipalId.value]"
+          },
           "signupAdminAppServicePrincipalId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'signupAdminAppServiceDeployment'), '2020-10-01').outputs.systemAssignedManagedIdentityPrincipalId.value]"
           }
@@ -1346,8 +1548,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.6.18.56646",
-              "templateHash": "433440752363212600"
+              "version": "0.7.4.23292",
+              "templateHash": "14406250937121354174"
             }
           },
           "parameters": {
@@ -1374,6 +1576,12 @@
               "metadata": {
                 "description": "The Principal Id of the Signup Admin App Service System Assigned Managed Identity."
               }
+            },
+            "applicationAppServicePrincipalId": {
+              "type": "string",
+              "metadata": {
+                "description": "The Principal Id of the Saas App Service System Assigned Managed Identity."
+              }
             }
           },
           "resources": [
@@ -1384,7 +1592,8 @@
               "properties": {
                 "accessPolicies": [
                   "[if(parameters('modulesToDeploy').adminService, createObject('objectId', parameters('adminApiPrincipalId'), 'tenantId', subscription().tenantId, 'permissions', createObject('secrets', createArray('get', 'list'))), createObject())]",
-                  "[if(parameters('modulesToDeploy').signupAdminWeb, createObject('objectId', parameters('signupAdminAppServicePrincipalId'), 'tenantId', subscription().tenantId, 'permissions', createObject('secrets', createArray('get', 'list'))), createObject())]"
+                  "[if(parameters('modulesToDeploy').signupAdminWeb, createObject('objectId', parameters('signupAdminAppServicePrincipalId'), 'tenantId', subscription().tenantId, 'permissions', createObject('secrets', createArray('get', 'list'))), createObject())]",
+                  "[if(parameters('modulesToDeploy').applicationWeb, createObject('objectId', parameters('applicationAppServicePrincipalId'), 'tenantId', subscription().tenantId, 'permissions', createObject('secrets', createArray('get', 'list'))), createObject())]"
                 ]
               }
             }
@@ -1393,6 +1602,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'adminApiDeployment')]",
+        "[resourceId('Microsoft.Resources/deployments', 'applicationAppServiceDeployment')]",
         "[resourceId('Microsoft.Resources/deployments', 'signupAdminAppServiceDeployment')]"
       ]
     }

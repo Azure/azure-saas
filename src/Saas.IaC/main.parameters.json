@@ -17,6 +17,12 @@
         "azureAdB2cInstanceSecretValue": {
             "value": "null"
         },
+        "azureAdB2cSaasAppClientIdSecretValue": {
+            "value": "null"
+        },
+        "azureAdB2cSaasAppClientSecretSecretValue": {
+            "value": "null"
+        },
         "azureAdB2cSignupAdminClientIdSecretValue": {
             "value": "null"
         },
@@ -35,6 +41,9 @@
         "permissionsApiCertificatePassphraseSecretValue": {
             "value": "null"
         },  
+        "saasAppApiScopes": {
+            "value": "null"
+        },
         "saasProviderName": {
             "value": "dvader"
         },
