@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Permissions.Service", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.AspNetCore.Authorization.Tests", "src\Saas.Authorization\Saas.AspNetCore.Authorization.Tests\Saas.AspNetCore.Authorization.Tests.csproj", "{AEDE788C-35EF-4C03-AA2F-1D1D787001FA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Billing.Service", "src\Saas.Billing\Saas.Billing.Service\Saas.Billing.Service.csproj", "{48BA6628-649B-4845-8B8A-B2FFA4B10530}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{AEDE788C-35EF-4C03-AA2F-1D1D787001FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEDE788C-35EF-4C03-AA2F-1D1D787001FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEDE788C-35EF-4C03-AA2F-1D1D787001FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48BA6628-649B-4845-8B8A-B2FFA4B10530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48BA6628-649B-4845-8B8A-B2FFA4B10530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48BA6628-649B-4845-8B8A-B2FFA4B10530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48BA6628-649B-4845-8B8A-B2FFA4B10530}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

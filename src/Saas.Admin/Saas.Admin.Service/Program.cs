@@ -11,6 +11,7 @@ using Saas.AspNetCore.Authorization.ClaimTransformers;
 var builder = WebApplication.CreateBuilder(args);
 
 X509Certificate2 permissionsApiCertificate;
+X509Certificate2 paymentApiCertificate;
 
 if (builder.Environment.IsProduction())
 {
@@ -23,12 +24,17 @@ if (builder.Environment.IsProduction())
 
     // Get certificate from secret imported above and parse it into an X509Certificate
     permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(builder.Configuration["KeyVault:PermissionsApiCert"]), builder.Configuration["KeyVault:PermissionsApiCertPassphrase"]);
+
+    paymentApiCertificate = new X509Certificate2(Convert.FromBase64String(builder.Configuration["KeyVault:PaymentApiCert"]), builder.Configuration["KeyVault:PaymentApiCertPassphrase"]);
 }
 else
 {
     // If running locally, you must first set the certificate as a base 64 encoded string in your .NET secrets manager.
-    var certString = builder.Configuration["PermissionsApi:LocalCertificate"];
-    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(certString));
+    var permissionCertString = builder.Configuration["PermissionsApi:LocalCertificate"];
+    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(permissionCertString));
+
+    var paymentCertString = builder.Configuration["PaymentApi:LocalCertificate"];
+    paymentApiCertificate = new X509Certificate2(Convert.FromBase64String(paymentCertString));
 }
 
 builder.Services.AddDbContext<TenantsContext>(options =>
@@ -125,6 +131,27 @@ builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient
             // Since this doesn't happen locally, we need to do it ourselves
 
             options.DefaultRequestHeaders.Add("X-ARR-ClientCert", Convert.ToBase64String(permissionsApiCertificate.GetRawCertData()));
+        }
+    });
+
+builder.Services.AddHttpClient<IBillingServiceClient, BillingServiceClient>()
+    // Configure outgoing HTTP requests to include certificate for payment API
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        HttpClientHandler handler = new HttpClientHandler();
+        handler.ClientCertificates.Add(paymentApiCertificate);
+        return handler;
+    })
+    .ConfigureHttpClient(options =>
+    {
+        options.BaseAddress = new Uri(builder.Configuration["PaymentApi:BaseUrl"]);
+
+        if (builder.Environment.IsDevelopment())
+        {
+            // The payment API expects the certificate to be provided to the application layer by the web server after the TLS handshake
+            // Since this doesn't happen locally, we need to do it ourselves
+
+            options.DefaultRequestHeaders.Add("X-ARR-ClientCert", Convert.ToBase64String(paymentApiCertificate.GetRawCertData()));
         }
     });
 

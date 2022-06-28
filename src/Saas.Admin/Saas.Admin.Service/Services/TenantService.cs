@@ -7,12 +7,14 @@ public class TenantService : ITenantService
 {
     private readonly TenantsContext _context;
     private readonly IPermissionService _permissionService;
+    private readonly IBillingServiceClient _billingService;
     private readonly ILogger _logger;
 
-    public TenantService(TenantsContext tenantContext, IPermissionService permissionService, ILogger<TenantService> logger)
+    public TenantService(TenantsContext tenantContext, IPermissionService permissionService, IBillingServiceClient billingService, ILogger<TenantService> logger)
     {
         _context = tenantContext;
         _permissionService = permissionService;
+        _billingService = billingService;
         _logger = logger;
     }
 
@@ -52,6 +54,9 @@ public class TenantService : ITenantService
         try
         {
             await _permissionService.AddUserPermissionsToTenantAsync(tenant.Id.ToString(), adminId, AppConstants.Roles.TenantAdmin);
+            
+            //TODO (SaaS): Implement the billing module to setup the appropriate tenant subscription
+            await _billingService.SubscriptionAsync(new NewSubscriptionRequest() { CustomerId = newTenantRequest.CreatorEmail, ProductTierId = newTenantRequest.ProductTierId.ToString(), ServiceStartDate = new DateTime()});
         }
         catch (Exception ex)
         {
