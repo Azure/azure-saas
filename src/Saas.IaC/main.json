@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.7.4.23292",
-      "templateHash": "3775625698538448937"
+      "templateHash": "7285554353607664512"
     }
   },
   "parameters": {
@@ -23,14 +23,14 @@
     },
     "adminApiContainerImageTag": {
       "type": "string",
-      "defaultValue": "ghcr.io/azure/azure-saas/asdk-admin:latest",
+      "defaultValue": "ghcr.io/azure/azure-saas/asdk-admin:v1.0",
       "metadata": {
         "description": "The tag of the container image to deploy to the Admin api app service."
       }
     },
     "applicationContainerImageTag": {
       "type": "string",
-      "defaultValue": "ghcr.io/azure/azure-saas/asdk-web:latest",
+      "defaultValue": "ghcr.io/azure/azure-saas/asdk-web:v1.0",
       "metadata": {
         "description": "The tag of the container image to deploy to the SaaS Application api app service."
       }
@@ -151,7 +151,7 @@
     },
     "signupAdminContainerImageTag": {
       "type": "string",
-      "defaultValue": "ghcr.io/azure/azure-saas/asdk-signup:latest",
+      "defaultValue": "ghcr.io/azure/azure-saas/asdk-signup:v1.0",
       "metadata": {
         "description": "The tag of the container image to deploy to the SignupAdmin app service."
       }

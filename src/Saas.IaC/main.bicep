@@ -7,10 +7,10 @@ param adminApiScopes string
 param adminApiScopeBaseUrl string
 
 @description('The tag of the container image to deploy to the Admin api app service.')
-param adminApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-admin:latest'
+param adminApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-admin:v1.0'
 
 @description('The tag of the container image to deploy to the SaaS Application api app service.')
-param applicationContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-web:latest'
+param applicationContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-web:v1.0'
 
 @description('The value of the Azure AD B2C Admin Api Client Id Key Vault Secret.')
 param azureAdB2cAdminApiClientIdSecretValue string
@@ -68,7 +68,7 @@ param permissionsApiCertificatePassphraseSecretValue string
 param saasAppApiScopes string
 
 @description('The tag of the container image to deploy to the SignupAdmin app service.')
-param signupAdminContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-signup:latest'
+param signupAdminContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-signup:v1.0'
 
 @description('The SaaS Provider name.')
 param saasProviderName string
