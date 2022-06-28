@@ -8,9 +8,9 @@ ENV DOCKER=true
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 #Install Required powershell modules
-RUN pwsh -Command "Install-Module -Name Microsoft.Graph -Force -AllowClobber"
-RUN pwsh -Command "Install-Module -Name Microsoft.Graph.Applications -Force -AllowClobber" 
-RUN pwsh -Command "Install-Module -Name Az.Accounts -Force -AllowClobber" 
+RUN pwsh -Command "Install-Module -Name Microsoft.Graph -RequiredVersion 1.9.6 -Force -AllowClobber"
+RUN pwsh -Command "Install-Module -Name Microsoft.Graph.Applications -RequiredVersion 1.9.6 -Force -AllowClobber" 
+RUN pwsh -Command "Install-Module -Name Az.Accounts -RequiredVersion 2.8.0 -Force -AllowClobber" 
 
 WORKDIR /app
 

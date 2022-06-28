@@ -1,0 +1,14 @@
+on:
+  push:
+    tags:
+      - '*'
+
+name: CI/CD - Tag - Container Image Build and Webhook - Identity Setup
+
+jobs:      
+  build-image:
+    name: Build and Publish Image
+    uses: Azure/azure-saas/.github/workflows/template-container-image-build.yml@main
+    with:
+      image_to_push: asdk-identity-setup
+      tag_name: ${GITHUB_REF/refs\/tags\//}

@@ -27,8 +27,8 @@ Requirements:
 Running our pre-built docker image is the recommended way to set up the identity framework, as the image comes pre-installed with all the dependencies necessary for execution. To start, run the following commands:
 
 ```bash
-docker pull ghcr.io/azure/azure-saas/asdk-identity-setup:latest
-docker run -it -v "$(pwd):/data" --name asdk-b2c-deployment ghcr.io/azure/azure-saas/asdk-identity-setup:latest
+docker pull ghcr.io/azure/azure-saas/asdk-identity-setup:v1.0
+docker run -it -v "$(pwd):/data" --name asdk-b2c-deployment ghcr.io/azure/azure-saas/asdk-identity-setup:v1.0
 ```
 
 This will automatically pull and run the container image and its entrypoint is the [B2C-Create](https://github.com/Azure/azure-saas/blob/main/src/Saas.Identity/Saas.IdentityProvider/scripts/B2C-Create.ps1) powershell script.
