@@ -12,6 +12,9 @@ param saasAppApiScopes string
 @description('The base url for the app registration that the scopes belong to.')
 param adminApiScopeBaseUrl string
 
+@description('The URL for the keyvault that contains the application secrets')
+param keyVaultUri string
+
 @description('The location for all resources.')
 param location string
 
@@ -81,6 +84,9 @@ resource applicationAppService 'Microsoft.Web/sites@2021-03-01' = {
       ]
     }
   }
+  identity: {
+    type: 'SystemAssigned'
+  }
 }
 
 // Resource - Application App Service - Deployment
@@ -96,3 +102,4 @@ resource applicationAppService 'Microsoft.Web/sites@2021-03-01' = {
 // Outputs
 //////////////////////////////////////////////////
 output applicationAppServiceHostName string = applicationAppService.properties.defaultHostName
+output systemAssignedManagedIdentityPrincipalId string = applicationAppService.identity.principalId

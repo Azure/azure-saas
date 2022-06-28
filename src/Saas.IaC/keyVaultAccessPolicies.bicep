@@ -12,6 +12,12 @@ param modulesToDeploy object
 @description('The Principal Id of the Signup Admin App Service System Assigned Managed Identity.')
 param signupAdminAppServicePrincipalId string
 
+
+@description('The Principal Id of the Saas App Service System Assigned Managed Identity.')
+param applicationAppServicePrincipalId string
+
+
+
 // Existing Resource - Key Vault
 //////////////////////////////////////////////////
 resource keyVault 'Microsoft.KeyVault/vaults@2021-06-01-preview' existing = {
@@ -37,6 +43,16 @@ resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2021-11-01-previ
       } : {}
       (modulesToDeploy.signupAdminWeb) ? {
         objectId: signupAdminAppServicePrincipalId
+        tenantId: subscription().tenantId
+        permissions: {
+          secrets: [
+            'get'
+            'list'
+          ]
+        }
+      } : {}
+      (modulesToDeploy.applicationWeb) ? {
+        objectId: applicationAppServicePrincipalId
         tenantId: subscription().tenantId
         permissions: {
           secrets: [
