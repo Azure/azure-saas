@@ -110,7 +110,7 @@ Note: Collaborators are other developers you wish to help manage your services, 
 #### Module Client Secrets
 
 - From the `App registration` view
-- For the apps listed below, navigate to them, then navigate to `Certificates & secrets` in their navbars
+- For the apps that need a secret created (listed above), navigate to them, then navigate to `Certificates & secrets` in their navbars
 - Add a new client secret for later reference, giving it an appropriate expiration and description
 
 ![(Client Secrets Screenshot)](/azure-saas/images/identity-framework-manual-step-4-module-client-secrets.png)
