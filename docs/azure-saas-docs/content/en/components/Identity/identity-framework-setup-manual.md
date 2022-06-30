@@ -285,7 +285,6 @@ openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in
 
 - Generate a standard [Bicep parameters file](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/parameter-files) 
 - Place file into `src\Saas.Identity\Saas.IdentityProvider\policies`
-- Add the following values to the `parameters` collection
 
 #### Parameters
 
