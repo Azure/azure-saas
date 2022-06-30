@@ -135,7 +135,7 @@ Note: Collaborators are other developers you wish to help manage your services, 
 - OpenSSL with [Powershell Core (v7.0+)](https://github.com/PowerShell/PowerShell) Example:
 
 ```
-$CertificatePassword = Read-Host -AsSecureString
+$pswd= Read-Host -Prompt "Please enter a password to encrypt the self signed certificate with"
 
 openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out certificate.crt -keyout certificate.key -subj         "/CN=*.azurewebsites.net"
 
