@@ -14,7 +14,7 @@ On this page, you will find instructions for how to manually setup the Identity 
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/)
 - [Open SSL](https://www.openssl.org/)
   - Note: An OpenSSL executable is also bundled with Git for Windows at `C:\Program Files\Git\usr\bin\openssl.exe`
-- Visual Studio Code
+- [Visual Studio Code](https://code.visualstudio.com/)
    - Tools:
    - [Azure AD B2C Custom Policy Extension](https://marketplace.visualstudio.com/items?itemName=AzureADB2CTools.aadb2c)
 
