@@ -62,6 +62,9 @@ After finishing the identity framework setup, you may choose to either run the p
 
 After finishing the identity framework setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
 
+### Option 3: Setup Identity Framework - Manual (Advanced)
+See the [Manual Setup Instructions](../components/identity/identity-framework-setup-manual) to set all Azure service secrets and identifiers yourself.
+
 ## 2.a. Running the Dev Kit in your local dev environment
 
 - Install the latest version of [Visual Studio 2022](https://visualstudio.microsoft.com/vs/). You may also use Visual Studio Code, but the solution and projects are targeted at VS2022.

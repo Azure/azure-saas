@@ -22,33 +22,39 @@ On this page, you will find instructions for how to manually setup the Identity 
 
 ### Step 1. Create B2C Tenant in Azure
 
-![(Azure Add Service Screenshot)](/azure-saas/images/identity-framework-manual-step-1-adding-service.png)
-
 - From the dashboard, click `Create a Resource` and select `Azure Active Directory B2C`
 - Note: A reference is registered in your subscription at time of creation to associate the tenant with your subscription.
 
+![(Azure Add Service Screenshot)](/azure-saas/images/identity-framework-manual-step-1-adding-service.png)
+
+---
+
 ### Step 2. Log into newly created Tenant
+
+- Click on `Open B2C Tenant` quicklink to immediately change directory to your new Tenant
 
 ![(Switch Directory Screenshot)](/azure-saas/images/identity-framework-manual-step-2-switch-tenant-quicklink.png)
 
-- Click on `Open B2C Tenant` quicklink to immediately change directory to your new Tenant
+---
 
 ### Step 3. (Optional) Invite collaborators to the new Tenant
 
 Note: Collaborators are other developers you wish to help manage your services, not customers
 
-![(Tenant User Management Screenshot)](/azure-saas/images/identity-framework-manual-step-3-invite-collaborators.png)
-
 - Go to the `Azure AD B2C` dashboard while logged into your new Tenant, click `Users` in the lefthand navbar
 - After navigating, you may create or invite guest users into your Tenant allowing them access
 
-### Step 4. Create necessary app registrations in Azure AD B2C Tenant
+![(Tenant User Management Screenshot)](/azure-saas/images/identity-framework-manual-step-3-invite-collaborators.png)
 
-![(Registered Apps Screenshot)](/azure-saas/images/identity-framework-manual-step-4-app-registration.png)
+---
+
+### Step 4. Create necessary app registrations in Azure AD B2C Tenant
 
 - From the Tenant `Azure AD B2C` dashboard, click `App registrations`
 - Add new registrations corresponding to the following list of modules
 - Instructions for adding client secrets, API scopes, and API permissions are detailed below
+
+![(Registered Apps Screenshot)](/azure-saas/images/identity-framework-manual-step-4-app-registration.png)
 
 #### Modules
 
@@ -103,19 +109,19 @@ Note: Collaborators are other developers you wish to help manage your services, 
 
 #### Module Client Secrets
 
-![(Client Secrets Screenshot)](/azure-saas/images/badgemeup-screenshot.png)
-
 - From the `App registration` view
 - For the apps listed below, navigate to them, then navigate to `Certificates & secrets` in their navbars
 - Add a new client secret for later reference, giving it an appropriate expiration and description
 
-#### Module API Scopes
+![(Client Secrets Screenshot)](/azure-saas/images/identity-framework-manual-step-4-module-client-secrets.png)
 
-![(Expose an API Scopes)](/azure-saas/images/badgemeup-screenshot.png)
+#### Module API Scopes
 
 - From the `App registration` view
 - For the apps listed below, navigate to them, then navigate to `Expose an API` in their navbars
 - The first time you add a scope, you will be prompted to define the `Application ID URI`, do so and save the domain and identifier each independently for later reference
+
+![(Expose an API Scopes)](/azure-saas/images/identity-framework-manual-step-4-app-expose-api.png)
 
 #### Module API Permissions
 - From the `App registration` view
@@ -131,6 +137,8 @@ Note: Collaborators are other developers you wish to help manage your services, 
   - tenant.delete
   - tenant.global.delete
   - Delete tenant global
+
+---
 
 ### Step 5. Create self-signed certificate
 
@@ -154,6 +162,7 @@ $pfxBytes = Get-Content "selfSignedCertificate.pfx" -AsByteStream
 $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 ```
 
+---
 
 ### Step 6. Create Policy Keys in Azure AD B2C Tenant
 
@@ -180,9 +189,13 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
   - File upload: (The .pfx created in step 5)
   - Password: (The password created in step 5)
 
+---
+
 ### Step 7. Clone ASDK repo
 
 - Clone the latest release of the [ASDK](https://github.com/Azure/azure-saas)
+
+---
 
 ### Step 8. Initiate identity Bicep deployment with parameters from previous few steps
 
@@ -192,14 +205,6 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
   - You may reference or fill out `main.parameters.json` in the Saas.Identity.IaC directory
   - (Note: some parameters are referenced in step 13 and must match what is selected here, such as the chosen saasProviderName)
 -      az deployment group create --name "IdentityBicepDeployment" --resource-group <#YourAzureResourceGroupName#> template-file ./main.bicep --parameters ./main.parameters.json
-
-#### Bicep Templates to Deploy
-- main.bicep
-- identityAppServicePlan.bicep
-- identityKeyVault
-- identityKeyVaultAccessPolicies
-- 
-
 
 #### Parameters
 
@@ -265,9 +270,9 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 }
 ```
 
-### Step 9. Config transform IEF Policies with config values from previous few steps
+---
 
-![(VS Code Screenshot)](/azure-saas/images/badgemeup-screenshot.png)
+### Step 9. Configure transform IEF Policies with config values from previous few steps
 
 - Launch PowerShell and navigate to project directory `src\Saas.Identity\Saas.IdentityProvider\policies`
 - Launch VS Code using:
@@ -291,16 +296,20 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 - Execute `B2C Build All Policies`
 - Navigate to `Environments` dropdown in VS Code Explorer for generated policies
 
-### Step 10. Upload IEF Policies to Azure AD B2C Tenant
+![(VS Code Screenshot)](/azure-saas/images/identity-framework-manual-step-9-vscode-ief-policies.png)
 
-![(Policy Upload Screenshot)](/azure-saas/images/identity-framework-manual-step-1-adding-service.png)
+---
+
+### Step 10. Upload IEF Policies to Azure AD B2C Tenant
 
 - In your Azure dashboard, navigate to `Azure AD B2C` service, then to `Identity Framework Experience` in the nav bar
 - Select `Upload custom policy` and upload each of the generated policy files
 
-### Step 11. Create parameters.json for input into main bicep deployment
+![(Policy Upload Screenshot)](/azure-saas/images/identity-framework-manual-step-10-upload-policies.png)
 
-![(Parameters File Directory Screenshot)](/azure-saas/images/badgemeup-screenshot.png)
+---
+
+### Step 11. Create parameters.json for input into main bicep deployment
 
 - Generate a standard [Bicep parameters file](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/parameter-files) using the parameters below
 - Place file into any folder (you will need it on step 2.b of the [Quick Start](https://azure.github.io/azure-saas/quick-start/#2b-deploying-to-azure---entire-solution) guide
