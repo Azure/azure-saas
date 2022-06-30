@@ -149,7 +149,7 @@ Note: Collaborators are other developers you wish to help manage your services, 
 - OpenSSL with [Powershell Core (v7.0+)](https://github.com/PowerShell/PowerShell) Example:
 
 ```
-$pswd= Read-Host -Prompt "Please enter a password to encrypt the self signed certificate with"
+$pswd = Read-Host -Prompt "Please enter a password to encrypt the self signed certificate with"
 
 # Create a new certificate in .crt format with the subject name as *.azurewebsites.net. You could also provide a specific subject name of your permissions api.
 openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out certificate.crt -keyout certificate.key -subj         "/CN=*.azurewebsites.net"
