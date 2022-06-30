@@ -53,56 +53,59 @@ Note: Collaborators are other developers you wish to help manage your services, 
 - From the Tenant `Azure AD B2C` dashboard, click `App registrations`
 - Add new registrations corresponding to the following list of modules
 - Instructions for adding client secrets, API scopes, and API permissions are detailed below
+- Copy down all IDs and secret values for reference later on in the setup steps
 
 ![(Registered Apps Screenshot)](/azure-saas/images/identity-framework-manual-step-4-app-registration.png)
 
 #### Modules
 
-- asdk-admin-api
+- **asdk-admin-api**
   - Display Name: asdk-admin-api
   - Account Type: Accounts in any identity provider or organizational directory
   - Grant Admin Consent to openid and offline_access_permissions: true
   - API Scopes:
 
-    | Scope Name | Description |
-    | - | - |
-    | tenant.read | Read a customer's own Tenant data |
-    | tenant.global.read | Admin-level read permissions for all Tenants |
-    | tenant.write | Alter a customer's own Tenant data |
-    | tenant.global.write | Admin-level write permissions for all Tenants |
-    | tenant.delete | Delete a customer's own Tenant data |
-    | tenant.global.delete | Admin-level delete permissions for all Tenants |
+| Scope Name | Description |
+| - | - |
+| tenant.read | Read a customer's own Tenant data |
+| tenant.global.read | Admin-level read permissions for all Tenants |
+| tenant.write | Alter a customer's own Tenant data |
+| tenant.global.write | Admin-level write permissions for all Tenants |
+| tenant.delete | Delete a customer's own Tenant data |
+| tenant.global.delete | Admin-level delete permissions for all Tenants |
 
-- asdk-signupadmin-app
+- **asdk-signupadmin-app**
   - Display Name: asdk-saas-app
   - Account Type: Accounts in any identity provider or organizational directory
   - Redirect URI: [Single-page application] `https://appsignup{providerName}{environmentName}.azurewebsites.net/signin-oidc`
   - Grant Admin Consent to openid and offline_access_permissions: true
   - Create Client Secrets?: Yes
-  - Required API Permissions: 
-    - tenant.read
-    - tenant.global.read
-    - tenant.write
-    - tenant.global.write
-    - tenant.delete
-    - tenant.global.delete
-- asdk-saas-app
+  - Required API Permissions:
+    - asdk-admin-api
+      - tenant.read
+      - tenant.global.read
+      - tenant.write
+      - tenant.global.write
+      - tenant.delete
+      - tenant.global.delete
+- **asdk-saas-app**
   - Display Name: asdk-saas-app
   - Account Type: Accounts in any identity provider or organizational directory
   - Redirect URI: [Single-page application] `https://appapplication{providerName}{environmentName}.azurewebsites.net/signin-oidc`
   - Grant Admin Consent to openid and offline_access_permissions: true
   - Create Client Secrets?: Yes
   - Required API Permissions: 
-    - tenant.read
-- asdk-permissions-api
+    - asdk-admin-api
+      - tenant.read
+- **asdk-permissions-api**
   - Display Name: asdk-permissions-api
   - Account Type: Accounts in any identity provider or organizational directory
   - Grant Admin Consent to openid and offline_access_permissions: true
-- IdentityExperienceFramework
+- **IdentityExperienceFramework**
   - Display Name: IdentityExperienceFramework
   - Account Type: Accounts in any identity provider or organizational directory
   - Grant Admin Consent to openid and offline_access_permissions: true
-- ProxyIdentityExperienceFramework
+- **ProxyIdentityExperienceFramework**
   - Display Name: ProxyIdentityExperienceFramework
   - Account Type: Accounts in any identity provider or organizational directory
   - Grant Admin Consent to openid and offline_access_permissions: true
