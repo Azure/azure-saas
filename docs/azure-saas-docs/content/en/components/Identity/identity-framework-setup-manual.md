@@ -31,7 +31,6 @@ On this page, you will find instructions for how to manually setup the Identity 
 
 ![(Switch Directory Screenshot)](/azure-saas/images/identity-framework-manual-step-2-switch-tenant-quicklink.png)
 
-- Upon being created, your Azure AD B2C Tenant will create a federated identity with your Azure subscription account.
 - Click on `Open B2C Tenant` quicklink to immediately change directory to your new Tenant
 
 ### Step 3. (Optional) Invite collaborators to the new Tenant
@@ -49,6 +48,7 @@ Note: Collaborators are other developers you wish to help manage your services, 
 
 - From the Tenant `Azure AD B2C` dashboard, click `App registrations`
 - Add new registrations corresponding to the following list of modules
+- Instructions for adding client secrets, API scopes, and API permissions are detailed below
 
 #### Modules
 
@@ -56,16 +56,38 @@ Note: Collaborators are other developers you wish to help manage your services, 
   - Display Name: asdk-admin-api
   - Account Type: Accounts in any identity provider or organizational directory
   - Grant Admin Consent to openid and offline_access_permissions: true
+  - API Scopes:
+
+    | Scope Name | Description |
+    | - | - |
+    | tenant.read | Read a customer's own Tenant data |
+    | tenant.global.read | Admin-level read permissions for all Tenants |
+    | tenant.write | Alter a customer's own Tenant data |
+    | tenant.global.write | Admin-level write permissions for all Tenants |
+    | tenant.delete | Delete a customer's own Tenant data |
+    | tenant.global.delete | Admin-level delete permissions for all Tenants |
+
 - asdk-signupadmin-app
   - Display Name: asdk-saas-app
   - Account Type: Accounts in any identity provider or organizational directory
-  - Redirect URI: [Single-page application] https://{your-signupadmin-app-url}.com/signin-oidc
+  - Redirect URI: [Single-page application] `https://appsignup{providerName}{environmentName}.azurewebsites.net/signin-oidc`
   - Grant Admin Consent to openid and offline_access_permissions: true
+  - Create Client Secrets?: Yes
+  - Required API Permissions: 
+    - tenant.read
+    - tenant.global.read
+    - tenant.write
+    - tenant.global.write
+    - tenant.delete
+    - tenant.global.delete
 - asdk-saas-app
   - Display Name: asdk-saas-app
   - Account Type: Accounts in any identity provider or organizational directory
-  - Redirect URI: [Single-page application] https://{your-app-url}.com/signin-oidc
+  - Redirect URI: [Single-page application] `https://appapplication{providerName}{environmentName}.azurewebsites.net/signin-oidc`
   - Grant Admin Consent to openid and offline_access_permissions: true
+  - Create Client Secrets?: Yes
+  - Required API Permissions: 
+    - tenant.read
 - asdk-permissions-api
   - Display Name: asdk-permissions-api
   - Account Type: Accounts in any identity provider or organizational directory
@@ -86,9 +108,6 @@ Note: Collaborators are other developers you wish to help manage your services, 
 - From the `App registration` view
 - For the apps listed below, navigate to them, then navigate to `Certificates & secrets` in their navbars
 - Add a new client secret for later reference, giving it an appropriate expiration and description
-- Modules Requiring Client Secrets:
-  - asdk-saas-app
-  - asdk-signupadmin-app
 
 #### Module API Scopes
 
@@ -97,19 +116,6 @@ Note: Collaborators are other developers you wish to help manage your services, 
 - From the `App registration` view
 - For the apps listed below, navigate to them, then navigate to `Expose an API` in their navbars
 - The first time you add a scope, you will be prompted to define the `Application ID URI`, do so and save the domain and identifier each independently for later reference
-- Add the following scopes to their respective APIs:
-
-
-- asdk-admin-api:
-
-  | Scope Name | Description |
-  | - | - |
-  | tenant.read | Read a customer's own Tenant data |
-  | tenant.global.read | Admin-level read permissions for all Tenants |
-  | tenant.write | Alter a customer's own Tenant data |
-  | tenant.global.write | Admin-level write permissions for all Tenants |
-  | tenant.delete | Delete a customer's own Tenant data |
-  | tenant.global.delete | Admin-level delete permissions for all Tenants |
 
 #### Module API Permissions
 - From the `App registration` view
@@ -137,10 +143,15 @@ Note: Collaborators are other developers you wish to help manage your services, 
 ```
 $pswd= Read-Host -Prompt "Please enter a password to encrypt the self signed certificate with"
 
+# Create a new certificate in .crt format with the subject name as *.azurewebsites.net. You could also provide a specific subject name of your permissions api.
 openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out certificate.crt -keyout certificate.key -subj         "/CN=*.azurewebsites.net"
 
-
+# Export the .crt and .key to a .pfx format
 openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in certificate.crt -password pass:$pswd
+
+# Encode pfx to base 64 string to reference in step 13
+$pfxBytes = Get-Content "selfSignedCertificate.pfx" -AsByteStream
+$pfxString = [System.Convert]::ToBase64String($pfxBytes)
 ```
 
 
@@ -178,8 +189,17 @@ openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in
 - Generate a standard [Bicep parameters file](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/parameter-files) using the parameters below
 - Navigate to `Saas.Identity/Saas.Identity.IaC` for the `az deploy` to work correctly
 - Deploy identity Bicep with the following parameters
-  - Add a secret name and value for each of the parameters listed below:
+  - You may reference or fill out `main.parameters.json` in the Saas.Identity.IaC directory
   - (Note: some parameters are referenced in step 13 and must match what is selected here, such as the chosen saasProviderName)
+-      az deployment group create --name "IdentityBicepDeployment" --resource-group <#YourAzureResourceGroupName#> template-file ./main.bicep --parameters ./main.parameters.json
+
+#### Bicep Templates to Deploy
+- main.bicep
+- identityAppServicePlan.bicep
+- identityKeyVault
+- identityKeyVaultAccessPolicies
+- 
+
 
 #### Parameters
 
@@ -300,8 +320,8 @@ openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in
 | azureAdB2cSignupAdminClientSecretSecretValue| (Secret value created in step 4)|
 | azureAdB2cTenantIdSecretValue| (Your Tenant Subscription ID found on your AD B2C dashboard)|
 | permissionsApiHostName| (The FQDN of the Permissions API) |
-| permissionsApiCertificateSecretValue| (Certificate secret generated in step 6)|
-| permissionsApiCertificatePassphraseSecretValue| (Certificate password generated in step 6)|
+| permissionsApiCertificateSecretValue| (Certificate encoded to base64 string generated in step 5)|
+| permissionsApiCertificatePassphraseSecretValue| (Certificate password generated in step 5)|
 | saasAppApiScopes| (space delimited string of SaaS App Api scope names (e.g. "test.scope tenant.delete tenant.global.delete tenant.global.read tenant.global.write tenant.read tenant.write"))                         |
 | saasProviderName| (created in step 8)                      |
 | saasEnvironment| (created in step 8)|
