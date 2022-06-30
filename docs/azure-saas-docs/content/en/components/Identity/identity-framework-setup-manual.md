@@ -157,7 +157,7 @@ openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out certificate.crt
 # Export the .crt and .key to a .pfx format
 openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in certificate.crt -password pass:$pswd
 
-# Encode pfx to base 64 string to reference in step 13
+# Encode pfx to base 64 string to reference in step 13. You may output this when you're ready to copy it with `Write-Host $pfxString`
 $pfxBytes = Get-Content "selfSignedCertificate.pfx" -AsByteStream
 $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 ```
