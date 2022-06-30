@@ -175,7 +175,7 @@ openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in
 
 ### Step 8. Initiate identity Bicep deployment with parameters from previous few steps
 
-- Generate a standard [Bicep parameters file](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/parameter-files) 
+- Generate a standard [Bicep parameters file](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/parameter-files) using the parameters below
 - Navigate to `Saas.identity/Saas.Identity.Iac` for the `az deploy` to work correctly
 - Deploy identity Bicep with the following parameters
   - Add a secret name and value for each of the parameters listed below:
