@@ -283,7 +283,7 @@ openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in
 
 ![(Parameters File Directory Screenshot)](/azure-saas/images/badgemeup-screenshot.png)
 
-- Generate a standard [Bicep parameters file](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/parameter-files) 
+- Generate a standard [Bicep parameters file](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/parameter-files) using the parameters below
 - Place file into any folder (you will need it on step 2.b of the [Quick Start](https://azure.github.io/azure-saas/quick-start/#2b-deploying-to-azure---entire-solution) guide
 
 #### Parameters
