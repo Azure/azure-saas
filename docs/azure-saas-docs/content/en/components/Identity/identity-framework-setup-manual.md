@@ -118,7 +118,7 @@ Note: Collaborators are other developers you wish to help manage your services, 
 #### Module API Scopes
 
 - From the `App registration` view
-- For the apps listed below, navigate to them, then navigate to `Expose an API` in their navbars
+- For the apps that need a scope exposed (listed above), navigate to them, then navigate to `Expose an API` in their navbars
 - The first time you add a scope, you will be prompted to define the `Application ID URI`, do so and save the domain and identifier each independently for later reference
 
 ![(Expose an API Scopes)](/azure-saas/images/identity-framework-manual-step-4-app-expose-api.png)
