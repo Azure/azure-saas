@@ -268,7 +268,7 @@ openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in
 | PolicySettings:RolesAPIUrl | (URL for the roles endpoint in the Permission module (e.g. (PermissionsApiFQDN)/api/CustomClaims/roles)) |
 
 
-- Open execute all text field (shortcut: ctl + shift + P)
+- Open the VS Code command palette (shortcut: ctrl + shift + p)
 - Execute `B2C Build All Policies`
 - Navigate to `Environments` dropdown in VS Code Explorer for generated policies
 
