@@ -139,7 +139,6 @@ $pswd= Read-Host -Prompt "Please enter a password to encrypt the self signed cer
 
 openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out certificate.crt -keyout certificate.key -subj         "/CN=*.azurewebsites.net"
 
-$pswd = ConvertFrom-SecureString -SecureString $CertificatePassword
 
 openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in certificate.crt -password pass:$pswd
 ```
