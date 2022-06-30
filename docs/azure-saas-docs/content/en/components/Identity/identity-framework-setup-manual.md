@@ -126,7 +126,7 @@ Note: Collaborators are other developers you wish to help manage your services, 
 #### Module API Permissions
 - From the `App registration` view
 - For the apps that need permissions granted to another app registration (listed above), navigate to them, then navigate to `API permissions` in their navbars
-- Add the following API permissions on the associated module:
+- After adding all the permissions, click the "Grant Admin Consent" button. You must do this on each app registration.
 - asdk-saas-app
   - tenant.read
 - asdk-signupadmin-app
