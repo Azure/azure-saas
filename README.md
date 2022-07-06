@@ -1,5 +1,7 @@
 ﻿# Azure SaaS Development Kit (ASDK)
 
+![The architecture diagram for the Azure SaaS Dev Kit (ASDK)](docs/azure-saas-docs/static/diagrams/overview.drawio.png)
+
 ## Project Overview
 
 The Azure SaaS Development Kit (ASDK) provides a starting point into cloud-based Software as a Service (SaaS) for developers, startups, ISVs and enterprises. A platform for platform creators. The ASDK provides a reference architecture that is extensible to meet your application's needs, microservice-oriented, and fully-documented to empower all levels of experience in their entry into Azure Cloud Services.

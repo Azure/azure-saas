@@ -10,7 +10,7 @@ weight: 0
 
 The Azure SaaS Development Kit is a deployable reference implementation of pre-built modules designed to help you launch your SaaS offering faster:
 
-* It includes commonly needed SaaS components that implement features such as identity, onboarding, and tenant management.
+* It is a control plane implementation that includes commonly needed SaaS components such as identity, onboarding, and tenant management.
 * It is [100% open-source code](https://github.com/Azure/azure-saas), allowing you to build by example or modify/extend to be purpose-built for your particular scenario.
 * The code is fully documented, making it clear how the code functions, and why key design decisions were made.
 
@@ -60,3 +60,4 @@ Check out the [quick start page](quick-start/).
 * [ISV Considerations for Azure landing zones](https://aka.ms/isv-landing-zones)
 * [Azure Well-Architected Framework](https://docs.microsoft.com/en-us/azure/architecture/framework/)
 * [WingTips Tickets SaaS Application](https://docs.microsoft.com/en-us/azure/azure-sql/database/saas-tenancy-welcome-wingtip-tickets-app) - Provides details into tradeoffs with various tenancy models within the database layer.
+* [Starter web app for SaaS development](https://docs.microsoft.com/en-us/azure/architecture/example-scenario/apps/saas-starter-web-app) - The Azure architecture center reference that this kit is based off of.
