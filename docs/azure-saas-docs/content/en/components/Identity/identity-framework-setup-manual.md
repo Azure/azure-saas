@@ -5,7 +5,7 @@ weight: 5000
 toc_hide: true
 ---
 
-On this page, you will find instructions for how to manually setup the Identity Framework through a combination of the Azure dashboard as well as relevant PowerShell commands
+On this page, you will find instructions for how to manually setup the Identity Framework through a combination of the Azure Portal as well as relevant PowerShell commands
 
 # Setup Identity Framework - Manual (Advanced)
 
@@ -29,31 +29,31 @@ On this page, you will find instructions for how to manually setup the Identity 
 
 ---
 
-### Step 2. Log into newly created Tenant
+### Step 2. Log into newly created Azure AD B2C tenant
 
-- Click on `Open B2C Tenant` quicklink to immediately change directory to your new Tenant
+- Click on `Open B2C Tenant` quicklink to immediately change directory to your new Azure AD B2C tenant
 
 ![(Switch Directory Screenshot)](/azure-saas/images/identity-framework-manual-step-2-switch-tenant-quicklink.png)
 
 ---
 
-### Step 3. (Optional) Invite collaborators to the new Tenant
+### Step 3. (Optional) Invite collaborators to the new Azure AD B2C tenant
 
 Note: Collaborators are other developers you wish to help manage your services, not customers
 
-- Go to the `Azure AD B2C` dashboard while logged into your new Tenant, click `Users` in the lefthand navbar
-- After navigating, you may create or invite guest users into your Tenant allowing them access
+- Go to the `Azure AD B2C` dashboard while logged into your new Azure AD B2C tenant, click `Users` in the lefthand navbar
+- After navigating, you may create or invite guest users into your Azure AD B2C tenant allowing them access
 
 ![(Tenant User Management Screenshot)](/azure-saas/images/identity-framework-manual-step-3-invite-collaborators.png)
 
 ---
 
-### Step 4. Create necessary app registrations in Azure AD B2C Tenant
+### Step 4. Create necessary app registrations in Azure AD B2C tenant
 
-- From the Tenant `Azure AD B2C` dashboard, click `App registrations`
-- Add new registrations corresponding to the following list of modules
+- From the `Azure AD B2C` dashboard, click `App registrations`
+- Add new registrations corresponding for the following list of modules
 - Instructions for adding client secrets, API scopes, and API permissions are detailed below
-- Copy down all IDs and secret values for reference later on in the setup steps
+- Copy all client ids and secret values for reference later on in the setup steps
 
 ![(Registered Apps Screenshot)](/azure-saas/images/identity-framework-manual-step-4-app-registration.png)
 
@@ -75,7 +75,7 @@ Note: Collaborators are other developers you wish to help manage your services, 
 | tenant.global.delete | Admin-level delete permissions for all Tenants |
 
 - **asdk-signupadmin-app**
-  - Display Name: asdk-saas-app
+  - Display Name: asdk-signupadmin-app
   - Account Type: Accounts in any identity provider or organizational directory
   - Redirect URI: [Single-page application] `https://appsignup{providerName}{environmentName}.azurewebsites.net/signin-oidc`
   - Grant Admin Consent to openid and offline_access_permissions: true
@@ -114,7 +114,7 @@ Note: Collaborators are other developers you wish to help manage your services, 
 
 - From the `App registration` view
 - For the apps that need a secret created (listed above), navigate to them, then navigate to `Certificates & secrets` in their navbars
-- Add a new client secret for later reference, giving it an appropriate expiration and description
+- Add a new client secret and copy the generated value for later reference, giving it an appropriate expiration and description
 
 ![(Client Secrets Screenshot)](/azure-saas/images/identity-framework-manual-step-4-module-client-secrets.png)
 
@@ -302,10 +302,10 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 
 ---
 
-### Step 11. Create parameters.json for input into main bicep deployment
+### Step 11. Create parameters.json for input into main Bicep deployment
 
 - Generate a standard [Bicep parameters file](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/parameter-files) using the parameters below
-- Place file into any folder (you will need it on step 2.b of the [Quick Start](https://azure.github.io/azure-saas/quick-start/#2b-deploying-to-azure---entire-solution) guide
+- Place file into any folder (you will need it on step 2.b of the [Quick Start](https://azure.github.io/azure-saas/quick-start/#2b-deploying-to-azure---entire-solution) guide)
 
 #### Parameters
 
@@ -315,7 +315,7 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 | adminApiScopeBaseUrl| (Reference your Tenant domain and the registered Admin app identifier, format of| "https|//{your tenant name}.onmicrosoft.com/{admin app client id}")|
 | azureAdB2cAdminApiClientIdSecretValue| (Admin Api Client Id found under its Registered App entry) |
 | azureAdB2cDomainSecretValue| (Your Tenant domain found on your AD B2C dashboard)|
-| azureAdB2cInstanceSecretValue| (The B2C login endpoint in format of| https|//(Tenant Name).b2clogin.com)|
+| azureAdB2cInstanceSecretValue| (The B2C login endpoint in format of https://{TENANT_NAME}.b2clogin.com)|
 | azureAdB2cSaasAppClientIdSecretValue|  (SaaS App Api Client Id found under its Registered App entry) |
 | azureAdB2cSaasAppClientSecretSecretValue| (Secret value created in step 4)|
 | azureAdB2cSignupAdminClientIdSecretValue| (SaaS App Api Client Id found under its Registered App entry) |
