@@ -16,8 +16,8 @@ This project uses [Azure Active Directory B2C](https://docs.microsoft.com/azure/
 
 To setup the Identity Framework, we have provided an interactive PowerShell script that automates the setup for you by calling the necessary Microsoft Graph API endpoints. Upon running, it will ask you to sign into your home azure account, ask you a few questions, and then begin the setup process. This PowerShell script will output a parameters file that you'll need to provide when deploying the solution to Azure in step 2.b.
 
-> NOTE: The Microsoft Graph API endpoints used to perform this setup are still in beta and are subject to change. As a result, it is possible you may see issues during setup. Please report any issues with as much detail as possible by opening an issue on our [GitHub repo](https://github.com/Azure/azure-saas/issues). 
-<!-- > As a fallback, you can also create the Identity Framework manually by following the instructions below. -->
+> NOTE: The Microsoft Graph API endpoints used to perform this setup programatically are still in beta and are subject to change. As a result, it is possible you may see issues during setup. Please report any issues with as much detail as possible by opening an issue on our [GitHub repo](https://github.com/Azure/azure-saas/issues).
+> As a fallback, you can also create the Identity Framework manually by following the instructions [below](#option-3-setup-identity-framework---manual-advanced).
 
 ### Option 1: Setup Identity Framework - Docker (Recommended)
 
@@ -34,7 +34,7 @@ docker run -it -v "$(pwd):/data" --name asdk-b2c-deployment ghcr.io/azure/azure-
 
 This will automatically pull and run the container image and its entrypoint is the [B2C-Create](https://github.com/Azure/azure-saas/blob/main/src/Saas.Identity/Saas.IdentityProvider/scripts/B2C-Create.ps1) powershell script.
 
-> Note: The `-v` flag on this command will mount your present working directory to the `/data` directory inside this container. This is the directory that the `main.parameters.json` file will be output to upon the script completion. If you choose to exclude this flag, the container will still execute but you will need to copy this file out of the container afterwards using the [docker cp](https://docs.docker.com/engine/reference/commandline/cp/) command as you will need it in step 2.b.
+> Note: The `-v` flag on this command will mount your present working directory to the `/data` directory inside this container. This is the directory that the `main.parameters.json` file (necessary for step 2.b) will be output to upon the script completion. If you choose to exclude this flag, the container will still execute but you will need to copy this file out of the container afterwards using the [docker cp](https://docs.docker.com/engine/reference/commandline/cp/) command.
 
 After finishing the identity framework setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
 
@@ -61,6 +61,10 @@ After finishing the identity framework setup, you may choose to either run the p
 5. Follow the prompts in the script to sign into Azure and deploy the identity framework.
 
 After finishing the identity framework setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
+
+### Option 3: Setup Identity Framework - Manual (Advanced)
+
+See the [Manual Setup Instructions](../components/identity/identity-framework-setup-manual) page for a complete guide on creating the identity framework resources yourself.
 
 ## 2.a. Running the Dev Kit in your local dev environment
 
