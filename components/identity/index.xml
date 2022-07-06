@@ -248,5 +248,605 @@ admin--&amp;gt;&amp;gt;frontend : Ok
       </description>
     </item>
     
+    <item>
+      <title>Components: Identity Framework Setup - Manual</title>
+      <link>https://azure.github.io/azure-saas/components/identity/identity-framework-setup-manual/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://azure.github.io/azure-saas/components/identity/identity-framework-setup-manual/</guid>
+      <description>
+        
+        
+        &lt;p&gt;On this page, you will find instructions for how to manually setup the Identity Framework through a combination of the Azure Portal as well as relevant PowerShell commands&lt;/p&gt;
+&lt;h1 id=&#34;setup-identity-framework---manual-advanced&#34;&gt;Setup Identity Framework - Manual (Advanced)&lt;/h1&gt;
+&lt;h2 id=&#34;1-requirements&#34;&gt;1. Requirements&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.microsoft.com/en-us/cli/azure/&#34;&gt;Azure CLI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.openssl.org/&#34;&gt;Open SSL&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;Note: An OpenSSL executable is also bundled with Git for Windows at &lt;code&gt;C:\Program Files\Git\usr\bin\openssl.exe&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://code.visualstudio.com/&#34;&gt;Visual Studio Code&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;Required Extensions:&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://marketplace.visualstudio.com/items?itemName=AzureADB2CTools.aadb2c&#34;&gt;Azure AD B2C Custom Policy Extension&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;2-instructions&#34;&gt;2. Instructions&lt;/h2&gt;
+&lt;h3 id=&#34;step-1-create-b2c-tenant-in-azure&#34;&gt;Step 1. Create B2C Tenant in Azure&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;From the dashboard, click &lt;code&gt;Create a Resource&lt;/code&gt; and select &lt;code&gt;Azure Active Directory B2C&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Note: A reference is registered in your subscription at time of creation to associate the tenant with your subscription.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/identity-framework-manual-step-1-adding-service.png&#34; alt=&#34;(Azure Add Service Screenshot)&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-2-log-into-newly-created-azure-ad-b2c-tenant&#34;&gt;Step 2. Log into newly created Azure AD B2C tenant&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Click on &lt;code&gt;Open B2C Tenant&lt;/code&gt; quicklink to immediately change directory to your new Azure AD B2C tenant&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/identity-framework-manual-step-2-switch-tenant-quicklink.png&#34; alt=&#34;(Switch Directory Screenshot)&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-3-optional-invite-collaborators-to-the-new-azure-ad-b2c-tenant&#34;&gt;Step 3. (Optional) Invite collaborators to the new Azure AD B2C tenant&lt;/h3&gt;
+&lt;p&gt;Note: Collaborators are other developers you wish to help manage your services, not customers&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Go to the &lt;code&gt;Azure AD B2C&lt;/code&gt; dashboard while logged into your new Azure AD B2C tenant, click &lt;code&gt;Users&lt;/code&gt; in the lefthand navbar&lt;/li&gt;
+&lt;li&gt;After navigating, you may create or invite guest users into your Azure AD B2C tenant allowing them access&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/identity-framework-manual-step-3-invite-collaborators.png&#34; alt=&#34;(Tenant User Management Screenshot)&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-4-create-necessary-app-registrations-in-azure-ad-b2c-tenant&#34;&gt;Step 4. Create necessary app registrations in Azure AD B2C tenant&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;From the &lt;code&gt;Azure AD B2C&lt;/code&gt; dashboard, click &lt;code&gt;App registrations&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Add new registrations corresponding for the following list of modules&lt;/li&gt;
+&lt;li&gt;Instructions for adding client secrets, API scopes, and API permissions are detailed below&lt;/li&gt;
+&lt;li&gt;Copy all client ids and secret values for reference later on in the setup steps&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/identity-framework-manual-step-4-app-registration.png&#34; alt=&#34;(Registered Apps Screenshot)&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;modules&#34;&gt;Modules&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;asdk-admin-api&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;Display Name: asdk-admin-api&lt;/li&gt;
+&lt;li&gt;Account Type: Accounts in any identity provider or organizational directory&lt;/li&gt;
+&lt;li&gt;Grant Admin Consent to openid and offline_access_permissions: true&lt;/li&gt;
+&lt;li&gt;API Scopes:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Scope Name&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;tenant.read&lt;/td&gt;
+&lt;td&gt;Read a customer&amp;rsquo;s own Tenant data&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tenant.global.read&lt;/td&gt;
+&lt;td&gt;Admin-level read permissions for all Tenants&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tenant.write&lt;/td&gt;
+&lt;td&gt;Alter a customer&amp;rsquo;s own Tenant data&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tenant.global.write&lt;/td&gt;
+&lt;td&gt;Admin-level write permissions for all Tenants&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tenant.delete&lt;/td&gt;
+&lt;td&gt;Delete a customer&amp;rsquo;s own Tenant data&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tenant.global.delete&lt;/td&gt;
+&lt;td&gt;Admin-level delete permissions for all Tenants&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;asdk-signupadmin-app&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;Display Name: asdk-signupadmin-app&lt;/li&gt;
+&lt;li&gt;Account Type: Accounts in any identity provider or organizational directory&lt;/li&gt;
+&lt;li&gt;Redirect URI: [Single-page application] &lt;code&gt;https://appsignup{providerName}{environmentName}.azurewebsites.net/signin-oidc&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Grant Admin Consent to openid and offline_access_permissions: true&lt;/li&gt;
+&lt;li&gt;Create Client Secrets?: Yes&lt;/li&gt;
+&lt;li&gt;Required API Permissions:
+&lt;ul&gt;
+&lt;li&gt;asdk-admin-api
+&lt;ul&gt;
+&lt;li&gt;tenant.read&lt;/li&gt;
+&lt;li&gt;tenant.global.read&lt;/li&gt;
+&lt;li&gt;tenant.write&lt;/li&gt;
+&lt;li&gt;tenant.global.write&lt;/li&gt;
+&lt;li&gt;tenant.delete&lt;/li&gt;
+&lt;li&gt;tenant.global.delete&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;asdk-saas-app&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;Display Name: asdk-saas-app&lt;/li&gt;
+&lt;li&gt;Account Type: Accounts in any identity provider or organizational directory&lt;/li&gt;
+&lt;li&gt;Redirect URI: [Single-page application] &lt;code&gt;https://appapplication{providerName}{environmentName}.azurewebsites.net/signin-oidc&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Grant Admin Consent to openid and offline_access_permissions: true&lt;/li&gt;
+&lt;li&gt;Create Client Secrets?: Yes&lt;/li&gt;
+&lt;li&gt;Required API Permissions:
+&lt;ul&gt;
+&lt;li&gt;asdk-admin-api
+&lt;ul&gt;
+&lt;li&gt;tenant.read&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;asdk-permissions-api&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;Display Name: asdk-permissions-api&lt;/li&gt;
+&lt;li&gt;Account Type: Accounts in any identity provider or organizational directory&lt;/li&gt;
+&lt;li&gt;Grant Admin Consent to openid and offline_access_permissions: true&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IdentityExperienceFramework&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;Display Name: IdentityExperienceFramework&lt;/li&gt;
+&lt;li&gt;Account Type: Accounts in any identity provider or organizational directory&lt;/li&gt;
+&lt;li&gt;Grant Admin Consent to openid and offline_access_permissions: true&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ProxyIdentityExperienceFramework&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;Display Name: ProxyIdentityExperienceFramework&lt;/li&gt;
+&lt;li&gt;Account Type: Accounts in any identity provider or organizational directory&lt;/li&gt;
+&lt;li&gt;Grant Admin Consent to openid and offline_access_permissions: true&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;module-client-secrets&#34;&gt;Module Client Secrets&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;From the &lt;code&gt;App registration&lt;/code&gt; view&lt;/li&gt;
+&lt;li&gt;For the apps that need a secret created (listed above), navigate to them, then navigate to &lt;code&gt;Certificates &amp;amp; secrets&lt;/code&gt; in their navbars&lt;/li&gt;
+&lt;li&gt;Add a new client secret and copy the generated value for later reference, giving it an appropriate expiration and description&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/identity-framework-manual-step-4-module-client-secrets.png&#34; alt=&#34;(Client Secrets Screenshot)&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;module-api-scopes&#34;&gt;Module API Scopes&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;From the &lt;code&gt;App registration&lt;/code&gt; view&lt;/li&gt;
+&lt;li&gt;For the apps that need a scope exposed (listed above), navigate to them, then navigate to &lt;code&gt;Expose an API&lt;/code&gt; in their navbars&lt;/li&gt;
+&lt;li&gt;The first time you add a scope, you will be prompted to define the &lt;code&gt;Application ID URI&lt;/code&gt;, do so and save the domain and identifier each independently for later reference&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/identity-framework-manual-step-4-app-expose-api.png&#34; alt=&#34;(Expose an API Scopes)&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;module-api-permissions&#34;&gt;Module API Permissions&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;From the &lt;code&gt;App registration&lt;/code&gt; view&lt;/li&gt;
+&lt;li&gt;For the apps that need permissions granted to another app registration (listed above), navigate to them, then navigate to &lt;code&gt;API permissions&lt;/code&gt; in their navbars&lt;/li&gt;
+&lt;li&gt;After adding all the permissions, click the &amp;ldquo;Grant Admin Consent&amp;rdquo; button. You must do this on each app registration.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-5-create-self-signed-certificate&#34;&gt;Step 5. Create self-signed certificate&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note: A self-signed certificate is not recommended for production environments. Read more &lt;a href=&#34;https://azure.github.io/azure-saas/components/identity/permissions-service/#authentication&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;Create an RSA self-signed certificate to be referenced and uploaded to your Azure AD B2C Tenant&lt;/li&gt;
+&lt;li&gt;The .pfx file will be uploaded in a later step to your Azure AD B2C to allow it access to integrate with your Permissions API&lt;/li&gt;
+&lt;li&gt;OpenSSL with &lt;a href=&#34;https://github.com/PowerShell/PowerShell&#34;&gt;Powershell Core (v7.0+)&lt;/a&gt; Example:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$pswd = Read-Host -Prompt &amp;quot;Please enter a password to encrypt the self signed certificate with&amp;quot;
+
+# Create a new certificate in .crt format with the subject name as *.azurewebsites.net. You could also provide a specific subject name of your permissions api.
+openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out certificate.crt -keyout certificate.key -subj         &amp;quot;/CN=*.azurewebsites.net&amp;quot;
+
+# Export the .crt and .key to a .pfx format
+openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in certificate.crt -password pass:$pswd
+
+# Encode pfx to base 64 string to reference in step 13. You may output this when you&#39;re ready to copy it with `Write-Host $pfxString`
+$pfxBytes = Get-Content &amp;quot;selfSignedCertificate.pfx&amp;quot; -AsByteStream
+$pfxString = [System.Convert]::ToBase64String($pfxBytes)
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h3 id=&#34;step-6-create-policy-keys-in-azure-ad-b2c-tenant&#34;&gt;Step 6. Create Policy Keys in Azure AD B2C Tenant&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/identity-framework-manual-step-6-identity-experience-framework.png&#34; alt=&#34;(Identity Experience Framework Screenshot)&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Find &lt;code&gt;Policy keys&lt;/code&gt; in &lt;code&gt;Azure AD B2C Service&lt;/code&gt; by navigating to &lt;code&gt;Identity Experience Framework&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Click Add and select the following options to generate the system policy keys&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/identity-framework-manual-step-6-policy-keys.png&#34; alt=&#34;(Policy Keys Screenshot)&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;TokenSigningKeyContainer
+&lt;ul&gt;
+&lt;li&gt;Options: Generate&lt;/li&gt;
+&lt;li&gt;Name: TokenSigningKeyContainer&lt;/li&gt;
+&lt;li&gt;Key type: RSA&lt;/li&gt;
+&lt;li&gt;Key usage: Signature&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;TokenEncryptionKeyContainer
+&lt;ul&gt;
+&lt;li&gt;Options: Generate&lt;/li&gt;
+&lt;li&gt;Name: TokenEncryptionKeyContainer&lt;/li&gt;
+&lt;li&gt;Key type: RSA&lt;/li&gt;
+&lt;li&gt;Key usage: Encryption&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;RestApiClientCertificate
+&lt;ul&gt;
+&lt;li&gt;Options: Upload&lt;/li&gt;
+&lt;li&gt;Name: *.azurewebsites.net&lt;/li&gt;
+&lt;li&gt;File upload: (The .pfx created in step 5)&lt;/li&gt;
+&lt;li&gt;Password: (The password created in step 5)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-7-clone-asdk-repo&#34;&gt;Step 7. Clone ASDK repo&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Clone the latest release of the &lt;a href=&#34;https://github.com/Azure/azure-saas&#34;&gt;ASDK&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-8-initiate-identity-bicep-deployment-with-parameters-from-previous-few-steps&#34;&gt;Step 8. Initiate identity Bicep deployment with parameters from previous few steps&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Generate a standard &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/parameter-files&#34;&gt;Bicep parameters file&lt;/a&gt; using the parameters below&lt;/li&gt;
+&lt;li&gt;Navigate to &lt;code&gt;Saas.Identity/Saas.Identity.IaC&lt;/code&gt; for the &lt;code&gt;az deploy&lt;/code&gt; to work correctly&lt;/li&gt;
+&lt;li&gt;Deploy identity Bicep with the following parameters
+&lt;ul&gt;
+&lt;li&gt;You may reference or fill out &lt;code&gt;main.parameters.json&lt;/code&gt; in the Saas.Identity.IaC directory&lt;/li&gt;
+&lt;li&gt;(Note: some parameters are referenced in step 13 and must match what is selected here, such as the chosen saasProviderName)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code&gt; az deployment group create --name &amp;quot;IdentityBicepDeployment&amp;quot; --resource-group &amp;lt;#YourAzureResourceGroupName#&amp;gt; template-file ./main.bicep --parameters ./main.parameters.json
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;parameters&#34;&gt;Parameters&lt;/h4&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Parameter Name&lt;/th&gt;
+&lt;th&gt;Value&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;AppSettings:AdminServiceBaseUrl&lt;/td&gt;
+&lt;td&gt;(URL for downstream admin service)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cDomainSecretValue&lt;/td&gt;
+&lt;td&gt;(Your Tenant domain found on your AD B2C dashboard)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cInstanceSecretValue&lt;/td&gt;
+&lt;td&gt;(The B2C login endpoint in format of https://(Tenant Name).b2clogin.com)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cTenantIdSecretValue&lt;/td&gt;
+&lt;td&gt;(Your Tenant Subscription ID found on your AD B2C dashboard)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cPermissionsApiClientIdSecretValue&lt;/td&gt;
+&lt;td&gt;(The Client ID found on your registered Permissions API app page)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cPermissionsApiClientSecretSecretValue&lt;/td&gt;
+&lt;td&gt;(The Client Secret Value created in step 8)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;permissionsApiSslThumbprintSecretValue&lt;/td&gt;
+&lt;td&gt;(Thumbprint created in step 5)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;saasProviderName&lt;/td&gt;
+&lt;td&gt;(Select a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp). Max Length is 8 characters.)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;saasEnvironment&lt;/td&gt;
+&lt;td&gt;(Select an environment name. (e.g. &amp;lsquo;prd&amp;rsquo;, &amp;lsquo;stg&amp;rsquo;, &amp;lsquo;dev&amp;rsquo;, &amp;lsquo;tst&amp;rsquo;))&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;saasInstanceNumber&lt;/td&gt;
+&lt;td&gt;(Select an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003))&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;sqlAdministratorLogin&lt;/td&gt;
+&lt;td&gt;(Select an admin account name used for resource creation)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;sqlAdministratorLoginPassword&lt;/td&gt;
+&lt;td&gt;(Select a password for the admin account)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;example-parameters-json&#34;&gt;Example Parameters Json&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;{
+  &amp;quot;$schema&amp;quot;: &amp;quot;https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#&amp;quot;,
+  &amp;quot;contentVersion&amp;quot;: &amp;quot;1.0.0.0&amp;quot;,
+  &amp;quot;parameters&amp;quot;: {
+    &amp;quot;AppSettings:AdminServiceBaseUrl&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;asdk-demo-admin.com&amp;quot;
+    },
+    &amp;quot;azureAdB2cDomainSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;asdkdemotenant.onmicrosoft.com&amp;quot;
+    },
+    &amp;quot;azureAdB2cInstanceSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;https://asdkdemotenant.b2clogin.com&amp;quot;
+    },
+    &amp;quot;azureAdB2cTenantIdSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;00000000-0000-0000-0000-000000000000&amp;quot;
+    },
+    &amp;quot;azureAdB2cPermissionsApiClientIdSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;00000000-0000-0000-0000-000000000000&amp;quot;
+    },
+    &amp;quot;azureAdB2cPermissionsApiClientSecretSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
+    },
+    &amp;quot;permissionsApiSslThumbprintSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
+    },
+    &amp;quot;saasProviderName&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;contoso&amp;quot;
+    },
+    &amp;quot;saasEnvironment&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;tst&amp;quot;
+    },
+    &amp;quot;saasInstanceNumber&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;001&amp;quot;
+    },
+    &amp;quot;sqlAdministratorLogin&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;sqlAdmin&amp;quot;
+    },
+    &amp;quot;sqlAdministratorLoginPassword&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;FooBar1&amp;quot;
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h3 id=&#34;step-9-configure-transform-ief-policies-with-config-values-from-previous-few-steps&#34;&gt;Step 9. Configure transform IEF Policies with config values from previous few steps&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Launch PowerShell and navigate to project directory &lt;code&gt;src\Saas.Identity\Saas.IdentityProvider\policies&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Launch VS Code using:&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code&gt;code .
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;Open or create &lt;code&gt;appsettings.json&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Note: You may reference &lt;code&gt;sample.appsettings.json&lt;/code&gt; for basic parameter setup&lt;/li&gt;
+&lt;li&gt;Complete the settings for the following attributes:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Parameter Name&lt;/th&gt;
+&lt;th&gt;Value&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Name&lt;/td&gt;
+&lt;td&gt;(Select a name for the environment (e.g. Development))&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Production&lt;/td&gt;
+&lt;td&gt;(a boolean indicating production status)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Tenant&lt;/td&gt;
+&lt;td&gt;(Name of Tenant)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;PolicySettings:IdentityExperienceFrameworkAppId&lt;/td&gt;
+&lt;td&gt;(App ID of IdentityExperienceFramework app created in step 4)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;PolicySettings:ProxyIdentityExperienceFrameworkAppId&lt;/td&gt;
+&lt;td&gt;(App ID of ProxyIdentityExperienceFramework app created in step 4)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;PolicySettings:PermissionsAPIUrl&lt;/td&gt;
+&lt;td&gt;(URL for the permissions endpoint in the Permission module (e.g. (PermissionsApiFQDN)/api/CustomClaims/permissions))&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;PolicySettings:RolesAPIUrl&lt;/td&gt;
+&lt;td&gt;(URL for the roles endpoint in the Permission module (e.g. (PermissionsApiFQDN)/api/CustomClaims/roles))&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ul&gt;
+&lt;li&gt;Open the VS Code command palette (shortcut: ctrl + shift + p)&lt;/li&gt;
+&lt;li&gt;Execute &lt;code&gt;B2C Build All Policies&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Navigate to &lt;code&gt;Environments&lt;/code&gt; dropdown in VS Code Explorer for generated policies&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/identity-framework-manual-step-9-vscode-ief-policies.png&#34; alt=&#34;(VS Code Screenshot)&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-10-upload-ief-policies-to-azure-ad-b2c-tenant&#34;&gt;Step 10. Upload IEF Policies to Azure AD B2C Tenant&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;In your Azure dashboard, navigate to &lt;code&gt;Azure AD B2C&lt;/code&gt; service, then to &lt;code&gt;Identity Framework Experience&lt;/code&gt; in the nav bar&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;Upload custom policy&lt;/code&gt; and upload each of the generated policy files&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/identity-framework-manual-step-10-upload-policies.png&#34; alt=&#34;(Policy Upload Screenshot)&#34;&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;step-11-create-parametersjson-for-input-into-main-bicep-deployment&#34;&gt;Step 11. Create parameters.json for input into main Bicep deployment&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Generate a standard &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/parameter-files&#34;&gt;Bicep parameters file&lt;/a&gt; using the parameters below&lt;/li&gt;
+&lt;li&gt;Place file into any folder (you will need it on step 2.b of the &lt;a href=&#34;https://azure.github.io/azure-saas/quick-start/#2b-deploying-to-azure---entire-solution&#34;&gt;Quick Start&lt;/a&gt; guide)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;parameters-1&#34;&gt;Parameters&lt;/h4&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Parameter Name&lt;/th&gt;
+&lt;th&gt;Value&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;adminApiScopes&lt;/td&gt;
+&lt;td&gt;(space delimited string of admin scope names (e.g. &amp;ldquo;test.scope tenant.delete tenant.global.delete tenant.global.read tenant.global.write tenant.read tenant.write&amp;rdquo;))&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;adminApiScopeBaseUrl&lt;/td&gt;
+&lt;td&gt;(Reference your Tenant domain and the registered Admin app identifier, format of&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cAdminApiClientIdSecretValue&lt;/td&gt;
+&lt;td&gt;(Admin Api Client Id found under its Registered App entry)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cDomainSecretValue&lt;/td&gt;
+&lt;td&gt;(Your Tenant domain found on your AD B2C dashboard)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cInstanceSecretValue&lt;/td&gt;
+&lt;td&gt;(The B2C login endpoint in format of https://{TENANT_NAME}.b2clogin.com)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cSaasAppClientIdSecretValue&lt;/td&gt;
+&lt;td&gt;(SaaS App Api Client Id found under its Registered App entry)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cSaasAppClientSecretSecretValue&lt;/td&gt;
+&lt;td&gt;(Secret value created in step 4)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cSignupAdminClientIdSecretValue&lt;/td&gt;
+&lt;td&gt;(SaaS App Api Client Id found under its Registered App entry)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cSignupAdminClientSecretSecretValue&lt;/td&gt;
+&lt;td&gt;(Secret value created in step 4)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;azureAdB2cTenantIdSecretValue&lt;/td&gt;
+&lt;td&gt;(Your Tenant Subscription ID found on your AD B2C dashboard)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;permissionsApiHostName&lt;/td&gt;
+&lt;td&gt;(The FQDN of the Permissions API)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;permissionsApiCertificateSecretValue&lt;/td&gt;
+&lt;td&gt;(Certificate encoded to base64 string generated in step 5)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;permissionsApiCertificatePassphraseSecretValue&lt;/td&gt;
+&lt;td&gt;(Certificate password generated in step 5)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;saasAppApiScopes&lt;/td&gt;
+&lt;td&gt;(space delimited string of SaaS App Api scope names (e.g. &amp;ldquo;test.scope tenant.delete tenant.global.delete tenant.global.read tenant.global.write tenant.read tenant.write&amp;rdquo;))&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;saasProviderName&lt;/td&gt;
+&lt;td&gt;(created in step 8)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;saasEnvironment&lt;/td&gt;
+&lt;td&gt;(created in step 8)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;saasInstanceNumber&lt;/td&gt;
+&lt;td&gt;(created in step 8)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;sqlAdministratorLogin&lt;/td&gt;
+&lt;td&gt;(created in step 8)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;sqlAdministratorLoginPassword&lt;/td&gt;
+&lt;td&gt;(created in step 8)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;example&#34;&gt;Example&lt;/h4&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;{
+  &amp;quot;$schema&amp;quot;: &amp;quot;https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#&amp;quot;,
+  &amp;quot;contentVersion&amp;quot;: &amp;quot;1.0.0.0&amp;quot;,
+  &amp;quot;parameters&amp;quot;: {
+	&amp;quot;adminApiScopes&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;test.scope tenant.delete tenant.global.delete tenant.global.read tenant.global.write tenant.read tenant.write&amp;quot;
+    },
+	&amp;quot;adminApiScopeBaseUrl&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;https://asdkdemotenant.onmicrosoft.com/00000000-0000-0000-0000-000000000000&amp;quot;
+    },
+	&amp;quot;azureAdB2cAdminApiClientIdSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;00000000-0000-0000-0000-000000000000&amp;quot;
+    },
+    &amp;quot;AppSettings:AdminServiceBaseUrl&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;asdk-demo-admin.com&amp;quot;
+    },
+    &amp;quot;azureAdB2cDomainSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;asdkdemotenant.onmicrosoft.com&amp;quot;
+    },
+    &amp;quot;azureAdB2cInstanceSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;https://asdkdemotenant.b2clogin.com&amp;quot;
+    },
+	&amp;quot;azureAdB2cSaasAppClientIdSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;00000000-0000-0000-0000-000000000000&amp;quot;
+    },
+	&amp;quot;azureAdB2cSaasAppClientSecretSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
+    },
+	&amp;quot;azureAdB2cSignupAdminClientIdSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;00000000-0000-0000-0000-000000000000&amp;quot;
+    },
+	&amp;quot;azureAdB2cSignupAdminClientSecretSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
+    },
+    &amp;quot;azureAdB2cTenantIdSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;00000000-0000-0000-0000-000000000000&amp;quot;
+    },
+    &amp;quot;azureAdB2cPermissionsApiClientIdSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;00000000-0000-0000-0000-000000000000&amp;quot;
+    },
+    &amp;quot;azureAdB2cPermissionsApiClientSecretSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
+    },
+    &amp;quot;permissionsApiSslThumbprintSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
+    },
+    &amp;quot;permissionsApiHostName&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;https://asdkdemopermissions.com&amp;quot;
+    },
+    &amp;quot;permissionsApiCertificateSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
+    },
+    &amp;quot;permissionsApiCertificatePassphraseSecretValue&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;FooBar1&amp;quot;
+    },
+    &amp;quot;saasAppApiScopes&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;test.scope tenant.delete tenant.global.delete tenant.global.read tenant.global.write tenant.read tenant.write&amp;quot;
+    },
+    &amp;quot;saasProviderName&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;contoso&amp;quot;
+    },
+    &amp;quot;saasEnvironment&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;tst&amp;quot;
+    },
+    &amp;quot;saasInstanceNumber&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;001&amp;quot;
+    },
+    &amp;quot;sqlAdministratorLogin&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;sqlAdmin&amp;quot;
+    },
+    &amp;quot;sqlAdministratorLoginPassword&amp;quot;: {
+      &amp;quot;value&amp;quot;: &amp;quot;FooBar1&amp;quot;
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+      </description>
+    </item>
+    
   </channel>
 </rss>
