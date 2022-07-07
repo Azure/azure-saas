@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - users/landonpierce/docsaddinsights
     paths:
       - '.github/**'
       - 'docs/**'
@@ -29,12 +30,15 @@ jobs:
       - name: Setup Docsy
         run:  git submodule update --init --recursive && npm install -D --save autoprefixer && npm install -D --save postcss-cli && npm install -D --save postcss
 
-      - run: hugo
+      - name: Build Hugo Site 
+        run: hugo
         working-directory: ./docs/azure-saas-docs
+        env:
+          APPINSIGHTS_CONNECTION_STRING: ${{ secrets.APPINSIGHTS_CONNECTION_STRING }}
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/users/landonpierce/docsaddinsights' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/azure-saas-docs/public
