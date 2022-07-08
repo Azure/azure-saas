@@ -42,3 +42,7 @@ github_branch = "main"
 
 [params.drawio]
 enable = false
+
+[security]
+  [security.funcs]
+    getenv = ['APPINSIGHTS_CONNECTION_STRING']
