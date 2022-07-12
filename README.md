@@ -15,9 +15,9 @@ For more information please review the [ASDK Documentation](https://azure.github
 Several individual module readmes have been provided to cover key development concepts, necessary app setting secrets and how to run them locally.
 
 - [Admin Service](src/Saas.Admin) - Primary services administrating Tenant info and providing relevant information to frontend applications
-- [Permissions Service](src\Saas.Identity\Saas.Permissions) - Services utilized by the Admin services to determine action authorization
-- [Signup Application Web](src\Saas.SignupAdministration) - MVC web application for new Tenant signup
-- [SaaS Application Web](src\Saas.Application) - Razor application providing the SaaS service to registered tenants
+- [Permissions Service](src/Saas.Identity/Saas.Permissions) - Services utilized by the Admin services to determine action authorization
+- [Signup Application Web](src/Saas.SignupAdministration) - MVC web application for new Tenant signup
+- [SaaS Application Web](src/Saas.Application) - Razor application providing the SaaS service to registered tenants
 
 ### GitHub Workflows
 
