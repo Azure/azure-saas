@@ -38,7 +38,7 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 
 | AppSetting Key                        |  Description                                                                                                 | Secret | Default Value                 |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------ | ----------------------------- |
-| AppSettings:SSLCertThumbprint         | The certificate thumbprint used to validate the certificate forwarded to the application via the web server. | true   |                               |
+| AppSettings:ApiKey         | The API Key used to secure the permissions service                                                                      | 
 | AzureAdB2C:ClientId                   | The service client corresponding to the Signup Admin application                                             | true   |                               |
 | AzureAdB2C:Domain                     | Domain name for the Azure AD B2C instance                                                                    | true   |                               |
 | AzureAdB2C:Instance                   | URL for the root of the Azure AD B2C instance                                                                | true   |                               |
