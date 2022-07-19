@@ -1,4 +1,5 @@
 using Azure.Identity;
+using Microsoft.AspNetCore.HttpOverrides;
 using Saas.Permissions.Service.Data;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models.AppSettings;
@@ -33,6 +34,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 builder.Services.AddDbContext<PermissionsContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("PermissionsContext"));
@@ -50,6 +52,7 @@ if (app.Environment.IsDevelopment()) {
 }
 
 app.UseHttpsRedirection();
+app.UseForwardedHeaders();
 
 // Adds middleware to check for the presence of an API Key
 app.UseMiddleware<ApiKeyMiddleware>();

@@ -8,7 +8,6 @@ namespace Saas.Permissions.Service.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(AuthenticationSchemes = CertificateAuthenticationDefaults .AuthenticationScheme)]
 public class PermissionsController : ControllerBase
 {
     private readonly IPermissionsService _permissionsService;

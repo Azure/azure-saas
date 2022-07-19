@@ -14,13 +14,13 @@ public class ApiKeyMiddleware {
 
         if (!context.Request.Headers.TryGetValue(API_KEY, out var extractedApiKey)) {
             context.Response.StatusCode = 401;
-            await context.Response.WriteAsync($"API Key must be provided on the ${API_KEY} header");
+            await context.Response.WriteAsync($"API Key must be provided on the {API_KEY} header");
             return;
         }
         
         var appSettings = context.RequestServices.GetRequiredService<IConfiguration>();
         var apiKey = _appSettings.ApiKey;
-        
+
         if (!apiKey.Equals(extractedApiKey)) {
             context.Response.StatusCode = 401;
             await context.Response.WriteAsync("API Key provided was invalid.");
