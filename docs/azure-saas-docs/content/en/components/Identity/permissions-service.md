@@ -35,10 +35,7 @@ When deployed to Azure, the application is configured to load its secrets from [
 
 ### Authentication
 
-The Permissions Service is secured using [TLS Mutual Authentication](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0#configure-certificate-validation) (Certificate Authentication). The application layer is configured to verify the authenticity of the certificate by comparing the thumbprint of the certificate against a configuration value. For TLS Mutual Authentication to work properly, the web server must also be configured to forward the certificate to the application layer. This is done for you if you deploy the application following the steps in the [Quick Start](../../../quick-start) guide, but if you choose to run the code in an environment you provision, you will need to do [this configuration](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth) yourself.
-
-> **Important!**  
-> The certificate that gets deployed out of the box by following the Quick Start is a self signed certificate. Self signed certificates are not meant for production use, and it is highly recommended that you replace this certificate with one signed by a Certificate Authority before using this module in production.
+The Permissions Service is secured using API Key Authentication. The API Key is set using the `AppSettings:ApiKey` secret and there is middleware on the API that will verify that all incoming requests have an API key that matches on the `x-api-key` header. If you deploy the application following the steps in the [Quick Start](../../../quick-start) guide, an API key is randomly generated for you and uploaded to Azure Key Vault.
 
 ### Database
 
@@ -54,10 +51,7 @@ The Permissions Service uses [Swashbuckle](https://www.nuget.org/packages/Swashb
 
 ## FAQ and Design Considerations
 
-- Q: Why did we choose to secure the permissions service with certificate authentication over API Keys/JWT Tokens/Another Method?
-  - A: The communication between Azure AD B2C (our default Identity Provider) and the permissions service must be secured with either [Basic or Certificate Auth](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-api-connector-token-enrichment?pivots=b2c-custom-policy#configure-the-restful-api-technical-profile) and it is not considered best practice to use Basic authentication in a production environment.
-
 - Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique (i.e., you cannot have the same Permission for the same user on the same tenant more than once). Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a separate database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.
 - We have purposefully chosen to flow all CRUD operations on permissions through the [Admin Service](../../../components/admin-service). This is for a number of reasons:
-  1. It removes the burden of authorization from the permissions service. All the permissions service needs to worry about is accepting a valid certificate, which only the identity provider and admin service possess. For higher security applications, you may choose to preform more authorization checks before adding permissions
+  1. It removes the burden of authorization from the permissions service. All the permissions service needs to worry about is accepting a valid API Key, which only the identity provider and admin service possess. For higher security applications, you may choose to preform more authorization checks before adding permissions
   2. It simplifies the architecture. The frontend applications do not need to have any knowledge of the permissions service existing. When a tenant is created, the applications make 1 call to the admin service, and it handles the subsequent call to update the permissions records.

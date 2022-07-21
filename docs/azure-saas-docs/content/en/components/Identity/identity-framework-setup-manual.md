@@ -133,27 +133,9 @@ Note: Collaborators are other developers you wish to help manage your services, 
 
 ---
 
-### Step 5. Create self-signed certificate
+### Step 5. Create a random API Key 
 
->Note: A self-signed certificate is not recommended for production environments. Read more [here](https://azure.github.io/azure-saas/components/identity/permissions-service/#authentication).
-
-- Create an RSA self-signed certificate to be referenced and uploaded to your Azure AD B2C Tenant
-- The .pfx file will be uploaded in a later step to your Azure AD B2C to allow it access to integrate with your Permissions API
-- OpenSSL with [Powershell Core (v7.0+)](https://github.com/PowerShell/PowerShell) Example:
-
-```
-$pswd = Read-Host -Prompt "Please enter a password to encrypt the self signed certificate with"
-
-# Create a new certificate in .crt format with the subject name as *.azurewebsites.net. You could also provide a specific subject name of your permissions api.
-openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out certificate.crt -keyout certificate.key -subj         "/CN=*.azurewebsites.net"
-
-# Export the .crt and .key to a .pfx format
-openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in certificate.crt -password pass:$pswd
-
-# Encode pfx to base 64 string to reference in step 13. You may output this when you're ready to copy it with `Write-Host $pfxString`
-$pfxBytes = Get-Content "selfSignedCertificate.pfx" -AsByteStream
-$pfxString = [System.Convert]::ToBase64String($pfxBytes)
-```
+An API Key is required to secure communication with the Permissions API. We suggest using a random string at least 20 characters in length consisting of a good mix of uppercase, lowercase, numbers and special characters. 
 
 ---
 
@@ -176,11 +158,11 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
   - Name: TokenEncryptionKeyContainer
   - Key type: RSA
   - Key usage: Encryption
-- RestApiClientCertificate
-  - Options: Upload
-  - Name: *.azurewebsites.net
-  - File upload: (The .pfx created in step 5)
-  - Password: (The password created in step 5)
+- RestApiKey
+  - Options: Manual 
+  - Name: RestApiKey 
+  - Secret: (The API Key you created in step 5)
+  - Key usage: Signature
 
 ---
 
@@ -209,7 +191,7 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 | azureAdB2cTenantIdSecretValue| (Your Tenant Subscription ID found on your AD B2C dashboard)|
 | azureAdB2cPermissionsApiClientIdSecretValue| (The Client ID found on your registered Permissions API app page)|
 | azureAdB2cPermissionsApiClientSecretSecretValue| (The Client Secret Value created in step 8)|
-| permissionsApiSslThumbprintSecretValue| (Thumbprint created in step 5)|
+| permissionsApiApiKeySecretValue | (API Key created in step 5)|
 | saasProviderName| (Select a provider name. This name will be used to name the Azure Resources. (e.g. contoso, myapp). Max Length is 8 characters.)|
 | saasEnvironment| (Select an environment name. (e.g. 'prd', 'stg', 'dev', 'tst'))|
 | saasInstanceNumber| (Select an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003))|
@@ -241,7 +223,7 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
     "azureAdB2cPermissionsApiClientSecretSecretValue": {
       "value": "FooBar"
     },
-    "permissionsApiSslThumbprintSecretValue": {
+    "permissionsApiApiKeySecretValue": {
       "value": "FooBar"
     },
     "saasProviderName": {
@@ -322,8 +304,7 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 | azureAdB2cSignupAdminClientSecretSecretValue| (Secret value created in step 4)|
 | azureAdB2cTenantIdSecretValue| (Your Tenant Subscription ID found on your AD B2C dashboard)|
 | permissionsApiHostName| (The FQDN of the Permissions API) |
-| permissionsApiCertificateSecretValue| (Certificate encoded to base64 string generated in step 5)|
-| permissionsApiCertificatePassphraseSecretValue| (Certificate password generated in step 5)|
+| permissionsApiApiKeySecretValue | (API Key generated in step 5)|
 | saasAppApiScopes| (space delimited string of SaaS App Api scope names (e.g. "test.scope tenant.delete tenant.global.delete tenant.global.read tenant.global.write tenant.read tenant.write"))                         |
 | saasProviderName| (created in step 8)                      |
 | saasEnvironment| (created in step 8)|
@@ -377,17 +358,11 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
     "azureAdB2cPermissionsApiClientSecretSecretValue": {
       "value": "FooBar"
     },
-    "permissionsApiSslThumbprintSecretValue": {
-      "value": "FooBar"
-    },
     "permissionsApiHostName": {
       "value": "https://asdkdemopermissions.com"
     },
-    "permissionsApiCertificateSecretValue": {
+    "permissionsApiApiKeySecretValue": {
       "value": "FooBar"
-    },
-    "permissionsApiCertificatePassphraseSecretValue": {
-      "value": "FooBar1"
     },
     "saasAppApiScopes": {
       "value": "test.scope tenant.delete tenant.global.delete tenant.global.read tenant.global.write tenant.read tenant.write"
