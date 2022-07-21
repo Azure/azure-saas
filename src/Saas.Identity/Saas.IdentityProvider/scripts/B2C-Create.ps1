@@ -56,7 +56,9 @@ function New-SaaSIdentityProvider {
     -SaasAppFQDN $userInputParams.SaasAppFQDN `
     -CurrentB2CUserId $currentB2CUser.Id `
 
-  $selfSignedCert = New-AsdkSelfSignedCertificate $userInputParams.SelfSignedCertificatePassword
+
+  # Create Api Key
+  $permissionsApiKey = Get-RandomPassword -Length 32
 
   # Deploy Bicep here
 
@@ -67,7 +69,7 @@ function New-SaaSIdentityProvider {
     -B2cTenantId $createdTenantGuid `
     -PermissionsApiAppRegClientId $appRegistrations.PermissionsAppReg.AppRegistrationProperties.AppId `
     -PermissionsApiAppRegClientSecret $appRegistrations.PermissionsAppReg.ClientSecret `
-    -PermissionsApiSelfSignedCertThumbprint $selfSignedCert.PfxThumbprint `
+    -PermissionsApiApiKey $permissionsApiKey `
     -SaasProviderName $userInputParams.ProviderName `
     -SaasEnvironment $userInputParams.SaasEnvironment `
     -SaasInstanceNumber $userInputParams.InstanceNumber `
@@ -79,8 +81,8 @@ function New-SaaSIdentityProvider {
   $trustFrameworkKeySetSigningKeyId = New-TrustFrameworkSigningKey 
   $trustFrameworkKeySetEncryptionKeyId = New-TrustFrameworkEncryptionKey
   
-  # Upload cert to b2c here
-  $trustFrameworkKeySetClientCertificateKeyId = New-TrustFrameworkClientCertificateKey -CertificateString $selfSignedCert.PfxString -Pswd $userInputParams.SelfSignedCertificatePassword
+  # Upload API key to B2C policy key container
+  $trustFrameworkKeySetApiKeyId = New-TrustFrameworkApiKey -ApiKey $permissionsApiKey 
 
   # Upload policies
   $configTokens = @{
@@ -89,7 +91,7 @@ function New-SaaSIdentityProvider {
     "{Settings:IdentityExperienceFrameworkAppId}"      = "$($appRegistrations.IEFAppReg.AppRegistrationProperties.AppId)"
     "{Settings:PermissionsAPIUrl}"                     = "$($userInputParams.PermissionsApiFQDN)/api/CustomClaims/permissions"
     "{Settings:RolesAPIUrl}"                           = "$($userInputParams.PermissionsApiFQDN)/api/CustomClaims/roles"
-    "{Settings:RESTAPIClientCertificate}"              = "$($trustFrameworkKeySetClientCertificateKeyId.Id)"  
+    "{Settings:RESTAPIKey}"                            = "$($trustFrameworkKeySetApiKeyId.Id)"  
   }
 
   Import-IEFPolicies -configTokens $configTokens
@@ -106,15 +108,14 @@ function New-SaaSIdentityProvider {
       azureAdB2cAdminApiClientIdSecretValue          = @{ value = $appRegistrations.AdminAppReg.AppRegistrationProperties.AppId }
       azureAdB2cDomainSecretValue                    = @{ value = "$($userInputParams.B2CTenantName).onmicrosoft.com" }
       azureAdB2cInstanceSecretValue                  = @{ value = "https://$($userInputParams.B2CTenantName).b2clogin.com" }
-	  azureAdB2cSaasAppClientIdSecretValue           = @{ value = $appRegistrations.SaasAppAppReg.AppRegistrationProperties.AppId }
+	    azureAdB2cSaasAppClientIdSecretValue           = @{ value = $appRegistrations.SaasAppAppReg.AppRegistrationProperties.AppId }
       azureAdB2cSaasAppClientSecretSecretValue       = @{ value = $appRegistrations.SaasAppAppReg.ClientSecret }
       azureAdB2cSignupAdminClientIdSecretValue       = @{ value = $appRegistrations.SignupAdminAppReg.AppRegistrationProperties.AppId }
       azureAdB2cSignupAdminClientSecretSecretValue   = @{ value = $appRegistrations.SignupAdminAppReg.ClientSecret }
-	  azureAdB2cTenantIdSecretValue                  = @{ value = $createdTenantGuid }
+	    azureAdB2cTenantIdSecretValue                  = @{ value = $createdTenantGuid }
       permissionsApiHostName                         = @{ value = $userInputParams.PermissionsApiFQDN }
-      permissionsApiCertificateSecretValue           = @{ value = $selfSignedCert.PfxString }
-      permissionsApiCertificatePassphraseSecretValue = @{ value = ConvertFrom-SecureString -SecureString $userInputParams.SelfSignedCertificatePassword -AsPlainText }
-	  saasAppApiScopes                               = @{ value = $appRegistrations.SaasAppAppReg.AdminScopesForSaasApp -join " " }
+      permissionsApiApiKeySecretValue                = @{ value = $permissionsApiKey }
+	    saasAppApiScopes                               = @{ value = $appRegistrations.SaasAppAppReg.AdminScopesForSaasApp -join " " }
       saasProviderName                               = @{ value = $userInputParams.ProviderName }
       saasEnvironment                                = @{ value = $userInputParams.SaasEnvironment }
       saasInstanceNumber                             = @{ value = $userInputParams.InstanceNumber }
@@ -183,7 +184,6 @@ function Get-UserInputParameters {
     InstanceNumber                     = Read-Host "Please enter an instance number. This number will be appended to most Azure Resources created. (e.g. 001, 002, 003)"
     SqlAdministratorLogin              = Read-Host "Please enter the desired username for the SQL administrator account (e.g. sqladmin). Note: 'admin' is not allowed and will fail during the deployment step."
     SqlAdministratorLoginPassword      = Read-Host -AsSecureString -Prompt "Please enter the desired password for the SQL administrator account."
-    SelfSignedCertificatePassword      = Read-Host -AsSecureString -Prompt "Please enter the desired password for the self-signed certificate that will be generated."
   }
 
   $userInputParams.Add("SaasAppFQDN", "https://appapplication$($userInputParams.ProviderName)$($userInputParams.SaasEnvironment).azurewebsites.net")
@@ -201,7 +201,6 @@ function Get-UserInputParameters {
   -InstanceNumber $userInputParams.InstanceNumber `
   -SqlAdministratorLogin $userInputParams.SqlAdministratorLogin `
   -SqlAdministratorLoginPassword $userInputParams.SqlAdministratorLoginPassword `
-  -SelfSignedCertificatePassword $userInputParams.SelfSignedCertificatePassword `
 
   return $userInputParams
 
@@ -246,10 +245,8 @@ function Confirm-UserInputParameters {
     [string] $SqlAdministratorLogin,
 
     [Parameter(Mandatory=$true)]
-    [securestring] $SqlAdministratorLoginPassword,
+    [securestring] $SqlAdministratorLoginPassword
 
-    [Parameter(Mandatory=$true)]
-    [securestring] $SelfSignedCertificatePassword
 
   )
   return
@@ -400,24 +397,24 @@ function New-TrustFrameworkEncryptionKey {
   return $trustFrameworkKeySet
 }
 
-function New-TrustFrameworkClientCertificateKey {
+function New-TrustFrameworkApiKey {
   param (
-    [string] $CertificateString,
-    [Security.SecureString] $Pswd
+    [string] $ApiKey
   )
-  Write-Host "Creating client certificate policy..."
-  $trustFrameworkKeySetName = "RestApiClientCertificate"
+  Write-Host "Creating new API key..."
+  $trustFrameworkKeySetName = "RestApiKey"
   try {
     $trustFrameworkKeySet = New-MgTrustFrameworkKeySet -Id $trustFrameworkKeySetName
     $params = @{
-      Key      = $CertificateString
-      Password = ConvertFrom-SecureString -SecureString $Pswd -AsPlainText
+      TrustFrameworkKeySetId = $trustFrameworkKeySet.Id
+      k = $ApiKey
+      use = "sig"
     }
-    Invoke-MgUploadTrustFrameworkKeySetPkcs12 -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -BodyParameter $params
+    Invoke-MgUploadTrustFrameworkKeySetSecret -TrustFrameworkKeySetId $trustFrameworkKeySet.Id -BodyParameter $params
 
   }
   catch {
-    Write-Warning "Error on creating client certificate policy. Error: $_"
+    Write-Warning "Error on creating API Key policy. Error: $_"
   }
 
   return $trustFrameworkKeySet
@@ -521,7 +518,7 @@ function Invoke-IdentityBicepDeployment {
     [string] $B2cTenantId,
     [string] $PermissionsApiAppRegClientId,
     [string] $PermissionsApiAppRegClientSecret,
-    [string] $PermissionsApiSelfSignedCertThumbprint,
+    [string] $PermissionsApiApiKey,
     [string] $SaasProviderName,
     [string] $SaasEnvironment,
     [string] $SaasInstanceNumber,
@@ -536,7 +533,7 @@ function Invoke-IdentityBicepDeployment {
     azureAdB2cTenantIdSecretValue                   = $B2cTenantId
     azureAdB2cPermissionsApiClientIdSecretValue     = $PermissionsApiAppRegClientId
     azureAdB2cPermissionsApiClientSecretSecretValue = $PermissionsApiAppRegClientSecret
-    permissionsApiSslThumbprintSecretValue          = $PermissionsApiSelfSignedCertThumbprint
+    permissionsApiApiKeySecretValue                 = $PermissionsApiApiKey
     saasProviderName                                = $SaasProviderName
     saasEnvironment                                 = $SaasEnvironment
     saasInstanceNumber                              = $SaasInstanceNumber
@@ -557,37 +554,6 @@ function Invoke-IdentityBicepDeployment {
 
 }
 
-
-function New-AsdkSelfSignedCertificate {
-  param (
-    [securestring] $CertificatePassword
-  )
-
-  try {
-    Write-Host "Creating self signed certificate..."
-
-    # We are using OpenSSL to create a self signed certificate because the PKI powershell module is not supported on Powershell Core yet
-
-    ## Generate Certificate in .crt/.key format
-    openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out certificate.crt -keyout certificate.key -subj "/CN=*.azurewebsites.net"
-
-    # Convert Certificate to .pfx format with the private key
-    # As mentioned in our documentation, self signed certificates are not suitable for anything other than testing. Do not use this certificate in production.
-    $pswd = ConvertFrom-SecureString -SecureString $CertificatePassword -AsPlainText
-    openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in certificate.crt -password pass:$pswd
-
-    # Get the thumbprint of the generated certificate
-    $pfxThumbprint = $(openssl pkcs12 -in selfSignedCertificate.pfx -nodes -passin pass:$pswd | openssl x509 -noout -fingerprint) -replace "SHA1 Fingerprint=", "" -replace ":", ""
-    $pfxBytes = Get-Content "selfSignedCertificate.pfx" -AsByteStream
-    $pfxString = [System.Convert]::ToBase64String($pfxBytes)
-  }
-  catch {
-    Write-Error "An error occurred generating the self signed certificate: $_.Exception.Message"
-    throw
-  }
-  
-  return @{ PfxString = $pfxString; PfxThumbprint = $pfxThumbprint; Pswd = $pswd }
-}
 
 # Helper Function called by Install-AppRegistrations
 function New-AppRegistration {
@@ -1162,6 +1128,26 @@ function Write-OutputFile {
     Write-Host "Output file written to ./$OutputFile"
   }
 
+}
+
+function Get-RandomPassword {
+    param (
+        [Parameter(Mandatory)]
+        [int] $length
+    )
+    $charSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{]+-[*=@)}$^(_!#?>/|.'.ToCharArray()
+    $rng = New-Object System.Security.Cryptography.RNGCryptoServiceProvider
+    $bytes = New-Object byte[]($length)
+ 
+    $rng.GetBytes($bytes)
+ 
+    $result = New-Object char[]($length)
+ 
+    for ($i = 0 ; $i -lt $length ; $i++) {
+        $result[$i] = $charSet[$bytes[$i]%$charSet.Length]
+    }
+ 
+    return (-join $result)
 }
 
 New-SaaSIdentityProvider
