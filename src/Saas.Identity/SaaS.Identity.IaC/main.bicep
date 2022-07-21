@@ -17,8 +17,8 @@ param azureAdB2cPermissionsApiClientIdSecretValue string
 @description('The value of the Azure AD B2C Permissions Api Client Secret Key Vault Secret.')
 param azureAdB2cPermissionsApiClientSecretSecretValue string 
 
-@description('The value of the Permissions Api SSL Thumbprint Key Vault Secret.')
-param permissionsApiSslThumbprintSecretValue string
+@description('The value of the Permissions Api Api Key Key Vault Secret.')
+param permissionsApiApiKeySecretValue string
 
 @description('The URL for the container registry to pull the docker images from')
 param containerRegistryUrl string = 'https://ghcr.io'
@@ -98,7 +98,7 @@ module identityKeyVaultModule './identityKeyVault.bicep' = {
     azureAdB2cTenantIdSecretValue: azureAdB2cTenantIdSecretValue
     azureAdB2cPermissionsApiClientIdSecretValue: azureAdB2cPermissionsApiClientIdSecretValue
     azureAdB2cPermissionsApiClientSecretSecretValue: azureAdB2cPermissionsApiClientSecretSecretValue
-    permissionsApiSslThumbprintSecretValue: permissionsApiSslThumbprintSecretValue
+    permissionsApiApiKeySecretValue: permissionsApiApiKeySecretValue
     permissionsSqlConnectionStringSecretValue: permissionsSqlModule.outputs.permissionsSqlDatabaseConnectionString
   }
 }

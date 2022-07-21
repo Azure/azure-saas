@@ -35,11 +35,11 @@ param azureAdB2cPermissionsApiClientSecretSecretName string = 'permissions-Azure
 @description('The value of the Azure AD B2C Permissions Api Client Secret Key Vault Secret.')
 param azureAdB2cPermissionsApiClientSecretSecretValue string
 
-@description('The name of the Permissions Api SSL Thumbprint Key Vault Secret.')
-param permissionsApiSslThumbprintSecretName string = 'permissions-AppSettings--SSLCertThumbprint'
+@description('The name of the Permissions Api Api Key Key Vault Secret.')
+param permissionsApiApiKeySecretName string = 'permissions-AppSettings--ApiKey'
 
-@description('The value of the Permissions Api SSL Thumbprint Key Vault Secret.')
-param permissionsApiSslThumbprintSecretValue string
+@description('The value of the Permissions Api Api Key Key Vault Secret.')
+param permissionsApiApiKeySecretValue string
 
 @description('The name of the Permissions SQL Connection String Key Vault Secret.')
 param permissionsSqlConnectionStringSecretName string = 'permissions-ConnectionStrings--PermissionsContext'
@@ -67,13 +67,13 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
   }
 }
 
-// Resource - Key Vault - Secret - Permissions Api SSL Thumbprint
+// Resource - Key Vault - Secret - Permissions Api Api Key 
 //////////////////////////////////////////////////
 resource permissionsApiSslThumbprintSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   parent: keyVault
-  name: permissionsApiSslThumbprintSecretName
+  name: permissionsApiApiKeySecretName 
   properties: {
-    value: permissionsApiSslThumbprintSecretValue
+    value: permissionsApiApiKeySecretValue 
   }
 }
 

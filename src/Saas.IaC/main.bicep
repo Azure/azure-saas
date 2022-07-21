@@ -57,12 +57,8 @@ param location string = resourceGroup().location
 @description('The Host Name of the Permissions Api to point the Admin Api to.')
 param permissionsApiHostName string
 
-@description('The base64 encoded certificate to save in the keyvault for securing communication with the permissions API.')
-param permissionsApiCertificateSecretValue string
-
-@description('The passphrase fopr the  certificate to save in the keyvault for securing communication with the permissions API.')
-@secure()
-param permissionsApiCertificatePassphraseSecretValue string
+@description('The API Key used to authenticate with the Permissions Api.')
+param permissionsApiApiKeySecretValue string
 
 @description('Scopes to authorize SaaS App user for the admin service.')
 param saasAppApiScopes string
@@ -163,8 +159,7 @@ module keyVaultModule 'keyVault.bicep' = {
     azureAdB2cTenantIdSecretValue: azureAdB2cTenantIdSecretValue
     keyVaultName: keyVaultName
     location: location
-    permissionsApiCertificateSecretValue: permissionsApiCertificateSecretValue
-    permissionsApiCertificatePassphraseSecretValue: permissionsApiCertificatePassphraseSecretValue
+    permissionsApiApiKeySecretValue: permissionsApiApiKeySecretValue
   }
 }
 

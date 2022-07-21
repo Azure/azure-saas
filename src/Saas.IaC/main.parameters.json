@@ -35,10 +35,7 @@
         "permissionsApiHostName": {
             "value": "null"
         },
-        "permissionsApiCertificateSecretValue": {
-            "value": "null"
-        },  
-        "permissionsApiCertificatePassphraseSecretValue": {
+        "permissionsApiApiKeySecretValue": {
             "value": "null"
         },  
         "saasAppApiScopes": {

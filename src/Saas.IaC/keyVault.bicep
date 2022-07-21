@@ -78,18 +78,11 @@ param keyVaultName string
 @description('The location for all resources.')
 param location string
 
-@description('The name of the Permissions Api Certificate Key Vault Secret.')
-param permissionsApiCertificateSecretName string = 'admin-KeyVault--PermissionsApiCert'
+@description('The name of the Permissions Api Api Key Key Vault Secret.')
+param permissionsApiApiKeySecretName string = 'admin-KeyVault--PermissionsApiApiKey'
 
-@description('The value of the Permissions Api Certificate Key Vault Secret.')
-param permissionsApiCertificateSecretValue string
-
-
-@description('The name of the Permissions Api Certificate Passphrase Key Vault Secret.')
-param permissionsApiCertificatePassphraseSecretName string = 'admin-KeyVault--PermissionsApiCertPassphrase'
-
-@description('The value of the Permissions Api Certificate Passphrase Key Vault Secret.')
-param permissionsApiCertificatePassphraseSecretValue string
+@description('The value of the Permissions Api Api Key Key Vault Secret.')
+param permissionsApiApiKeySecretValue string
 
 
 // Resource - Key Vault
@@ -114,21 +107,11 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
 
 // Resource - Key Vault - Secret - Permissions Api Certificate
 //////////////////////////////////////////////////
-resource permissionsApiCertificateSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
+resource permissionsApiApiKeySecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   parent: keyVault
-  name: permissionsApiCertificateSecretName
+  name: permissionsApiApiKeySecretName
   properties: {
-    value: permissionsApiCertificateSecretValue
-  }
-}
-
-// Resource - Key Vault - Secret - Permissions Api Certificate Passphrase
-//////////////////////////////////////////////////
-resource permissionsApiCertificatePassphraseSecret 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
-  parent: keyVault
-  name: permissionsApiCertificatePassphraseSecretName
-  properties: {
-    value: permissionsApiCertificatePassphraseSecretValue
+    value: permissionsApiApiKeySecretValue
   }
 }
 
