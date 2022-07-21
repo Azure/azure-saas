@@ -21,14 +21,6 @@ if (builder.Environment.IsProduction())
         new DefaultAzureCredential(),
         new CustomPrefixKeyVaultSecretManager("admin"));
 
-    // Get certificate from secret imported above and parse it into an X509Certificate
-    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(builder.Configuration["KeyVault:PermissionsApiCert"]), builder.Configuration["KeyVault:PermissionsApiCertPassphrase"]);
-}
-else
-{
-    // If running locally, you must first set the certificate as a base 64 encoded string in your .NET secrets manager.
-    var certString = builder.Configuration["PermissionsApi:LocalCertificate"];
-    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(certString));
 }
 
 builder.Services.AddDbContext<TenantsContext>(options =>

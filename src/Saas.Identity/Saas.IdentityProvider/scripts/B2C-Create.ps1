@@ -1135,6 +1135,8 @@ function Get-RandomPassword {
         [Parameter(Mandatory)]
         [int] $length
     )
+    
+    Write-Host "Generating new API key for securing the permissions API..."
     $charSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{]+-[*=@)}$^(_!#?>/|.'.ToCharArray()
     $rng = New-Object System.Security.Cryptography.RNGCryptoServiceProvider
     $bytes = New-Object byte[]($length)
@@ -1147,6 +1149,7 @@ function Get-RandomPassword {
         $result[$i] = $charSet[$bytes[$i]%$charSet.Length]
     }
  
+    Write-Host "Api Key Generated"
     return (-join $result)
 }
 

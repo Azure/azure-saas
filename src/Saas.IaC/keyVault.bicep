@@ -79,7 +79,7 @@ param keyVaultName string
 param location string
 
 @description('The name of the Permissions Api Api Key Key Vault Secret.')
-param permissionsApiApiKeySecretName string = 'admin-KeyVault--PermissionsApiApiKey'
+param permissionsApiApiKeySecretName string = 'admin-PermissionsApi--ApiKey'
 
 @description('The value of the Permissions Api Api Key Key Vault Secret.')
 param permissionsApiApiKeySecretValue string

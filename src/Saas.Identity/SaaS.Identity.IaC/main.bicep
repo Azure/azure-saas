@@ -24,7 +24,7 @@ param permissionsApiApiKeySecretValue string
 param containerRegistryUrl string = 'https://ghcr.io'
 
 @description('The tag of the container image to deploy to the permissions api app service.')
-param permissionsApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-permissions:v1.0'
+param permissionsApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-permissions:v1.1'
 
 @description('The location for all resources.')
 param location string = resourceGroup().location
