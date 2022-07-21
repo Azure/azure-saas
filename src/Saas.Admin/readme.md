@@ -59,12 +59,11 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 | ClaimToRoleTransformer:RoleClaimtype       | Type of the claim to use in the new Identity, works alongside built-in                                                                  | false  | MyCustomRoles                         |
 | ClaimToRoleTransformer:SourceClaimType     | Name of the claim custom roles are in                                                                                                   | false  | permissions                           |
 | ConnectionStrings:TenantsContext           | Connection String to SQL server database used to store permission data.                                                                 | true   | (localdb connnection string)          |
-| KeyVault:PermissionsApiCert                | The name of the secret in Azure Key Vault that contains a base64 encoded certificate to use for authentication with the permissions api | false  |                                       |
 | KeyVault:Url                               | KeyVault URL to pull secret values from in production                                                                                   | false  |                                       |
 | Logging:LogLevel:Default                   | Logging level when no configured provider is matched                                                                                    | false  | Information                           |
 | Logging:LogLevel:Microsoft.AspNetCore      | Logging level for AspNetCore logging                                                                                                    | false  | Warning                               |
 | PermissionsApi:BaseUrl                     | URL for downstream [Permissions API](../Saas.Identity/Saas.Permissions/readme.md)                                                       | false  |                                       |
-| PermissionsApi:LocalCertificate            | A Base64 encoded certificate (.CER) used to authenticate with the permissions API.                                                      | true   |                                       |
+| PermissionsApi:ApiKey                      | API Key to use for authentication with the downstream [Permissions API](../Saas.Identity/Saas.Permissions/readme.md) | true  |                                       |
 
 ### iv. Starting the App
 

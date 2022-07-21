@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Saas.Permissions.Service.Models;
 using Saas.Permissions.Service.Models.AppSettings;
 namespace Saas.Permissions.Service.Utilities;
 
@@ -14,7 +15,7 @@ public class ApiKeyMiddleware {
 
         if (!context.Request.Headers.TryGetValue(API_KEY, out var extractedApiKey)) {
             context.Response.StatusCode = 401;
-            await context.Response.WriteAsync($"API Key must be provided on the {API_KEY} header");
+            await context.Response.WriteAsJsonAsync(new UnauthorizedResponse($"API Key must be provided on the {API_KEY} header"));
             return;
         }
         
@@ -23,7 +24,7 @@ public class ApiKeyMiddleware {
 
         if (!apiKey.Equals(extractedApiKey)) {
             context.Response.StatusCode = 401;
-            await context.Response.WriteAsync("API Key provided was invalid.");
+            await context.Response.WriteAsJsonAsync(new UnauthorizedResponse("API Key provided was invalid."));
             return;
         }
         await _next(context);

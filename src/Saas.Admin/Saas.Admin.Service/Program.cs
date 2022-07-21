@@ -108,24 +108,10 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient>()
-    // Configure outgoing HTTP requests to include certificate for permissions API
-    .ConfigurePrimaryHttpMessageHandler(() =>
-    {
-        HttpClientHandler handler = new HttpClientHandler();
-        handler.ClientCertificates.Add(permissionsApiCertificate);
-        return handler;
-    })
     .ConfigureHttpClient(options =>
     {
         options.BaseAddress = new Uri(builder.Configuration["PermissionsApi:BaseUrl"]);
-
-        if (builder.Environment.IsDevelopment())
-        {
-            // The permissions API expects the certificate to be provided to the application layer by the web server after the TLS handshake
-            // Since this doesn't happen locally, we need to do it ourselves
-
-            options.DefaultRequestHeaders.Add("X-ARR-ClientCert", Convert.ToBase64String(permissionsApiCertificate.GetRawCertData()));
-        }
+        options.DefaultRequestHeaders.Add("x-api-key", builder.Configuration["PermissionsApi:ApiKey"]);
     });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
