@@ -12,6 +12,7 @@ jobs:
     with:
       image_to_push: asdk-signup
       tag_name: ${GITHUB_REF/refs\/tags\//}
+      tag_latest: true
 
   # Add webhook jobs below here for each environment you want to automatically update
   # webhook-dev:
