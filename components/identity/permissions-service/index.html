@@ -27,13 +27,13 @@ The SaaS.Permissions.Service module (aka Permissions Service) is a component of 
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/permissions-service/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-06-28T13:52:56-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-07-21T16:08:21-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="SaaS.Permissions.Service">
 <meta itemprop="description" content="Overview The SaaS.Permissions.Service module (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions:
  Handles Create, Read, Update, and Delete (CRUD) operations from the rest of the solution for permission data Serves as an endpoint for the Identity Provider to retrieve permission data in order to enrich the user token with claims  How to Run Locally Instructions to get this module running on your local dev machine are located in the module&rsquo;s readme.">
-<meta itemprop="dateModified" content="2022-06-28T13:52:56-04:00" />
-<meta itemprop="wordCount" content="868">
+<meta itemprop="dateModified" content="2022-07-21T16:08:21-04:00" />
+<meta itemprop="wordCount" content="734">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SaaS.Permissions.Service"/>
 <meta name="twitter:description" content="Overview The SaaS.Permissions.Service module (aka Permissions Service) is a component of the Identity Framework. It is an API that serves 2 main functions:
@@ -306,11 +306,7 @@ The SaaS.Permissions.Service module (aka Permissions Service) is a component of 
 <li><a href="../../../components/admin-service">Admin Service</a></li>
 </ul>
 <h3 id="authentication">Authentication</h3>
-<p>The Permissions Service is secured using <a href="https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0#configure-certificate-validation">TLS Mutual Authentication</a> (Certificate Authentication). The application layer is configured to verify the authenticity of the certificate by comparing the thumbprint of the certificate against a configuration value. For TLS Mutual Authentication to work properly, the web server must also be configured to forward the certificate to the application layer. This is done for you if you deploy the application following the steps in the <a href="../../../quick-start">Quick Start</a> guide, but if you choose to run the code in an environment you provision, you will need to do <a href="https://docs.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth">this configuration</a> yourself.</p>
-<blockquote>
-<p><strong>Important!</strong><br>
-The certificate that gets deployed out of the box by following the Quick Start is a self signed certificate. Self signed certificates are not meant for production use, and it is highly recommended that you replace this certificate with one signed by a Certificate Authority before using this module in production.</p>
-</blockquote>
+<p>The Permissions Service is secured using API Key Authentication. The API Key is set using the <code>AppSettings:ApiKey</code> secret and there is middleware on the API that will verify that all incoming requests have an API key that matches on the <code>x-api-key</code> header. If you deploy the application following the steps in the <a href="../../../quick-start">Quick Start</a> guide, an API key is randomly generated for you and uploaded to Azure Key Vault.</p>
 <h3 id="database">Database</h3>
 <p><a href="https://docs.microsoft.com/en-us/ef/core/">Entity Framework Core</a> is used to manage the SQL Server Database schema and connections. We are using <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/new-database">Code First Development</a> and, if no data or schema exists in the database on application startup, the application will automatically create the database schema that is defined in our <a href="https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Data">model files</a>. If you make any changes to these models, you will need to preform a <a href="https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/">migration</a> to upgrade the database schema.</p>
 <h3 id="microsoft-graph-api">Microsoft Graph API</h3>
@@ -319,19 +315,10 @@ The certificate that gets deployed out of the box by following the Quick Start i
 <p>The Permissions Service uses <a href="https://www.nuget.org/packages/Swashbuckle">Swashbuckle</a> to generate the OpenAPI definition and a UI for testing. This definition is also consumed by the Admin Service to generate its client implementation for interfacing with this API. Read more about using it <a href="https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-6.0&amp;tabs=visual-studio">here</a>.</p>
 <h2 id="faq-and-design-considerations">FAQ and Design Considerations</h2>
 <ul>
-<li>
-<p>Q: Why did we choose to secure the permissions service with certificate authentication over API Keys/JWT Tokens/Another Method?</p>
-<ul>
-<li>A: The communication between Azure AD B2C (our default Identity Provider) and the permissions service must be secured with either <a href="https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-api-connector-token-enrichment?pivots=b2c-custom-policy#configure-the-restful-api-technical-profile">Basic or Certificate Auth</a> and it is not considered best practice to use Basic authentication in a production environment.</li>
-</ul>
-</li>
-<li>
-<p>Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique (i.e., you cannot have the same Permission for the same user on the same tenant more than once). Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a separate database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.</p>
-</li>
-<li>
-<p>We have purposefully chosen to flow all CRUD operations on permissions through the <a href="../../../components/admin-service">Admin Service</a>. This is for a number of reasons:</p>
+<li>Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique (i.e., you cannot have the same Permission for the same user on the same tenant more than once). Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a separate database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.</li>
+<li>We have purposefully chosen to flow all CRUD operations on permissions through the <a href="../../../components/admin-service">Admin Service</a>. This is for a number of reasons:
 <ol>
-<li>It removes the burden of authorization from the permissions service. All the permissions service needs to worry about is accepting a valid certificate, which only the identity provider and admin service possess. For higher security applications, you may choose to preform more authorization checks before adding permissions</li>
+<li>It removes the burden of authorization from the permissions service. All the permissions service needs to worry about is accepting a valid API Key, which only the identity provider and admin service possess. For higher security applications, you may choose to preform more authorization checks before adding permissions</li>
 <li>It simplifies the architecture. The frontend applications do not need to have any knowledge of the permissions service existing. When a tenant is created, the applications make 1 call to the admin service, and it handles the subsequent call to update the permissions records.</li>
 </ol>
 </li>
@@ -340,7 +327,7 @@ The certificate that gets deployed out of the box by following the Quick Start i
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified June 28, 2022: <a href="https://github.com/Azure/azure-saas/commit/edf2a87e86dc83616fd78fd4ab3f46a9da13ac5c">spelling fixes (edf2a87)</a>
+  Last modified July 21, 2022: <a href="https://github.com/Azure/azure-saas/commit/76162ee62099ce3f41703d03ef3cfb23300d046e">Update documentation to add in api key and remove reference of certificate (76162ee)</a>
 </div>
 
 </div>

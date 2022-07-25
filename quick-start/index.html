@@ -25,11 +25,11 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/quick-start/" /><meta property="article:section" content="" />
 
-<meta property="article:modified_time" content="2022-07-06T09:59:30-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-07-21T16:08:21-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Quick Start">
 <meta itemprop="description" content="Getting Started with the Azure SaaS Dev Kit">
-<meta itemprop="dateModified" content="2022-07-06T09:59:30-04:00" />
+<meta itemprop="dateModified" content="2022-07-21T16:08:21-04:00" />
 <meta itemprop="wordCount" content="1258">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Quick Start"/>
@@ -295,8 +295,8 @@ As a fallback, you can also create the Identity Framework manually by following 
 <li><a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a></li>
 </ul>
 <p>Running our pre-built docker image is the recommended way to set up the identity framework, as the image comes pre-installed with all the dependencies necessary for execution. To start, run the following commands:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker pull ghcr.io/azure/azure-saas/asdk-identity-setup:v1.0
-docker run -it -v <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>pwd<span style="color:#66d9ef">)</span><span style="color:#e6db74">:/data&#34;</span> --name asdk-b2c-deployment ghcr.io/azure/azure-saas/asdk-identity-setup:v1.0
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker pull ghcr.io/azure/azure-saas/asdk-identity-setup:v1.1
+docker run -it -v <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>pwd<span style="color:#66d9ef">)</span><span style="color:#e6db74">:/data&#34;</span> --name asdk-b2c-deployment ghcr.io/azure/azure-saas/asdk-identity-setup:v1.1
 </code></pre></div><p>This will automatically pull and run the container image and its entrypoint is the <a href="https://github.com/Azure/azure-saas/blob/main/src/Saas.Identity/Saas.IdentityProvider/scripts/B2C-Create.ps1">B2C-Create</a> powershell script.</p>
 <blockquote>
 <p>Note: The <code>-v</code> flag on this command will mount your present working directory to the <code>/data</code> directory inside this container. This is the directory that the <code>main.parameters.json</code> file (necessary for step 2.b) will be output to upon the script completion. If you choose to exclude this flag, the container will still execute but you will need to copy this file out of the container afterwards using the <a href="https://docs.docker.com/engine/reference/commandline/cp/">docker cp</a> command.</p>
@@ -347,7 +347,7 @@ docker run -it -v <span style="color:#e6db74">&#34;</span><span style="color:#66
 <p>Deploying to Azure is easy thanks to our pre-configured ARM (Azure Resource Manager) templates.</p>
 <p>This button will take you to the Azure portal and will pass it the ARM template. You will need the parameters file output from step 1.</p>
 <ol>
-<li>Click here: <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fv1.0%2Fsrc%2FSaas.IaC%2Fmain.json"><img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"></a>.</li>
+<li>Click here: <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fv1.1%2Fsrc%2FSaas.IaC%2Fmain.json"><img src="https://aka.ms/deploytoazurebutton" alt="Deploy to Azure"></a>.</li>
 <li>Select &ldquo;Edit Parameters&rdquo;.</li>
 <li>Select &ldquo;Load File&rdquo; and upload the <code>parameters.json</code> file output from the Identity Framework Deployment (step 1 above). Click &ldquo;Save&rdquo;.</li>
 <li>From the dropdown, select the subscription and resource group you&rsquo;d like to deploy the resources to.</li>
@@ -386,7 +386,7 @@ Bicep is a domain-specific language (DSL) that uses declarative syntax to deploy
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified July 6, 2022: <a href="https://github.com/Azure/azure-saas/commit/1bff42c5001451ebb1e4ca88d9acbfc2853ac25f">B2C Manual Setup Readme (#191) (1bff42c)</a>
+  Last modified July 21, 2022: <a href="https://github.com/Azure/azure-saas/commit/76162ee62099ce3f41703d03ef3cfb23300d046e">Update documentation to add in api key and remove reference of certificate (76162ee)</a>
 </div>
 
 </div>

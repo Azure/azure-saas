@@ -26,13 +26,13 @@ Setup Identity Framework - Manual (Advanced) 1. Requirements  Azure CLI Open SSL
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://azure.github.io/azure-saas/components/identity/identity-framework-setup-manual/" /><meta property="article:section" content="components" />
 
-<meta property="article:modified_time" content="2022-07-06T09:59:30-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
+<meta property="article:modified_time" content="2022-07-21T16:08:21-04:00" /><meta property="og:site_name" content="Azure SaaS Dev Kit Docs" />
 
 <meta itemprop="name" content="Identity Framework Setup - Manual">
 <meta itemprop="description" content="On this page, you will find instructions for how to manually setup the Identity Framework through a combination of the Azure Portal as well as relevant PowerShell commands
 Setup Identity Framework - Manual (Advanced) 1. Requirements  Azure CLI Open SSL  Note: An OpenSSL executable is also bundled with Git for Windows at C:\Program Files\Git\usr\bin\openssl.exe   Visual Studio Code  Required Extensions: Azure AD B2C Custom Policy Extension    2.">
-<meta itemprop="dateModified" content="2022-07-06T09:59:30-04:00" />
-<meta itemprop="wordCount" content="1724">
+<meta itemprop="dateModified" content="2022-07-21T16:08:21-04:00" />
+<meta itemprop="wordCount" content="1570">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Identity Framework Setup - Manual"/>
 <meta name="twitter:description" content="On this page, you will find instructions for how to manually setup the Identity Framework through a combination of the Azure Portal as well as relevant PowerShell commands
@@ -210,7 +210,7 @@ Setup Identity Framework - Manual (Advanced) 1. Requirements  Azure CLI Open SSL
         <li><a href="#step-2-log-into-newly-created-azure-ad-b2c-tenant">Step 2. Log into newly created Azure AD B2C tenant</a></li>
         <li><a href="#step-3-optional-invite-collaborators-to-the-new-azure-ad-b2c-tenant">Step 3. (Optional) Invite collaborators to the new Azure AD B2C tenant</a></li>
         <li><a href="#step-4-create-necessary-app-registrations-in-azure-ad-b2c-tenant">Step 4. Create necessary app registrations in Azure AD B2C tenant</a></li>
-        <li><a href="#step-5-create-self-signed-certificate">Step 5. Create self-signed certificate</a></li>
+        <li><a href="#step-5-create-a-random-api-key">Step 5. Create a random API Key</a></li>
         <li><a href="#step-6-create-policy-keys-in-azure-ad-b2c-tenant">Step 6. Create Policy Keys in Azure AD B2C Tenant</a></li>
         <li><a href="#step-7-clone-asdk-repo">Step 7. Clone ASDK repo</a></li>
         <li><a href="#step-8-initiate-identity-bicep-deployment-with-parameters-from-previous-few-steps">Step 8. Initiate identity Bicep deployment with parameters from previous few steps</a></li>
@@ -458,27 +458,9 @@ Setup Identity Framework - Manual (Advanced) 1. Requirements  Azure CLI Open SSL
 <li>After adding all the permissions, click the &ldquo;Grant Admin Consent&rdquo; button. You must do this on each app registration.</li>
 </ul>
 <hr>
-<h3 id="step-5-create-self-signed-certificate">Step 5. Create self-signed certificate</h3>
-<blockquote>
-<p>Note: A self-signed certificate is not recommended for production environments. Read more <a href="https://azure.github.io/azure-saas/components/identity/permissions-service/#authentication">here</a>.</p>
-</blockquote>
-<ul>
-<li>Create an RSA self-signed certificate to be referenced and uploaded to your Azure AD B2C Tenant</li>
-<li>The .pfx file will be uploaded in a later step to your Azure AD B2C to allow it access to integrate with your Permissions API</li>
-<li>OpenSSL with <a href="https://github.com/PowerShell/PowerShell">Powershell Core (v7.0+)</a> Example:</li>
-</ul>
-<pre tabindex="0"><code>$pswd = Read-Host -Prompt &quot;Please enter a password to encrypt the self signed certificate with&quot;
-
-# Create a new certificate in .crt format with the subject name as *.azurewebsites.net. You could also provide a specific subject name of your permissions api.
-openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out certificate.crt -keyout certificate.key -subj         &quot;/CN=*.azurewebsites.net&quot;
-
-# Export the .crt and .key to a .pfx format
-openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in certificate.crt -password pass:$pswd
-
-# Encode pfx to base 64 string to reference in step 13. You may output this when you're ready to copy it with `Write-Host $pfxString`
-$pfxBytes = Get-Content &quot;selfSignedCertificate.pfx&quot; -AsByteStream
-$pfxString = [System.Convert]::ToBase64String($pfxBytes)
-</code></pre><hr>
+<h3 id="step-5-create-a-random-api-key">Step 5. Create a random API Key</h3>
+<p>An API Key is required to secure communication with the Permissions API. We suggest using a random string at least 20 characters in length consisting of a good mix of uppercase, lowercase, numbers and special characters.</p>
+<hr>
 <h3 id="step-6-create-policy-keys-in-azure-ad-b2c-tenant">Step 6. Create Policy Keys in Azure AD B2C Tenant</h3>
 <p><img src="/azure-saas/images/identity-framework-manual-step-6-identity-experience-framework.png" alt="(Identity Experience Framework Screenshot)"></p>
 <ul>
@@ -503,12 +485,12 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 <li>Key usage: Encryption</li>
 </ul>
 </li>
-<li>RestApiClientCertificate
+<li>RestApiKey
 <ul>
-<li>Options: Upload</li>
-<li>Name: *.azurewebsites.net</li>
-<li>File upload: (The .pfx created in step 5)</li>
-<li>Password: (The password created in step 5)</li>
+<li>Options: Manual</li>
+<li>Name: RestApiKey</li>
+<li>Secret: (The API Key you created in step 5)</li>
+<li>Key usage: Signature</li>
 </ul>
 </li>
 </ul>
@@ -567,8 +549,8 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 <td>(The Client Secret Value created in step 8)</td>
 </tr>
 <tr>
-<td>permissionsApiSslThumbprintSecretValue</td>
-<td>(Thumbprint created in step 5)</td>
+<td>permissionsApiApiKeySecretValue</td>
+<td>(API Key created in step 5)</td>
 </tr>
 <tr>
 <td>saasProviderName</td>
@@ -615,7 +597,7 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
     &quot;azureAdB2cPermissionsApiClientSecretSecretValue&quot;: {
       &quot;value&quot;: &quot;FooBar&quot;
     },
-    &quot;permissionsApiSslThumbprintSecretValue&quot;: {
+    &quot;permissionsApiApiKeySecretValue&quot;: {
       &quot;value&quot;: &quot;FooBar&quot;
     },
     &quot;saasProviderName&quot;: {
@@ -759,12 +741,8 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 <td>(The FQDN of the Permissions API)</td>
 </tr>
 <tr>
-<td>permissionsApiCertificateSecretValue</td>
-<td>(Certificate encoded to base64 string generated in step 5)</td>
-</tr>
-<tr>
-<td>permissionsApiCertificatePassphraseSecretValue</td>
-<td>(Certificate password generated in step 5)</td>
+<td>permissionsApiApiKeySecretValue</td>
+<td>(API Key generated in step 5)</td>
 </tr>
 <tr>
 <td>saasAppApiScopes</td>
@@ -836,17 +814,11 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
     &quot;azureAdB2cPermissionsApiClientSecretSecretValue&quot;: {
       &quot;value&quot;: &quot;FooBar&quot;
     },
-    &quot;permissionsApiSslThumbprintSecretValue&quot;: {
-      &quot;value&quot;: &quot;FooBar&quot;
-    },
     &quot;permissionsApiHostName&quot;: {
       &quot;value&quot;: &quot;https://asdkdemopermissions.com&quot;
     },
-    &quot;permissionsApiCertificateSecretValue&quot;: {
+    &quot;permissionsApiApiKeySecretValue&quot;: {
       &quot;value&quot;: &quot;FooBar&quot;
-    },
-    &quot;permissionsApiCertificatePassphraseSecretValue&quot;: {
-      &quot;value&quot;: &quot;FooBar1&quot;
     },
     &quot;saasAppApiScopes&quot;: {
       &quot;value&quot;: &quot;test.scope tenant.delete tenant.global.delete tenant.global.read tenant.global.write tenant.read tenant.write&quot;
@@ -872,7 +844,7 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified July 6, 2022: <a href="https://github.com/Azure/azure-saas/commit/1bff42c5001451ebb1e4ca88d9acbfc2853ac25f">B2C Manual Setup Readme (#191) (1bff42c)</a>
+  Last modified July 21, 2022: <a href="https://github.com/Azure/azure-saas/commit/76162ee62099ce3f41703d03ef3cfb23300d046e">Update documentation to add in api key and remove reference of certificate (76162ee)</a>
 </div>
 
 </div>

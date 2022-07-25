@@ -129,11 +129,7 @@
 &lt;li&gt;&lt;a href=&#34;../../../components/admin-service&#34;&gt;Admin Service&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id=&#34;authentication&#34;&gt;Authentication&lt;/h3&gt;
-&lt;p&gt;The Permissions Service is secured using &lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0#configure-certificate-validation&#34;&gt;TLS Mutual Authentication&lt;/a&gt; (Certificate Authentication). The application layer is configured to verify the authenticity of the certificate by comparing the thumbprint of the certificate against a configuration value. For TLS Mutual Authentication to work properly, the web server must also be configured to forward the certificate to the application layer. This is done for you if you deploy the application following the steps in the &lt;a href=&#34;../../../quick-start&#34;&gt;Quick Start&lt;/a&gt; guide, but if you choose to run the code in an environment you provision, you will need to do &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth&#34;&gt;this configuration&lt;/a&gt; yourself.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Important!&lt;/strong&gt;&lt;br&gt;
-The certificate that gets deployed out of the box by following the Quick Start is a self signed certificate. Self signed certificates are not meant for production use, and it is highly recommended that you replace this certificate with one signed by a Certificate Authority before using this module in production.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;The Permissions Service is secured using API Key Authentication. The API Key is set using the &lt;code&gt;AppSettings:ApiKey&lt;/code&gt; secret and there is middleware on the API that will verify that all incoming requests have an API key that matches on the &lt;code&gt;x-api-key&lt;/code&gt; header. If you deploy the application following the steps in the &lt;a href=&#34;../../../quick-start&#34;&gt;Quick Start&lt;/a&gt; guide, an API key is randomly generated for you and uploaded to Azure Key Vault.&lt;/p&gt;
 &lt;h3 id=&#34;database&#34;&gt;Database&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&#34;https://docs.microsoft.com/en-us/ef/core/&#34;&gt;Entity Framework Core&lt;/a&gt; is used to manage the SQL Server Database schema and connections. We are using &lt;a href=&#34;https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/workflows/new-database&#34;&gt;Code First Development&lt;/a&gt; and, if no data or schema exists in the database on application startup, the application will automatically create the database schema that is defined in our &lt;a href=&#34;https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service/Data&#34;&gt;model files&lt;/a&gt;. If you make any changes to these models, you will need to preform a &lt;a href=&#34;https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/&#34;&gt;migration&lt;/a&gt; to upgrade the database schema.&lt;/p&gt;
 &lt;h3 id=&#34;microsoft-graph-api&#34;&gt;Microsoft Graph API&lt;/h3&gt;
@@ -142,19 +138,10 @@ The certificate that gets deployed out of the box by following the Quick Start i
 &lt;p&gt;The Permissions Service uses &lt;a href=&#34;https://www.nuget.org/packages/Swashbuckle&#34;&gt;Swashbuckle&lt;/a&gt; to generate the OpenAPI definition and a UI for testing. This definition is also consumed by the Admin Service to generate its client implementation for interfacing with this API. Read more about using it &lt;a href=&#34;https://docs.microsoft.com/en-us/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-6.0&amp;amp;tabs=visual-studio&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;faq-and-design-considerations&#34;&gt;FAQ and Design Considerations&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;Q: Why did we choose to secure the permissions service with certificate authentication over API Keys/JWT Tokens/Another Method?&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;A: The communication between Azure AD B2C (our default Identity Provider) and the permissions service must be secured with either &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-api-connector-token-enrichment?pivots=b2c-custom-policy#configure-the-restful-api-technical-profile&#34;&gt;Basic or Certificate Auth&lt;/a&gt; and it is not considered best practice to use Basic authentication in a production environment.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique (i.e., you cannot have the same Permission for the same user on the same tenant more than once). Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a separate database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;We have purposefully chosen to flow all CRUD operations on permissions through the &lt;a href=&#34;../../../components/admin-service&#34;&gt;Admin Service&lt;/a&gt;. This is for a number of reasons:&lt;/p&gt;
+&lt;li&gt;Permissions are stored in the database in a single table (dbo.Permissions) with 3 pieces of data: Tenant ID, User ID (Email), and PermissionString. All 3 together make the row unique (i.e., you cannot have the same Permission for the same user on the same tenant more than once). Permissions are stored as a string (ex: Admin, User.Read, User.Write) for simplicity and extensibility. You may choose to store these in a separate database table and reference them by ID number if you have a large number of permissions and you want to enforce the types of permissions being assigned.&lt;/li&gt;
+&lt;li&gt;We have purposefully chosen to flow all CRUD operations on permissions through the &lt;a href=&#34;../../../components/admin-service&#34;&gt;Admin Service&lt;/a&gt;. This is for a number of reasons:
 &lt;ol&gt;
-&lt;li&gt;It removes the burden of authorization from the permissions service. All the permissions service needs to worry about is accepting a valid certificate, which only the identity provider and admin service possess. For higher security applications, you may choose to preform more authorization checks before adding permissions&lt;/li&gt;
+&lt;li&gt;It removes the burden of authorization from the permissions service. All the permissions service needs to worry about is accepting a valid API Key, which only the identity provider and admin service possess. For higher security applications, you may choose to preform more authorization checks before adding permissions&lt;/li&gt;
 &lt;li&gt;It simplifies the architecture. The frontend applications do not need to have any knowledge of the permissions service existing. When a tenant is created, the applications make 1 call to the admin service, and it handles the subsequent call to update the permissions records.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/li&gt;
@@ -434,27 +421,9 @@ admin--&amp;gt;&amp;gt;frontend : Ok
 &lt;li&gt;After adding all the permissions, click the &amp;ldquo;Grant Admin Consent&amp;rdquo; button. You must do this on each app registration.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;step-5-create-self-signed-certificate&#34;&gt;Step 5. Create self-signed certificate&lt;/h3&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Note: A self-signed certificate is not recommended for production environments. Read more &lt;a href=&#34;https://azure.github.io/azure-saas/components/identity/permissions-service/#authentication&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;Create an RSA self-signed certificate to be referenced and uploaded to your Azure AD B2C Tenant&lt;/li&gt;
-&lt;li&gt;The .pfx file will be uploaded in a later step to your Azure AD B2C to allow it access to integrate with your Permissions API&lt;/li&gt;
-&lt;li&gt;OpenSSL with &lt;a href=&#34;https://github.com/PowerShell/PowerShell&#34;&gt;Powershell Core (v7.0+)&lt;/a&gt; Example:&lt;/li&gt;
-&lt;/ul&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$pswd = Read-Host -Prompt &amp;quot;Please enter a password to encrypt the self signed certificate with&amp;quot;
-
-# Create a new certificate in .crt format with the subject name as *.azurewebsites.net. You could also provide a specific subject name of your permissions api.
-openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out certificate.crt -keyout certificate.key -subj         &amp;quot;/CN=*.azurewebsites.net&amp;quot;
-
-# Export the .crt and .key to a .pfx format
-openssl pkcs12 -export -out selfSignedCertificate.pfx -inkey certificate.key -in certificate.crt -password pass:$pswd
-
-# Encode pfx to base 64 string to reference in step 13. You may output this when you&#39;re ready to copy it with `Write-Host $pfxString`
-$pfxBytes = Get-Content &amp;quot;selfSignedCertificate.pfx&amp;quot; -AsByteStream
-$pfxString = [System.Convert]::ToBase64String($pfxBytes)
-&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h3 id=&#34;step-5-create-a-random-api-key&#34;&gt;Step 5. Create a random API Key&lt;/h3&gt;
+&lt;p&gt;An API Key is required to secure communication with the Permissions API. We suggest using a random string at least 20 characters in length consisting of a good mix of uppercase, lowercase, numbers and special characters.&lt;/p&gt;
+&lt;hr&gt;
 &lt;h3 id=&#34;step-6-create-policy-keys-in-azure-ad-b2c-tenant&#34;&gt;Step 6. Create Policy Keys in Azure AD B2C Tenant&lt;/h3&gt;
 &lt;p&gt;&lt;img src=&#34;https://azure.github.io/azure-saas/azure-saas/images/identity-framework-manual-step-6-identity-experience-framework.png&#34; alt=&#34;(Identity Experience Framework Screenshot)&#34;&gt;&lt;/p&gt;
 &lt;ul&gt;
@@ -479,12 +448,12 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 &lt;li&gt;Key usage: Encryption&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;RestApiClientCertificate
+&lt;li&gt;RestApiKey
 &lt;ul&gt;
-&lt;li&gt;Options: Upload&lt;/li&gt;
-&lt;li&gt;Name: *.azurewebsites.net&lt;/li&gt;
-&lt;li&gt;File upload: (The .pfx created in step 5)&lt;/li&gt;
-&lt;li&gt;Password: (The password created in step 5)&lt;/li&gt;
+&lt;li&gt;Options: Manual&lt;/li&gt;
+&lt;li&gt;Name: RestApiKey&lt;/li&gt;
+&lt;li&gt;Secret: (The API Key you created in step 5)&lt;/li&gt;
+&lt;li&gt;Key usage: Signature&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
@@ -543,8 +512,8 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 &lt;td&gt;(The Client Secret Value created in step 8)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;permissionsApiSslThumbprintSecretValue&lt;/td&gt;
-&lt;td&gt;(Thumbprint created in step 5)&lt;/td&gt;
+&lt;td&gt;permissionsApiApiKeySecretValue&lt;/td&gt;
+&lt;td&gt;(API Key created in step 5)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;saasProviderName&lt;/td&gt;
@@ -591,7 +560,7 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
     &amp;quot;azureAdB2cPermissionsApiClientSecretSecretValue&amp;quot;: {
       &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
     },
-    &amp;quot;permissionsApiSslThumbprintSecretValue&amp;quot;: {
+    &amp;quot;permissionsApiApiKeySecretValue&amp;quot;: {
       &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
     },
     &amp;quot;saasProviderName&amp;quot;: {
@@ -735,12 +704,8 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
 &lt;td&gt;(The FQDN of the Permissions API)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;permissionsApiCertificateSecretValue&lt;/td&gt;
-&lt;td&gt;(Certificate encoded to base64 string generated in step 5)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;permissionsApiCertificatePassphraseSecretValue&lt;/td&gt;
-&lt;td&gt;(Certificate password generated in step 5)&lt;/td&gt;
+&lt;td&gt;permissionsApiApiKeySecretValue&lt;/td&gt;
+&lt;td&gt;(API Key generated in step 5)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;saasAppApiScopes&lt;/td&gt;
@@ -812,17 +777,11 @@ $pfxString = [System.Convert]::ToBase64String($pfxBytes)
     &amp;quot;azureAdB2cPermissionsApiClientSecretSecretValue&amp;quot;: {
       &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
     },
-    &amp;quot;permissionsApiSslThumbprintSecretValue&amp;quot;: {
-      &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
-    },
     &amp;quot;permissionsApiHostName&amp;quot;: {
       &amp;quot;value&amp;quot;: &amp;quot;https://asdkdemopermissions.com&amp;quot;
     },
-    &amp;quot;permissionsApiCertificateSecretValue&amp;quot;: {
+    &amp;quot;permissionsApiApiKeySecretValue&amp;quot;: {
       &amp;quot;value&amp;quot;: &amp;quot;FooBar&amp;quot;
-    },
-    &amp;quot;permissionsApiCertificatePassphraseSecretValue&amp;quot;: {
-      &amp;quot;value&amp;quot;: &amp;quot;FooBar1&amp;quot;
     },
     &amp;quot;saasAppApiScopes&amp;quot;: {
       &amp;quot;value&amp;quot;: &amp;quot;test.scope tenant.delete tenant.global.delete tenant.global.read tenant.global.write tenant.read tenant.write&amp;quot;
