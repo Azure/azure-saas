@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.7.4.23292",
-      "templateHash": "7285554353607664512"
+      "templateHash": "13913189299763884879"
     }
   },
   "parameters": {
@@ -23,14 +23,14 @@
     },
     "adminApiContainerImageTag": {
       "type": "string",
-      "defaultValue": "ghcr.io/azure/azure-saas/asdk-admin:v1.0",
+      "defaultValue": "ghcr.io/azure/azure-saas/asdk-admin:v1.1",
       "metadata": {
         "description": "The tag of the container image to deploy to the Admin api app service."
       }
     },
     "applicationContainerImageTag": {
       "type": "string",
-      "defaultValue": "ghcr.io/azure/azure-saas/asdk-web:v1.0",
+      "defaultValue": "ghcr.io/azure/azure-saas/asdk-web:v1.1",
       "metadata": {
         "description": "The tag of the container image to deploy to the SaaS Application api app service."
       }
@@ -131,16 +131,10 @@
         "description": "The Host Name of the Permissions Api to point the Admin Api to."
       }
     },
-    "permissionsApiCertificateSecretValue": {
-      "type": "string",
-      "metadata": {
-        "description": "The base64 encoded certificate to save in the keyvault for securing communication with the permissions API."
-      }
-    },
-    "permissionsApiCertificatePassphraseSecretValue": {
+    "permissionsApiApiKeySecretValue": {
       "type": "secureString",
       "metadata": {
-        "description": "The passphrase fopr the  certificate to save in the keyvault for securing communication with the permissions API."
+        "description": "The API Key used to authenticate with the Permissions Api."
       }
     },
     "saasAppApiScopes": {
@@ -151,7 +145,7 @@
     },
     "signupAdminContainerImageTag": {
       "type": "string",
-      "defaultValue": "ghcr.io/azure/azure-saas/asdk-signup:v1.0",
+      "defaultValue": "ghcr.io/azure/azure-saas/asdk-signup:v1.1",
       "metadata": {
         "description": "The tag of the container image to deploy to the SignupAdmin app service."
       }
@@ -547,11 +541,8 @@
           "location": {
             "value": "[parameters('location')]"
           },
-          "permissionsApiCertificateSecretValue": {
-            "value": "[parameters('permissionsApiCertificateSecretValue')]"
-          },
-          "permissionsApiCertificatePassphraseSecretValue": {
-            "value": "[parameters('permissionsApiCertificatePassphraseSecretValue')]"
+          "permissionsApiApiKeySecretValue": {
+            "value": "[parameters('permissionsApiApiKeySecretValue')]"
           }
         },
         "template": {
@@ -561,7 +552,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.7.4.23292",
-              "templateHash": "10345434415902719005"
+              "templateHash": "16792040523285546760"
             }
           },
           "parameters": {
@@ -736,30 +727,17 @@
                 "description": "The location for all resources."
               }
             },
-            "permissionsApiCertificateSecretName": {
+            "permissionsApiApiKeySecretName": {
               "type": "string",
-              "defaultValue": "admin-KeyVault--PermissionsApiCert",
+              "defaultValue": "admin-PermissionsApi--ApiKey",
               "metadata": {
-                "description": "The name of the Permissions Api Certificate Key Vault Secret."
+                "description": "The name of the Permissions Api Api Key Key Vault Secret."
               }
             },
-            "permissionsApiCertificateSecretValue": {
+            "permissionsApiApiKeySecretValue": {
               "type": "string",
               "metadata": {
-                "description": "The value of the Permissions Api Certificate Key Vault Secret."
-              }
-            },
-            "permissionsApiCertificatePassphraseSecretName": {
-              "type": "string",
-              "defaultValue": "admin-KeyVault--PermissionsApiCertPassphrase",
-              "metadata": {
-                "description": "The name of the Permissions Api Certificate Passphrase Key Vault Secret."
-              }
-            },
-            "permissionsApiCertificatePassphraseSecretValue": {
-              "type": "string",
-              "metadata": {
-                "description": "The value of the Permissions Api Certificate Passphrase Key Vault Secret."
+                "description": "The value of the Permissions Api Api Key Key Vault Secret."
               }
             }
           },
@@ -784,20 +762,9 @@
             {
               "type": "Microsoft.KeyVault/vaults/secrets",
               "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('permissionsApiCertificateSecretName'))]",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('permissionsApiApiKeySecretName'))]",
               "properties": {
-                "value": "[parameters('permissionsApiCertificateSecretValue')]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2021-11-01-preview",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('permissionsApiCertificatePassphraseSecretName'))]",
-              "properties": {
-                "value": "[parameters('permissionsApiCertificatePassphraseSecretValue')]"
+                "value": "[parameters('permissionsApiApiKeySecretValue')]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"

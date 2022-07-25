@@ -28,8 +28,8 @@ Requirements:
 Running our pre-built docker image is the recommended way to set up the identity framework, as the image comes pre-installed with all the dependencies necessary for execution. To start, run the following commands:
 
 ```bash
-docker pull ghcr.io/azure/azure-saas/asdk-identity-setup:v1.0
-docker run -it -v "$(pwd):/data" --name asdk-b2c-deployment ghcr.io/azure/azure-saas/asdk-identity-setup:v1.0
+docker pull ghcr.io/azure/azure-saas/asdk-identity-setup:v1.1
+docker run -it -v "$(pwd):/data" --name asdk-b2c-deployment ghcr.io/azure/azure-saas/asdk-identity-setup:v1.1
 ```
 
 This will automatically pull and run the container image and its entrypoint is the [B2C-Create](https://github.com/Azure/azure-saas/blob/main/src/Saas.Identity/Saas.IdentityProvider/scripts/B2C-Create.ps1) powershell script.
@@ -86,7 +86,7 @@ Deploying to Azure is easy thanks to our pre-configured ARM (Azure Resource Mana
 
 This button will take you to the Azure portal and will pass it the ARM template. You will need the parameters file output from step 1.
 
-1. Click here: [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fv1.0%2Fsrc%2FSaas.IaC%2Fmain.json).
+1. Click here: [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fv1.1%2Fsrc%2FSaas.IaC%2Fmain.json).
 2. Select "Edit Parameters".
 3. Select "Load File" and upload the `parameters.json` file output from the Identity Framework Deployment (step 1 above). Click "Save". 
 4. From the dropdown, select the subscription and resource group you'd like to deploy the resources to.

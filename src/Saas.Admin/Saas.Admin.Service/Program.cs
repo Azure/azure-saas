@@ -21,14 +21,6 @@ if (builder.Environment.IsProduction())
         new DefaultAzureCredential(),
         new CustomPrefixKeyVaultSecretManager("admin"));
 
-    // Get certificate from secret imported above and parse it into an X509Certificate
-    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(builder.Configuration["KeyVault:PermissionsApiCert"]), builder.Configuration["KeyVault:PermissionsApiCertPassphrase"]);
-}
-else
-{
-    // If running locally, you must first set the certificate as a base 64 encoded string in your .NET secrets manager.
-    var certString = builder.Configuration["PermissionsApi:LocalCertificate"];
-    permissionsApiCertificate = new X509Certificate2(Convert.FromBase64String(certString));
 }
 
 builder.Services.AddDbContext<TenantsContext>(options =>
@@ -108,24 +100,10 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient>()
-    // Configure outgoing HTTP requests to include certificate for permissions API
-    .ConfigurePrimaryHttpMessageHandler(() =>
-    {
-        HttpClientHandler handler = new HttpClientHandler();
-        handler.ClientCertificates.Add(permissionsApiCertificate);
-        return handler;
-    })
     .ConfigureHttpClient(options =>
     {
         options.BaseAddress = new Uri(builder.Configuration["PermissionsApi:BaseUrl"]);
-
-        if (builder.Environment.IsDevelopment())
-        {
-            // The permissions API expects the certificate to be provided to the application layer by the web server after the TLS handshake
-            // Since this doesn't happen locally, we need to do it ourselves
-
-            options.DefaultRequestHeaders.Add("X-ARR-ClientCert", Convert.ToBase64String(permissionsApiCertificate.GetRawCertData()));
-        }
+        options.DefaultRequestHeaders.Add("x-api-key", builder.Configuration["PermissionsApi:ApiKey"]);
     });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

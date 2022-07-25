@@ -7,10 +7,10 @@ param adminApiScopes string
 param adminApiScopeBaseUrl string
 
 @description('The tag of the container image to deploy to the Admin api app service.')
-param adminApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-admin:v1.0'
+param adminApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-admin:v1.1'
 
 @description('The tag of the container image to deploy to the SaaS Application api app service.')
-param applicationContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-web:v1.0'
+param applicationContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-web:v1.1'
 
 @description('The value of the Azure AD B2C Admin Api Client Id Key Vault Secret.')
 param azureAdB2cAdminApiClientIdSecretValue string
@@ -57,18 +57,15 @@ param location string = resourceGroup().location
 @description('The Host Name of the Permissions Api to point the Admin Api to.')
 param permissionsApiHostName string
 
-@description('The base64 encoded certificate to save in the keyvault for securing communication with the permissions API.')
-param permissionsApiCertificateSecretValue string
-
-@description('The passphrase fopr the  certificate to save in the keyvault for securing communication with the permissions API.')
+@description('The API Key used to authenticate with the Permissions Api.')
 @secure()
-param permissionsApiCertificatePassphraseSecretValue string
+param permissionsApiApiKeySecretValue string
 
 @description('Scopes to authorize SaaS App user for the admin service.')
 param saasAppApiScopes string
 
 @description('The tag of the container image to deploy to the SignupAdmin app service.')
-param signupAdminContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-signup:v1.0'
+param signupAdminContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-signup:v1.1'
 
 @description('The SaaS Provider name.')
 param saasProviderName string
@@ -163,8 +160,7 @@ module keyVaultModule 'keyVault.bicep' = {
     azureAdB2cTenantIdSecretValue: azureAdB2cTenantIdSecretValue
     keyVaultName: keyVaultName
     location: location
-    permissionsApiCertificateSecretValue: permissionsApiCertificateSecretValue
-    permissionsApiCertificatePassphraseSecretValue: permissionsApiCertificatePassphraseSecretValue
+    permissionsApiApiKeySecretValue: permissionsApiApiKeySecretValue
   }
 }
 

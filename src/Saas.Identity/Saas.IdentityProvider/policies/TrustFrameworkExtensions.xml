@@ -57,13 +57,11 @@
             <!-- Set the ServiceUrl with your own REST API endpoint -->
             <Item Key="ServiceUrl">{Settings:PermissionsAPIUrl}</Item>
             <Item Key="SendClaimsIn">Body</Item>
-            <!-- Set AuthenticationType to Basic or ClientCertificate in production environments -->
-            <Item Key="AuthenticationType">ClientCertificate</Item>
-            <!-- REMOVE the following line in production environments -->
-            <Item Key="AllowInsecureAuthInProduction">true</Item>
+            <Item Key="AuthenticationType">ApiKeyHeader</Item>
+            <Item Key="AllowInsecureAuthInProduction">false</Item>
           </Metadata>
           <CryptographicKeys>
-            <Key Id="ClientCertificate" StorageReferenceId="{Settings:RESTAPIClientCertificate}" />
+            <Key Id="x-api-key" StorageReferenceId="{Settings:RESTAPIKey}" />
           </CryptographicKeys>
           <InputClaims>
             <!-- Claims sent to your REST API -->
@@ -84,13 +82,11 @@
             <!-- Set the ServiceUrl with your own REST API endpoint -->
             <Item Key="ServiceUrl">{Settings:RolesAPIUrl}</Item>
             <Item Key="SendClaimsIn">Body</Item>
-            <!-- Set AuthenticationType to Basic or ClientCertificate in production environments -->
-            <Item Key="AuthenticationType">ClientCertificate</Item>
-            <!-- REMOVE the following line in production environments -->
-            <Item Key="AllowInsecureAuthInProduction">true</Item>
+            <Item Key="AuthenticationType">ApiKeyHeader</Item>
+            <Item Key="AllowInsecureAuthInProduction">false</Item>
           </Metadata>
           <CryptographicKeys>
-            <Key Id="ClientCertificate" StorageReferenceId="{Settings:RESTAPIClientCertificate}" />
+            <Key Id="x-api-key" StorageReferenceId="{Settings:RESTAPIKey}" />
           </CryptographicKeys>
           <InputClaims>
             <!-- Claims sent to your REST API -->

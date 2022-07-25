@@ -17,7 +17,7 @@
         "azureAdB2cPermissionsApiClientSecretSecretValue": {
             "value": "null"
         },
-        "permissionsApiSslThumbprintSecretValue": {
+        "permissionsApiApiKeySecretValue": {
             "value": "null"
         },   
         "permissionsApiContainerImageTag": {
