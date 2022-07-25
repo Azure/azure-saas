@@ -12,4 +12,3 @@ jobs:
     with:
       image_to_push: asdk-identity-setup
       tag_name: ${GITHUB_REF/refs\/tags\//}
-      tag_latest: true
