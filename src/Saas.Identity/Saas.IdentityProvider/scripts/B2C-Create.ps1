@@ -1,15 +1,34 @@
+<#
+.SYNOPSIS
+   The script will create the Identity Framework required for the Azure SaaS Development Kit (ASDK)
+.DESCRIPTION
+   The ASDK uses Azure Active Directory B2C for an IdP (Identity Provider). The first step in setting up this project is to configure a new Azure AD B2C instance to house your local user accounts. You will also need to deploy the Permissions API, as Azure AD B2C will have a dependency on it.  To setup the Identity Framework, we have provided an interactive PowerShell script that automates the setup for you by calling the necessary Microsoft Graph API endpoints. Upon running, it will ask you to sign into your home azure account, ask you a few questions, and then begin the setup process. This PowerShell script will output a parameters file that you’ll need to provide when deploying the solution to Azure in step 2.b.
+.INPUTS
+  The following are sample inputs to prepare for running the script:
+    B2CTenantName                      = "asdk001"
+    B2CTenantLocation                  = "United States"
+    CountryCode                        = "US"
+    AzureResourceLocation              = "eastus"
+    IdentityFrameworkResourceGroupName = "rg-asdk-dev-001"
+    SaasEnvironment                    = "dev"
+    ProviderName                       = "asdk"
+    InstanceNumber                     = "001"
+    SqlAdministratorLogin              = "sqladmin"
+    SqlAdministratorLoginPassword      = "P@ssW0rD!"
+.OUTPUTS
+   Upon script completion this script will output a parameters.json file that is required for step 2.b
+.NOTES
+    Windows PowerShell and PowerShell Core are supported.
+    Microsoft.Graph PowerShell module needs to be installed.
+    Azure CLI needs to be installed and authenticated for the owning tenant.
+    Usage:
+    dot-source in a PS script: . ./Create-AzureB2C.ps1
+    invoke individual functions, or the main one: Initialize-B2CTenant -B2CTenantName mytenant -ResourceGroupName myrg -Location "Europe" -CountryCode "CZ"
+#>
+
 #### Settings ####
 $ErrorActionPreference = "Stop"
 #### /Settings ####
-
-
-# Windows PowerShell and PowerShell Core are supported.
-# - Microsoft.Graph PowerShell module needs to be installed.
-# - Azure CLI needs to be installed and authenticated for the owning tenant.
-#
-# Usage:
-# - dot-source in a PS script: . ./Create-AzureB2C.ps1
-# - invoke individual functions, or the main one: Initialize-B2CTenant -B2CTenantName mytenant -ResourceGroupName myrg -Location "Europe" -CountryCode "CZ"
 
 function New-SaaSIdentityProvider {
   [CmdletBinding()] # indicate that this is advanced function (with additional params automatically added)
@@ -56,12 +75,10 @@ function New-SaaSIdentityProvider {
     -SaasAppFQDN $userInputParams.SaasAppFQDN `
     -CurrentB2CUserId $currentB2CUser.Id `
 
-
   # Create Api Key
   $permissionsApiKey = Get-RandomPassword -Length 32
 
   # Deploy Bicep here
-
   Invoke-IdentityBicepDeployment `
     -IdentityFrameworkResourceGroupName $userInputParams.IdentityFrameworkResourceGroupName `
     -B2CDomain "$($userInputParams.B2CTenantName).onmicrosoft.com" `
@@ -76,7 +93,6 @@ function New-SaaSIdentityProvider {
     -SqlAdministratorLogin $userInputParams.SqlAdministratorLogin `
     -SqlAdministratorPassword $userInputParams.SqlAdministratorLoginPassword `
 
-  
   #Create Signing and Encrpytion Keys
   $trustFrameworkKeySetSigningKeyId = New-TrustFrameworkSigningKey 
   $trustFrameworkKeySetEncryptionKeyId = New-TrustFrameworkEncryptionKey
@@ -96,8 +112,6 @@ function New-SaaSIdentityProvider {
 
   Import-IEFPolicies -configTokens $configTokens
 
-  
-    
   # Output parameters.json
   $outputParams = [ordered]@{
     '$schema'      = "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#"
@@ -121,9 +135,7 @@ function New-SaaSIdentityProvider {
       saasInstanceNumber                             = @{ value = $userInputParams.InstanceNumber }
       sqlAdministratorLogin                          = @{ value = $userInputParams.SqlAdministratorLogin }
       sqlAdministratorLoginPassword                  = @{ value = ConvertFrom-SecureString -SecureString $userInputParams.SqlAdministratorLoginPassword -AsPlainText }
-
     }
-
   }
 
   Write-OutputFile -OutputParams $outputParams
@@ -171,6 +183,7 @@ function Invoke-Login {
   }
 
 }
+
 function Get-UserInputParameters {
  
   $userInputParams = @{
@@ -203,7 +216,6 @@ function Get-UserInputParameters {
   -SqlAdministratorLoginPassword $userInputParams.SqlAdministratorLoginPassword `
 
   return $userInputParams
-
 }
 
 # Validate Input Parameters
@@ -246,8 +258,6 @@ function Confirm-UserInputParameters {
 
     [Parameter(Mandatory=$true)]
     [securestring] $SqlAdministratorLoginPassword
-
-
   )
   return
 }
@@ -274,7 +284,6 @@ function New-AzureADB2CTenant {
   
     # Under which Azure resource group will this B2C tenant reside.
     [string] $AzureResourceGroup
-
   )
   
   $aadProviderRegState = $(az provider show -n Microsoft.AzureActiveDirectory --query "registrationState" -o tsv)
@@ -367,8 +376,6 @@ function New-AzureADB2CTenant {
   $tenantGuid = $(az resource show --id $resourceId --query "properties.tenantId" -o tsv)
   return $tenantGuid
 }
-
-
 
 function New-TrustFrameworkSigningKey {
   Write-Host "Creating new signing key..."
@@ -524,7 +531,6 @@ function Invoke-IdentityBicepDeployment {
     [string] $SaasInstanceNumber,
     [string] $SqlAdministratorLogin,
     [securestring] $SqlAdministratorPassword
-    
   )
 
   $params = @{
@@ -553,7 +559,6 @@ function Invoke-IdentityBicepDeployment {
     --parameters $paramsJson
 
 }
-
 
 # Helper Function called by Install-AppRegistrations
 function New-AppRegistration {
@@ -666,6 +671,7 @@ function New-SPAppRoleAssignment {
   }
   
 }
+
 function New-UserAppRoleAssignment {
   param(
     [Parameter(Mandatory = $true, HelpMessage = "The identifier of the application that consent is being granted on.")]
@@ -691,6 +697,7 @@ function New-UserAppRoleAssignment {
   If not, you will need to manually grant consent in the B2C Admin portal. Error: $_"
   }
 }
+
 # Helper Function called by Install-AppRegistrations
 function New-AdminConsent {
   param(
@@ -720,8 +727,7 @@ function New-AdminConsent {
     ResourceId  = $ApiObjectId
     Scope       = $ApiScopes -Join " " #"tenant.delete tenant.write tenant.global.delete tenant.global.write tenant.read tenant.global.read"
     StartTime   = $StartTime
-    ExpiryTime  = $ExpiryTime
-    
+    expiryTime  = $ExpiryTime
   }
 
   $permissionGrant = Get-MgOauth2PermissionGrant -Filter "clientId eq '$($ClientObjectId)' and resourceId eq '$($ApiObjectId)'and ConsentType eq 'AllPrincipals'" -Top 1
@@ -1089,7 +1095,6 @@ function Install-AppRegistrations {
     IEFProxyAppReg    = $iefProxyAppReg
   }
 }
-
 function ConvertTo-AzJsonParams {
   param(
     [Parameter(Mandatory = $true)]
@@ -1103,7 +1108,6 @@ function ConvertTo-AzJsonParams {
   return $retHashTable
 
 }
-
 
 # Outputs parameters.json file with the information from the b2c setup. 
 function Write-OutputFile {
