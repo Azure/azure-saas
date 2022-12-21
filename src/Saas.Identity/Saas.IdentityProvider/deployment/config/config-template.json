@@ -1,0 +1,160 @@
+{
+  "initConfig": {
+    "subscriptionId": "",
+    "tenantId": "",
+    "location": "",
+    "naming": {
+      "solutionPrefix": "asdk",
+      "solutionName": "test"
+    },
+    "azureb2c": {
+      "location": "Europe",
+      "countryCode": "DK",
+      "skuName": "PremiumP1",
+      "tier": "A0"
+    }
+  },
+  "azureb2c": {
+    "policyKeys": [
+      {
+        "name": "TokenSigningKeyContainer",
+        "options": "Generate",
+        "keyType": "RSA",
+        "keyUsage": "Signature"
+      },
+      {
+        "name": "TokenEncryptionKeyContainer",
+        "options": "Generate",
+        "keyType": "RSA",
+        "keyUsage": "Encryption"
+      },
+      {
+        "name": "RestApiKey",
+        "options": "Manual",
+        "hasSecret": true,
+        "keyUsage": "Signature"
+      }
+    ]
+  },      
+  "appRegistrations": [
+    {
+      "name": "admin-api",
+      "certificate": false,
+      "redirectUri": null,
+      "permissions": null,
+      "scopes": [
+        {
+          "name": "tenant.read",
+          "description": "Read a customer's own Tenant data",
+          "guid": null
+        },
+        {
+          "name": "tenant.global.read",
+          "description": "Admin-level read permissions for all Tenants",
+          "guid": null
+        },
+        {
+          "name": "tenant.write",
+          "description": "Alter a customer's own Tenant data",
+          "guid": null
+        },
+        {
+          "name": "tenant.global.write",
+          "description": "Admin-level write permissions for all Tenants",
+          "guid": null
+        },
+        {
+          "name": "tenant.delete",
+          "description": "Delete a customer's own Tenant data",
+          "guid": null
+        },
+        {
+          "name": "tenant.global.delete",
+          "description": "Admin-level delete permissions for all Tenants",
+          "guid": null
+        }
+      ]
+    },
+    {
+      "name": "signupadmin-app",
+      "certificate": true,
+      "redirectUri": "https://appsignup.azurewebsites.net/signin-oidc",
+      "scopes": null,
+      "permissions": [
+        {
+          "endpoint": "admin-api",
+          "scopes": [
+            "tenant.read",
+            "tenant.global.read",
+            "tenant.write",
+            "tenant.global.write",
+            "tenant.delete",
+            "tenant.global.delete"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "saas-app",
+      "certificate": true,
+      "redirectUri": "https://appsignup.azurewebsites.net/signin-oidc",
+      "scopes": null,
+      "permissions": [
+        {
+          "endpoint": "admin-api",
+          "scopes": [
+            "tenant.read"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "permissions-api",
+      "certificate": false,
+      "redirectUri": null,
+      "permissions": [
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
+        }
+      ],
+      "scopes": null
+    },
+    {
+      "name": "IdenityExperienceFramework",
+      "certificate": false,
+      "redirectUri": null,
+      "permissions": [
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
+        }
+      ],
+      "scopes": null
+    },
+    {
+      "name": "ProxyIdentityExperienceFramwork",
+      "certificate": false,
+      "redirectUri": null,
+      "permissions": [
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
+        }
+      ],
+      "scopes": null
+    }
+  ]
+}
