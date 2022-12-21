@@ -1,5 +1,6 @@
-{
+{ 
   "initConfig": {
+    "userPrincipalId": "",
     "subscriptionId": "",
     "tenantId": "",
     "location": "",
@@ -14,6 +15,9 @@
       "tier": "A0"
     }
   },
+  "version": "",
+  "environment": "development",
+  "production": false,
   "azureb2c": {
     "policyKeys": [
       {
@@ -42,6 +46,7 @@
       "certificate": false,
       "redirectUri": null,
       "permissions": null,
+      "baseUrl": null,
       "scopes": [
         {
           "name": "tenant.read",
@@ -78,7 +83,7 @@
     {
       "name": "signupadmin-app",
       "certificate": true,
-      "redirectUri": "https://appsignup.azurewebsites.net/signin-oidc",
+      "redirectUri": null,
       "scopes": null,
       "permissions": [
         {
@@ -97,7 +102,7 @@
     {
       "name": "saas-app",
       "certificate": true,
-      "redirectUri": "https://appsignup.azurewebsites.net/signin-oidc",
+      "redirectUri": null,
       "scopes": null,
       "permissions": [
         {
@@ -110,8 +115,13 @@
     },
     {
       "name": "permissions-api",
-      "certificate": false,
+      "certificate": true,
       "redirectUri": null,
+      "permissionsApiUrl": null,
+      "rolesApiUrl": null,
+      "domain": null,
+      "instance": "https://login.microsoftonline.com/",
+      "apiName": null,
       "permissions": [
         {
           "grantAdminConsent": true,
@@ -119,6 +129,9 @@
           "scopes": [
             "openid",
             "offline_access"
+          ],
+          "appRoles": [
+            "User.Read.All"
           ]
         }
       ],
@@ -156,5 +169,18 @@
       ],
       "scopes": null
     }
-  ]
+  ],
+  "sql": {
+    "sqlAdminLoginName": "sqlAdmin"
+  },
+  "container": {
+    "containerRegistryUrl": "https://ghcr.io",
+    "permissionsApiContainerImageTag": "ghcr.io/azure/azure-saas/asdk-permissions:v1.1"
+  },
+  "deployment": {
+    "users": [],
+    "azureCli": {
+      "configDir": null
+    }
+  }
 }
