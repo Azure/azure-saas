@@ -153,6 +153,11 @@ function add-required-resource-access() {
 
         echo "Grant admin consent: ${grant_admin_consent}" | log-output --level info
 
+        echo "Waiting 30 seconds to allow the permissions to propagate before granting admin consent." \
+            | log-output --level info
+
+        sleep 30s
+
         if [[ "${grant_admin_consent}" == true  ]]; then
 
             echo "Granting admin consent" | log-output --level info

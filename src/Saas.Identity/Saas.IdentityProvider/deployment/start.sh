@@ -50,6 +50,11 @@ tenant_id="$( get-value ".initConfig.tenantId" )"
 echo "Log into you Azure tenant" | log-output --level info --header "Login to Azure"  
 log-into-main "${subscription_id}" "${tenant_id}"
 
+echo "You will be required to log into the Azure B2C tenant in a few minutes. Thank you." \
+    | log-output \
+        --level warning \
+        --header "One more login request in coming up" \
+
 # Creating resource group
 resource_group="$( get-value ".deployment.resourceGroup.name" )"
 location="$( get-value ".initConfig.location" )"
@@ -71,7 +76,6 @@ echo "Provisioning resource group ${resource_group}..." | log-output --level inf
             --level error \
             --header "Critical error" \
             | exit 1
-
 
 echo "Provisioning Azure B2C..." | log-output --level info --header "Azure B2C Tenant"  
 # Creating Azure AD B2C Directory

@@ -110,8 +110,7 @@ function add-certificate-to-vault() {
         az keyvault certificate create \
             --name "${key_name}" \
             --vault-name "${key_vault_name}" \
-            --policy "@${CERTIFICATE_POLICY_FILE}" \
-            | log-output \
+            --policy "@${CERTIFICATE_POLICY_FILE}" 1> /dev/null \
             || echo "Failed to create self-signing certificate for ${key_name}." \
                 | log-output \
                     --level error \

@@ -31,7 +31,7 @@ function create-linux-user() {
     usr_temp_pwd="$( cat /dev/urandom | tr -cd '[:graph:]' | head -c 24 )"
 
     # Encrypting the random passwords so that it can be used with the 'useradd' command when creating the 'b2c' user.
-    encrypted_pwd="$( mkpasswd "${usr_temp_pwd}" -m sha-512 )"
+    encrypted_pwd="$( mkpasswd "${usr_temp_pwd}" --method=sha-512 )"
 
     # Creating the temp shell user providing the encrypted password.
     sudo useradd -m "${usr_name}" -p "${encrypted_pwd}" --home-dir "${usr_path}" > /dev/null

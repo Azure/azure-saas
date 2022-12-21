@@ -112,7 +112,7 @@ function create-service-principal-for-policy-key-creation() {
     local service_principal_username="$1"
 
     if ! service-principal-exist "${service_principal_username}"; then
-        echo "Creating service principal for policy key configuration ..." | log-output --level info
+        echo "Creating service principal for ${service_principal_username}." | log-output --level info
 
         service_principal="$( az ad sp create-for-rbac \
             --name "${service_principal_username}" \

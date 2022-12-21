@@ -15,3 +15,9 @@ echo "Provisioning or updating service principal for policy key creation: ${serv
 
 # create temporary service principal for adding the policy keys for the B2C tenant before exiting az cli b2c session
 create-service-principal-for-policy-key-creation "${service_principal_name}"
+
+echo "Service principal created successfully. Waiting 30 seconds to let it propagate..." \
+    | log-output \
+        --level success
+
+sleep 30s
