@@ -1,0 +1,13 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    jq \
+    sudo \
+    libicu-dev \
+    uuid-runtime \
+    && curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+WORKDIR /asdk/Saas.IdentityProvider/deployment
+
+ENV ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR="/asdk/Saas.IdentityProvider/deployment"

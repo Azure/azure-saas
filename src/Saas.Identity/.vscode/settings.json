@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./Saas.IdentityProvider/deployment/script/module"
+    ]
+}
