@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appSettingsAdminServiceBaseUrl": {
+            "value": null
+        },
+        "solutionPostfix": {
+            "value": null
+        },
+        "solutionPrefix": {
+            "value": null
+        },
+        "solutionName": {
+            "value": null
+        },
+        "keyVaultName": {
+            "value": null
+        },
+        "azureB2CDomain": {
+            "value": null
+        },
+        "azureB2CLoginEndpoint": {
+            "value": null
+        },
+        "azureB2CTenantId": {
+            "value": null
+        },
+        "azureB2CPermissionApiClientId": {
+            "value": null
+        },
+        "permissionsApiName": {
+            "value": null
+        },
+        "sqlAdministratorLogin": {
+            "value": null
+        },
+        "containerRegistryUrl": {
+            "value": null
+        },
+        "permissionsApiContainerImageTag": {
+            "value": null
+        }
+    }
+}

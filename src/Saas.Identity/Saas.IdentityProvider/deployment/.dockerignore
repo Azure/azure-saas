@@ -1,0 +1,10 @@
+run.sh
+/config/config.*
+/config/certificate-policy.json
+/log/*
+/.vscode
+/.vscode/*
+build*.sh
+Dockerfile
+Dockerfile.Apple-Sillicon
+docker-compose.yml
