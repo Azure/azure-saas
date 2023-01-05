@@ -21,7 +21,7 @@ function app-exist() {
     fi
 }
 
-function get-permission-id()
+function get-scope-permission-id()
 {
     local resource_id="$1"
     local permission_name="$2"
@@ -30,7 +30,23 @@ function get-permission-id()
         --id "${resource_id}" \
         --query "oauth2PermissionScopes[?value=='${permission_name}'].id" \
         --output tsv \
-        || echo "Failed to get permission id for ${permission_name}" || exit 1 )"
+        || echo "Failed to get permission id for ${permission_name}" \
+            || exit 1 )"
+
+    echo "${permission_id}"
+}
+
+function get-app-role-permission-id()
+{
+    local resource_id="$1"
+    local permission_name="$2"
+
+    permission_id="$( az ad sp show \
+        --id "${resource_id}" \
+        --query "appRoles[?value=='${permission_name}'].id" \
+        --output tsv \
+        || echo "Failed to get permission id for ${permission_name}" \
+            || exit 1 )"
 
     echo "${permission_id}"
 }
@@ -99,6 +115,7 @@ function add-required-resource-access() {
 
         # get the permission scopes
         scopes=$(jq '.scopes' <<< "${permission}")
+        app_roles=$(jq '.appRoles' <<< "${permission}")
         
         # get the permission endpoint
         endpoint=$(jq -r '.endpoint' <<< "${permission}")
@@ -118,27 +135,58 @@ function add-required-resource-access() {
 
         required_resource_access_array_json="$( init-required-resource-access "${resource_id}" )"
 
-        readarray -t scope_array < <( jq -r '.[]' <<< "${scopes}" )
+        if [[ -n "${scopes}" && ! "${scopes}" == null ]]; then
 
-        # iterate through the scopes in the permission
-        for scope_name in "${scope_array[@]}"; do
+            readarray -t scope_array < <( jq -r '.[]' <<< "${scopes}" )
 
-            if [[ "${is_custom_resource}" == "true" ]]; then
-                scope_guid=$( get-scope-guid "${endpoint}" "${scope_name}" )
-            else
-                scope_guid=$( get-permission-id  "${resource_id}" "${scope_name}" )
-            fi
+            # iterate through the scopes in the permission
+            for scope_name in "${scope_array[@]}"; do
 
-            echo "Scope name: '${scope_name}', Scope guid: '${scope_guid}'" | log-output --level info
+                if [[ "${is_custom_resource}" == "true" ]]; then
+                    scope_guid=$( get-scope-guid "${endpoint}" "${scope_name}" )
+                else
+                    scope_guid=$( get-scope-permission-id  "${resource_id}" "${scope_name}" )
+                fi
 
-            required_resource_access_json="$( create-required-resource-access "${scope_guid}" )"
+                echo "Scope name: '${scope_name}', Scope guid: '${scope_guid}'" \
+                    | log-output \
+                        --level info
 
-            required_resource_access_array_json="$( jq -c \
-                --argjson required_resource_access "${required_resource_access_json}" \
-                '.[0].resourceAccess += [$required_resource_access]' \
-                <<< "${required_resource_access_array_json}" )"
+                required_resource_access_json="$( create-required-resource-access "${scope_guid}" "Scope")"
 
-        done
+                required_resource_access_array_json="$( jq -c \
+                    --argjson required_resource_access "${required_resource_access_json}" \
+                        '.[0].resourceAccess += [$required_resource_access]' \
+                            <<< "${required_resource_access_array_json}" )"
+
+            done
+        fi
+
+        if [[ -n "${app_roles}" && ! "${app_roles}" == null  ]]; then
+            readarray -t app_role_array < <( jq -r '.[]' <<< "${app_roles}" )
+
+            # iterate through the scopes in the permission
+            for app_role_name in "${app_role_array[@]}"; do
+
+                if [[ "${is_custom_resource}" == "true" ]]; then
+                    app_role_guid=$( get-app-role-guid "${endpoint}" "${app_role_name}" )
+                else
+                    app_role_guid=$( get-app-role-permission-id  "${resource_id}" "${app_role_name}" )
+                fi
+
+                echo "App role name: '${app_role_name}', App role guid: '${app_role_guid}'" \
+                    | log-output \
+                        --level info
+
+                required_resource_access_json="$( create-required-resource-access "${app_role_guid}" "Role" )"
+
+                required_resource_access_array_json="$( jq -c \
+                    --argjson required_resource_access "${required_resource_access_json}" \
+                        '.[0].resourceAccess += [$required_resource_access]' \
+                            <<< "${required_resource_access_array_json}" )"
+
+            done
+        fi
         
         az ad app update \
             --id "${app_id}" \
@@ -175,12 +223,13 @@ function add-required-resource-access() {
 
 function create-required-resource-access() {
     local scope_guid="$1"
+    local permission_type="$2"
 
     # create empty oauth permissions json
     required_resource_access_json="$( cat <<-END
 {
     "id": "${scope_guid}",
-    "type": "Scope"
+    "type": "${permission_type}"
 }
 END
 ) " 

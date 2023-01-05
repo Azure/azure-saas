@@ -75,7 +75,7 @@ for app in "${app_reg_array[@]}"; do
 
         if app-exist "${app_id}"; then
         
-            echo "App registration for ${app_name} already exist." \
+            echo "App registration for ${app_name} already exist. If you made changes or updated the certificate, you will have to delete the app registration to use this script to update it. " \
                 | log-output --level info
 
             continue

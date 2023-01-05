@@ -14,6 +14,12 @@ def patch_paramenters_file(config_file: str, paramenter_file: str) -> None:
     with open(paramenter_file, 'r') as f:
         parameters = json.load(f)
 
+    parameters['parameters']['version']['value'] \
+        = config['version']
+
+    parameters['parameters']['devMachineIp']['value'] \
+        = config['deployment']['devMachine']['ip']
+
     parameters['parameters']['appSettingsAdminServiceBaseUrl']['value'] \
         = get_app_value(config, "admin-api", "baseUrl")
     
@@ -38,11 +44,20 @@ def patch_paramenters_file(config_file: str, paramenter_file: str) -> None:
     parameters['parameters']['azureB2CTenantId']['value'] \
         = config['deployment']['azureb2c']['tenantId']
 
-    parameters['parameters']['azureB2CPermissionApiClientId']['value'] \
-        = get_app_value(config, "permissions-api", "appId")
-
     parameters['parameters']['permissionsApiName']['value'] \
         = get_app_value(config, "permissions-api", "apiName")
+
+    parameters['parameters']['permissionApiClientId']['value'] \
+        = get_app_value(config, "permissions-api", "appId")
+    
+    parameters['parameters']['permissionInstance']['value'] \
+        = get_app_value(config, "permissions-api", "instance")
+
+    parameters['parameters']['permissionCertificateName']['value'] \
+        = get_app_value(config, "permissions-api", "certificateKeyName")
+
+    parameters['parameters']['permissionApiKey']['value'] \
+        = 'RestApiKey'
 
     parameters['parameters']['sqlAdministratorLogin']['value'] \
         = config['sql']['sqlAdminLoginName']

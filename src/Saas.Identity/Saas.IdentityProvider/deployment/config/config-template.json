@@ -115,10 +115,12 @@
     },
     {
       "name": "permissions-api",
-      "certificate": false,
+      "certificate": true,
       "redirectUri": null,
       "permissionsApiUrl": null,
       "rolesApiUrl": null,
+      "domain": null,
+      "instance": "https://login.microsoftonline.com/",
       "apiName": null,
       "permissions": [
         {
@@ -127,6 +129,9 @@
           "scopes": [
             "openid",
             "offline_access"
+          ],
+          "appRoles": [
+            "User.Read.All"
           ]
         }
       ],

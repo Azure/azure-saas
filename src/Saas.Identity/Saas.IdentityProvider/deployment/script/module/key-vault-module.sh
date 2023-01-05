@@ -107,34 +107,37 @@ function init-key-vault-certificate-template() {
                 --header "Critical Error" \
                 || exit 1
 
-    # patching certificate policy
+    # patching certificate policy to our liking, including making the certs none-exportable
+    put-certificate-value '.keyProperties.exportable' "false"
     put-certificate-value '.keyProperties.keySize' "4096"
     put-certificate-value '.x509CertificateProperties.subject' "CN=${b2c_name}"
 }
 
-function add-certificate-to-vault() {
-    local key_name="$1"
+function create-certificate-in-vault() {
+    local cert_name="$1"
     local key_vault_name="$2"
     local output_dir="$3"
 
     # check if certificate doesn't not exist and create it if not
-    if ! certificate-exist "${key_name}" ; then
-        echo "Creating a self-signing certificate for ${key_name}..." | log-output
+    if ! certificate-exist "${cert_name}" ; then
+        echo "Creating a self-signing certificate called '${cert_name}' for '${cert_name}'..." | log-output
 
         az keyvault certificate create \
-            --name "${key_name}" \
+            --name "${cert_name}" \
             --vault-name "${key_vault_name}" \
             --policy "@${CERTIFICATE_POLICY_FILE}" 1> /dev/null \
-            || echo "Failed to create self-signing certificate for ${key_name}." \
+            || echo "Failed to create self-signing certificate for ${cert_name}." \
                 | log-output \
                     --level error \
                     --header "Critical Error" \
                     || exit 1
     else
-        echo "A self-signing certificate for ${key_name} already exist and will be used." \
+        echo "A self-signing certificate for ${cert_name} already exist and will be used." \
             | log-output \
                 --level success
     fi
+
+    echo "${cert_name}"
 
     return
 }
