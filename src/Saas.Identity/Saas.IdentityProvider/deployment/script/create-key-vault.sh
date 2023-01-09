@@ -34,19 +34,23 @@ for app_reg in "${app_reg_array[@]}"; do
     has_certificate="$( jq -r '.certificate'    <<< "${app_reg}" )"
     app_name="$( jq -r '.name'                  <<< "${app_reg}" )"
 
+    cert_name="cert-${app_name}"
+
     if [[ "${has_certificate}" == "true" ]]; then
 
-        add-certificate-to-vault \
-            "${app_name}" \
+        cert_name="$( create-certificate-in-vault \
+            "${cert_name}" \
             "${key_vault_name}" \
-            "${b2c_config_usr_certificates_path}"
+            "${b2c_config_usr_certificates_path}" )"
 
         certificates_path="$( get-certificate-public-key \
-            "${app_name}" \
+            "${cert_name}" \
             "${key_vault_name}" \
             "${b2c_config_usr_certificates_path}" )"
         
-        put-public-key-path "${app_name}" "${certificates_path}"
+        put-key-certificate-path "${app_name}" "${certificates_path}"
+
+        put-certificate-key-name "${app_name}" "${cert_name}"
     fi
 done
 

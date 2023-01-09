@@ -2,46 +2,49 @@
 
 This deployment script provisions and configures the Azure services defining the back-bone of Azure SaaS Dev Kit, providing the foundation on which to build a SaaS solution. 
 
-## Run deployment script in a container using docker (recommended)
+## Before you begin
 
-The recommended way to run this deployment script is to run the script in a container using [docker](https://docs.docker.com/get-docker/). This will ensure that you have all the required dependencies installed and that you are running the script in a controlled environment.
+Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this GitHub repository. Make it your own.
 
-To run the script you must first build the container. To do this  run the following commands:
+A main purpose of the Azure SaaS Dev Kit is to boost your SaaS journey by providing a foundation for a solid start. But it is just that: *a start*. Soon you will want to test variations, make you own changes, evolve the repo into something that is yours. By forking the repository, you are ready to utilize [commit](https://github.com/git-guides/git-commit) and check in your code.
+
+## Run the deployment script in a container, using docker (recommended)
+
+The following steps assumes that your working on a Mac with a recent version of MacOS or using Windows 10/11 PC running [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install), which can be downloaded from the [Windows Store](https://www.microsoft.com/store/productId/9P9TQF7MRM4R). WSL lets you run a GNU/Linux environment on you Windows machine, including [bash](https://www.gnu.org/software/bash/), without any modifications and without the need of a virtual machine. We suggest using [Ubuntu 22.04](https://www.microsoft.com/store/productId/9PN20MSR04DW) on Windows, which can also be downloaded from the Windows Store.
+
+There are two ways to run this deployment script, but the recommended way to run it is from a container, that you build, using [docker](https://docs.docker.com/get-docker/). This containerized approach will ensure that you have all the required dependencies installed and that you are running the script in a controlled environment. And it will minimize the changes that some other properties of your existing environment interferes with the script or that the script inadvertently interferes with your existing environment.
+
+### Begin
+
+To begin open your GNU Linux terminal to the directory where you've [cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the [forked](https://docs.github.com/en/get-started/quickstart/fork-a-repo) version of ASDK. Should be something like:
+
+````bash
+/<project root>/azure-saas/src/Saas.Identity/Saas.IdentityProvider/deployment
+````
+
+### Building the script-run container
+
+To run the script you must first build the container. To do this run the following commands:
 
 ```bash
-chmod +x build.sh
+chmod +x build.sh # only needed the first time to set execute permissions on build.sh
 ./build.sh
 ```
 
 This will take a few minutes. The container will be named `asdk-idprovider`.
 
-When the container have been creates, run the using the following commands:
+### Running the deployment script using the container
+
+When the container have been creates, run the script using the container with the following commands:
 
 ```bash 
-chmod +x run.sh
+chmod +x run.sh # only needed the first time to set execute permissions on run.sh
 ./run.sh
 ```
 
-This will instantiate the container and mount the current root directory as a volume accessible from within the container. Mounting the root directory means that any edits to the `config.json` or anything any of the script files will immediately becomes effective without having to re-build the container, all you need to do is run `./run.sh` again
+This will instantiate the container and mount the current root directory as a volume accessible from within the container. 
 
-## Running deployment script on your computer w/o docker (not recommended)
-You can also run the deployment script on you computing without using a container.
-
-The script have been tested on:
--  Ubuntu 22.04 (will also run on WSL2 on Windows 10/11 with a Ubuntu 22.04 disto).
--  MacOS Ventura. 13.1+, including MacOS running on Apple Silicon.
-While not tested on other configurations, it will likely run recent Linux distros and versions as well as and earlier and recent versions of MacOS too.
-
-Make sure that you have the following installed on your machine before running the script:
-- [Az CLI v2.43.0+](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
-- [JQ v1.6+](https://linuxhint.com/bash_jq_command/) for Bash.
-- Specifically on MacOS, you'll need a more recent of `bash` as the default version is rather old. For this you can install the latest version of bash using homebrew: [`brew install bash`](https://formulae.brew.sh/formula/bash).
-
-When these requirements are met, the script can be run using the following command:
-```bash
-chmod +x start.sh
-./start.sh
-```
+Mounting the root directory means that any edits to the `config.json` or anything any of the script files you see will immediately becomes effective without having to re-build the container. All you need to do is tun `./run.sh` again to make changes you made happen.
 
 ## Running the script
 
@@ -129,3 +132,36 @@ While running the script, you will be asked to log in twice.
 ### What if something goes wrong?
 
 In most cases, if something goes wrong along the way, all you need to do is run the script again and it will skip the parts that have already been completed and re-try the parts that have not.
+
+## Running deployment script on your computer w/o docker (not recommended)
+
+You can also run the deployment script on you computing without using a container.
+
+The script have been tested on:
+
+-  Ubuntu 22.04 (will also run on WSL2 on Windows 10/11 with a Ubuntu 22.04 distro).
+-  MacOS Ventura. 13.1+, including MacOS running on Apple Silicon.
+   While not tested on other configurations, it will likely run recent Linux distros and versions as well as and earlier and recent versions of MacOS too.
+
+Make sure that you have the following installed on your machine before running the script:
+
+- [Az CLI v2.43.0+](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+- [JQ v1.6+](https://linuxhint.com/bash_jq_command/) for Bash.
+- Specifically on MacOS, you'll need a more recent of `bash` as the default version is rather old. For this you can install the latest version of bash using homebrew: [`brew install bash`](https://formulae.brew.sh/formula/bash).
+
+When these requirements are met, the script can be run using the following command:
+
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+From there on everything else is virtually identical to running the script from inside a container.
+
+## Now what?
+
+The deployment script has run to it's completion and the Identity Framework have been deployed - providing that nothing went wrong, of course. It's time to party! 🎉 Time to kick the tires on The Azure SaaS Development Kit. 🚗
+
+The fact is, that despite all the services that are now humming along in the cloud, aligned and mutually configured to cooperate, not much is actually running, let alone doing anything useful. It's like installing an operating system it's cool and all, but the real fun starts when we install/deploy more on top.
+
+ASDK is modular, just the next step should be to run the Permission Service, as it's such a core component. We suggest that you run it locally first. This gives you an opportunity to attach a debugger to *see* and understand what's going on. Of course, eventually, you'll want to deploy the Permission Service to the cloud too. Anyhow, please head over to the Permission Service `ReadMe`, for more on both deployment and running it locally. The Permission Service is part of the repository that you *git cloned*, after you *git forked* it. You'll find it  here: `/<project root>/azure-saas/src/Saas.Identity/Saas.Permissions`.

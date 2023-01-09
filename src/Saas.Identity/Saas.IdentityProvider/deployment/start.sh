@@ -7,7 +7,7 @@ ASDK_ID_PROVIDER_DEPLOYMENT_VERSION="0.8.0"
 
 if [[ -z $ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR ]] ; then
     base_dir="$( dirname "$( readlink -f "$0" )" )"
-    echo -e "${YELLOW}ID_PROVIDER_DEPLOYMENT_BASE_DIR is not set".
+    echo -e "${YELLOW}ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR is not set".
     echo -e "Setting it to current root: ${base_dir}${NC}"
     export ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR=$base_dir
 fi
@@ -106,7 +106,7 @@ trap clean-up EXIT INT TERM
 echo "Please don't go anywhere. You will be required to log into the Azure B2C tenant in a few minutes. Thank you." \
     | log-output \
         --level warning \
-        --header "One more login request is coming up" \
+        --header "One more login request is coming up." \
 
 # Creating resource group if it does not already exist
 resource_group="$( get-value ".deployment.resourceGroup.name" )"
@@ -115,7 +115,7 @@ location="$( get-value ".initConfig.location" )"
 echo "Provisioning resource group ${resource_group}..." | log-output --level info --header "Resource Group"  
 ( create-resource-group "${resource_group}" "${location}" \
     && put-value ".deployment.resourceGroup.provisionState" "successful" ) \
-    || echo "Creation of resource group failed" \
+    || echo "Creation of resource group failed." \
         | log-output \
             --level error \
             --header "Critical error" \
@@ -124,7 +124,7 @@ echo "Provisioning resource group ${resource_group}..." | log-output --level inf
 # Creating Azure Key Vault if it does not already exist
  ( "${SCRIPT_DIR}/create-key-vault.sh" \
     && put-value ".deployment.keyVault.provisionState" "successful" ) \
-    || echo "Creation of KeyVault failed" \
+    || echo "Creation of KeyVault failed." \
         | log-output \
             --level error \
             --header "Critical error" \
@@ -134,7 +134,7 @@ echo "Provisioning Azure B2C..." | log-output --level info --header "Azure B2C T
 # Creating Azure AD B2C Directory if it does not already exist
 ( "${SCRIPT_DIR}/create-azure-b2c.sh" \
     && put-value ".deployment.azureb2c.provisionState" "successful" ) \
-    || echo "Creation of Azure B2C tenant failed" \
+    || echo "Creation of Azure B2C tenant failed." \
         | log-output \
             --level error \
             --header "Critical error" \
@@ -143,7 +143,7 @@ echo "Provisioning Azure B2C..." | log-output --level info --header "Azure B2C T
 # Configuring Azure the AD B2C Tenant
 ( "${SCRIPT_DIR}/config-b2c.sh" \
     && put-value ".deployment.azureb2c.configurationState" "successful" ) \
-    || echo "Configuration of Azure B2C tenant failed" \
+    || echo "Configuration of Azure B2C tenant failed." \
         | log-output \
             --level error \
             --header "Critical error" \
@@ -153,16 +153,16 @@ echo "Provisioning Azure B2C..." | log-output --level info --header "Azure B2C T
 # Deploying Identity Provider
 ( "${SCRIPT_DIR}/deploy-identity-provider.sh" \
     && put-value ".deployment.identityProvider.provisionState" "successful" ) \
-    || echo "Deployment of Identity Provider failed" \
+    || echo "Deployment of Identity Provider failed." \
         | log-output \
             --level error \
             --header "Critical error" \
             || exit 1
 
 # Uploading IEF custom policies
-( "${SCRIPT_DIR}/transform-ief-policies.sh" \
+( "${SCRIPT_DIR}/upload-ief-policies.sh" \
     && put-value ".deployment.iefPolicies.provisionState" "successful" ) \
-    || echo "Upload of IEF policies failed" \
+    || echo "Upload of IEF policies failed." \
         | log-output \
             --level error \
             --header "Critical error" \

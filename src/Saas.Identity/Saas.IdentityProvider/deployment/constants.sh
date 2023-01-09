@@ -6,7 +6,8 @@ B2C_USR_AZURE_CONFIG_DIR="${HOME}/b2c/.azure"
 SP_USR_AZURE_CONFIG_DIR="${HOME}/sp/.azure"
 
 if [[ -z $ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR ]] ; then
-    echo "ID_PROVIDER_DEPLOYMENT_BASE_DIR is not set. Please run script from the root of the project using start.sh."
+    echo "ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR is not set. Please run 'start.sh' from the root of the project using start.sh."
+    echo "Or use command 'export ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR=\$PWD' if you are in the root of the project directory - i.e. .../deployment."
     exit 1
 fi
 

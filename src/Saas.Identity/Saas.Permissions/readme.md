@@ -1,36 +1,81 @@
 # SaaS.Permissions.Service
 
-## 1. Module Overview
+## Module Overview
 
-This project hosts a service api for the role-based authorization of user actions. It is fully self-contained such that it includes complete copies of all necessary classes for operation. However, keep in mind that some functionality within the API does have [dependencies](https://azure.github.io/azure-saas/components/identity/permissions-service#dependencies) on other services.
+This project hosts a service API for the role-based authorization of user actions. It is fully self-contained such that it includes complete copies of all necessary classes for operation. However, keep in mind that some functionality within the API does have [dependencies](https://azure.github.io/azure-saas/components/identity/permissions-service#dependencies) on other services.
 
 For a complete overview, please see the [SaaS.Permissions.Service](https://azure.github.io/azure-saas/components/identity/permissions-service/) page in our documentation site.
 
-## 2. How to Run Locally
+## How to Run Locally
 
 Once configured, this app presents an api service which exposes endpoints to perform CRUD operations on user permission data. It may be run locally during development of service logic and for regenerating its included NSwag api client. (An NSwag file is included in the Admin project to generate its client.)
 
-### i. Requirements
+### Requirements
 
 To run the web api, you must have the following installed on your machine:
 
-- [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
-- [ASP.NET Core 6.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-6.0)
-- (Recommended) [Visual Studio](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download)
-- A connection string to a running, empty SQL Server Database.
-    - [Local DB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver15) (Windows Only) - See `Additional Resources` below for basic config secret
-    - [SQL Server Docker Container](https://hub.docker.com/_/microsoft-mssql-server)
-    - [SQL Server Developer Edition](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+- [.NET 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
+- [ASP.NET Core 7.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-7.0)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) (recommended) or [Visual Studio Code](https://code.visualstudio.com/download)
 - A deployed [Identity Framework](https://azure.github.io/azure-saas/quick-start/) instance
-    - [Azure AD B2C](https://azure.microsoft.com/en-us/services/active-directory/external-identities/b2c/) - created automatically with Bicep deployment
 
-### ii. Development Tools
+### Development Tools
 
 - [NSwag](https://github.com/RicoSuter/NSwag) - An NSwag configuration file has been included to generate an appropriate client from the included Admin project.
     *Consumed By:*
     - [Saas.Admin.Service](../../Saas.Admin)
 
-### iii. App Settings
+###  App Configuration Settings
+
+This project rely on settings being stored in [Azure App Configuration](https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview) as well as secrets and certificates being stored in [Azure Key Vault](https://learn.microsoft.com/en-us/azure/key-vault/general/overview).
+
+Secrets will be represented with a reference (URI) in Azure App Configuration pointing to the actual secret s Azure Key Vault. 
+
+Settings, certificates and secrets where automatically created and provisioned during the Azure deployment of the Identity Framework, but for running the SaaS Permission Service in a local development environment, we need a few extra steps to gain access and permissions to access both Azure App Configuration and Azure Key Vault from your computer. 
+
+#### Azure Key Vault Access 
+
+For local development access to Azure Key Vault, we will rely on Azure CLI to provide access tokens the development environment need to run. For this to work, you should open a terminal in Visual Studio or Visual Studio Code and run these commands:
+
+```bash
+az account show # use this to see if you're already logged into your Azure tanent, if not use the next command to login
+az login
+```
+
+#### Azure App Configuration 
+
+To manage access Azure App Configuration securely, from our development environment, we will leverage the Dotnet [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows). To do this, please these commands in a terminal in the root directory of the project.
+
+```cmd
+dotnet user-secrets init #initialized your Secret Manager for the project.
+dotnet user-secrets set ConnectionStrings:AppConfig "<your_azure_app_config_connection_string>"
+```
+
+The Azure App Configuration `connection string` can be found in the Azure Portal by navigating to your Azure App Configuration instance, that was deployed as part of the Identity Framework. Or, it can be obtained from the command line by running this az cli command from a terminal logged into your Azure tenant: 
+
+```bash
+az appconfig credential list --name "<name of your azure app configuration> --query [0].connectionString"
+```
+
+In the Azure Portal it looks like this:
+
+![image-20230105174952120](assets/readme/image-20230105174952120.png)
+
+For more details on connecting a local development environment to Azure App Configuration please see: [Connect to the App Configuration store](https://learn.microsoft.com/en-us/azure/azure-app-configuration/quickstart-aspnet-core-app?tabs=core6x#connect-to-the-app-configuration-store). 
+
+### Accessing the Azure SQL Server data from your developer environment
+
+The deployment of the Identity Frameworks includes deploying an Azure SQL Server database. The deployment script takes note of the public IP address of the developer machine running the script. Furthermore, the script also adds this IP address to the firewall rules of the database. That said, you may want to work on you project from multiple locations and dev-machines. To do so you will likely need to make further changes to the firewall rules of Azure SQL Server. To do this, please visit the Azure portal. 
+
+![image-20230107210713030](assets/readme/image-20230107210713030.png)
+
+
+
+
+
+
+
+--- delete this next section when done.
 
 In order to run the project locally, the App Settings marked as `secret: true` must be set using the [.NET secrets manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&tabs=windows). When deployed to azure using the Bicep deployments, these secrets are [loaded from Azure Key Vault](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment) instead.
 
@@ -57,7 +102,11 @@ Default values for non secret app settings can be found in [appsettings.json](Sa
 1. Insert secrets marked as required for running locally into your secrets manager (such as by using provided script).
 1. Start app. Service will launch as presented Swagger API.
 
-## 3. Additional Resources
+## How To Run In Production
+
+For running in production permission is managed with Managed Identities and Web App environment variables, set during deployment. For more on this see here: <TODO...reference the deployment script.>.
+
+## Additional Resources
 
 ### i. LocalDB
 If using the LocalDB persistance for local development, tables and data can be interacted with directly through Visual Studio. Under the `View` menu, find `SQL Server Object Explorer`. Additional documentation is available [here](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver16)

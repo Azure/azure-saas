@@ -76,21 +76,68 @@ function get-public-key-path() {
             | select(.name==\"${app_name}\") ).publicKeyPath"
 }
 
-function put-public-key-path() {
+function put-key-certificate-path() {
     local app_name="$1"
-    local public_key_path="$2"
+    local key_path="$2"
     local json
 
     json="$( cat "${CONFIG_FILE}" )"
 
     output="$( echo "${json}" \
-        | jq --arg x "${public_key_path}" \
+        | jq --arg x "${key_path}" \
             "( .appRegistrations[] \
             | select(.name==\"${app_name}\") ).publicKeyPath \
             |= \$x" \
         )" \
             && echo "${output}" > "${CONFIG_FILE}" \
             || exit 1
+}
+
+function get-key-certificate-path() {
+    local app_name="$1"
+    local key_path="$2"
+    local json
+
+    json="$( cat "${CONFIG_FILE}" )"
+
+    output="$( echo "${json}" \
+        | jq --arg x "${key_path}" \
+            "( .appRegistrations[] \
+            | select(.name==\"${app_name}\") ).publicKeyPath \
+            |= \$x" \
+        )" \
+            && echo "${output}" > "${CONFIG_FILE}" \
+            || exit 1
+}
+
+function put-certificate-key-name() {
+    local app_name="$1"
+    local key_name="$2"
+    local json
+
+    json="$( cat "${CONFIG_FILE}" )"
+
+    output="$( echo "${json}" \
+        | jq --arg x "${key_name}" \
+            "( .appRegistrations[] \
+            | select(.name==\"${app_name}\") ).certificateKeyName \
+            |= \$x" \
+        )" \
+            && echo "${output}" > "${CONFIG_FILE}" \
+            || exit 1
+}
+
+function get-certificate-key-name() {
+    local app_name="$1"
+    local key_name="$2"
+    local json
+
+    json="$( cat "${CONFIG_FILE}" )"
+
+    echo "${json}" \
+        | jq -r \
+            "( .appRegistrations[] \
+            | select(.name==\"${app_name}\") ).certificateKeyName" 
 }
 
 function get-policy-key-secret-path() {
@@ -194,6 +241,21 @@ function get-scope-guid() {
             | select(.name==\"${scope_name}\") ).guid" 
 }
 
+function get-app-role-guid() {
+    local app_name="$1"
+    local app_role_name="$2"
+    
+    local json
+
+    json="$( cat "${CONFIG_FILE}" )"
+    echo "${json}" \
+        | jq -r \
+            "( .appRegistrations[] \
+            | select(.name==\"${app_name}\") \
+            | .appRoles[] \
+            | select(.name==\"${app_role_name}\") ).guid" 
+}
+
 function put-scope-guid() {
     local app_name="$1"
     local scope_name="$2"
@@ -246,12 +308,21 @@ function put-certificate-value {
 
     json="$( cat "${CERTIFICATE_POLICY_FILE}" )" ;
 
-    regex='^[0-9]+$'
+    regex_is_number='^[0-9]+$'
+    regex_is_boolean='^(true|True|false|False)$'
 
     # Determin if a value is an integer or a string before writing to json
-    if [[ $value =~ $regex ]] ; then
+    if [[ $value =~ $regex_is_number ]]; then
         output="$( echo "${json}" \
-            | jq --arg x "${value}" "${key}=(\$x|tonumber)" \
+            | jq --arg x "${value}" \
+                "${key}=(\$x|tonumber)" \
+                )" \
+                && echo "${output}" > "${CERTIFICATE_POLICY_FILE}" \
+                || exit 1
+    elif [[ $value =~ $regex_is_boolean ]]; then
+        output="$( echo "${json}" \
+            | jq --arg x "${value}" \
+                "${key}=(\$x | ascii_downcase | test(\"true\") )" \
             )" \
                 && echo "${output}" > "${CERTIFICATE_POLICY_FILE}" \
                 || exit 1

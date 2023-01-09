@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e -o pipefail
+
 # include script modules into current shell
 source "constants.sh"
 source "$SCRIPT_MODULE_DIR/init-module.sh"
@@ -12,11 +14,13 @@ if ! [[ -f "${IDENTITY_BICEP_PARAMETERS_FILE}" ]]; then
     cp "${IDENTITY_BICEP_PARAMETERS_TEMPLATE_FILE}" "${IDENTITY_BICEP_PARAMETERS_FILE}"
 fi
 
-"${SCRIPT_MODULE_DIR}/generate-identity-paramenters.py" "${CONFIG_FILE}" "${IDENTITY_BICEP_PARAMETERS_FILE}" \
+set -u
+
+"${SCRIPT_MODULE_DIR}/map-identity-paramenters.py" "${CONFIG_FILE}" "${IDENTITY_BICEP_PARAMETERS_FILE}" \
     | log-output \
         --level info \
         --header "Generating Identity Provider parameters..." \
-    || echo "Failed to generate Identity Provider parameters" \
+    || echo "Failed to map Identity Provider parameters" \
         | log-output \
             --level error \
             --header "Critical Error" \

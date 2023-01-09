@@ -1,5 +1,8 @@
 // Parameters
 //////////////////////////////////////////////////
+@description('Version')
+param version string
+
 @description('The App Service Plan ID.')
 param appServicePlanId string
 
@@ -23,7 +26,6 @@ param userAssignedIdentityName string
 
 @description('The name of the Azure App Configuration.')
 param appConfigurationName string
-
 
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
   name: userAssignedIdentityName
@@ -54,13 +56,14 @@ resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
   resource appsettings 'config@2022-03-01' = {
     name: 'appsettings'
     properties: {
+      Version: version
       DOCKER_REGISTRY_SERVER_URL: containerRegistryUrl
       Logging__LogLevel__Default: 'Information'
       Logging__LogLevel__Microsoft__AspNetCore: 'Warning'
       KeyVault__Url: keyVaultUri
       ASPNETCORE_ENVIRONMENT: 'Development'
       UserAssignedManagedIdentityClientId: userAssignedIdentity.properties.clientId
-      AppConfiguration: appConfig.properties.endpoint
+      AppConfiguration__Endpoint : appConfig.properties.endpoint
     }
   }
 }

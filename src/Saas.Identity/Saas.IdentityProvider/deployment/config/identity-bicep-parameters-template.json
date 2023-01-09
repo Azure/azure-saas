@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "version": {
+            "value": null
+        },
+        "devMachineIp": {
+            "value": null
+        },
         "appSettingsAdminServiceBaseUrl": {
             "value": null
         },
@@ -26,10 +32,19 @@
         "azureB2CTenantId": {
             "value": null
         },
-        "azureB2CPermissionApiClientId": {
+        "permissionsApiName": {
             "value": null
         },
-        "permissionsApiName": {
+        "permissionApiClientId": {
+            "value": null
+        },
+        "permissionInstance": {
+            "value": null
+        },
+        "permissionCertificateName": {
+            "value": null
+        },
+        "permissionApiKey": {
             "value": null
         },
         "sqlAdministratorLogin": {

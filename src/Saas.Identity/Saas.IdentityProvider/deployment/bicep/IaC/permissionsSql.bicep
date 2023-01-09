@@ -1,5 +1,8 @@
 // Parameters
 //////////////////////////////////////////////////
+@description('The ip address of the dev machine')
+param devMachineIp string
+
 @description('The location for all resources.')
 param location string
 
@@ -12,16 +15,12 @@ param permissionsSqlDatabaseName string
 @description('The SQL Server administrator login.')
 param sqlAdministratorLogin string
 
-// @description('The SQL Server administrator login password.')
-// @secure()
-// param sqlAdministratorLoginPassword string
+@description('The User Assigned Identity name.')
+param userAssignedIdentityName string
 
-module secretGenerator 'createSecret.bicep' = {
-  name: 'secrets'
-  params: {
-    location: location
-  }
-}
+@description('The SQL Server administrator login password.')
+@secure()
+param sqlAdministratorLoginPassword string
 
 // Resource - Permissions SQL Server
 //////////////////////////////////////////////////
@@ -30,19 +29,30 @@ resource permissionsSqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   location: location
   properties: {
     administratorLogin: sqlAdministratorLogin
-    administratorLoginPassword: secretGenerator.outputs.secret
+    administratorLoginPassword: sqlAdministratorLoginPassword
     version: '12.0'
   }
 }
 
-// Allow access to azure services checkbox
-resource allowAzureAccessFirewallRule 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
-  name: 'AllowAllWindowsAzureIps'
+// Allow all internal azure ips to access the sql server firewall
+resource allowAzureAccessFirewallRuleAzureInternal 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
+  name: 'AllowOnlyAllWindowsAzureIps'
   parent: permissionsSqlServer
   properties: {
     // Using 0.0.0.0 to specify all internal azure ips as found here: https://docs.microsoft.com/en-us/azure/templates/microsoft.sql/servers/firewallrules?tabs=bicep#serverfirewallruleproperties
     startIpAddress: '0.0.0.0'
     endIpAddress: '0.0.0.0'
+  }
+}
+
+// Allow all internal azure ips to access the sql server firewall
+resource allowAzureAccessFirewallRuleDevMachine 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
+  name: 'AllowAccessToDevMachineIpAddress'
+  parent: permissionsSqlServer
+  properties: {
+    // Using 0.0.0.0 to specify all internal azure ips as found here: https://docs.microsoft.com/en-us/azure/templates/microsoft.sql/servers/firewallrules?tabs=bicep#serverfirewallruleproperties
+    startIpAddress: devMachineIp
+    endIpAddress: devMachineIp
   }
 }
 
@@ -58,7 +68,11 @@ resource permissionsSqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-prev
   }
 }
 
+resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+  name: userAssignedIdentityName
+  location: location
+}
+
 // Outputs
 //////////////////////////////////////////////////
 output permissionsSqlServerFQDN string = permissionsSqlServer.properties.fullyQualifiedDomainName
-output permissionsSqlDatabaseConnectionString string = 'Data Source=tcp:${permissionsSqlServer.properties.fullyQualifiedDomainName},1433;Initial Catalog=${permissionsSqlDatabaseName};User Id=${sqlAdministratorLogin}@${permissionsSqlServer.properties.fullyQualifiedDomainName};Password=${secretGenerator.outputs.secret};'

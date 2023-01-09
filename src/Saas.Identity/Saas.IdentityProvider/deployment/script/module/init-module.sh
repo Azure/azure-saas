@@ -123,6 +123,10 @@ function populate-configuration-manifest() {
 
     set-version "${ASDK_ID_PROVIDER_DEPLOYMENT_VERSION}"
 
+    dev_machine_ip="$( dig +short myip.opendns.com @resolver1.opendns.com )"
+
+    put-value '.deployment.devMachine.ip' "${dev_machine_ip}"
+
     # defining solution name setting
     solution_name=$( get-value ".initConfig.naming.solutionName ")
     solution_prefix=$( get-value ".initConfig.naming.solutionPrefix ")
@@ -191,6 +195,8 @@ function populate-configuration-manifest() {
         "permissions-api" \
         "rolesApiUrl" \
         "https://${permission_api_name}.azurewebsites.net/api/CustomClaims/roles"
+    
+
 }
 
 function intialize-context-for-automation-users() {

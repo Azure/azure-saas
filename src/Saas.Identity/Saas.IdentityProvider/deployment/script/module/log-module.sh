@@ -157,6 +157,13 @@ function log-output() {
             --level "${level}"
     fi
 
+    set +u
+    if [[ -z ${ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME} ]]; then
+        now=$(date '+%Y-%m-%d--%H-%M-%S')
+        ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME="${now}"
+    fi
+    set -u
+
     { 
         if test -n "$header"; then
             echo
