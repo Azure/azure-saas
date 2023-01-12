@@ -52,9 +52,6 @@
         },
         "containerRegistryUrl": {
             "value": null
-        },
-        "permissionsApiContainerImageTag": {
-            "value": null
         }
     }
 }

@@ -11,7 +11,10 @@ public class PermissionsService : IPermissionsService
     private readonly ILogger _logger;
     private readonly IGraphAPIService _graphAPIService;
     
-    public PermissionsService(PermissionsContext permissionsContext, ILogger<PermissionsService> logger, IGraphAPIService graphAPIService)
+    public PermissionsService(
+        PermissionsContext permissionsContext, 
+        ILogger<PermissionsService> logger, 
+        IGraphAPIService graphAPIService)
     {
         _context = permissionsContext;
         _logger = logger;

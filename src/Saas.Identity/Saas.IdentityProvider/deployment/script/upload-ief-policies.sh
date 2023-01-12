@@ -28,8 +28,6 @@ environment="$( get-value ".environment" )"
 service_principal_username="$( get-value ".deployment.azureb2c.servicePrincipal.username" )"
 set-user-context "${service_principal_username}"
 
-# TODO write algo for sorting on dependency order for base policies
-
 dependency_sorted_array="$( "${SCRIPT_MODULE_DIR}/get-dependency-sorted-policies.py" \
     "${IDENTITY_EXPERIENCE_FRAMEWORK_POLICY_ENVIRONMENT_DIR}/${environment}" )"
 

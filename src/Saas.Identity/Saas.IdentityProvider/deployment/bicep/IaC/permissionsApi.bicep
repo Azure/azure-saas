@@ -18,8 +18,6 @@ param permissionsApiName string
 @description('The URL for the container registry to pull the docker images from')
 param containerRegistryUrl string
 
-@description('The tag of the container image to deploy to the permissions api app service')
-param permissionsApiContainerImageTag string
 
 @description('Azure App Configuration User Assigned Identity Name.')
 param userAssignedIdentityName string
@@ -40,13 +38,12 @@ resource appConfig 'Microsoft.AppConfiguration/configurationStores@2022-05-01' e
 resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
   name: permissionsApiName
   location: location
-  kind: 'app,linux,container'
+  kind: 'app,windows'
   properties: {
     serverFarmId: appServicePlanId
     httpsOnly: true
     siteConfig: {
-      alwaysOn: true
-      linuxFxVersion: 'DOCKER|${permissionsApiContainerImageTag}'    
+      alwaysOn: true 
     }
   }
   identity: {
@@ -81,4 +78,3 @@ resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
 // Outputs
 //////////////////////////////////////////////////
 output permissionsApiHostName string = permissionsApi.properties.defaultHostName
-// output managedIdentityPrincipalId string = permissionsApi.identity.principalId

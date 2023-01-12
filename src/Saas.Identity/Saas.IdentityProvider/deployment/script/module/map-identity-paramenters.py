@@ -65,9 +65,6 @@ def patch_paramenters_file(config_file: str, paramenter_file: str) -> None:
     parameters['parameters']['containerRegistryUrl']['value'] \
             = config['container']['containerRegistryUrl']
 
-    parameters['parameters']['permissionsApiContainerImageTag']['value'] \
-            = config['container']['permissionsApiContainerImageTag']
-
     with open(paramenter_file, 'w') as f:
         f.write(json.dumps(parameters, indent=4))
 

@@ -51,9 +51,6 @@ param sqlAdministratorLogin string
 @description('The URL for the container registry to pull the docker images from')
 param containerRegistryUrl string = 'https://ghcr.io'
 
-@description('The tag of the container image to deploy to the permissions api app service.')
-param permissionsApiContainerImageTag string = 'ghcr.io/azure/azure-saas/asdk-permissions:v1.1'
-
 @description('The location for all resources.')
 param location string = resourceGroup().location
 
@@ -110,6 +107,7 @@ resource identityKeyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
 // Create object w/ array of objects containing the kayname and value to be stored in Azure App Configuration store.
 var azureB2C = 'AzureB2C'
 var permissionApi = 'PermissionApi'
+var msGraph = 'MsGraph'
 var sql = 'Sql'
 var label = version
 
@@ -202,6 +200,16 @@ var appConfigStore = {
       value: 'Data Source=tcp:${permissionsSqlModule.outputs.permissionsSqlServerFQDN},1433;Initial Catalog=${permissionsSqlDatabaseName};User Id=${sqlAdministratorLogin}@${permissionsSqlModule.outputs.permissionsSqlServerFQDN};Password=${secretGenerator.outputs.secret};'
       isSecret: true
     }
+    {
+      key: '${msGraph}:BaseUrl'
+      value: 'https://graph.microsoft.com/v1.0'
+      isSecret: false
+    }
+    {
+      key: '${msGraph}:Scopes'
+      value: 'https://graph.microsoft.com/.default'
+      isSecret: false
+    }
   ]
 }
 
@@ -224,7 +232,6 @@ module permissionsApiModule 'permissionsApi.bicep' = {
     location: location
     permissionsApiName: permissionsApiName
     containerRegistryUrl: containerRegistryUrl
-    permissionsApiContainerImageTag: permissionsApiContainerImageTag
     userAssignedIdentityName: userAssignedIdentity.name
     appConfigurationName: appConfigurationName
   }
@@ -251,3 +258,5 @@ module restApiKeyModule './linkToExistingKeyVaultSecret.bicep' = {
     keyName: '${permissionApi}:apiKey'
   }
 }
+
+output appServicePlanName string = appServicePlanModule.outputs.appServicePlanId
