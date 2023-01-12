@@ -1,30 +1,48 @@
 # Deploying the Identity Provider and Permission Service
 
-This deployment script provisions and configures the Azure services defining the back-bone of Azure SaaS Dev Kit, providing the foundation on which to build a SaaS solution. 
+This deployment script provisions and configures the Azure services defining the SaaS Identify Foundation, which is back-bone of the Azure SaaS Dev Kit. 
 
 ## Before you begin
 
-Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this GitHub repository. Make it your own.
-
-A main purpose of the Azure SaaS Dev Kit is to boost your SaaS journey by providing a foundation for a solid start. But it is just that: *a start*. Soon you will want to test variations, make you own changes, evolve the repo into something that is yours. By forking the repository, you are ready to utilize [commit](https://github.com/git-guides/git-commit) and check in your code.
+Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this GitHub repository to you own GitHub account - i.e., make it your own. A main purpose of the Azure SaaS Dev Kit is to boost your SaaS journey by providing a foundation for a solid start. It is however just a start and soon you will want to test variations, make you own changes, evolve the repo into something that is yours. By forking the repository, you will be ready to [commit](https://github.com/git-guides/git-commit) and check in your own code.
 
 ## Run the deployment script in a container, using docker (recommended)
 
-The following steps assumes that your working on a Mac with a recent version of MacOS or using Windows 10/11 PC running [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install), which can be downloaded from the [Windows Store](https://www.microsoft.com/store/productId/9P9TQF7MRM4R). WSL lets you run a GNU/Linux environment on you Windows machine, including [bash](https://www.gnu.org/software/bash/), without any modifications and without the need of a virtual machine. We suggest using [Ubuntu 22.04](https://www.microsoft.com/store/productId/9PN20MSR04DW) on Windows, which can also be downloaded from the Windows Store.
+> Tip: Although using container with Docker to run the script is the recommended approach, you'll find the steps to run the script without a container in a later section below. 
 
-There are two ways to run this deployment script, but the recommended way to run it is from a container, that you build, using [docker](https://docs.docker.com/get-docker/). This containerized approach will ensure that you have all the required dependencies installed and that you are running the script in a controlled environment. And it will minimize the changes that some other properties of your existing environment interferes with the script or that the script inadvertently interferes with your existing environment.
+### Prerequisites 
+
+The following steps assumes that your working on a Mac with a recent version of MacOS (Ventura or later recommended), on Linux or Windows 10/11.
+
+Running on Windows 10/11 requires that [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install) have been enabled. WSL can be downloaded from the [Windows Store](https://www.microsoft.com/store/productId/9P9TQF7MRM4R). 
+
+WSL lets you run a GNU/Linux environment (including [bash](https://www.gnu.org/software/bash/)) on Windows 10/11 without any modifications and without the need of a virtual machine.
+
+We suggest using [Ubuntu 22.04](https://www.microsoft.com/store/productId/9PN20MSR04DW) on Windows, which can also also be downloaded from the Windows Store.
+
+You should also install Azure Command Line Interface (az cli) from the terminal: [How to install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
+
+### Why use a container?
+
+There are two ways to run this deployment script. The recommended way to run the script is using a container that you build using [docker](https://docs.docker.com/get-docker/). 
+
+This containerized approach will ensure that you have all the required dependencies installed and that you are running the script in a controlled environment. It will also minimize the chances that some other properties of your existing environment interferes with the script or that the script inadvertently interferes with your existing environment.
 
 ### Begin
 
-To begin open your GNU Linux terminal to the directory where you've [cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the [forked](https://docs.github.com/en/get-started/quickstart/fork-a-repo) version of ASDK. Should be something like:
+To begin; open your GNU Linux terminal to the directory where you've [cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the [forked](https://docs.github.com/en/get-started/quickstart/fork-a-repo) version of ASDK. Should be something like:
 
 ````bash
 /<project root>/azure-saas/src/Saas.Identity/Saas.IdentityProvider/deployment
 ````
 
+![image-20230110094801956](assets/readme/image-20230110094801956.png)
+
+> Tip: You can open the deployment project in Visual Code by typing `code .` in the terminal (Mac or Windows with WSL) from the directory.
+
 ### Building the script-run container
 
-To run the script you must first build the container. To do this run the following commands:
+To run the script you must first build the container. To do this; run the following commands:
 
 ```bash
 chmod +x build.sh # only needed the first time to set execute permissions on build.sh
@@ -160,8 +178,8 @@ From there on everything else is virtually identical to running the script from 
 
 ## Now what?
 
-The deployment script has run to it's completion and the Identity Framework have been deployed - providing that nothing went wrong, of course. It's time to party! 🎉 Time to kick the tires on The Azure SaaS Development Kit. 🚗
+The deployment script has run to it's completion and the Identity Framework have been deployed - providing that nothing went wrong, of course. It's time to kick the tires on The Azure SaaS Development Kit. ASDK is modular and the next step should be to run the Permission Service, as it's such a core component. 
 
-The fact is, that despite all the services that are now humming along in the cloud, aligned and mutually configured to cooperate, not much is actually running, let alone doing anything useful. It's like installing an operating system it's cool and all, but the real fun starts when we install/deploy more on top.
+We suggest that you run it locally first. This gives you an opportunity to attach a debugger to *see* and understand what's going on, so please head over to the Permission Service `ReadMe`, for more on locally as well as deploying it to Azure. 
 
-ASDK is modular, just the next step should be to run the Permission Service, as it's such a core component. We suggest that you run it locally first. This gives you an opportunity to attach a debugger to *see* and understand what's going on. Of course, eventually, you'll want to deploy the Permission Service to the cloud too. Anyhow, please head over to the Permission Service `ReadMe`, for more on both deployment and running it locally. The Permission Service is part of the repository that you *git cloned*, after you *git forked* it. You'll find it  here: `/<project root>/azure-saas/src/Saas.Identity/Saas.Permissions`.
+The Permission Service is part of the repository that you *git cloned*, after you *git forked* it. You'll find it  here: `/<project root>/azure-saas/src/Saas.Identity/Saas.Permissions`.

@@ -20,15 +20,15 @@ public class PublicX509CertificateDetailProvider : IPublicX509CertificateDetailP
     {
         if (! Uri.TryCreate(keyInfo.KeyVaultUrl, UriKind.Absolute, out Uri? keyVaultUri))
         {
-            throw new UriFormatException($"Invalid Key Vault URL: '{keyInfo.KeyVaultUrl}'");
+            throw new UriFormatException($"Invalid Key Vault Url format: '{keyInfo.KeyVaultUrl}'");
         }
 
         var cacheItemName = $"{keyInfo.KeyVaultUrl}-{keyInfo.KeyVaultCertificateName}";
 
-        if (_memoryCache.TryGetValue<PublicX509CertificateDetail>(cacheItemName, out var cachedCertDetails))
+        if (_memoryCache.TryGetValue<PublicX509CertificateDetail>(cacheItemName, out var cachedCertDetails)
+            && cachedCertDetails is not null)
         {
-            return cachedCertDetails
-                ?? throw new NullReferenceException("Memory caching error. Certificate in cache cannot be null.");
+            return cachedCertDetails;
         }
 
         CertificateClient certClient = new(keyVaultUri, credential);

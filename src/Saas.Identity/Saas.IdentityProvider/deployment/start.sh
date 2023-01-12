@@ -151,8 +151,8 @@ echo "Provisioning Azure B2C..." | log-output --level info --header "Azure B2C T
 
 
 # Deploying Identity Provider
-( "${SCRIPT_DIR}/deploy-identity-provider.sh" \
-    && put-value ".deployment.identityProvider.provisionState" "successful" ) \
+( "${SCRIPT_DIR}/deploy-identity-foundation.sh" \
+    && put-value ".deployment.identityFoundation.provisionState" "successful" ) \
     || echo "Deployment of Identity Provider failed." \
         | log-output \
             --level error \

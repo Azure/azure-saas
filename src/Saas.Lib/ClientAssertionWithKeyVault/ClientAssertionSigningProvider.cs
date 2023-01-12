@@ -49,10 +49,10 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
     {
         var cacheItemName = $"{keyInfo.KeyVaultUrl}-{keyInfo.KeyVaultCertificateName}-{clientId}-{audience}";
 
-        if (_memoryCache.TryGetValue<string>(cacheItemName, out var clientAssertion))
+        if (_memoryCache.TryGetValue<string>(cacheItemName, out var clientAssertion)
+            && clientAssertion is not null)
         {
-            return clientAssertion
-                ?? throw new NullReferenceException("Memory caching error. Assertion in cache cannot be null.");
+            return clientAssertion;
         }
 
         (clientAssertion, DateTimeOffset expiryTime) = 

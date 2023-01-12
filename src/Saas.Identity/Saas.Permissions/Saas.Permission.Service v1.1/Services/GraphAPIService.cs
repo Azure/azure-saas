@@ -15,9 +15,9 @@ public class GraphAPIService : IGraphAPIService
 
     public GraphAPIService(
         IOptions<PermissionApiOptions> permissionApiOptions,
-        IAuthenticationProvider authenticationProvider)
+        IGraphApiClientFactory graphClientFactory)
     {
-        _graphServiceClient = new GraphServiceClient(authenticationProvider);
+        _graphServiceClient = graphClientFactory.Create();
         _permissionOptions = permissionApiOptions.Value;
     }
     public async Task<string[]> GetAppRolesAsync(ClaimsRequest request)
