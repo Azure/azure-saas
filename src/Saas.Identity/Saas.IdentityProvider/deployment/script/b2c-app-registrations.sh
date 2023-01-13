@@ -69,17 +69,10 @@ for app in "${app_reg_array[@]}"; do
             --level info \
             --header "${display_name}"
 
-    if [[ -n "${app_id}" \
-        && ! "${app_id}" == null \
-        && ! "${app_id}" == "null" ]]; then
-
-        if app-exist "${app_id}"; then
-        
-            echo "App registration for ${app_name} already exist. If you made changes or updated the certificate, you will have to delete the app registration to use this script to update it. " \
-                | log-output --level info
-
-            continue
-        fi
+    if app-exist "${app_id}"; then
+        echo "App registration for ${app_name} already exist. If you made changes or updated the certificate, you will have to delete the app registration to use this script to update it. " \
+            | log-output --level info
+        continue
     fi
     
     if [[ -n "${redirect_uri}" \
@@ -123,6 +116,7 @@ for app in "${app_reg_array[@]}"; do
 
     # add appId to config
     put-app-id "${app_name}" "${app_id}"
+    put-app-object-id "${app_name}" "${obj_id}"
 
     # add identifier uri when scopes are present
     if [[ (( $scopes_length -gt 0)) ]]; then

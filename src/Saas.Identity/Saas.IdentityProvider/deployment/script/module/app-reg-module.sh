@@ -7,6 +7,14 @@ source "$SCRIPT_MODULE_DIR/log-module.sh"
 function app-exist() {
     local app_id="$1"
 
+    if [[ -z "${app_id}" \
+        || "${app_id}" == null \
+        || "${app_id}" == "null" ]]; then
+
+        false
+        return
+    fi
+
     app_exist="$( az ad app show \
         --id "${app_id}" \
         --query "appId=='${app_id}'" 2> /dev/null \

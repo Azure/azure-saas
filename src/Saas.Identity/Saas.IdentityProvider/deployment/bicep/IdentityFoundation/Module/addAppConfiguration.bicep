@@ -19,7 +19,7 @@ param isSecret bool = false
 @description('Azure App Configuration User Assigned Identity Name.')
 param userAssignedIdentityName string
 
-var rolesJson = loadJsonContent('../roles.json')
+var rolesJson = loadJsonContent('roles.json')
 var roles = rolesJson.roles
 var keyVaultSecretUser = 'Key Vault Secrets User'
 
@@ -35,7 +35,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing =  {
   name: keyVaultName
 }
 
-resource keyVaultEntry 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (isSecret) {
+resource KeyVaultEntry 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (isSecret) {
   parent: keyVault
   name: replace(keyName, ':', '-')
   properties: {
@@ -47,15 +47,15 @@ resource appConfigurationEntry 'Microsoft.AppConfiguration/configurationStores/k
   parent:appConfig
     name: '${keyName}$ver${label}'
     properties: {
-      value: (!isSecret) ? value : '{"uri":"${keyVaultEntry.properties.secretUri}"}'
+      value: (!isSecret) ? value : '{"uri":"${KeyVaultEntry.properties.secretUri}"}'
       contentType: (!isSecret) ? 'application/json' : 'application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8'
 
     }
   }
 
 resource managedIdentityCanReadNotificationSecret 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (isSecret) {
-  name: guid(roles[keyVaultSecretUser], userAssignedIdentity.id, keyVaultEntry.id)
-  scope: keyVaultEntry
+  name: guid(roles[keyVaultSecretUser], userAssignedIdentity.id, KeyVaultEntry.id)
+  scope: KeyVaultEntry
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roles[keyVaultSecretUser])
     principalId: userAssignedIdentity.properties.principalId

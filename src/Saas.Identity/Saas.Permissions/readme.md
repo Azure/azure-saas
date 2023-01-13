@@ -1,10 +1,10 @@
-# SaaS.Permissions.Service
+# SaaS Permissions Service
 
 ## Module Overview
 
 This project contains an API for the role-based authorization of user actions. It is fully self-contained such that it includes complete copies of all necessary classes for operation. However, keep in mind that some functionality within the API does have [dependencies](https://azure.github.io/azure-saas/components/identity/permissions-service#dependencies) on SQL Server Database that was deployed a spart of the Identity Foundation and on the [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/use-the-api).
 
- For a complete overview, please see the [SaaS.Permissions.Service](https://azure.github.io/azure-saas/components/identity/permissions-service/) page in our documentation site.
+ For a complete overview, please see the [SaaS Permissions Service](https://azure.github.io/azure-saas/components/identity/permissions-service/) page in our documentation site.
 
 ## How to Run Locally
 
@@ -24,7 +24,7 @@ You also need a a deployed [Identity Framework](https://azure.github.io/azure-sa
 
 - [NSwag](https://github.com/RicoSuter/NSwag) - An NSwag configuration file has been included to generate an appropriate client from the included Admin project.
     *Consumed By:*
-    - [Saas.Admin.Service](../../Saas.Admin)
+    - [Saas Admin Service](../../Saas.Admin)
 
 ###  App Configuration and Settings
 

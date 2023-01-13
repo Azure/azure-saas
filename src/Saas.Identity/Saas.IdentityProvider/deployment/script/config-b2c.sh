@@ -14,7 +14,7 @@ b2c_config_usr_name="$( get-value ".deployment.azureb2c.username" )"
 set-user-context "${b2c_config_usr_name}"
 
 # run the shell script for provisioning the Azure B2C app registrations
-"${SCRIPT_DIR}/shell-b2c-app-registrations.sh" \
+"${SCRIPT_DIR}/b2c-app-registrations.sh" \
     || echo "Azure B2C app registrations failed." \
         | log-output \
             --level Error \
@@ -26,7 +26,7 @@ echo "Azure B2C app registrations have completed." \
             --level success \
 
 # run the shell script for provioning the Azure B2C service principal needed to configure the Azure B2C policies
-"${SCRIPT_DIR}/shell-create-service-principal.sh" \
+"${SCRIPT_DIR}/create-service-principal.sh" \
     || echo "Service principal creation/update failed." \
         | log-output \
             --level Error \
@@ -45,7 +45,7 @@ service_principal_username="$( get-value ".deployment.azureb2c.servicePrincipal.
 set-user-context "${service_principal_username}"
 
 # run shell script for provisioning the Azure B2C policy keys 
-"${SCRIPT_DIR}/shell-b2c-policy-keys.sh" \
+"${SCRIPT_DIR}/b2c-policy-keys.sh" \
     || echo "B2C policy configuration script failed." \
         | log-output \
             --level error \

@@ -21,8 +21,8 @@ def create_appsettings_file(config_file: str, app_settings_file: str) -> None:
     name = config['environment']
     production = config['production']
     tenant = config['deployment']['azureb2c']['domainName']
-    identityExperienceFrameworkAppId = get_app_value(config, "IdenityExperienceFramework", "appId")
-    proxyIdentityExperienceFrameworkAppId = get_app_value(config, "ProxyIdentityExperienceFramwork", "appId")
+    identityExperienceFrameworkAppId = get_app_value(config, "IdentityExperienceFramework", "appId")
+    proxyIdentityExperienceFrameworkAppId = get_app_value(config, "ProxyIdentityExperienceFramework", "appId")
     permissionsAPIUrl = get_app_value(config, "permissions-api", "permissionsApiUrl")
     rolesAPIUrl = get_app_value(config, "permissions-api", "rolesApiUrl")
     restAPIKey = "B2C_1A_" + "RestApiKey"
@@ -94,24 +94,18 @@ def policy_builder(policy_dir: str, app_settings_file: str) -> None:
             val = env['PolicySettings'][policyName]
             patch_policy_file (output_dir, policyName, val)
 
-def main(config_file: str, app_settings_file: str, policy_dir: str) -> None:
+# Main entry point for the script
+if __name__ == "__main__":
+    # config/json file containing the manifest 
+    config_file = sys.argv[1]
+    # appsettings file to be generated
+    app_settings_file = sys.argv[2]
+    # policy directory containing the xml policy files
+    policy_dir = sys.argv[3]
+
+    # Call the main function
     create_appsettings_file(config_file, app_settings_file)
     policy_builder(policy_dir, app_settings_file)
-
-
-# Main entry point for the script 
-
-# config/json file containing the manifest 
-config_file = sys.argv[1]
-
-# appsettings file to be generated
-app_settings_file = sys.argv[2]
-
-# policy directory containing the xml policy files
-policy_dir = sys.argv[3]
-
-# Call the main function
-main(config_file, app_settings_file, policy_dir)
 
 
 

@@ -50,7 +50,10 @@
         "sqlAdministratorLogin": {
             "value": null
         },
-        "containerRegistryUrl": {
+        "gitRepoUrl": {
+            "value": null
+        },
+        "gitBranch": {
             "value": null
         }
     }

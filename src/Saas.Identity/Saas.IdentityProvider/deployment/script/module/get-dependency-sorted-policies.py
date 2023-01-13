@@ -68,12 +68,10 @@ def get_dependency_sorted_dict(dict: dict) -> dict:
 
     return sorted_policy_dict
 
-policy_dir = sys.argv[1]
+if __name__ == "__main__":
+    policy_dir = sys.argv[1]
+    unsorted_policy_dict = get_policy_list(policy_dir)
+    sorted_policy_dict = get_dependency_sorted_dict(unsorted_policy_dict)
+    arr = [{'id': key, 'path': path } for key, path in sorted_policy_dict.items()]
 
-unsorted_policy_dict = get_policy_list(policy_dir)
-
-sorted_policy_dict = get_dependency_sorted_dict(unsorted_policy_dict)
-
-arr = [{'id': key, 'path': path } for key, path in sorted_policy_dict.items()]
-
-print(json.dumps(arr, indent = 4))
+    print(json.dumps(arr, indent = 4))

@@ -17,7 +17,7 @@ param keyVaultKeyName string
 @description('The name of the key to hold the value in Azure App Configuration.')
 param keyName string
 
-var rolesJson = loadJsonContent('../roles.json')
+var rolesJson = loadJsonContent('roles.json')
 var roles = rolesJson.roles
 var keyVaultSecretUser = 'Key Vault Secrets User'
 

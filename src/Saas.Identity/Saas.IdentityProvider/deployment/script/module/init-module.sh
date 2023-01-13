@@ -12,26 +12,34 @@ source "$SCRIPT_MODULE_DIR/service-principal-module.sh"
 
 function final-state() {
     resource_group_state="$( get-value ".deployment.resourceGroup.provisionState" )"
+    storage_state="$( get-value ".deployment.storage.provisionState" )"
     key_vault_state="$( get-value ".deployment.keyVault.provisionState" )"
     azure_b2c_state="$( get-value ".deployment.azureb2c.provisionState" )"
-    azure_b2c_config_state="$( get-value ".deployment.azureb2c.configurationState" )"
+    azure_b2c_config_state="$( get-value ".deployment.azureb2c.configuration.provisionState" )"
+    identity_foundation_state="$( get-value ".deployment.identityFoundation.provisionState" )"
+    ief_policies_state="$( get-value ".deployment.iefPolicies.provisionState" )"
+    oidc_state="$( get-value ".deployment.oidc.provisionState" )"
 
-    echo 
-    if [ "${resource_group_state}" == "successful" ] \
-        && [ "${key_vault_state}" == "successful" ] \
-        && [ "${azure_b2c_state}" == "successful" ] \
-        && [ "${azure_b2c_config_state}" == "successful" ]; then
-        echo "Deployment script completed successfully." \
+    if [[ "${resource_group_state}" == "successful" ]] \
+        && [[ "${storage_state}" == "successful" ]] \
+        && [[ "${key_vault_state}" == "successful" ]] \
+        && [[ "${azure_b2c_state}" == "successful" ]] \
+        && [[ "${azure_b2c_config_state}" == "successful" ]] \
+        && [[ "${identity_foundation_state}" == "successful" ]] \
+        && [[ "${ief_policies_state}" == "successful" ]] \
+        && [[ "${oidc_state}" == "successful" ]]; then
+        echo "Identity Foundation deployed successfully." \
             | log-output \
                 --level success \
                 --header "Deployment script completion"
-            exit 0
     else
-        echo "Deployment script completed with errors." \
+        echo "Identity Foundation deployed with errors." \
             | log-output \
                 --level error \
-                --header "Deployment script completion"
-            exit 1
+                --header "Deployment script completion" \
+            || echo "Please review the log file for more details: ${LOG_FILE_DIR}/${ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME}" \
+                | log-output \
+                    --level warn
     fi
 }
 
@@ -82,20 +90,23 @@ function initialize-post-fix() {
             --header "Postfix" 
 
         echo "The unique postfix ${postfix} will be used for naming resources." \
-            | log-output --level info
+            | log-output \
+                --level info
 
         echo "As long as the postfix is unchanged, any rerun of this script will continue were it left off." \
-            | log-output --level info
+            | log-output \
+                --level info
 
         echo "If the post fix is deleted or changed, an all new deployment will be created when rerunning this script." \
-            | log-output --level warning
+            | log-output \
+                --level warning
 
         put-value ".deployment.postfix" "${postfix}"
     else
         echo "Using existing postfix to continue or patch existing deployment: ${postfix}" \
             | log-output \
                 --level info\
-            --header "Postfix" 
+                --header "Postfix" 
     fi
 }
 
@@ -104,7 +115,11 @@ function log-in-to-main-tenant() {
     tenant_id="$( get-value ".initConfig.tenantId" )"
 
     # Log in to you tenant, if you are not already logged in
-    echo "Log into you Azure tenant" | log-output --level info --header "Login to Azure"  
+    echo "Log into you Azure tenant" \
+        | log-output \
+            --level info \
+            --header "Login to Azure"  
+    
     log-into-main "${tenant_id}" "${subscription_id}"
 }
 
@@ -121,27 +136,81 @@ function continue-validating-configuration-settings() {
 
 function populate-configuration-manifest() {
 
-    set-version "${ASDK_ID_PROVIDER_DEPLOYMENT_VERSION}"
-
-    dev_machine_ip="$( dig +short myip.opendns.com @resolver1.opendns.com )"
-
-    put-value '.deployment.devMachine.ip' "${dev_machine_ip}"
-
     # defining solution name setting
-    solution_name=$( get-value ".initConfig.naming.solutionName ")
-    solution_prefix=$( get-value ".initConfig.naming.solutionPrefix ")
+    solution_name="$( get-value ".initConfig.naming.solutionName" | cut -c 1-16 )"
+    solution_prefix="$( get-value ".initConfig.naming.solutionPrefix" | cut -c 1-6 )"
     long_solution_name="${solution_prefix}-${solution_name}-${postfix}"
 
+    # getting public ip address for user, for use in database firewall rules
+    dev_machine_ip="$( dig +short myip.opendns.com @resolver1.opendns.com )" \
+        || echo "Unable to determine your public IP address." \
+            | log-output \
+                --level error \
+                --header "Critical error" \
+                || exit 1
+
+    put-value ".deployment.devMachine.ip" "${dev_machine_ip}"
+
+    # defining storage account name 3-24 characters, only lowercase letters and numbers
+    storage_account_name="$( sed -E 's/[^[:alnum:]]//g;s/[A-Z]/\L&/g' \
+        <<< "st${solution_prefix}${solution_name}${postfix}" \
+        | cut -c 1-24 )"
+
+    put-value ".deployment.storage.name" "${storage_account_name}"
+
+    storage_container_name="blob-${long_solution_name}"
+    put-value ".deployment.storage.containerName" "${storage_container_name}"
+
+
+    if [ -f /.dockerenv ]; then
+        set +u
+        if [ -z "${GIT_REPO_ORIGIN}" ]; then
+            echo "GIT_REPO_ORIGIN is not set for container. Before running the script again, please set the environment variable using the command: 'export GIT_REPO_ORIGIN=\"$( git config --get remote.origin.url )\"'." \
+                | log-output \
+                    --level error \
+                    --header "Critical error" \
+                    || exit 1
+        fi
+
+        if [ -z "${GIT_ORG_PROJECT_NAME}" ]; then
+            echo "GIT_ORG_PROJECT_NAME is not set for container. Before running the script again, please set the environment variable using the command: 'export GIT_ORG_PROJECT_NAME=\"$( git config --get remote.origin.url | sed 's/.*\/\([^ ]*\/[^.]*\).*/\1/' )\"'." \
+                | log-output \
+                    --level error \
+                    --header "Critical error" \
+                    || exit 1
+        fi
+        set -u
+
+        put-value ".git.repo" "${GIT_REPO_ORIGIN}"
+        put-value ".git.orgProjectName" "${GIT_ORG_PROJECT_NAME}"
+    else
+        git_repo_origin="$( git config \
+            --get remote.origin.url )"
+
+        git_org_project_name="$( git config \
+            --get remote.origin.url \
+            | sed 's/.*\/\([^ ]*\/[^.]*\).*/\1/' )"
+        
+        put-value ".git.repo" "${git_repo_origin}"
+        put-value ".git.orgProjectName" "${git_org_project_name}"
+    fi
+
+    # For more about OIDC Workflows see: https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=openid
+    put-value ".deployment.oidc.name" "oidc-workflow-${long_solution_name}"
+    put-value ".deployment.oidc.credential.name" "oidc-credential-${long_solution_name}"
+
     # defining resource group name setting
-    put-value '.deployment.resourceGroup.name'  \
-        "rg-${long_solution_name}"
+    put-value ".deployment.resourceGroup.name" "rg-${long_solution_name}"
 
     # defining Azure B2C display name
     b2c_display_name="b2c-${long_solution_name}"
     put-value ".deployment.azureb2c.displayName" "${b2c_display_name}"
 
-    # defining Azure B2C name
-    b2c_name="$( sed -E 's/[^[:alnum:]]//g' <<< "${solution_prefix}${solution_name}${postfix}" )"
+    # defining Azure B2C name only lowercase letters and numbers, and no more than 43 characters
+    b2c_name="$( sed -E 's/[^[:alnum:]]//g;s/[A-Z]/\L&/g' \
+        <<< "${solution_prefix}${solution_name}${postfix}" \
+        | cut -c 1-43 )"
+
     put-value ".deployment.azureb2c.domainName" "${b2c_name}.onmicrosoft.com"
     put-value ".deployment.azureb2c.name" "${b2c_name}"
 
@@ -203,11 +272,15 @@ function intialize-context-for-automation-users() {
 
     # create user context for Azure B2C user
     b2c_config_usr_name="$( get-value ".deployment.azureb2c.username" )"
-    create-user-context "${b2c_config_usr_name}" "${CERTIFICATE_DIR_NAME}" "certs"
-    echo "User context for '${b2c_config_usr_name}' have been created." | log-output --level success
+    create-user-context "${b2c_config_usr_name}" "${CERTIFICATE_DIR_NAME}" "certs" true
+    echo "User context for '${b2c_config_usr_name}' have been created." \
+        | log-output \
+            --level success
 
     # create user context for Azure B2C service principal
     service_principal_name="$( get-value ".deployment.azureb2c.servicePrincipal.username" )"
-    create-user-context "${service_principal_name}" "${SECRET_DIR_NAME}" "secrets"
-    echo "User context for '${service_principal_name}' have been created." | log-output --level success
+    create-user-context "${service_principal_name}" "${SECRET_DIR_NAME}" "secrets" false
+    echo "User context for '${service_principal_name}' have been created." \
+        | log-output \
+            --level success
 }

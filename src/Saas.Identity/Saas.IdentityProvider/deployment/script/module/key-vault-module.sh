@@ -73,7 +73,7 @@ function create-key-vault() {
         az deployment group create \
             --resource-group "${resource_group}" \
             --name "KeyVaultDeployment" \
-            --template-file ./bicep/create-key-vault.bicep \
+            --template-file ./bicep/deployKeyVault.bicep \
             --parameters \
                 keyVaultName="${key_vault_name}" \
                 userObjectId="${user_principal_id}" \

@@ -15,9 +15,32 @@
       "tier": "A0"
     }
   },
-  "version": "",
+  "version": "0.8.0",
   "environment": "development",
   "production": false,
+  "git": {
+    "branch": "main"
+  },
+  "oidc": 
+  {
+    "name": null,
+    "objectId": null,
+    "appId": null,
+    "assigneeObjectId": null,
+    "credential": 
+    {
+      "name": null,
+      "issuer": "https://token.actions.githubusercontent.com/",
+      "subject": null,
+      "description": "OIDC Workflow credentials for GitHub Actions for ASDK",
+      "audience": [
+        "api://AzureADTokenExchange"
+      ]
+    },
+    "federation": {
+      "id": null
+    }
+  },
   "azureb2c": {
     "policyKeys": [
       {
@@ -96,6 +119,14 @@
             "tenant.delete",
             "tenant.global.delete"
           ]
+        },
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
         }
       ]
     },
@@ -138,7 +169,7 @@
       "scopes": null
     },
     {
-      "name": "IdenityExperienceFramework",
+      "name": "IdentityExperienceFramework",
       "certificate": false,
       "redirectUri": null,
       "permissions": [
@@ -154,7 +185,7 @@
       "scopes": null
     },
     {
-      "name": "ProxyIdentityExperienceFramwork",
+      "name": "ProxyIdentityExperienceFramework",
       "certificate": false,
       "redirectUri": null,
       "permissions": [

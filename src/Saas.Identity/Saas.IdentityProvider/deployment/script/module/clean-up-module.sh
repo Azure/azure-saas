@@ -7,6 +7,7 @@ source "$SCRIPT_MODULE_DIR/log-module.sh"
 source "$SCRIPT_MODULE_DIR/util-module.sh"
 source "$SCRIPT_MODULE_DIR/user-module.sh"
 source "$SCRIPT_MODULE_DIR/service-principal-module.sh"
+source "$SCRIPT_MODULE_DIR/backup-module.sh"
 
 function clean-up-after-service-principal() {
 
@@ -17,7 +18,7 @@ function clean-up-after-service-principal() {
 
     service_principal_username="$( get-value ".deployment.azureb2c.servicePrincipal.username" )"
     service_principal_credentials_file_path="$( get-user-value "${service_principal_username}" "credentialsPath" )"
-    rm -f "${service_principal_credentials_file_path}"
+    sudo rm -f "${service_principal_credentials_file_path}"
 
     # deleting service principal credentials in Azure AD too
     app_id="$( get-value ".deployment.azureb2c.servicePrincipal.appId" )"
@@ -43,6 +44,8 @@ function clean-up-after-service-principal() {
 function clean-up() {
     
     set  +e +o pipefail
+
+    backup-config-end
 
     # if settings doesn't exist then the script didn't get far and in any case we're not able to clean up when we don't have the settings.
     check-settings > /dev/null || exit 1
@@ -71,4 +74,6 @@ function clean-up() {
     set -e -o pipefail
 
     final-state
+
+    backup-log    
 }

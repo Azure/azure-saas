@@ -22,8 +22,6 @@ param userAssignedIdentityName string
 @secure()
 param sqlAdministratorLoginPassword string
 
-// Resource - Permissions SQL Server
-//////////////////////////////////////////////////
 resource permissionsSqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   name: permissionsSqlServerName
   location: location
@@ -36,7 +34,7 @@ resource permissionsSqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
 
 // Allow all internal azure ips to access the sql server firewall
 resource allowAzureAccessFirewallRuleAzureInternal 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
-  name: 'AllowOnlyAllWindowsAzureIps'
+  name: 'allowOnlyAllWindowsAzureIps'
   parent: permissionsSqlServer
   properties: {
     // Using 0.0.0.0 to specify all internal azure ips as found here: https://docs.microsoft.com/en-us/azure/templates/microsoft.sql/servers/firewallrules?tabs=bicep#serverfirewallruleproperties
@@ -47,7 +45,7 @@ resource allowAzureAccessFirewallRuleAzureInternal 'Microsoft.Sql/servers/firewa
 
 // Allow all internal azure ips to access the sql server firewall
 resource allowAzureAccessFirewallRuleDevMachine 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
-  name: 'AllowAccessToDevMachineIpAddress'
+  name: 'allowAccessToDevMachineIpAddress'
   parent: permissionsSqlServer
   properties: {
     // Using 0.0.0.0 to specify all internal azure ips as found here: https://docs.microsoft.com/en-us/azure/templates/microsoft.sql/servers/firewallrules?tabs=bicep#serverfirewallruleproperties
@@ -56,8 +54,6 @@ resource allowAzureAccessFirewallRuleDevMachine 'Microsoft.Sql/servers/firewallR
   }
 }
 
-// Resource - Permissions SQL Database
-//////////////////////////////////////////////////
 resource permissionsSqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
   parent: permissionsSqlServer
   name: permissionsSqlDatabaseName
@@ -73,6 +69,5 @@ resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@
   location: location
 }
 
-// Outputs
-//////////////////////////////////////////////////
 output permissionsSqlServerFQDN string = permissionsSqlServer.properties.fullyQualifiedDomainName
+output permissionsSqlServerName string = permissionsSqlServer.name

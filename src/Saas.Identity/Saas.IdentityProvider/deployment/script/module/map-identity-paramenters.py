@@ -62,14 +62,18 @@ def patch_paramenters_file(config_file: str, paramenter_file: str) -> None:
     parameters['parameters']['sqlAdministratorLogin']['value'] \
         = config['sql']['sqlAdminLoginName']
 
-    parameters['parameters']['containerRegistryUrl']['value'] \
-            = config['container']['containerRegistryUrl']
+    parameters['parameters']['gitRepoUrl']['value'] \
+        = config['git']['repo']
 
-    with open(paramenter_file, 'w') as f:
+    parameters['parameters']['gitBranch']['value'] \
+        = config['git']['branch']
+
+    with open(paramenter_file, 'w+') as f:
         f.write(json.dumps(parameters, indent=4))
 
 # Main entry point for the script 
-config_file = sys.argv[1]
-paramenter_file = sys.argv[2]
+if __name__ == "__main__":
+    config_file = sys.argv[1]
+    paramenter_file = sys.argv[2]
 
-patch_paramenters_file(config_file, paramenter_file)
+    patch_paramenters_file(config_file, paramenter_file)

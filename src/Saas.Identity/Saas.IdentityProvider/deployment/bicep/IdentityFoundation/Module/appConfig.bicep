@@ -16,14 +16,14 @@ param configStore object = {
   ]
 }
 
-var rolesJson = loadJsonContent('../roles.json')
+var rolesJson = loadJsonContent('roles.json')
 var roles = rolesJson.roles
 var appConfigurationReader = 'App Configuration Data Reader'
 
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
   name: configStore.userAssignedIdentityName
 }
-resource appConfiguration 'Microsoft.AppConfiguration/configurationStores@2022-05-01' = {
+resource appConfig 'Microsoft.AppConfiguration/configurationStores@2022-05-01' = {
   location: location
   name: configStore.appConfigurationName
   sku: {
@@ -34,7 +34,7 @@ resource appConfiguration 'Microsoft.AppConfiguration/configurationStores@2022-0
 
 resource managedIdentityCanReadConfigurationStore 'Microsoft.Authorization/roleAssignments@2022-04-01' ={
   name: guid(roles[appConfigurationReader], userAssignedIdentity.id)
-  scope: appConfiguration
+  scope: appConfig
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roles[appConfigurationReader])
     principalId: userAssignedIdentity.properties.principalId
@@ -42,12 +42,11 @@ resource managedIdentityCanReadConfigurationStore 'Microsoft.Authorization/roleA
   }
 }
 
-
 // Adding App Configuration entries
 module appConfigurationSettings 'addAppConfiguration.bicep' = [ for entry in configStore.entries: {
   name: replace('AppConfigurationSettings-${entry.key}', ':', '-')
   params: {
-    appConfigurationName: configStore.appConfigurationName
+    appConfigurationName: appConfig.name
     userAssignedIdentityName: configStore.userAssignedIdentityName
     keyVaultName: configStore.keyVaultName
     value: entry.value
@@ -56,3 +55,5 @@ module appConfigurationSettings 'addAppConfiguration.bicep' = [ for entry in con
     isSecret: entry.isSecret
   }
 }]
+
+output appConfigurationName string = appConfig.name
