@@ -48,6 +48,15 @@ function get-value {
     echo "${json}" | jq -r "${key}"
 }
 
+function get-object { 
+    local key="$1" ;
+
+    local json ;
+    
+    json="$( cat "${CONFIG_FILE}" )" ;
+    echo "${json}" | jq -r "${key}"
+}
+
 function put-value { 
     local key="$1" ;
     local variableValue="$2" ;
@@ -190,6 +199,23 @@ function put-app-id() {
         | jq --arg x "${app_id}" \
             "( .appRegistrations[] \
             | select(.name==\"${app_name}\") ).appId \
+            |= \$x" \
+        )" \
+            && echo "${output}" > "${CONFIG_FILE}" \
+            || exit 1
+}
+
+function put-app-object-id() {
+    local app_name="$1"
+    local object_id="$2"
+    local json
+
+    json="$( cat "${CONFIG_FILE}" )"
+
+    output="$( echo "${json}" \
+        | jq --arg x "${object_id}" \
+            "( .appRegistrations[] \
+            | select(.name==\"${app_name}\") ).objectId \
             |= \$x" \
         )" \
             && echo "${output}" > "${CONFIG_FILE}" \

@@ -1,5 +1,3 @@
-// Parameters
-//////////////////////////////////////////////////
 @description('Version')
 param version string
 
@@ -48,19 +46,19 @@ param permissionApiKey string
 @description('Select an admin account name used for resource creation.')
 param sqlAdministratorLogin string
 
-@description('The URL for the container registry to pull the docker images from')
-param containerRegistryUrl string = 'https://ghcr.io'
+@description('The git repo url.')
+param gitRepoUrl string
+
+@description('The git repo branch you want to deploy.')
+param gitBranch string
 
 @description('The location for all resources.')
 param location string = resourceGroup().location
 
-// Variables
-//////////////////////////////////////////////////
 var appServicePlanName = 'plan-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var appConfigurationName = 'appconfig-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var permissionsSqlDatabaseName = 'sqldb-permissions-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var permissionsSqlServerName = 'sql-permissions-${solutionPrefix}-${solutionName}-${solutionPostfix}'
-
 var userAssignedIdentityName = 'user-assign-id-${solutionPrefix}-${solutionName}-${solutionPostfix}' 
 
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
@@ -68,27 +66,15 @@ resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@
   location: location
 }
 
-// Module - App Service Plan
-//////////////////////////////////////////////////
-module appServicePlanModule './identityAppServicePlan.bicep' = {
-  name: 'appServicePlanDeployment'
-  params: {
-    appServicePlanName: appServicePlanName
-    location: location
-  }
-}
-
-module secretGenerator 'createSecret.bicep' = {
-  name: 'secrets'
+module secretGenerator './Module/createSecret.bicep' = {
+  name: 'SecretsGenerator'
   params: {
     location: location
   }
 }
 
-// Module - Permissions SQL Database
-//////////////////////////////////////////////////
-module permissionsSqlModule './permissionsSql.bicep' = {
-  name: 'permissionsSqlDeployment'
+module permissionsSqlModule './Module/permissionsSql.bicep' = {
+  name: 'PermissionsSqlDeployment'
   params: {
     devMachineIp: devMachineIp
     location: location
@@ -100,7 +86,7 @@ module permissionsSqlModule './permissionsSql.bicep' = {
   }
 }
 
-resource identityKeyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: keyVaultName
 }
 
@@ -113,15 +99,15 @@ var label = version
 
 var permissionCertificates = [
   {
-    SourceType: identityKeyVault.name
-    KeyVaultUrl: identityKeyVault.properties.vaultUri
+    SourceType: keyVault.name
+    KeyVaultUrl: keyVault.properties.vaultUri
     KeyVaultCertificateName: permissionCertificateName
     }
 ]
 
 var appConfigStore = {
   appConfigurationName: appConfigurationName
-  keyVaultName: identityKeyVault.name
+  keyVaultName: keyVault.name
   userAssignedIdentityName: userAssignedIdentity.name
   label: label
   entries: [
@@ -213,42 +199,37 @@ var appConfigStore = {
   ]
 }
 
-module appConfigurationModule './identityAppConfig.bicep' = {
-  name: 'appConfigurationDeployment'
+module appConfigurationModule './Module/appConfig.bicep' = {
+  name: 'AppConfigurationDeployment'
   params: {
     configStore: appConfigStore
     location: location
   }
 }
 
-// Module - Permissions Api
-//////////////////////////////////////////////////
-module permissionsApiModule 'permissionsApi.bicep' = {
-  name: 'permissionsApiDeployment'
+module permissionsApiModule 'Module/permissionsApi.bicep' = {
+  name: 'PermissionsApiDeployment'
   params: {
     version: version
-    appServicePlanId: appServicePlanModule.outputs.appServicePlanId
-    keyVaultUri: identityKeyVault.properties.vaultUri
+    appServicePlanName: appServicePlanName
+    keyVaultUri: keyVault.properties.vaultUri
     location: location
     permissionsApiName: permissionsApiName
-    containerRegistryUrl: containerRegistryUrl
     userAssignedIdentityName: userAssignedIdentity.name
-    appConfigurationName: appConfigurationName
+    appConfigurationName: appConfigurationModule.outputs.appConfigurationName
   }
 }
 
-// Module - Key Vault - Access Policy
-//////////////////////////////////////////////////
-module keyVaultAccessPolicyModule 'identityKeyVaultAccessPolicies.bicep' = {
-  name: 'keyVaultAccessPolicyDeployment'
+module keyVaultAccessPolicyModule 'Module/keyVaultAccessPolicies.bicep' = {
+  name: 'KeyVaultAccessPolicyDeployment'
   params: {
     keyVaultName: keyVaultName
     userAssignedIdentityName: userAssignedIdentity.name
   }
 }
 
-module restApiKeyModule './linkToExistingKeyVaultSecret.bicep' = {
-  name: 'permissionApiKeyDeployment'
+module restApiKeyModule './Module/linkToExistingKeyVaultSecret.bicep' = {
+  name: 'PermissionApiKeyDeployment'
   params: {
     label: version
     keyVaultName: keyVaultName
@@ -259,4 +240,14 @@ module restApiKeyModule './linkToExistingKeyVaultSecret.bicep' = {
   }
 }
 
-output appServicePlanName string = appServicePlanModule.outputs.appServicePlanId
+output version string = version
+output location string = location
+output appConfigurationName string = appConfigStore.appConfigurationName
+output keyVaultName string = keyVault.name
+output keyVaultUri string = keyVault.properties.vaultUri
+output appServicePlanName string = permissionsApiModule.outputs.appServicePlanName
+output permissionsSqlServerName string = permissionsSqlModule.outputs.permissionsSqlServerName
+output userAssignedIdentityName string = userAssignedIdentity.name
+output userAssignedIdentityId string = userAssignedIdentity.id
+output permissionsSqlServerFQDN string = permissionsSqlModule.outputs.permissionsSqlServerFQDN
+output permissionsApiHostName string = permissionsApiModule.outputs.permissionsApiHostName

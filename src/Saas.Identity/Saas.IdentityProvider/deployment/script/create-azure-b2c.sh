@@ -29,7 +29,7 @@ if ! resource-exist "${b2c_type_name}" "${b2c_name}" ; then
 
     az deployment group create \
         --resource-group "${resource_group}" \
-        --template-file ./bicep/create-azure-b2c.bicep \
+        --template-file ./bicep/deployAzureB2c.bicep \
         --output none \
         --parameters \
             location="${b2c_location}" \

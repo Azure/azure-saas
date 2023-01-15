@@ -8,16 +8,16 @@ source "$SCRIPT_MODULE_DIR/init-module.sh"
 source "$SCRIPT_MODULE_DIR/log-module.sh"
 source "$SCRIPT_MODULE_DIR/config-module.sh"
 
-if ! [[ -f "${IDENTITY_BICEP_PARAMETERS_FILE}" ]]; then
-    echo "The file ${IDENTITY_BICEP_PARAMETERS_FILE} does not exist, creating it now" \
+if ! [[ -f "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" ]]; then
+    echo "The file ${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE} does not exist, creating it now" \
         | log-output \
             --level info
-    cp "${IDENTITY_BICEP_PARAMETERS_TEMPLATE_FILE}" "${IDENTITY_BICEP_PARAMETERS_FILE}"
+    cp "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_TEMPLATE_FILE}" "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}"
 fi
 
 set -u
 
-"${SCRIPT_MODULE_DIR}/map-identity-paramenters.py" "${CONFIG_FILE}" "${IDENTITY_BICEP_PARAMETERS_FILE}" \
+"${SCRIPT_MODULE_DIR}/map-identity-paramenters.py" "${CONFIG_FILE}" "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" \
     | log-output \
         --level info \
         --header "Generating Identity Provider parameters..." \
@@ -36,8 +36,8 @@ echo "Provisioning permission provider in resource group ${resource_group}..." \
 output="$( az deployment group create \
     --resource-group "${resource_group}" \
     --name "IdentityBicepDeployment" \
-    --template-file "${MAIN_IDENTITY_DEPLOY_FILE}" \
-    --parameters "${IDENTITY_BICEP_PARAMETERS_FILE}" )" \
+    --template-file "${DEPLOY_IDENTITY_FOUNDATION_FILE}" \
+    --parameters "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" )" \
     || echo "Failed to deploy Identity Provider" \
         | log-output \
             --level error \

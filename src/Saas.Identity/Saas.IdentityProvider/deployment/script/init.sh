@@ -7,6 +7,7 @@ source "constants.sh"
 source "$SCRIPT_MODULE_DIR/util-module.sh"
 source "$SCRIPT_MODULE_DIR/config-module.sh"
 source "$SCRIPT_MODULE_DIR/log-module.sh"
+source "$SCRIPT_MODULE_DIR/backup-module.sh"
 
 function check-prerequisites() {
 
@@ -57,6 +58,13 @@ function check-prerequisites() {
                 --level error \
                 --header "Critical error" \
                 || exit 1
+    
+    # if running in a container copy the msal token cache 
+    # so that user may not have to log in again to main tenant.
+    if [ -f /.dockerenv ]; then
+        cp -f /asdk/.azure/msal_token_cache.* /root/.azure/
+        cp -f /asdk/.azure/azureProfile.json /root/.azure/
+    fi
 }
 
 function initialize-shell-scripts() {
@@ -109,10 +117,7 @@ function initialize-configuration-manifest-file()
                 --level info \
                 --header "Configation Settings"
 
-        backup_file="${CONFIG_FILE}.${ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME}.bak"
-
-        echo "Backing up existing configuration file to: ${backup_file}" | log-output --level info
-        cp "${CONFIG_FILE}" "${backup_file}"
+        backup-config-beginning
     fi
 
     echo "Configuration settings: $CONFIG_FILE." \

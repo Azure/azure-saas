@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
+export ASDK_CACHE_AZ_CLI_SESSIONS=true
+
 NC='\033[0m' # No Color
 YELLOW='\033[1;33m'
 
-ASDK_ID_PROVIDER_DEPLOYMENT_VERSION="0.8.0"
-
 if [[ -z $ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR ]] ; then
-    base_dir="$( dirname "$( readlink -f "$0" )" )"
+    base_dir="$( pwd )"
     echo -e "${YELLOW}ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR is not set".
     echo -e "Setting it to current root: ${base_dir}${NC}"
     export ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR=$base_dir
@@ -24,6 +24,7 @@ source "$SCRIPT_MODULE_DIR/tenant-login-module.sh"
 source "$SCRIPT_MODULE_DIR/config-module.sh"
 source "$SCRIPT_MODULE_DIR/log-module.sh"
 source "$SCRIPT_MODULE_DIR/resource-module.sh"
+source "$SCRIPT_MODULE_DIR/storage-module.sh"
 source "$SCRIPT_MODULE_DIR/clean-up-module.sh"
 
 # get now date and time for backup file name
@@ -64,11 +65,11 @@ sudo echo "You are logged in with sudo." \
     | echo-color \
         --level success
 
-# make sure that the shell-init script is executable
-chmod +x "$SCRIPT_DIR/shell-init.sh"
+# make sure that the init script is executable
+chmod +x "$SCRIPT_DIR/init.sh"
 
 # initialize deployment environment
-"${SCRIPT_DIR}/shell-init.sh" \
+"${SCRIPT_DIR}/init.sh" \
     || if [[ $? -eq 2 ]]; then exit 0; fi
 
 # from hereon and on run clean-up script on exit, interrupt and terminination of script
@@ -76,97 +77,221 @@ trap clean-up EXIT INT TERM
 
 (
     # check to see if the postfix exists. If so use it, if not create it.
-    initialize-post-fix
+    initialize-post-fix \
+        || echo "Initialization of postfix failed." \
+            | log-output \
+                --level error \
+                --header "Critical error" \
+                || exit 1
 
     # check to see if all initial configuration values exist in config.json, exit if not.
-    check-settings
+    check-settings \
+        || echo "Configuration settings are missing." \
+            | log-output \
+                --level error \
+                --header "Critical error" \
+                || exit 1
 
     # Log in to you tenant, if you are not already logged in
-    log-in-to-main-tenant
+    log-in-to-main-tenant \
+        || echo "Log in to tenant failed." \
+            | log-output \
+                --level error \
+                --header "Critical error" \
+                || exit 1
 
     # check to see if settings are valid 
-    continue-validating-configuration-settings
+    continue-validating-configuration-settings \
+        || echo "Validation of configuration settings failed." \
+            | log-output \
+                --level error \
+                --header "Critical error" \
+                || exit 1
 
     # populate the configuration manifest with additional setting needed for deployment
-    populate-configuration-manifest
+    populate-configuration-manifest \
+        || echo "Populating configuration manifest failed." \
+            | log-output \
+                --level error \
+                --header "Critical error" \
+                || exit 1
 
     # preserve the Azure CLI context so that it can be restored after the deployment
-    preserve-azure-cli-context
+    preserve-azure-cli-context \
+        || echo "Preserving Azure CLI context failed." \
+            | log-output \
+                --level error \
+                --header "Critical error" \
+                || exit 1
 
     # create user context for Azure B2C user and Azure B2C service principal
     intialize-context-for-automation-users    
-) \
-    || echo "Initilization failed" \
+) || echo "Initilization failed" \
         | log-output \
             --level error \
             --header "Critical error" \
             || exit 1
 
 # service message
-echo "Please don't go anywhere. You will be required to log into the Azure B2C tenant in a few minutes. Thank you." \
+echo "Please don't go anywhere just yet. You may need to log into the Azure B2C tenant in a few minutes. Thank you." \
     | log-output \
         --level warning \
-        --header "One more login request is coming up." \
+        --header "Attention." \
 
 # Creating resource group if it does not already exist
 resource_group="$( get-value ".deployment.resourceGroup.name" )"
 location="$( get-value ".initConfig.location" )"
 
-echo "Provisioning resource group ${resource_group}..." | log-output --level info --header "Resource Group"  
-( create-resource-group "${resource_group}" "${location}" \
-    && put-value ".deployment.resourceGroup.provisionState" "successful" ) \
-    || echo "Creation of resource group failed." \
+echo "Provisioning resource group ${resource_group}..." \
+    | log-output \
+        --level info \
+        --header "Resource Group"
+
+put-value ".deployment.resourceGroup.provisionState" "provisioning"  
+(
+    create-resource-group "${resource_group}" "${location}"
+    put-value ".deployment.resourceGroup.provisionState" "successful"
+) ||
+    (
+        put-value ".deployment.resourceGroup.provisionState" "failed" \
+        && echo "Creation of resource group failed." \
         | log-output \
             --level error \
             --header "Critical error" \
-            || exit 1
- 
+            
+    ) || exit 1
+
+# Creating storage it does not already exist
+put-value ".deployment.storage.provisionState" "provisioning"
+( \
+    storage_account_name="$( get-value ".deployment.storage.name" )"
+
+    if ! storage-account-exist "${resource_group}" "${storage_account_name}" ; then
+        
+        storage_container_name="$( get-value ".deployment.storage.containerName" )"
+        subscription_id="$( get-value ".initConfig.subscriptionId" )"
+        user_principal_id="$( get-value ".initConfig.userPrincipalId" )"
+
+        storage-create \
+            "${resource_group}" \
+            "${storage_account_name}" \
+            "${location}" \
+            "${storage_container_name}" \
+            "${subscription_id}" \
+            "${user_principal_id}" \
+            || echo "Storage creation failed." \
+                | log-output \
+                    --level error \
+                    --header "Critical error" \
+                    || exit 1
+
+        put-value ".deployment.storage.provisionState" "successful"
+
+    fi
+) || 
+    (
+        put-value ".deployment.storage.provisionState" "failed" \
+        && echo "Storage failed exists." \
+        | log-output \
+            --level error \
+            --header "Critical error" \
+        || exit 1            
+    ) 
+
+# Adding OIDC Workflow for GitHub Actions
+ put-value ".deployment.oidc.provisionState" "provisioning"
+( 
+    "${SCRIPT_DIR}/create-oidc-workflow-github-action.sh" \
+    && put-value ".deployment.oidc.provisionState" "successful"
+) || 
+    ( 
+        echo "OIDC Workflow for GitHub Actions failed." \
+        && put-value ".deployment.oidc.provisionState" "failed" \
+        | log-output \
+            --level error \
+            --header "Critical error" \
+        || exit 1
+    )
+
+ put-value ".deployment.keyVault.provisionState" "provioning"
 # Creating Azure Key Vault if it does not already exist
- ( "${SCRIPT_DIR}/create-key-vault.sh" \
-    && put-value ".deployment.keyVault.provisionState" "successful" ) \
-    || echo "Creation of KeyVault failed." \
+( 
+    "${SCRIPT_DIR}/create-key-vault.sh" \
+    && put-value ".deployment.keyVault.provisionState" "successful" 
+) || 
+    (
+        put-value ".deployment.keyVault.provisionState" "failed" \
+        && echo "Creation of KeyVault failed." \
         | log-output \
             --level error \
             --header "Critical error" \
-            || exit 1
+        || exit 1
+    )
 
-echo "Provisioning Azure B2C..." | log-output --level info --header "Azure B2C Tenant"  
+echo "Provisioning Azure B2C..." \
+    | log-output \
+        --level info \
+        --header "Azure B2C Tenant"
+
+put-value ".deployment.azureb2c.provisionState" "provisioning"
 # Creating Azure AD B2C Directory if it does not already exist
-( "${SCRIPT_DIR}/create-azure-b2c.sh" \
-    && put-value ".deployment.azureb2c.provisionState" "successful" ) \
-    || echo "Creation of Azure B2C tenant failed." \
+( 
+    "${SCRIPT_DIR}/create-azure-b2c.sh" 
+    put-value ".deployment.azureb2c.provisionState" "successful" 
+) || 
+    ( 
+        put-value ".deployment.azureb2c.provisionState" "failed" \
+        && echo "Creation of Azure B2C tenant failed." \
         | log-output \
             --level error \
             --header "Critical error" \
-            || exit 1
+        || exit 1
+    )
 
+put-value ".deployment.azureb2c.configuration.provisionState" "provisioning"
 # Configuring Azure the AD B2C Tenant
-( "${SCRIPT_DIR}/config-b2c.sh" \
-    && put-value ".deployment.azureb2c.configurationState" "successful" ) \
-    || echo "Configuration of Azure B2C tenant failed." \
+( 
+    "${SCRIPT_DIR}/config-b2c.sh" \
+    && put-value ".deployment.azureb2c.configuration.provisionState" "successful" 
+) || 
+    (
+        put-value ".deployment.azureb2c.configuration.provisionState" "failed" \
+        && echo "Configuration of Azure B2C tenant failed." \
         | log-output \
             --level error \
             --header "Critical error" \
-            || exit 1
+        || exit 1
+    )
 
-
+put-value ".deployment.identityFoundation.provisionState" "provisioning"
 # Deploying Identity Provider
-( "${SCRIPT_DIR}/deploy-identity-foundation.sh" \
-    && put-value ".deployment.identityFoundation.provisionState" "successful" ) \
-    || echo "Deployment of Identity Provider failed." \
+( 
+    "${SCRIPT_DIR}/deploy-identity-foundation.sh" \
+    && put-value ".deployment.identityFoundation.provisionState" "successful" 
+) || 
+    (
+        put-value ".deployment.identityFoundation.provisionState" "failed" \
+        && echo "Deployment of Identity Provider failed." \
         | log-output \
             --level error \
             --header "Critical error" \
-            || exit 1
+        || exit 1
+    )
 
+put-value ".deployment.iefPolicies.provisionState" "provisioning"
 # Uploading IEF custom policies
-( "${SCRIPT_DIR}/upload-ief-policies.sh" \
-    && put-value ".deployment.iefPolicies.provisionState" "successful" ) \
-    || echo "Upload of IEF policies failed." \
+( 
+    "${SCRIPT_DIR}/upload-ief-policies.sh" \
+    && put-value ".deployment.iefPolicies.provisionState" "successful" 
+) || 
+    (
+        put-value ".deployment.iefPolicies.provisionState" "failed" \
+        && echo "Upload of IEF policies failed." \
         | log-output \
             --level error \
             --header "Critical error" \
-            || exit 1
+        || exit 1
+    )
 
 
 # end of script - which means running the clean-up script before exiting

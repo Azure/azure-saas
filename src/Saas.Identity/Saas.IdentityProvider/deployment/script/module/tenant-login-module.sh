@@ -4,6 +4,7 @@
 # load config-module into current shell
 source "$SCRIPT_MODULE_DIR/config-module.sh"
 source "$SCRIPT_MODULE_DIR/log-module.sh"
+source "$SCRIPT_MODULE_DIR/user-module.sh"
 
 function is-logged-into-tenant-by-name() {
     local tenant_domain_name="$1" ;
@@ -170,7 +171,27 @@ function log-into-b2c() {
 
     if [[ -z "${tenant_id}" ]] ; then
         log-in-error
-    fi   
+    fi
+
+    cache-session
 
     put-value ".deployment.azureb2c.tenantId" "${tenant_id}"       
+}
+
+function cache-session() {
+    set +u
+    if [[ ! $ASDK_CACHE_AZ_CLI_SESSIONS == true ]] || [[ -z $ASDK_CURRENT_USER ]]; then
+        set -u 
+        echo "Caching setting not enabled or no current user set." \
+            | log-output \
+                --level warning \
+                --header "Caching az cli session"
+    else
+        set -u 
+        echo "Caching enabled: '$ASDK_CACHE_AZ_CLI_SESSIONS' for current user: '$ASDK_CURRENT_USER'" \
+            | log-output \
+                --level info \
+                --header "Caching az cli session"
+        set-cache-session "${ASDK_CURRENT_USER}"
+    fi
 }

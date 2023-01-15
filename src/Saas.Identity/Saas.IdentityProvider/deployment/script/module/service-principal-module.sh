@@ -23,14 +23,47 @@ END
         return
 }
 
-function service-principal-exist() {
-    local service_principal_username="$1"
+function service-principal-exist-by-name() {
+    local service_principal_name="$1"
+
+    if [[ -z "${service_principal_name}" \
+        || "${service_principal_name}" == null \
+        || "${service_principal_name}" == "null" ]]; then
+
+        false
+        return
+    fi
 
     service_principal="$( az ad sp list \
-        --display-name "${service_principal_username}" \
-        --output tsv)"
+        --display-name "${service_principal_name}" \
+        --output tsv )"
 
     if [[ -n "${service_principal}" ]]; then
+        true
+        return
+    else
+        false
+        return
+    fi
+}
+
+function service-principal-exist-by-id() {
+    local service_principal_id="$1"
+
+    if [[ -z "${service_principal_id}" \
+        || "${service_principal_id}" == null \
+        || "${service_principal_id}" == "null" ]]; then
+
+        false
+        return
+    fi
+
+    service_principal_response="$( az ad sp show \
+        --id "${service_principal_id}" \
+        --query id \
+        --output tsv )"
+
+    if [[ -n "${service_principal_response}" ]]; then
         true
         return
     else
@@ -192,7 +225,7 @@ function reset-sp-credentials() {
 function create-service-principal-for-policy-key-creation() {
     local service_principal_username="$1"
 
-    if ! service-principal-exist "${service_principal_username}"; then
+    if ! service-principal-exist-by-name "${service_principal_username}"; then
         echo "Creating service principal for ${service_principal_username}." | log-output --level info
 
         service_principal="$( az ad sp create-for-rbac \

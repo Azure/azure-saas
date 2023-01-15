@@ -4,7 +4,7 @@
 param version string
 
 @description('The App Service Plan ID.')
-param appServicePlanId string
+param appServicePlanName string
 
 @description('The Uri of the Key Vault.')
 param keyVaultUri string 
@@ -14,10 +14,6 @@ param location string
 
 @description('The Permissions Api name.')
 param permissionsApiName string
-
-@description('The URL for the container registry to pull the docker images from')
-param containerRegistryUrl string
-
 
 @description('Azure App Configuration User Assigned Identity Name.')
 param userAssignedIdentityName string
@@ -33,14 +29,24 @@ resource appConfig 'Microsoft.AppConfiguration/configurationStores@2022-05-01' e
   name: appConfigurationName
 }
 
-// Resource - Permissions Api
-//////////////////////////////////////////////////
+resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+  name: appServicePlanName
+  location: location
+  kind: 'linux'
+  sku: {
+    name: 'S1'
+  }
+  properties: {
+    reserved: true
+  }
+}
+
 resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
   name: permissionsApiName
   location: location
-  kind: 'app,windows'
+  kind: 'app,linux'
   properties: {
-    serverFarmId: appServicePlanId
+    serverFarmId: appServicePlan.name
     httpsOnly: true
     siteConfig: {
       alwaysOn: true 
@@ -54,7 +60,6 @@ resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
     name: 'appsettings'
     properties: {
       Version: version
-      DOCKER_REGISTRY_SERVER_URL: containerRegistryUrl
       Logging__LogLevel__Default: 'Information'
       Logging__LogLevel__Microsoft__AspNetCore: 'Warning'
       KeyVault__Url: keyVaultUri
@@ -64,6 +69,40 @@ resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
     }
   }
 }
+
+resource permissionsApiStagingSlot 'Microsoft.Web/sites/slots@2022-03-01' = {
+  name: 'PermissionsApi-Staging'
+  parent: permissionsApi
+  location: location
+  kind: 'app,linux'
+  properties: {
+    serverFarmId: appServicePlan.name
+  }
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: { '${userAssignedIdentity.id}': {} }
+  }
+}
+
+// resource permissionsApiSlotsConfig 'Microsoft.Web/sites/slots/config@2022-03-01' = {
+//   name: 'web'
+//   parent: permissionsApiSlots
+//   properties: {
+//     WEBSITE_RUN_FROM_PACKAGE: '1'
+//   }
+// }
+
+// resource permissionSrcControls 'Microsoft.Web/sites/sourcecontrols@2022-03-01' = {  
+//   name: 'web'
+//   parent: permissionsApi
+//   properties: {  
+//     isGitHubAction: true
+//     repoUrl: gitRepoUrl 
+//     branch: gitBranch 
+//     deploymentRollbackEnabled: true
+//     isManualIntegration: false
+//   }  
+// } 
 
 // Resource - Permissions Api - Deployment
 //////////////////////////////////////////////////
@@ -78,3 +117,4 @@ resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
 // Outputs
 //////////////////////////////////////////////////
 output permissionsApiHostName string = permissionsApi.properties.defaultHostName
+output appServicePlanName string = appServicePlan.name

@@ -4,7 +4,7 @@ param userObjectId string
 param location string = resourceGroup().location
 param tenantId string = subscription().tenantId
 
-var rolesJson = loadJsonContent('roles.json')
+var rolesJson = loadJsonContent('./IdentityFoundation/Module/roles.json')
 var roles = rolesJson.roles
 
 var roleOwner = 'Key Vault Owner'
