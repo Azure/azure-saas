@@ -2,12 +2,15 @@
 
 set -u -e -o pipefail
 
-# include script modules into current shell
-source "constants.sh"
-source "$SCRIPT_MODULE_DIR/config-module.sh"
-source "$SCRIPT_MODULE_DIR/colors-module.sh"
-source "$SCRIPT_MODULE_DIR/log-module.sh"
-source "$SCRIPT_MODULE_DIR/user-module.sh"
+# shellcheck disable=SC1091
+{
+    # include script modules into current shell
+    source "${ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE}/constants.sh"
+    source "$SHARED_MODULE_DIR/config-module.sh"
+    source "$SHARED_MODULE_DIR/colors-module.sh"
+    source "$SHARED_MODULE_DIR/log-module.sh"
+    source "$SHARED_MODULE_DIR/user-module.sh"
+}
 
 # setting user context to the user that will be used to configure Azure B2C
 b2c_config_usr_name="$( get-value ".deployment.azureb2c.username" )"

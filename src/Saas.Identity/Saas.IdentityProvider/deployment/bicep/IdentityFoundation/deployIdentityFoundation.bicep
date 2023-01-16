@@ -46,12 +46,6 @@ param permissionApiKey string
 @description('Select an admin account name used for resource creation.')
 param sqlAdministratorLogin string
 
-@description('The git repo url.')
-param gitRepoUrl string
-
-@description('The git repo branch you want to deploy.')
-param gitBranch string
-
 @description('The location for all resources.')
 param location string = resourceGroup().location
 
@@ -60,6 +54,7 @@ var appConfigurationName = 'appconfig-${solutionPrefix}-${solutionName}-${soluti
 var permissionsSqlDatabaseName = 'sqldb-permissions-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var permissionsSqlServerName = 'sql-permissions-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var userAssignedIdentityName = 'user-assign-id-${solutionPrefix}-${solutionName}-${solutionPostfix}' 
+var applicationInsightsName = 'appi-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: userAssignedIdentityName
@@ -91,123 +86,50 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
 }
 
 // Create object w/ array of objects containing the kayname and value to be stored in Azure App Configuration store.
-var azureB2C = 'AzureB2C'
 var permissionApi = 'PermissionApi'
-var msGraph = 'MsGraph'
-var sql = 'Sql'
-var label = version
 
-var permissionCertificates = [
-  {
-    SourceType: keyVault.name
-    KeyVaultUrl: keyVault.properties.vaultUri
-    KeyVaultCertificateName: permissionCertificateName
-    }
-]
-
-var appConfigStore = {
-  appConfigurationName: appConfigurationName
-  keyVaultName: keyVault.name
-  userAssignedIdentityName: userAssignedIdentity.name
-  label: label
-  entries: [
-    {
-      key: '${azureB2C}:AdminServiceBaseUrl'
-      value: appSettingsAdminServiceBaseUrl
-      isSecret: false
-    }
-    {
-      key: '${azureB2C}:Domain'
-      value: azureB2CDomain
-      isSecret: false
-    }
-    {
-      key: '${azureB2C}:LoginEndpoint'
-      value: azureB2CLoginEndpoint
-      isSecret: false
-    }
-    {
-      key: '${azureB2C}:TenantId'
-      value: azureB2CTenantId
-      isSecret: false
-    }
-    {
-      key: '${permissionApi}:ClientId'
-      value: permissionApiClientId
-      isSecret: false
-    }
-    {
-      key: '${permissionApi}:TenantId'
-      value: azureB2CTenantId
-      isSecret: false
-    }
-    {
-      key: '${permissionApi}:Domain'
-      value: azureB2CDomain
-      isSecret: false
-    }
-    {
-      key: '${permissionApi}:Instance'
-      value: permissionInstance
-      isSecret: false
-    }
-    {
-      key: '${permissionApi}:Audience'
-      value: permissionApiClientId
-      isSecret: false
-    }
-    {
-      key: '${permissionApi}:CallbackPath'
-      value: '/signin-oidc'
-      isSecret: false
-    }
-    {
-      key: '${permissionApi}:SignedOutCallbackPath'
-      value: '/signout-oidc'
-      isSecret: false
-    }
-    {
-      key: '${permissionApi}:Certificates'
-      value: replace('${permissionCertificates}', '\'','"') // replace single quotes with double quotes in the json string
-      isSecret: false
-    }
-    {
-      key: '${sql}:SQLAdministratorLoginName'
-      value: sqlAdministratorLogin
-      isSecret: false
-    }
-    {
-      key: '${sql}:SQLAdministratorLoginPassword'
-      value: secretGenerator.outputs.secret
-      isSecret: true
-    }
-    {
-      key: '${sql}:SQLConnectionString'
-      value: 'Data Source=tcp:${permissionsSqlModule.outputs.permissionsSqlServerFQDN},1433;Initial Catalog=${permissionsSqlDatabaseName};User Id=${sqlAdministratorLogin}@${permissionsSqlModule.outputs.permissionsSqlServerFQDN};Password=${secretGenerator.outputs.secret};'
-      isSecret: true
-    }
-    {
-      key: '${msGraph}:BaseUrl'
-      value: 'https://graph.microsoft.com/v1.0'
-      isSecret: false
-    }
-    {
-      key: '${msGraph}:Scopes'
-      value: 'https://graph.microsoft.com/.default'
-      isSecret: false
-    }
-  ]
-}
-
-module appConfigurationModule './Module/appConfig.bicep' = {
+module appConfigurationModule './Module/appConfigurationStore.bicep' = {
   name: 'AppConfigurationDeployment'
   params: {
-    configStore: appConfigStore
+    appConfigurationName: appConfigurationName
+    userAssignedIdentityName: userAssignedIdentity.name
     location: location
   }
 }
 
-module permissionsApiModule 'Module/permissionsApi.bicep' = {
+module keyVaultAccessPolicyModule 'Module/keyVaultAccessRBAC.bicep' = {
+  name: 'KeyVaultAccessPolicyDeployment'
+  params: {
+    keyVaultName: keyVault.name
+    userAssignedIdentityName: userAssignedIdentity.name
+  }
+  dependsOn: [
+    keyVault
+  ]
+}
+
+module restApiKeyModule './Module/linkToExistingKeyVaultSecret.bicep' = {
+  name: 'PermissionApiKeyDeployment'
+  params: {
+    label: version
+    keyVaultName: keyVault.name
+    appConfigurationName: appConfigurationName
+    userAssignedIdentityName: userAssignedIdentity.name
+    keyVaultKeyName: permissionApiKey
+    keyName: '${permissionApi}:apiKey'
+  }
+  dependsOn: [
+    keyVaultAccessPolicyModule
+    keyVault
+    appConfigurationModule
+  ]
+}
+
+resource appConfigurationStore 'Microsoft.AppConfiguration/configurationStores@2022-05-01' existing = {
+  name: appConfigurationName
+}
+
+module permissionsApiModule './Module/permissionsApi.bicep' = {
   name: 'PermissionsApiDeployment'
   params: {
     version: version
@@ -216,33 +138,49 @@ module permissionsApiModule 'Module/permissionsApi.bicep' = {
     location: location
     permissionsApiName: permissionsApiName
     userAssignedIdentityName: userAssignedIdentity.name
-    appConfigurationName: appConfigurationModule.outputs.appConfigurationName
+    appConfigurationName: appConfigurationStore.name
+    applicationInsightsName: applicationInsightsName
   }
+  dependsOn:  [
+    appConfigurationModule
+    keyVaultAccessPolicyModule
+    keyVault
+    restApiKeyModule
+  ]
 }
 
-module keyVaultAccessPolicyModule 'Module/keyVaultAccessPolicies.bicep' = {
-  name: 'KeyVaultAccessPolicyDeployment'
+module configurationEntriesModule './Module/addConfigEntries.bicep' = {
+  name: 'ConfigurationEntriesDeployment'
   params: {
-    keyVaultName: keyVaultName
+    version: version
+    appSettingsAdminServiceBaseUrl: appSettingsAdminServiceBaseUrl
+    keyVaultName: keyVault.name
+    azureB2CDomain: azureB2CDomain
+    azureB2CLoginEndpoint: azureB2CLoginEndpoint
+    azureB2CTenantId: azureB2CTenantId
+    permissionApiClientId: permissionApiClientId
+    permissionCertificateName: permissionCertificateName
+    permissionInstance: permissionInstance
+    sqlAdministratorLogin: sqlAdministratorLogin
     userAssignedIdentityName: userAssignedIdentity.name
+    keyVaultUrl: keyVault.properties.vaultUri
+    appConfigurationName: appConfigurationStore.name
+    permissionsSqlDatabaseName: permissionsSqlDatabaseName
+    permissionsSqlServerFQDN: permissionsSqlModule.outputs.permissionsSqlServerFQDN
+    sqlAdministratorLoginPassword: secretGenerator.outputs.secret
   }
-}
-
-module restApiKeyModule './Module/linkToExistingKeyVaultSecret.bicep' = {
-  name: 'PermissionApiKeyDeployment'
-  params: {
-    label: version
-    keyVaultName: keyVaultName
-    appConfigurationName: appConfigStore.appConfigurationName
-    userAssignedIdentityName: userAssignedIdentity.name
-    keyVaultKeyName: permissionApiKey
-    keyName: '${permissionApi}:apiKey'
-  }
+  dependsOn: [
+    appConfigurationModule
+    keyVaultAccessPolicyModule
+    keyVault
+    restApiKeyModule
+    permissionsApiModule
+  ]
 }
 
 output version string = version
 output location string = location
-output appConfigurationName string = appConfigStore.appConfigurationName
+output appConfigurationName string = appConfigurationName
 output keyVaultName string = keyVault.name
 output keyVaultUri string = keyVault.properties.vaultUri
 output appServicePlanName string = permissionsApiModule.outputs.appServicePlanName
@@ -251,3 +189,4 @@ output userAssignedIdentityName string = userAssignedIdentity.name
 output userAssignedIdentityId string = userAssignedIdentity.id
 output permissionsSqlServerFQDN string = permissionsSqlModule.outputs.permissionsSqlServerFQDN
 output permissionsApiHostName string = permissionsApiModule.outputs.permissionsApiHostName
+output applicationInsightsName string = applicationInsightsName

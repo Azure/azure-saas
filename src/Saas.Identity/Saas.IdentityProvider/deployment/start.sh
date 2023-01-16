@@ -2,30 +2,30 @@
 
 export ASDK_CACHE_AZ_CLI_SESSIONS=true
 
-NC='\033[0m' # No Color
-YELLOW='\033[1;33m'
-
-if [[ -z $ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR ]] ; then
-    base_dir="$( pwd )"
-    echo -e "${YELLOW}ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR is not set".
-    echo -e "Setting it to current root: ${base_dir}${NC}"
-    export ASDK_ID_PROVIDER_DEPLOYMENT_BASE_DIR=$base_dir
+if [[ -z $ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE ]]; then
+    # repo base
+    echo "ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE is not set. Setting it to default value."
+    repo_base="$( git rev-parse --show-toplevel )"
+    project_base="${repo_base}/src/Saas.Identity/Saas.IdentityProvider/deployment"
+    export ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE="${project_base}"
 fi
 
 # set bash options to exit on unset variables and errors (exit 1) including pipefail
 set -u -e -o pipefail
 
-# include script modules into current shell
-source "./constants.sh"
-source "$SCRIPT_MODULE_DIR/colors-module.sh"
-source "$SCRIPT_MODULE_DIR/init-module.sh"
-source "$SCRIPT_MODULE_DIR/util-module.sh"
-source "$SCRIPT_MODULE_DIR/tenant-login-module.sh"
-source "$SCRIPT_MODULE_DIR/config-module.sh"
-source "$SCRIPT_MODULE_DIR/log-module.sh"
-source "$SCRIPT_MODULE_DIR/resource-module.sh"
-source "$SCRIPT_MODULE_DIR/storage-module.sh"
-source "$SCRIPT_MODULE_DIR/clean-up-module.sh"
+# shellcheck disable=SC1091
+{
+    # include script modules into current shell
+    source "${ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE}/constants.sh"
+    source "$SCRIPT_DIR/init-module.sh"
+    source "$SCRIPT_DIR/clean-up-module.sh"
+    source "$SHARED_MODULE_DIR/util-module.sh"
+    source "$SHARED_MODULE_DIR/tenant-login-module.sh"
+    source "$SHARED_MODULE_DIR/config-module.sh"
+    source "$SHARED_MODULE_DIR/log-module.sh"
+    source "$SHARED_MODULE_DIR/resource-module.sh"
+    source "$SHARED_MODULE_DIR/storage-module.sh"
+}
 
 # get now date and time for backup file name
 now=$(date '+%Y-%m-%d--%H-%M-%S')
@@ -65,9 +65,11 @@ sudo echo "You are logged in with sudo." \
     | echo-color \
         --level success
 
-# make sure that the init script is executable
-chmod +x "$SCRIPT_DIR/init.sh"
-
+# if not running in a container
+if ! [ -f /.dockerenv ]; then
+    # make sure that the init script is executable
+    chmod +x "$SCRIPT_DIR/init.sh"
+fi
 # initialize deployment environment
 "${SCRIPT_DIR}/init.sh" \
     || if [[ $? -eq 2 ]]; then exit 0; fi
@@ -196,21 +198,6 @@ put-value ".deployment.storage.provisionState" "provisioning"
         || exit 1            
     ) 
 
-# Adding OIDC Workflow for GitHub Actions
- put-value ".deployment.oidc.provisionState" "provisioning"
-( 
-    "${SCRIPT_DIR}/create-oidc-workflow-github-action.sh" \
-    && put-value ".deployment.oidc.provisionState" "successful"
-) || 
-    ( 
-        echo "OIDC Workflow for GitHub Actions failed." \
-        && put-value ".deployment.oidc.provisionState" "failed" \
-        | log-output \
-            --level error \
-            --header "Critical error" \
-        || exit 1
-    )
-
  put-value ".deployment.keyVault.provisionState" "provioning"
 # Creating Azure Key Vault if it does not already exist
 ( 
@@ -290,7 +277,21 @@ put-value ".deployment.iefPolicies.provisionState" "provisioning"
             --header "Critical error" \
         || exit 1
     )
-
+    
+# Adding OIDC Workflow for GitHub Actions
+ put-value ".deployment.oidc.provisionState" "provisioning"
+( 
+    "${SCRIPT_DIR}/create-oidc-workflow-github-action.sh" \
+    && put-value ".deployment.oidc.provisionState" "successful"
+) || 
+    ( 
+        echo "OIDC Workflow for GitHub Actions failed." \
+        && put-value ".deployment.oidc.provisionState" "failed" \
+        | log-output \
+            --level error \
+            --header "Critical error" \
+        || exit 1
+    )
 
 # end of script - which means running the clean-up script before exiting
 exit 0

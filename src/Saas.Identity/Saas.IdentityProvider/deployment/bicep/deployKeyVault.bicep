@@ -9,8 +9,9 @@ var roles = rolesJson.roles
 
 var roleOwner = 'Key Vault Owner'
 var roleAdmin = 'Key Vault Administrator'
+var roleSecretOfficer = 'Key Vault Secrets Officer'
 
-resource identityKeyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
+resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: keyVaultName
   location: location
   properties: {
@@ -27,23 +28,12 @@ resource identityKeyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
       defaultAction: 'Allow'
       bypass: 'AzureServices'
     }
-    accessPolicies: [
-      {
-        tenantId: tenantId
-        objectId: userObjectId
-        permissions: {
-          certificates: ['all']
-          keys: ['all']
-          secrets: ['all']
-        }
-      }
-    ]
   }
 }
 
 resource kvRoleAssignmentOwner 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(roles[roleOwner],userObjectId,identityKeyVault.id)
-  scope: identityKeyVault
+  name: guid(roles[roleOwner], userObjectId, keyVault.id)
+  scope: keyVault
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roles[roleOwner])
     principalId: userObjectId
@@ -51,9 +41,19 @@ resource kvRoleAssignmentOwner 'Microsoft.Authorization/roleAssignments@2022-04-
   }
 }
 
+resource kvRoleAssignmentSecretOfficer 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(roles[roleSecretOfficer], userObjectId, keyVault.id)
+  scope: keyVault
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roles[roleSecretOfficer])
+    principalId: userObjectId
+    principalType: 'User'
+  }
+}
+
 resource kvRoleAssignmentAdmin 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(roles[roleAdmin],userObjectId,identityKeyVault.id)
-  scope: identityKeyVault
+  name: guid(roles[roleAdmin], userObjectId, keyVault.id)
+  scope: keyVault
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roles[roleAdmin])
     principalId: userObjectId

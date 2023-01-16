@@ -31,24 +31,31 @@ public class PublicX509CertificateDetailProvider : IPublicX509CertificateDetailP
             return cachedCertDetails;
         }
 
-        CertificateClient certClient = new(keyVaultUri, credential);
+        try
+        {
+            CertificateClient certClient = new(keyVaultUri, credential);
 
-        Azure.Response<KeyVaultCertificateWithPolicy> keyVaultPublicCertResponse = 
-            await certClient.GetCertificateAsync(keyInfo.KeyVaultCertificateName);
+            Azure.Response<KeyVaultCertificateWithPolicy> keyVaultPublicCertResponse =
+                await certClient.GetCertificateAsync(keyInfo.KeyVaultCertificateName);
 
-        X509Certificate2 publicX509Cert = new(keyVaultPublicCertResponse.Value.Cer);
+            X509Certificate2 publicX509Cert = new(keyVaultPublicCertResponse.Value.Cer);
 
-        PublicX509CertificateDetail publicX509CertificateDetail = new(
-            publicX509Cert.GetCertHash().Base64UrlEncode(),
-            keyVaultPublicCertResponse.Value.KeyId,
-            keyVaultPublicCertResponse.Value.Name);
+            PublicX509CertificateDetail publicX509CertificateDetail = new(
+                publicX509Cert.GetCertHash().Base64UrlEncode(),
+                keyVaultPublicCertResponse.Value.KeyId,
+                keyVaultPublicCertResponse.Value.Name);
 
-        // The certificate details are cached for 24 hours since they rarely change. 
-        var cacheOptions = new MemoryCacheEntryOptions()
-            .SetAbsoluteExpiration(TimeSpan.FromHours(24));
+            // The certificate details are cached for 24 hours since they rarely change. 
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromHours(24));
 
-        _memoryCache.Set(cacheItemName, publicX509CertificateDetail, cacheOptions);
+            _memoryCache.Set(cacheItemName, publicX509CertificateDetail, cacheOptions);
 
-        return publicX509CertificateDetail;
+            return publicX509CertificateDetail;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 }

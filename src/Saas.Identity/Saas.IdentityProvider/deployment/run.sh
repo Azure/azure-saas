@@ -1,26 +1,32 @@
 #!/usr/bin/env bash
 
-project_dir="$( pwd )"
-
+repo_base="$( git rev-parse --show-toplevel )"
 git_repo_origin="$( git config --get remote.origin.url )"
 git_org_project_name="$( git config --get remote.origin.url | sed 's/.*\/\([^ ]*\/[^.]*\).*/\1/' )"
 gh_auth_token="$( gh auth token )"
 
 if [[ -z "${gh_auth_token}" ]]; then
-    echo "Not loggged into your GitHub organization. GitHub auth token is not set. Please run 'gh auth login' first to set it and then run this script again."
-    exit 1
+    echo "You are not loggged into your GitHub organization. GitHub auth token is not set. Please run command 'gh auth login', then run this script again."
+    exit 0
 fi
 
+# using volumes '--volume' to mount only the needed directories to the container. 
+# using ':ro' to make scrip directories etc. read-only. Only config and log directories are writable.
 docker run \
-    -it \
+    --interactive \
+    --tty \
     --rm \
-    -v "${project_dir}":/asdk/Saas.IdentityProvider/deployment \
-    -v "${project_dir}/../policies":/asdk/Saas.IdentityProvider/policies \
-    -v "${project_dir}/../../SaaS.Identity.IaC":/asdk/SaaS.Identity.IaC \
-    -v "${HOME}/.azure/":/asdk/.azure:ro \
-    -v "${HOME}/asdk/.cache/":/asdk/.cache \
-    -e "GIT_REPO_ORIGIN=${git_repo_origin}" \
-    -e "GIT_ORG_PROJECT_NAME=${git_org_project_name}" \
-    -e "GITHUB_AUTH_TOKEN=${gh_auth_token}" \
-    asdk-idprovider:latest \
-    bash start.sh
+    --volume "${repo_base}/src/Saas.Identity/Saas.IdentityProvider/deployment/":/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment:ro \
+    --volume "${repo_base}/src/Saas.Identity/Saas.IdentityProvider/deployment/config/":/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/config \
+    --volume "${repo_base}/src/Saas.Identity/Saas.IdentityProvider/deployment/log/":/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/log \
+    --volume "${repo_base}/src/Saas.Identity/Saas.IdentityProvider/policies/":/asdk/src/Saas.Identity/Saas.IdentityProvider/policies \
+    --volume "${repo_base}/src/Saas.Lib/Deployment.Script.Modules/":/asdk/src/Saas.Lib/Deployment.Script.Modules:ro \
+    --volume "${repo_base}/.git/":/asdk/.git:ro \
+    --volume "${HOME}/.azure/":/asdk/.azure:ro \
+    --volume "${HOME}/asdk/.cache/":/asdk/.cache \
+    --env "ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE=/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment" \
+    --env "GIT_REPO_ORIGIN=${git_repo_origin}" \
+    --env "GIT_ORG_PROJECT_NAME=${git_org_project_name}" \
+    --env "GITHUB_AUTH_TOKEN=${gh_auth_token}" \
+    asdk-script-deployment:latest \
+    bash /asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/start.sh

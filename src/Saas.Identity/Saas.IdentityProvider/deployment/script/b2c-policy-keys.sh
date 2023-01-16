@@ -2,12 +2,15 @@
 
 set -u -e -o pipefail
 
-# include script modules into current shell
-source "constants.sh"
-source "$SCRIPT_MODULE_DIR/config-module.sh"
-source "$SCRIPT_MODULE_DIR/policy-module.sh"
-source "$SCRIPT_MODULE_DIR/log-module.sh"
-source "$SCRIPT_MODULE_DIR/service-principal-module.sh"
+# shellcheck disable=SC1091
+{
+    # include script modules into current shell
+    source "${ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE}/constants.sh"
+    source "$SHARED_MODULE_DIR/config-module.sh"
+    source "$SHARED_MODULE_DIR/policy-module.sh"
+    source "$SHARED_MODULE_DIR/log-module.sh"
+    source "$SHARED_MODULE_DIR/service-principal-module.sh"
+}
 
 b2c_tenant_id="$( get-value ".deployment.azureb2c.tenantId" )"
 service_principal_username="$( get-value ".deployment.azureb2c.servicePrincipal.username" )"
@@ -40,17 +43,17 @@ echo "Service principal login successful." | log-output --level success
 policy_keys="$( get-value ".azureb2c.policyKeys" )"
 
 # iterate over each policy key in policy key array
-readarray -t policy_key_array < <( jq -c '.[]' <<< "${policy_keys}" )
+readarray -t policy_key_array < <( jq --compact-output '.[]' <<< "${policy_keys}" )
 
 echo "Provisioning Policy Keys" | log-output --level info --header "Policy Keys"
 
 for policy_key in "${policy_key_array[@]}"; do
-    name="$( jq -r '.name'              <<< "${policy_key}" )"
-    options="$( jq -r '.options'        <<< "${policy_key}" )"
-    key_type="$( jq -r '.keyType'       <<< "${policy_key}" )"
-    key_use="$( jq -r '.keyUsage'       <<< "${policy_key}" )"
-    has_secret="$( jq -r '.hasSecret'   <<< "${policy_key}" )"
-    secret_path="$( jq -r '.secretPath' <<< "${policy_key}" )"
+    name="$( jq --raw-output '.name'              <<< "${policy_key}" )"
+    options="$( jq --raw-output '.options'        <<< "${policy_key}" )"
+    key_type="$( jq --raw-output '.keyType'       <<< "${policy_key}" )"
+    key_use="$( jq --raw-output '.keyUsage'       <<< "${policy_key}" )"
+    has_secret="$( jq --raw-output '.hasSecret'   <<< "${policy_key}" )"
+    secret_path="$( jq --raw-output '.secretPath' <<< "${policy_key}" )"
 
     if ! policy-key-exist "${name}"; then
 
@@ -67,7 +70,7 @@ for policy_key in "${policy_key_array[@]}"; do
             echo "Waiting 10 seconds for key-set to settle..." | echo-color --level info
             sleep 10
 
-            id="$( jq -r '.id' <<< "${policy_key_body}" )"
+            id="$( jq --raw-output '.id' <<< "${policy_key_body}" )"
 
             generate-policy-key "${id}" "${policy_key_body}"
             
@@ -89,7 +92,7 @@ for policy_key in "${policy_key_array[@]}"; do
 
                 create-policy-key-set "${policy_key_body}"
 
-                id="$( jq -r '.id' <<< "${policy_key_body}" )"
+                id="$( jq --raw-output '.id' <<< "${policy_key_body}" )"
 
                 echo "Waiting 10 seconds for key-set to settle..." | echo-color --level info
                 sleep 10

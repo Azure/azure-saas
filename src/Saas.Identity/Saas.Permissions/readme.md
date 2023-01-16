@@ -115,6 +115,24 @@ dig +short myip.opendns.com @resolver1.opendns.com
 
 ![image-20230112001210631](assets/readme/image-20230112001210631.png)
 
-## How  to Run In Production
+## How  to Deploy to Azure
+
+bla bla.
+
+We're going to deploy for Windows, rather than Linux, because the Windows remote debugging is the most seamless, and we're expecting that you'll want to remote debug into the Azure instance to explore and see how the app runs there. That said, nothing prevents you from deploying to Linux for production, since ASP.NET Core 7 runs equally well on Linux.
+
+For more on remote debugging with Visual Studio 2022 see: [Remote Debug ASP.NET Core on Azure App Service - Visual Studio (Windows) | Microsoft Learn](https://learn.microsoft.com/en-us/visualstudio/debugger/remote-debugging-azure-app-service?view=vs-2022). 
+
+
+
+## How to Debug in Azure
+
+After deploying to Azure everything should work. But what if it doesn't? We could attach a debugger then. Sure, but what if the ASP.NET Core app isn't even starting? 
+
+### My app won't start
+
+Command line to the rescue. 
+
+![image-20230120213644846](assets/readme/image-20230120213644846.png)
 
 <TO DO>

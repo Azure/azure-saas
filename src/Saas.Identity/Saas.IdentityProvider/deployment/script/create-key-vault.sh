@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 set -u -e -o pipefail
 
-# loading script modules into current shell
-source "constants.sh"
-source "$SCRIPT_MODULE_DIR/config-module.sh"
-source "$SCRIPT_MODULE_DIR/resource-module.sh"
-source "$SCRIPT_MODULE_DIR/key-vault-module.sh"
-source "$SCRIPT_MODULE_DIR/log-module.sh"
+# shellcheck disable=SC1091
+{
+    # include script modules into current shell
+    source "${ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE}/constants.sh"
+    source "$SHARED_MODULE_DIR/config-module.sh"
+    source "$SHARED_MODULE_DIR/resource-module.sh"
+    source "$SHARED_MODULE_DIR/key-vault-module.sh"
+    source "$SHARED_MODULE_DIR/log-module.sh"
+}
 
 resource_group="$( get-value ".deployment.resourceGroup.name" )"
 key_vault_name="$( get-value ".deployment.keyVault.name" )"
@@ -23,7 +26,7 @@ init-key-vault-certificate-template "${b2c_name}"
 app_registrations="$( get-value ".appRegistrations" )"
 
 # read each app_registration into an array
-readarray -t app_reg_array < <( jq -c '.[]' <<< "${app_registrations}" )
+readarray -t app_reg_array < <( jq --compact-output '.[]' <<< "${app_registrations}" )
 
 # get B2C config user details
 b2c_config_usr_name="$( get-value ".deployment.azureb2c.username" )"
@@ -31,8 +34,8 @@ b2c_config_usr_certificates_path="$( get-user-value "${b2c_config_usr_name}" "${
 
 # loop through each app_registration and create a certificate if needed
 for app_reg in "${app_reg_array[@]}"; do
-    has_certificate="$( jq -r '.certificate'    <<< "${app_reg}" )"
-    app_name="$( jq -r '.name'                  <<< "${app_reg}" )"
+    has_certificate="$( jq --raw-output '.certificate'    <<< "${app_reg}" )"
+    app_name="$( jq --raw-output '.name'                  <<< "${app_reg}" )"
 
     cert_name="cert-${app_name}"
 
@@ -58,7 +61,7 @@ done
 policy_keys="$( get-value ".azureb2c.policyKeys" )"
 
 # read each policy key into an array
-readarray -t policy_key_array < <( jq -c '.[]' <<< "${policy_keys}" )
+readarray -t policy_key_array < <( jq --compact-output '.[]' <<< "${policy_keys}" )
 
 # get service principal details
 service_principal_name="$( get-value ".deployment.azureb2c.servicePrincipal.username" )"
@@ -66,11 +69,11 @@ service_principal_secrets_path="$( get-user-value "${service_principal_name}" "$
 
 # loop through each policy key and create a secret if needed
 for policy_key in "${policy_key_array[@]}"; do
-    options="$( jq -r '.options'        <<< "${policy_key}" )"
-    has_secret="$( jq -r '.hasSecret'   <<< "${policy_key}" )"
+    options="$( jq --raw-output '.options'        <<< "${policy_key}" )"
+    has_secret="$( jq --raw-output '.hasSecret'   <<< "${policy_key}" )"
 
     if [[ "${options}" == "Manual" && "${has_secret}" == "true" ]]; then
-        policy_name="$( jq -r '.name' <<< "${policy_key}" )"
+        policy_name="$( jq --raw-output '.name' <<< "${policy_key}" )"
 
         secret_path="$( add-a-secret-to-vault \
             "${policy_name}" \
