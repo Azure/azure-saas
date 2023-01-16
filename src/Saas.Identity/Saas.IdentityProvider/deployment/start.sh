@@ -184,10 +184,8 @@ put-value ".deployment.storage.provisionState" "provisioning"
                     --level error \
                     --header "Critical error" \
                     || exit 1
-
-        put-value ".deployment.storage.provisionState" "successful"
-
     fi
+    put-value ".deployment.storage.provisionState" "successful"
 ) || 
     (
         put-value ".deployment.storage.provisionState" "failed" \
