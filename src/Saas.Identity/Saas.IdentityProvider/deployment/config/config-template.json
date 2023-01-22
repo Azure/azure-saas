@@ -33,7 +33,7 @@
     "credentials": 
     {
       "name": null,
-      "issuer": "https://token.actions.githubusercontent.com/",
+      "issuer": "https://token.actions.githubusercontent.com",
       "subject": null,
       "description": "OIDC Workflow credentials for GitHub Actions for ASDK",
       "audiences": [
