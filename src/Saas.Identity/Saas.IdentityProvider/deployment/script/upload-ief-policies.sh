@@ -2,14 +2,16 @@
 
 set -e -o pipefail
 
-# include script modules into current shell
-source "constants.sh"
-source "$SCRIPT_MODULE_DIR/init-module.sh"
-source "$SCRIPT_MODULE_DIR/log-module.sh"
-source "$SCRIPT_MODULE_DIR/policy-module.sh"
-source "$SCRIPT_MODULE_DIR/user-module.sh"
+# shellcheck disable=SC1091
+{
+    # include script modules into current shell
+    source "${ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE}/constants.sh"
+    source "$SHARED_MODULE_DIR/log-module.sh"
+    source "$SHARED_MODULE_DIR/policy-module.sh"
+    source "$SHARED_MODULE_DIR/user-module.sh"
+}
 
-"${SCRIPT_MODULE_DIR}/generate-ief-policies.py" \
+"${SCRIPT_DIR}/generate-ief-policies.py" \
     "${CONFIG_FILE}" \
     "${IDENTITY_EXPERIENCE_FRAMEWORK_POLICY_APP_SETTINGS_FILE}" \
     "${IDENTITY_EXPERIENCE_FRAMEWORK_POLICY_DIR}" \
@@ -28,15 +30,15 @@ environment="$( get-value ".environment" )"
 service_principal_username="$( get-value ".deployment.azureb2c.servicePrincipal.username" )"
 set-user-context "${service_principal_username}"
 
-dependency_sorted_array="$( "${SCRIPT_MODULE_DIR}/get-dependency-sorted-policies.py" \
+dependency_sorted_array="$( "${SCRIPT_DIR}/get-dependency-sorted-policies.py" \
     "${IDENTITY_EXPERIENCE_FRAMEWORK_POLICY_ENVIRONMENT_DIR}/${environment}" )"
 
 # iterate over each policy key in policy key array
-readarray -t policy_file_array < <( jq -c '.[]' <<< "${dependency_sorted_array}" )
+readarray -t policy_file_array < <( jq --compact-output '.[]' <<< "${dependency_sorted_array}" )
 
 for policy in "${policy_file_array[@]}"; do
-    id="$( jq -r '.id'              <<< "${policy}" )"
-    path="$( jq -r '.path'          <<< "${policy}" )"
+    id="$( jq --raw-output '.id'              <<< "${policy}" )"
+    path="$( jq --raw-output '.path'          <<< "${policy}" )"
 
     # removing the BOM from the file or az rest will choke on it.
     # https://en.wikipedia.org/wiki/Byte_order_mark

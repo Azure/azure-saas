@@ -47,6 +47,8 @@ There are two ways to run this deployment script. The recommended way to run the
 
 This containerized approach will ensure that you have all the required dependencies installed and that you are running the script in a controlled environment. It will also minimize the chances that some other properties of your existing environment interferes with the script or that the script inadvertently interferes with your existing environment.
 
+> Tip: On Windows 10/11, if you experience the error: *"The command 'docker' could not be found in this WSL 2 distro. We recommend to activate the WSL integration in Docker Desktop settings."*, then try to restart Docker Desktop or if that doesn't help, try and reinstall it. 
+
 ### Begin
 
 To begin; open your GNU Linux terminal to the directory where you've [cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the [forked](https://docs.github.com/en/get-started/quickstart/fork-a-repo) version of ASDK. Should be something like:
@@ -59,7 +61,7 @@ To begin; open your GNU Linux terminal to the directory where you've [cloned](ht
 
 > Tip: You can open the deployment project in Visual Code by typing `code .` in the terminal (Mac or Windows with WSL) from the directory.
 
-### Building the run-script container
+### Building the deployment script container
 
 To run the script you must first build the container. To do this, run the following commands:
 
@@ -68,7 +70,7 @@ chmod +x build.sh # only needed the first time to set execute permissions on bui
 ./build.sh
 ```
 
-This will take a few minutes to complete and you will only need to do it once, as long as you make no changes to the `Dockerfile`. The container will be named `asdk-idprovider`.
+This will take a few minutes to complete and you will only need to do it once, as long as you make no changes to the `Dockerfile`. The container will be named `asdk-script-deployment`.
 
 ### Running the deployment script using the container
 
@@ -212,9 +214,13 @@ In most cases, if something goes wrong along the way, all you need to do is run 
 >
 > Tip: In fact, deleting an entity and then running the script again is a general suggestion for if you want to make changes. The script is designed with resilience in mind. 
 
+If the script fails you may use the logs to investigate the issue. The logs are found in the [log](./log) directory in the project root. Every time the script is run a new folder with the time/date of the event is created. Inside this folder the `config.json` manifest file is stored twice. Once as it looks in the beginning of the script run and once who it looks at the end. The `config.json` manifest is an important file, if you need to run the script again.
+
+> Tip: The `config.json`and the logs both excluded from the any git commit made on the project as defined in `.gitignore`. This is done for both practical reasons and security reasons. However, each time you run the script, both the logs and the configuration files are uploaded and stored in an Azure Storage Account that the script creates in you Azure Resource Group.
+
 ## Now what?
 
-The deployment script has run to it's completion and the Identity Framework have been deployed - providing that nothing went wrong, of course. It's time to kick the tires on The Azure SaaS Development Kit. ASDK is modular and the next step should be to run the Permission Service, as it's such a core component. 
+The deployment script has run to it's completion and the Identity Framework have been deployed - providing that nothing went wrong, of course. It's time to kick the tires of the Azure SaaS Development Kit. ASDK is modular and the next step should be to run the Permission Service, as it's such a core component. 
 
 We suggest that you run the Permission API service locally first. This will give you an opportunity to attach a debugger to *see* and understand what's going on. So please head over to the [Permission Service ReadMe](../../Saas.Permissions/readme.md), for more on running the Permission API Service locally as well as deploying it to Azure, when you are ready to do so.
 

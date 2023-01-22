@@ -21,88 +21,112 @@ param userAssignedIdentityName string
 @description('The name of the Azure App Configuration.')
 param appConfigurationName string
 
+@description('The name of Application Insights.')
+param applicationInsightsName string
+
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
   name: userAssignedIdentityName
+}
+
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: applicationInsightsName
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    publicNetworkAccessForIngestion: 'Enabled'
+    publicNetworkAccessForQuery: 'Enabled'
+  }
+}
+
+resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+  name: appServicePlanName
+  location: location
+  kind: 'windows'
+  sku: {
+    name: 'S1'
+  }
+  properties: {
+    reserved: false // change to true to enable request Linux rather than Windows. Go figure :)
+  }
 }
 
 resource appConfig 'Microsoft.AppConfiguration/configurationStores@2022-05-01' existing = {
   name: appConfigurationName
 }
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: appServicePlanName
-  location: location
-  kind: 'linux'
-  sku: {
-    name: 'S1'
-  }
-  properties: {
-    reserved: true
-  }
-}
-
 resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
   name: permissionsApiName
   location: location
-  kind: 'app,linux'
+  kind: 'app,windows'
   properties: {
     serverFarmId: appServicePlan.name
     httpsOnly: true
     siteConfig: {
       alwaysOn: true 
+      // linuxFxVersion: 'DOTNETCORE|7.0'
+      http20Enabled: true
+      keyVaultReferenceIdentity: userAssignedIdentity.id // Must specify this when using User Assigned Managed Identity. Read here: https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references?tabs=azure-cli#access-vaults-with-a-user-assigned-identity
     }
   }
   identity: {
     type: 'UserAssigned'
-    userAssignedIdentities: { '${userAssignedIdentity.id}': {} }
+    userAssignedIdentities: { 
+      '${userAssignedIdentity.id}': {} 
+    }
   }
   resource appsettings 'config@2022-03-01' = {
     name: 'appsettings'
     properties: {
-      Version: version
+      Version: 'ver${version}'
       Logging__LogLevel__Default: 'Information'
       Logging__LogLevel__Microsoft__AspNetCore: 'Warning'
       KeyVault__Url: keyVaultUri
-      ASPNETCORE_ENVIRONMENT: 'Development'
+      ASPNETCORE_ENVIRONMENT: 'Production'
       UserAssignedManagedIdentityClientId: userAssignedIdentity.properties.clientId
       AppConfiguration__Endpoint : appConfig.properties.endpoint
+      APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
     }
   }
 }
 
-resource permissionsApiStagingSlot 'Microsoft.Web/sites/slots@2022-03-01' = {
-  name: 'PermissionsApi-Staging'
-  parent: permissionsApi
-  location: location
-  kind: 'app,linux'
-  properties: {
-    serverFarmId: appServicePlan.name
-  }
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: { '${userAssignedIdentity.id}': {} }
-  }
-}
-
-// resource permissionsApiSlotsConfig 'Microsoft.Web/sites/slots/config@2022-03-01' = {
-//   name: 'web'
-//   parent: permissionsApiSlots
+// resource permissionsApiStagingSlot 'Microsoft.Web/sites/slots@2022-03-01' = {
+//   name: 'PermissionsApi-Staging'
+//   parent: permissionsApi
+//   location: location
+//   kind: 'app,linux'
 //   properties: {
-//     WEBSITE_RUN_FROM_PACKAGE: '1'
+//     serverFarmId: appServicePlan.name
+//     httpsOnly: true
+//     siteConfig: {
+//       alwaysOn: true 
+//       linuxFxVersion: 'DOTNETCORE|7.0'
+//       http20Enabled: true
+//     }
+//   }
+//   identity: {
+//     type: 'UserAssigned'
+//     userAssignedIdentities: { '${userAssignedIdentity.id}': {} }
+//   }
+//   resource appsettings 'config@2022-03-01' = {
+//     name: 'appsettings'
+//     properties: {
+//       Version: version
+//       Logging__LogLevel__Default: 'Information'
+//       Logging__LogLevel__Microsoft__AspNetCore: 'Warning'
+//       KeyVault__Url: keyVaultUri
+//       ASPNETCORE_ENVIRONMENT: 'Development'
+//       UserAssignedManagedIdentityClientId: userAssignedIdentity.properties.clientId
+//       AppConfiguration__Endpoint : appConfig.properties.endpoint
+//     }
+//   }
+//   resource metadata 'config@2022-03-01' = {
+//     name: 'metadata'
+//     properties: {
+//       CURRENT_STACK: 'dotnet'      
+//     }
 //   }
 // }
-
-// resource permissionSrcControls 'Microsoft.Web/sites/sourcecontrols@2022-03-01' = {  
-//   name: 'web'
-//   parent: permissionsApi
-//   properties: {  
-//     isGitHubAction: true
-//     repoUrl: gitRepoUrl 
-//     branch: gitBranch 
-//     deploymentRollbackEnabled: true
-//     isManualIntegration: false
-//   }  
-// } 
 
 // Resource - Permissions Api - Deployment
 //////////////////////////////////////////////////

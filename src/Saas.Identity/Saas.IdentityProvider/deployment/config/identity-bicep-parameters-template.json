@@ -49,12 +49,6 @@
         },
         "sqlAdministratorLogin": {
             "value": null
-        },
-        "gitRepoUrl": {
-            "value": null
-        },
-        "gitBranch": {
-            "value": null
         }
     }
 }

@@ -2,11 +2,13 @@
 
 set -e -o pipefail
 
-# include script modules into current shell
-source "constants.sh"
-source "$SCRIPT_MODULE_DIR/init-module.sh"
-source "$SCRIPT_MODULE_DIR/log-module.sh"
-source "$SCRIPT_MODULE_DIR/config-module.sh"
+# shellcheck disable=SC1091
+{
+    # include script modules into current shell
+    source "${ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE}/constants.sh"
+    source "$SHARED_MODULE_DIR/log-module.sh"
+    source "$SHARED_MODULE_DIR/config-module.sh"
+}
 
 if ! [[ -f "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" ]]; then
     echo "The file ${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE} does not exist, creating it now" \
@@ -17,11 +19,11 @@ fi
 
 set -u
 
-"${SCRIPT_MODULE_DIR}/map-identity-paramenters.py" "${CONFIG_FILE}" "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" \
+"${SCRIPT_DIR}/map-identity-paramenters.py" "${CONFIG_FILE}" "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" \
     | log-output \
         --level info \
-        --header "Generating Identity Provider parameters..." \
-    || echo "Failed to map Identity Provider parameters" \
+        --header "Generating Identity Foundation services parameters..." \
+    || echo "Failed to map Identity Foundation services parameters" \
         | log-output \
             --level error \
             --header "Critical Error" \
@@ -29,25 +31,23 @@ set -u
 
 resource_group="$( get-value ".deployment.resourceGroup.name" )"
 
-echo "Provisioning permission provider in resource group ${resource_group}..." \
+echo "Provisioning Identity Foundation services in resource group ${resource_group}..." \
     | log-output \
         --level info
 
-output="$( az deployment group create \
+az deployment group create \
     --resource-group "${resource_group}" \
     --name "IdentityBicepDeployment" \
     --template-file "${DEPLOY_IDENTITY_FOUNDATION_FILE}" \
-    --parameters "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" )" \
-    || echo "Failed to deploy Identity Provider" \
+    --parameters "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" \
+    | log-output \
+        --level info \
+    || echo "Failed to deploy Identity Foundation services" \
         | log-output \
             --level error \
             --header "Critical Error" \
             || exit 1
-        
-echo "${output}" \
-    | log-output \
-        --level info
 
-echo "Permission provider successfully provisioned in resource group ${resource_group}..." \
+echo "Indentity Foundation services successfully provisioned in resource group ${resource_group}..." \
     | log-output \
         --level success

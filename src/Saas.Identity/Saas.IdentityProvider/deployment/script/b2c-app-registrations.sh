@@ -2,13 +2,16 @@
 
 set -u -e -o pipefail
 
-# include script modules into current shell
-source "constants.sh"
-source "$SCRIPT_MODULE_DIR/config-module.sh"
-source "$SCRIPT_MODULE_DIR/app-reg-module.sh"
-source "$SCRIPT_MODULE_DIR/colors-module.sh"
-source "$SCRIPT_MODULE_DIR/log-module.sh"
-source "$SCRIPT_MODULE_DIR/tenant-login-module.sh"
+# shellcheck disable=SC1091
+{
+    # include script modules into current shell
+    source "${ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE}/constants.sh"
+    source "$SHARED_MODULE_DIR/config-module.sh"
+    source "$SHARED_MODULE_DIR/app-reg-module.sh"
+    source "$SHARED_MODULE_DIR/colors-module.sh"
+    source "$SHARED_MODULE_DIR/log-module.sh"
+    source "$SHARED_MODULE_DIR/tenant-login-module.sh"
+}
 
 b2c_tenant_name="$( get-value ".deployment.azureb2c.domainName" )"
 
@@ -46,21 +49,21 @@ solution_name="$( get-value ".initConfig.naming.solutionName" )"
 app_id_uri="https://${b2c_name}/${prefix}-${solution_name}-${postfix}"
 
 # read each item in the JSON array to an item in the Bash array
-readarray -t app_reg_array < <( jq -c '.appRegistrations[]' "${CONFIG_FILE}")
+readarray -t app_reg_array < <( jq --compact-output '.appRegistrations[]' "${CONFIG_FILE}")
 
 # counter for iterations on Bash array
 i=1
 
-# iterate through the Bash array
+# iterate through the Bash array of app registrations
 for app in "${app_reg_array[@]}"; do
-    app_name=$( jq -r '.name'                           <<< "${app}" )
-    app_id=$( jq -r '.appId'                            <<< "${app}" )
-    has_cert=$( jq -r '.certificate'                    <<< "${app}" )
-    redirect_uri=$( jq -r '.redirectUri'                <<< "${app}" )
-    permissions=$( jq -r '.permissions'                 <<< "${app}" )
-    permissions_length=$( jq '.permissions | length'    <<< "${app}" )
-    scopes=$( jq -r '.scopes'                           <<< "${app}" )
-    scopes_length=$( jq '.scopes | length'              <<< "${app}" )
+    app_name=$( jq --raw-output '.name'                     <<< "${app}" )
+    app_id=$( jq --raw-output '.appId'                      <<< "${app}" )
+    has_cert=$( jq --raw-output '.certificate'              <<< "${app}" )
+    redirect_uri=$( jq --raw-output '.redirectUri'          <<< "${app}" )
+    permissions=$( jq --raw-output '.permissions'           <<< "${app}" )
+    permissions_length=$( jq '.permissions | length'        <<< "${app}" )
+    scopes=$( jq --raw-output '.scopes'                     <<< "${app}" )
+    scopes_length=$( jq --raw-output '.scopes | length'     <<< "${app}" )
     
     display_name="${app_name}"
 
@@ -111,12 +114,36 @@ for app in "${app_reg_array[@]}"; do
         | log-output \
             --level success
 
-    obj_id=$( jq -r '.Id' <<< "${app_json}" )
-    app_id=$( jq -r '.AppId' <<< "${app_json}" )
+    obj_id=$( jq --raw-output '.Id'       <<< "${app_json}" )
+    app_id=$( jq --raw-output '.AppId'    <<< "${app_json}" )
 
     # add appId to config
     put-app-id "${app_name}" "${app_id}"
     put-app-object-id "${app_name}" "${obj_id}"
+
+    # add certificate to app registration if cert is true
+    if [[ "${has_cert}" == true || "${has_cert}" == "true" ]]; then
+        echo "Adding public key certificate for: ${app_name}..." \
+            | log-output --level info
+
+        cert_path=$( jq --raw-output '.publicKeyPath' <<< "${app}" )
+
+        az ad app credential reset \
+            --id "${obj_id}" \
+            --cert "@${cert_path}" \
+            --only-show-errors \
+            | log-output \
+                --level info \
+            || echo "Failed to add certificate to app $app_name, ${app_id}: $?" \
+                | log-output \
+                    --level error \
+                    --header "Critical error" \
+                || exit 1
+
+        echo "Certificate added for: ${app_name}" \
+            | log-output \
+                --level success
+    fi
 
     # add identifier uri when scopes are present
     if [[ (( $scopes_length -gt 0)) ]]; then
@@ -137,40 +164,8 @@ for app in "${app_reg_array[@]}"; do
         echo "Identifier added: ${app_id_uri}" \
             | log-output \
                 --level success
-    fi
 
-    # add certificate to app registration if cert is true
-    if [[ "${has_cert}" == true || "${has_cert}" == "true" ]]; then
-        echo "Adding public key certificate for: ${app_name}..." \
-            | log-output --level info
-
-        cert_path=$( jq -r '.publicKeyPath' <<< "${app}" )
-
-        az ad app credential reset \
-            --id "${obj_id}" \
-            --cert "@${cert_path}" \
-            --only-show-errors \
-            | log-output \
-                --level info \
-            || echo "Failed to add certificate to app $app_name, ${app_id}: $?" \
-                | log-output \
-                    --level error \
-                    --header "Critical error" \
-                || exit 1
-
-        echo "Certificate added for: ${app_name}" \
-            | log-output \
-                --level success
-    fi
-
-    # add permissions to app registration if permissions is true
-    if [[ (( $scopes_length -gt 0)) ]]; then
-
-        echo "Adding permissions for: ${app_name}..." \
-            | log-output \
-                --level info
-
-        echo "Adding ${scopes_length} scopes: ${scopes}" \
+        echo "Adding ${scopes_length} permission scopes to for ${app_name}." \
             | log-output \
                 --level info
 
@@ -179,9 +174,23 @@ for app in "${app_reg_array[@]}"; do
         echo "Permissions added for: ${app_name}" \
             | log-output \
                 --level success
+
+        # to be able to consent to the new scopes a service principal needs to be created for the app registration
+        echo "Creating service principal for: ${app_name}..." \
+            | log-output \
+                --level info
+
+        az ad sp create \
+            --id "${app_id}" \
+            --only-show-errors > /dev/null\
+            || echo "Failed to create service principal for app ${app_name}" \
+                | log-output \
+                    --level error \
+                    --header "Critical error" \
+                    || exit 1        
     fi
 
-    # add ressource 
+    # add required resource permissions when permissions are present 
     if [[ (( $permissions_length -gt 0)) ]]; then
         echo "Adding required resource access for: ${app_name}..." \
             | log-output \
@@ -194,10 +203,9 @@ for app in "${app_reg_array[@]}"; do
                 --level success
     fi
 
-    # for testing purposes only
+    # break loop on counter - for debugging purposes only
     # if [[ (( $i == 2 )) ]]; then
     #     exit 1
     # fi
-
-    ((++i))
+    # ((++i))
 done

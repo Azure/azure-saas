@@ -2,12 +2,15 @@
 
 set -u -e -o pipefail
 
-# include script modules into current shell
-source "constants.sh"
-source "$SCRIPT_MODULE_DIR/util-module.sh"
-source "$SCRIPT_MODULE_DIR/config-module.sh"
-source "$SCRIPT_MODULE_DIR/log-module.sh"
-source "$SCRIPT_MODULE_DIR/backup-module.sh"
+# shellcheck disable=SC1091
+{
+    # include script modules into current shell
+    source "${ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE}/constants.sh"
+    source "$SHARED_MODULE_DIR/util-module.sh"
+    source "$SHARED_MODULE_DIR/config-module.sh"
+    source "$SHARED_MODULE_DIR/log-module.sh"
+    source "$SHARED_MODULE_DIR/backup-module.sh"
+}
 
 function check-prerequisites() {
 
@@ -68,9 +71,13 @@ function check-prerequisites() {
 }
 
 function initialize-shell-scripts() {
-    # ensure the needed scripts are executable
-    sudo chmod +x ${SCRIPT_DIR}/*.sh
-    sudo chmod +x ${SCRIPT_MODULE_DIR}/*.py
+    # if not running in a container
+    if ! [ -f /.dockerenv ]; then
+        # ensure the needed scripts are executable
+        sudo chmod +x ${SCRIPT_DIR}/*.sh
+        sudo chmod +x ${SHARED_MODULE_DIR}/*.py
+    fi
+
 }
 
 function initialize-configuration-manifest-file()
