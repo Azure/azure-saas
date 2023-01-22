@@ -34,7 +34,7 @@ now=$(date '+%Y-%m-%d--%H-%M-%S')
 export ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME="${now}"
 
 # create log file directory if it does not exist
-if [[ ! -d "${LOG_FILE_DIR}" ]]; then
+if ! [ -f /.dockerenv ] && [[ ! -d "${LOG_FILE_DIR}" ]]; then
     mkdir -p "$LOG_FILE_DIR"
     sudo chown -R 666 "$LOG_FILE_DIR"
 fi

@@ -63,14 +63,16 @@ To begin; open your GNU Linux terminal to the directory where you've [cloned](ht
 
 ### Building the deployment script container
 
-To run the script you must first build the container. To do this, run the following commands:
+To run the script you must first setup of the deployment environment and build the container. To do this, run the following commands:
 
 ```bash
-chmod +x build.sh # only needed the first time to set execute permissions on build.sh
-./build.sh
+chmod +x setup.sh # only needed the first time to set execute permissions on setup.sh
+./setup.sh
 ```
 
 This will take a few minutes to complete and you will only need to do it once, as long as you make no changes to the `Dockerfile`. The container will be named `asdk-script-deployment`.
+
+If you make changes to `Dockerfile` you can update the container by running `./build.sh` again.
 
 ### Running the deployment script using the container
 
@@ -85,9 +87,17 @@ This will instantiate the container and mount the current root directory as a vo
 
 Mounting the root directory means that any edits to `config.json` or anything any of the script files will immediately becomes effective without having to re-build the container. All you need to do is tun `./run.sh` and any changes you've  made will now be effective.
 
+### Logging into az cli
+
+To ensure that you are correctly logged into your Azure tenant, please run this command and follow the instructions. 
+
+```bash
+az login --scope "https://graph.microsoft.com/.default"
+```
+
 ###  Running the script the first time
 
-The first time you run the script, the script will automatically create a new instance of the `./config/config.json` file (based on `./config/config-template.json`), after which the script will exit immediately with a request for additional information to be added to the configuration manifest in `config.json`. 
+The first time you run the script, the script will automatically create a new instance of the file `./config/config.json`  (a copy of `./config/config-template.json`), after which the script will exit immediately with a request for additional information to be added to the configuration manifest in `config.json`. 
 
 Specifically, the `initConfig` section must be filled out (see more details below):
 
@@ -120,13 +130,13 @@ az login # only do this if you're not logged in already
 az ad signed-in-user show --query id
 ```
 
-> Note: The reason that the script doesn't pull the `userPrincipalId` automatically, is that some organization may require that this particular command can only be run from a *manage device*. Because the deployment script is run from inside a container this, the command may throw an error: "*AADSTS530003: Your device is required to be managed to access this resource.*", even if the device that the container is on, is managed.
+> Note: The reason that the script doesn't pull the `userPrincipalId` automatically, is that some organizations may require that this particular command can only be run from a *manage device*. Because the deployment script is run from inside a container this, the command may throw an error: "*AADSTS530003: Your device is required to be managed to access this resource.*", even if the device that the container is on, is managed.
 
 ### Azure Subscription Id
 
-You may have multiple Azure subscriptions and thus manually choosing which subscription you want to use is the most practical approach for filling in the `subscriptionId`value. You'll your subscriptions in the [Azure Portal on the subscriptions page](https://ms.portal.azure.com/#view/Microsoft_Azure_Billing/SubscriptionsBlade), the value must be a GUID.
+You may have multiple Azure subscriptions and thus manually choosing which subscription you want to use is the most practical approach for filling in the `subscriptionId`value. You'll find your subscriptions in the [Azure Portal on the subscriptions page](https://ms.portal.azure.com/#view/Microsoft_Azure_Billing/SubscriptionsBlade), the value should be a GUID.
 
- Alternatively, get a list of your subscriptions of the tenant that you are logged into by running the az cli command:
+Alternatively, get a list of your subscriptions of the tenant that you are logged into by running the az cli command and choose the one you want to use here:
 
 ```bash
  az account subscription list --query "[].{DisplayName:displayName, Id:id}" --output table
@@ -134,14 +144,14 @@ You may have multiple Azure subscriptions and thus manually choosing which subsc
 
 ###  Tenant Id
 
-Get the `tenantId`bu running the following command, which will respond with a GUID.
+Get the `tenantId`by running the following command, which will respond with a GUID.
 
 ```bash
 az login # only do this if you're not logged in already
 az account show --query tenantId
 ```
 
-> Note: The `id` that is returned by `az account show` is **not** the `userPrincipalId` mentioned above.
+> Note: The `id` that is returned by `az account show` is **not** the `userPrincipalId` required here.
 
 ### Location
 
@@ -153,7 +163,7 @@ az account list-locations --output table
 
 ### The other values
 
-Regarding the other values in `initConfig`:
+Other values in `initConfig`:
 
 | Value                  | Default   | Comment                                                      |
 | ---------------------- | --------- | ------------------------------------------------------------ |
@@ -166,21 +176,21 @@ Regarding the other values in `initConfig`:
 
 ### Running the script 
 
-After you've provided the values outlined above to the `config.json` file, you're ready to run the script again. 
+After you've added the values outlined above to `config.json` you're ready to run the script again. 
 
-While running the script the second time, you will be asked to log in once or twice. 
+While running the script the second time, you will be asked to log in once, and maybe twice. 
 
-1. The first log in, is for your main Azure tenant. This step will likely be skipped since you are already logged in to the specified tenant.
+1. The first log in, is for your main Azure tenant. This step will likely be skipped since you are already logged in to the specified tenant - i.e., using `az login --scope "https://graph.microsoft.com/.default"`
 
-   > Tip: The script is smart enough to utilize your Azure token cache from your main az cli session, outside of the container. 
+   > Tip: The script is smart enough to utilize your existing  Azure token, that is cached for your main az cli session, outside of the container. 
 
-2. The second login is for logging into the Azure B2C Tenant that have just been created. This login is needed to make further changes to the Azure B2C tenant. 
+2. The second login cannot be avoided, since it is for logging into the Azure B2C Tenant that have just been created. This login is needed to make further changes to the Azure B2C tenant. 
 
-   > Tip: The script will cache login sessions outside the container, so that if you need to run the script multiple times, you will not be asked to log in. This login session for Azure B2C will be cached here: `$HOME"/asdk/.cache/`.
+   > Note: The script will cache the login session, so that if you need to run the script multiple times, you will not be asked to log in again. This login session for Azure B2C is cached here: `$HOME/asdk/.cache/`.
 
-## Running deployment script on your computer w/o docker (not recommended)
+## Running deployment script on your computer without docker (not recommended)
 
-While not recommended, you can also run the deployment script on you computing without using a container. It will generally run slower and since the run environment is not as controlled as running the script using a container there is a higher risk for something not working. That said, the script is tested for this and will work in most circumstances. 
+While not recommended, you can also run the deployment script *bare-bone* on you computing without using a container. It will generally run slower and since the run environment is not as controlled as when running the script using a dedicated container, there is a higher risk for something not working. That said, the script is tested for this and will work in most circumstances.
 
 The script have been tested on:
 
@@ -208,15 +218,17 @@ From there on everything else is virtually identical to running the script from 
 
 ## What if something goes wrong?
 
-In most cases, if something goes wrong along the way, all you need to do is run the script again and it will skip the parts that have already been completed and re-try the parts that have not.
+It should happen, but it does. In most cases, if something goes wrong along the way, all you'll need to do is to run the script again and it will skip the parts that have already been completed and re-try the parts that have not.
 
-> Tip: If something goes wrong with the App Registrations, try deleting them and then run the script again. Please be aware that when you dele an App Registration it will move to `Deleted applications` and you will have to delete the registration once more to fully with `Delete permanently` to fully purge it.
+> Tip #1: If something goes wrong with for instance the the App Registrations, try deleting all of them (or at least the one that is not correct) and then run the script again. Doing so will recreate the app registrations. 
 >
-> Tip: In fact, deleting an entity and then running the script again is a general suggestion for if you want to make changes. The script is designed with resilience in mind. 
+> Tip #2: Please be aware that when you dele an App Registration it will move to `Deleted applications` and you will have to delete the deleted registration too using `Delete permanently` to fully purge it.
+>
+> Tip #3: Deleting an entity and then running the script again is a general a good suggestion for if you want to make changes. The script is designed with resilience in mind.
 
 If the script fails you may use the logs to investigate the issue. The logs are found in the [log](./log) directory in the project root. Every time the script is run a new folder with the time/date of the event is created. Inside this folder the `config.json` manifest file is stored twice. Once as it looks in the beginning of the script run and once who it looks at the end. The `config.json` manifest is an important file, if you need to run the script again.
 
-> Tip: The `config.json`and the logs both excluded from the any git commit made on the project as defined in `.gitignore`. This is done for both practical reasons and security reasons. However, each time you run the script, both the logs and the configuration files are uploaded and stored in an Azure Storage Account that the script creates in you Azure Resource Group.
+> Tip : The `config.json`and the logs are both excluded from the any git commit made on the project as defined in `.gitignore`. This is done for both practical reasons and security reasons. However, each time you run the script, both the logs and the configuration files are uploaded and stored in an Azure Storage Account in you Azure Resource Group.
 
 ## Now what?
 

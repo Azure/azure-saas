@@ -25,6 +25,14 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+
+      #azure login
+      - uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
       # checkout the repo specifying the branch name in 'ref:'
       - uses: actions/checkout@v3
         with:
@@ -48,13 +56,6 @@ jobs:
           dotnet publish ${{ env.PROJECT_PATH }} \
             --configuration Release \
             --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/{{ env.AZURE_WEBAPP_NAME }}'
-
-      - uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
 
       # Deploy to Azure Web apps
       - name: "Run Azure webapp deploy action using publish profile credentials"
