@@ -6,7 +6,9 @@ git_org_project_name="$( git config --get remote.origin.url | sed 's/.*\/\([^ ]*
 gh_auth_token="$( gh auth token )"
 
 if [[ -z "${gh_auth_token}" ]]; then
-    echo "You are not loggged into your GitHub organization. GitHub auth token is not set. Please run command 'gh auth login', then run this script again."
+    echo "You are not loggged into your GitHub organization. GitHub auth token is not set and/or you haven't installed GitHub Cli." 
+    echo "Please make sure that GitHub Cli is installed and then run 'gh auth login', before running this script again."
+    echo "See readme.md for more info."
     exit 0
 fi
 
