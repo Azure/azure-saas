@@ -62,11 +62,15 @@ resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
   properties: {
     serverFarmId: appServicePlan.name
     httpsOnly: true
+    clientCertEnabled: true // https://learn.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth?tabs=bicep
+    clientCertMode: 'Required'
     siteConfig: {
+      ftpsState: 'FtpsOnly'
       alwaysOn: true 
       // linuxFxVersion: 'DOTNETCORE|7.0'
       http20Enabled: true
       keyVaultReferenceIdentity: userAssignedIdentity.id // Must specify this when using User Assigned Managed Identity. Read here: https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references?tabs=azure-cli#access-vaults-with-a-user-assigned-identity
+      detailedErrorLoggingEnabled: true
     }
   }
   identity: {
