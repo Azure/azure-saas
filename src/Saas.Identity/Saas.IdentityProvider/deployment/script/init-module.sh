@@ -35,6 +35,22 @@ function final-state() {
             | log-output \
                 --level success \
                 --header "Deployment script completion"
+
+
+        resource_group="$( get-value ".deployment.resourceGroup.name" )"
+        subscription_id="$( get-value ".initConfig.subscriptionId" )"
+
+        echo "To see the deployed resources, please visit the Azure Portal and navigate to the resource group '${resource_group}': https://ms.portal.azure.com/#@microsoft.onmicrosoft.com/resource/subscriptions/${subscription_id}/resourceGroups/${resource_group}/overview" \
+            | log-output \
+                --level info \
+                --header "Deployment script completion"
+
+        b2c_tenant_id="$( get-value ".deployment.azureb2c.tenantId" )"
+
+        echo "Your Azure B2C Tenant Id is: ${b2c_tenant_id}" \
+            | log-output \
+                --level info
+
     else
         echo "Identity Foundation deployed with errors." \
             | log-output \

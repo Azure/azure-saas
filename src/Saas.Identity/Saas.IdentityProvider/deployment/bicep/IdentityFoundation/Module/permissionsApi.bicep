@@ -62,7 +62,7 @@ resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
   properties: {
     serverFarmId: appServicePlan.name
     httpsOnly: true
-    clientCertEnabled: true // https://learn.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth?tabs=bicep
+    // clientCertEnabled: true // https://learn.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth?tabs=bicep
     clientCertMode: 'Required'
     siteConfig: {
       ftpsState: 'FtpsOnly'

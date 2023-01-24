@@ -103,7 +103,9 @@ function log-into-main() {
                 --output tsv \
                     || log-in-error )"
 
-            echo "Logged into tenant ID: ${tenant_id}" | log-output --level info
+            echo "Logged into tenant ID: ${tenant_id}" \
+                | log-output \
+                    --level info
                 
             if [[ -z "${tenant_id}" ]] ; then
                     log-in-error
