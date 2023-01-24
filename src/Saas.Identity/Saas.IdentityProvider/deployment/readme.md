@@ -1,4 +1,4 @@
-# Deploying the Identity Provider and Permission Service
+# Deploying the Identity Foundation Services
 
 This deployment script provisions and configures the Azure services defining the SaaS Identify Foundation, which is back-bone of the Azure SaaS Dev Kit. 
 
@@ -54,7 +54,7 @@ This containerized approach will ensure that you have all the required dependenc
 To begin; open your GNU Linux terminal to the directory where you've [cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the [forked](https://docs.github.com/en/get-started/quickstart/fork-a-repo) version of ASDK. Should be something like:
 
 ````bash
-/<project root>/azure-saas/src/Saas.Identity/Saas.IdentityProvider/deployment
+.../src/Saas.Identity/Saas.IdentityProvider/deployment
 ````
 
 ![image-20230110094801956](assets/readme/image-20230110094801956.png)
@@ -232,9 +232,21 @@ If the script fails you may use the logs to investigate the issue. The logs are 
 
 ## Now what?
 
-The deployment script has run to it's completion and the Identity Framework have been deployed - providing that nothing went wrong, of course. It's time to kick the tires of the Azure SaaS Development Kit. ASDK is modular and the next step should be to run the Permission Service, as it's such a core component. 
+The deployment script has run to it's completion and the Identity Framework have been deployed - providing that nothing went wrong, of course. 
 
-We suggest that you run the Permission API service locally first. This will give you an opportunity to attach a debugger to *see* and understand what's going on. So please head over to the [Permission Service ReadMe](../../Saas.Permissions/readme.md), for more on running the Permission API Service locally as well as deploying it to Azure, when you are ready to do so.
+### Inspecting the Identity Foundation in the Azure Portal.
 
-> Tip: The Permission Service is part of the repository that you *git cloned*, after you *git forked* it. You'll find it  here: `/<project root>/azure-saas/src/Saas.Identity/Saas.Permissions`.
+The Identity Framework is gathered in an Azure Resource group. In the Azure Portal it will look something like this: 
+
+![image-20230124195324739](assets/readme/image-20230124195324739.png)
+
+### Adding Modules
+
+With the Identity Foundation in place, it's time to kick the tires of the Azure SaaS Development Kit. The next step should be to add the ASDK Permission Service API, which is a core component. 
+
+We suggest that you run the Permission API service locally first. This will give you an opportunity to attach a debugger to it to explore and learn more about what's going on. 
+
+So, please head over to the [Permission Service ReadMe](../../Saas.Permissions/readme.md), for more details on running the Permission API Service locally, as well as deploying it to Azure, when you are ready to do so.
+
+> Tip: The Permission Service is part of the repository that you *git cloned*, after you *git forked* it. You'll find it here: `.../src/Saas.Identity/Saas.Permissions`.
 

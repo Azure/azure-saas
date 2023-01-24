@@ -75,5 +75,5 @@ function clean-up() {
 
     set -e -o pipefail
 
-    final-state 
+    final-state
 }
