@@ -16,20 +16,25 @@ namespace ClientAssertionWithKeyVault;
 public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
 {
     private readonly ILogger _logger;
+
+    // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/loggermessage?view=aspnetcore-7.0
+    private static readonly Action<ILogger, Exception> _logError = LoggerMessage.Define(
+            LogLevel.Error,
+            new EventId(1, nameof(ClientAssertionSigningProvider)),
+            "Client Assertion Signing Provider");
+
     private readonly IMemoryCache _memoryCache;
     private readonly IPublicX509CertificateDetailProvider _publicX509CertificateDetailProvider;
 
     public ClientAssertionSigningProvider(
         IMemoryCache menoryCache,
         ILogger<ClientAssertionSigningProvider> logger,
-        IPublicX509CertificateDetailProvider? publicX509CertificateDetailProvider = null)
-    {
+        IPublicX509CertificateDetailProvider publicX509CertificateDetailProvider)
+    {   
         _logger = logger;
         _memoryCache = menoryCache;
 
-        _publicX509CertificateDetailProvider = publicX509CertificateDetailProvider is null 
-            ? new PublicX509CertificateDetailProvider(menoryCache)
-            : publicX509CertificateDetailProvider;
+        _publicX509CertificateDetailProvider = publicX509CertificateDetailProvider;
     }
 
     public async Task<string> GetClientAssertion(string keyVaultUrl,
@@ -70,7 +75,7 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
         var cacheOptions = new MemoryCacheEntryOptions()
             .SetAbsoluteExpiration(cacheExpiration);
 
-        _memoryCache.Set<string>(cacheItemName, clientAssertion, cacheOptions);
+        _memoryCache.Set(cacheItemName, clientAssertion, cacheOptions);
 
         return clientAssertion;
     }
@@ -112,7 +117,7 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
+            _logError(_logger, ex);
             throw;
         }
     }
@@ -138,7 +143,7 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
         }
         catch (Exception ex)
         {
-            _logger.LogError (ex, ex.Message);
+            _logError(_logger, ex);
             throw;
         }
     }

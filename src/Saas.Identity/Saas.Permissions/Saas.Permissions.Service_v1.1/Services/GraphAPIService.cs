@@ -54,23 +54,31 @@ public class GraphAPIService : IGraphAPIService
 
     public async Task<Models.User> GetUserByEmail(string userEmail)
     {
-        var graphUsers = await _graphServiceClient.Users
-            .Request()
-            .Filter($"identities/any(id: id/issuer eq '{_permissionOptions.Domain}' and id/issuerAssignedId eq '{userEmail}')")
-            .Select("id, identitied, displayName")
-            .GetAsync();
-
-        if (graphUsers.Count > 1)
+        try
         {
-            throw new UserNotFoundException($"More than one user with the email {userEmail} exists in the Identity provider");
-        }
-        if (graphUsers.Count == 0)
-        {
-            throw new UserNotFoundException($"The user with the email {userEmail} was not found in the Identity Provider");
-        }
+            var graphUsers = await _graphServiceClient.Users
+        .Request()
+        .Filter($"identities/any(id: id/issuer eq '{_permissionOptions.Domain}' and id/issuerAssignedId eq '{userEmail}')")
+        .Select("id, identitied, displayName")
+        .GetAsync();
 
-        // Ok to just return first, because at this point we've verified we have exactly 1 user in the graphUsers object.
-        return ToUserObjects(graphUsers).First();
+            if (graphUsers.Count > 1)
+            {
+                throw new UserNotFoundException($"More than one user with the email {userEmail} exists in the Identity provider");
+            }
+            if (graphUsers.Count == 0)
+            {
+                throw new UserNotFoundException($"The user with the email {userEmail} was not found in the Identity Provider");
+            }
+
+            // Ok to just return first, because at this point we've verified we have exactly 1 user in the graphUsers object.
+            return ToUserObjects(graphUsers).First();
+        }
+        catch (Exception ex)
+        {
+            _logError(_logger, ex);
+            throw;
+        }
     }
 
     // Enriches the user object with data from Microsoft Graph. 
@@ -101,35 +109,52 @@ public class GraphAPIService : IGraphAPIService
 
             return userList;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logError(_logger, ex);
             throw;
         }
     }
 
     private async Task<ServicePrincipal?> GetServicePrincipalAsync(string clientId)
     {
-        var servicePrincipal = await _graphServiceClient.ServicePrincipals.Request()
-            .Filter($"appId eq '{clientId}'")
-            .GetAsync();
-        
-        return servicePrincipal.SingleOrDefault();
+        try
+        {
+            var servicePrincipal = await _graphServiceClient.ServicePrincipals.Request()
+        .Filter($"appId eq '{clientId}'")
+        .GetAsync();
+
+            return servicePrincipal.SingleOrDefault();
+        }
+        catch (Exception ex)
+        {
+            _logError(_logger, ex);
+            throw;
+        }
     }
 
     private async Task<string[]> GetAppRoleAssignmentsAsync(ServicePrincipal servicePrincipal, string userId)
     {
-        var userAppRoleAssignments = await _graphServiceClient.Users[userId].AppRoleAssignments
-            .Request()
-            .Filter($"resourceId eq {servicePrincipal.Id}")
-            .GetAsync();
+        try
+        {
+            var userAppRoleAssignments = await _graphServiceClient.Users[userId].AppRoleAssignments
+        .Request()
+        .Filter($"resourceId eq {servicePrincipal.Id}")
+        .GetAsync();
 
-        var appRoleIds = userAppRoleAssignments.Select(a => a.AppRoleId);
-        
-        var appRoles = servicePrincipal.AppRoles
-            .Where(a => appRoleIds.Contains(a.Id))
-            .Select(a => a.Value);
-        
-        return appRoles.ToArray();
+            var appRoleIds = userAppRoleAssignments.Select(a => a.AppRoleId);
+
+            var appRoles = servicePrincipal.AppRoles
+                .Where(a => appRoleIds.Contains(a.Id))
+                .Select(a => a.Value);
+
+            return appRoles.ToArray();
+        }
+        catch (Exception ex)
+        {
+            _logError(_logger, ex);
+            throw;
+        }
     }
 
     private static IEnumerable<Models.User> ToUserObjects(IGraphServiceUsersCollectionPage graphUsers) => 

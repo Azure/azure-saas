@@ -238,7 +238,7 @@ The deployment script has run to it's completion and the Identity Framework have
 
 The Identity Framework is gathered in an Azure Resource group. In the Azure Portal it will look something like this: 
 
-![image-20230124195324739](assets/readme/image-20230124195324739.png)
+![image-20230126000531416](assets/readme/image-20230126000531416.png)
 
 ### Adding the Other Modules
 

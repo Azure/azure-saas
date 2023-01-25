@@ -34,7 +34,6 @@ public class PermissionsController : ControllerBase
 
         try
         {
-
             userIds = await _permissionsService.GetTenantUsersAsync(tenantId);
         }
         catch (Exception ex)

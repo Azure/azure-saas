@@ -57,8 +57,9 @@ builder.Services.AddControllers();
 // Using Entity Framework for accessing permission data stored in the Permissions Db.
 builder.Services.AddDbContext<PermissionsContext>(options =>
 {
-    var sqlConnectionString = builder.Configuration.GetRequiredSection(SqlOptions.SectionName).Get<SqlOptions>()?.SQLConnectionString
-        ?? throw new NullReferenceException("SQL Connection string cannot be null.");
+    var sqlConnectionString = builder.Configuration.GetRequiredSection(SqlOptions.SectionName)
+        .Get<SqlOptions>()?.SQLConnectionString
+            ?? throw new NullReferenceException("SQL Connection string cannot be null.");
 
     options.UseSqlServer(sqlConnectionString);
 });
@@ -142,7 +143,7 @@ void InitializeDevEnvironment()
     // Must corresspond exactly to the version string of our deployment as specificed in the deployment config.json.
     var version = "ver0.8.0";
 
-    logger.LogInformation($"Version: {version}");
+    logger.LogInformation("Version: {version}", version);
     logger.LogInformation($"Is Development.");
 
 
@@ -188,7 +189,7 @@ void InitializeProdEnvironment()
     var version = builder.Configuration.GetRequiredSection("Version")?.Value
         ?? throw new NullReferenceException("The Version value cannot be found. Has the 'Version' environment variable been set correctly for the Web App?");
 
-    logger.LogInformation($"Version: {version}");
+    logger.LogInformation("Version: {version}", version);
     logger.LogInformation($"Is Production.");
 
     var appConfigurationEndpoint = builder.Configuration.GetRequiredSection("AppConfiguration:Endpoint")?.Value
