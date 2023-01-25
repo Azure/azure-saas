@@ -22,6 +22,6 @@ set -u -e -o pipefail
 # include script modules into current shell
 {
     source "$ASDK_PERMISSIONS_API_DEPLOYMENT_BASE_DIR/constants.sh"
-    source "$SCRIPT_DIR/init-module.sh"
 }
 
+"${SCRIPT_DIR}/patch-workflow.py" "${CONFIG_FILE}" "${PERMISSIONS_DEPLOYMENT_WORKFLOW}"

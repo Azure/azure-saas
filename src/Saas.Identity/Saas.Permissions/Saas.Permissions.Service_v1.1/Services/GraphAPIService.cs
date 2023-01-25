@@ -10,28 +10,46 @@ namespace Saas.Permissions.Service.Services;
 
 public class GraphAPIService : IGraphAPIService
 {
+    private readonly ILogger _logger;
+
+    // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/loggermessage?view=aspnetcore-7.0
+    private static readonly Action<ILogger, Exception> _logError = LoggerMessage.Define(
+            LogLevel.Error,
+            new EventId(1, nameof(GraphAPIService)),
+            "Client Assertion Signing Provider");
+
     private readonly GraphServiceClient _graphServiceClient;
     private readonly PermissionApiOptions _permissionOptions;
 
     public GraphAPIService(
         IOptions<PermissionApiOptions> permissionApiOptions,
-        IGraphApiClientFactory graphClientFactory)
+        IGraphApiClientFactory graphClientFactory,
+        ILogger<GraphAPIService> logger)
     {
+        _logger= logger;
         _graphServiceClient = graphClientFactory.Create();
         _permissionOptions = permissionApiOptions.Value;
     }
     public async Task<string[]> GetAppRolesAsync(ClaimsRequest request)
     {
-        if (request.ClientId is null)
+        try
         {
-            throw new NullReferenceException("Client ID cannot be null.");
+            if (request.ClientId is null)
+            {
+                throw new NullReferenceException("Client ID cannot be null.");
+            }
+
+            ServicePrincipal? servicePrincipal = await GetServicePrincipalAsync(request.ClientId);
+
+            return servicePrincipal is null
+                ? throw new ArgumentException($"App role not found for \"{request.ClientId}\".")
+                : await GetAppRoleAssignmentsAsync(servicePrincipal, request.ObjectId.ToString());
         }
-
-        ServicePrincipal? servicePrincipal = await GetServicePrincipalAsync(request.ClientId);
-
-        return servicePrincipal is null
-            ? throw new ArgumentException($"App role not found for \"{request.ClientId}\".")
-            : await GetAppRoleAssignmentsAsync(servicePrincipal, request.ObjectId.ToString());
+        catch (Exception ex)
+        {
+            _logError(_logger, ex);
+            throw;
+        }
     }
 
     public async Task<Models.User> GetUserByEmail(string userEmail)

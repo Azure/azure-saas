@@ -1,40 +1,44 @@
-# SaaS Permissions Service
+# SaaS Permissions Service API
 
 ## Overview
 
-Section contains the ASDK Permissions Services API for handling role-based authorization of user. The service [depends](https://azure.github.io/azure-saas/components/identity/permissions-service#dependencies) on the Identity Foundation that was deployed a spart of the Identity Foundation and on the [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/use-the-api).
+Section contains the ASDK Permissions Service API for handling role-based authorization of user. The service [depends](https://azure.github.io/azure-saas/components/identity/permissions-service#dependencies) on the Identity Foundation that was deployed a spart of the Identity Foundation and on the [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/use-the-api).
 
 For a complete overview, please see the [SaaS Permissions Service](https://azure.github.io/azure-saas/components/identity/permissions-service/) page in the documentation site.
 
 ## How to Run Locally
 
-Once configured, this service presents a web api service exposing endpoints to perform CRUD operations on user permission settings.
+Once deployed, this service is a web API exposing endpoints to perform CRUD operations on user permission settings.
 
 The SaaS Permissions Service API can be run locally during development, testing and learning.
 
 ### Requirements
 
-To run the web api, you must have the following installed on your developer machine:
+To run the API locally, you must have the following installed on your developer machine:
 
 - [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) (recommended) or [Visual Studio Code](https://code.visualstudio.com/download).
 - [.NET 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 - [ASP.NET Core 7.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-7.0)
 
-You also need a deployed instance of the [Identity Framework](https://azure.github.io/azure-saas/quick-start/). For details visit the [Deploying the Identify Foundation Services readme](../Saas.Identity.Provider/readme.md).
+> Tip: .NET 7.0 and ASP.NET Core 7.0 can be installed as part of the latest version Microsoft Visual Studio 2022.
+
+You will also need a deployed instance of the [Identity Framework](https://azure.github.io/azure-saas/quick-start/). For details visit the [Deploying the Identify Foundation Services readme](../Saas.Identity.Provider/readme.md).
 
 ###  App Configuration and Settings
 
-To manage settings securely and efficiently, settings are being stored in [Azure App Configuration](https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview), while secrets and certificates are being stored in [Azure Key Vault](https://learn.microsoft.com/en-us/azure/key-vault/general/overview). Furthermore, secrets are represented with a reference (an URI) in Azure App Configuration, while the actual secret is kept safely and securely in Azure Key Vault. 
+To manage settings securely and efficiently, settings are being stored in [Azure App Configuration](https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview), while secrets and certificates are being stored in [Azure Key Vault](https://learn.microsoft.com/en-us/azure/key-vault/general/overview). Furthermore, secrets are represented with a reference (an URI) in Azure App Configuration pointing to the actual secret, which is kept safely and securely in Azure Key Vault. 
 
-All necessary settings, certificates and secrets needed for running the SaaS Permissions API, where automatically created and provisioned during the deployment of the Identity Framework, during the ASDK Identity Foundation deployment. 
+All necessary settings, certificates and secrets needed for running the SaaS Permissions API, where automatically created and provisioned during the deployment of the Identity Framework. 
 
 ### Setting up the local development environment
 
-For running the SaaS Permission API Service in a local development environment, we need a few extra steps to set up access to the provisioned Azure App Configuration and the Azure Key Vault service, to your local development environment. 
+For running the SaaS Permission API Service in a local development environment, we need a few extra steps to set up access to the provisioned Azure App Configuration and the Azure Key Vault service, for your local development environment. 
 
 #### Access and Permissions to Azure Key Vault 
 
-For access to Azure Key Vault, we will rely on [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) to provide the needed access token. For this to work, you should open a terminal from within Visual Studio (or Visual Studio Code) and run these commands:
+![image-20230125141953381](assets/readme/image-20230125141953381.png)
+
+For accessing Azure Key Vault, we will rely on [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) to provide the needed access token. For this to work, you should open a terminal from within Visual Studio (or Visual Studio Code) and run these commands:
 
 ```bash
 az account show # use this to see if you're already logged into your Azure tanent, if not use the next command to login
@@ -88,15 +92,16 @@ dotnet user-secrets set ConnectionStrings:AppConfig "<your_azure_app_config_conn
 
 The following is good to know, for ensuring that your development environment has access to the SQL Server Database, that was deployed as part of the Identity Foundation.
 
-During he deployment, the deployment script takes note of the public IP address of the developer machine running the script. The script then adds this specific IP address to an *allowed firewall rule*. 
+During the deployment of the Identity Foundation, the deployment script takes note of the public IP address of the developer machine running the deployment script. The script then adds this specific IP address to an *allowed firewall rule* for the Azure SQL Server. 
 
-Adding your public IP address is essential for your local development environment to be able to run. By default the configuration of the SQL Server only allows network access from IP addresses of services running *inside* the Azure environment. This default network security setting is great for production, however since your local development environment is not likely running inside the Azure environment, this firewall restriction may get in the way.
+Adding your public IP address is essential for your local development environment to be able to run. By default the configuration of the SQL Server only allow network access from IP addresses of services running *inside* the Azure environment. This default network security setting is great for production, however since your local development environment is not very likely to be running from within the Azure environment, this firewall restriction gets in the way.
 
-You may also want to work on you project from multiple locations and development environments, in which case you will need to make changes to the firewall rules of Azure SQL Server, allowing these additional public IPs to access the database.
+> Tip: You may want to work on you project from multiple locations and development environments, in which case you will need to make changes to the firewall rules of Azure SQL Server, allowing these additional public IPs to access the database.
+>
 
-To do this, please do the following:
+To add additional public IP addresses to the Azure SQL Service firewall rule, please do the following:
 
-1. You can identity the global IP address by running this bash command on MacOS, Linux or on Windows 10/11 from within a [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) terminal session:
+1. You can identity the global IP address of the developer machine you are currently running from, by running this bash command on MacOS, Linux or on Windows 10/11 from within a [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) terminal session:
 
 ```bash
 dig +short myip.opendns.com @resolver1.opendns.com
@@ -108,21 +113,25 @@ dig +short myip.opendns.com @resolver1.opendns.com
 
 ## Running the Permissions Service API
 
-After all of the above have been set up, you're now ready to build and run the SaaS Permissions Services. When you do, a browser will open and load a Swagger Page:
+After all of the above have been set up, you're now ready to build and run the SaaS Permissions Services in your local development environment. As you press debug/run, a browser will open and load a Swagger Page:
+
+> Tip: Swagger is only enabled when the API is running locally. You'll find the details in `program.cs`.
 
 ![image-20230112000806828](assets/readme/image-20230112000806828.png)
 
-Now *try it out* and run the `GetTenantUsers` API. It will take approx. 20-40 seconds to complete the request the first time you run it, because the app will need to authenticate itself, including getting a signed assertion from Key Vault. 
+Now *try it out* and run the `GetTenantUsers` API. It will take approx. 20-40 seconds to complete the request, the first time you run it, because the app will need to authenticate itself, including getting a signed assertion from Key Vault. 
 
-> Tip: After the first run the access token is cached, so if you run the request a second time it will be much faster. 
+> Tip: After the first run the access token is cached for the duration of it's life time, so if you run the request a second time it will be much faster. 
 
-Enter the `tenantId` of your Azure B2C Tenant (i.e., the one that was created as part of deploying the Identity Foundation). You'll find it in the `config.json` file at `.deployment.azureb2c.tenantId`.
+Enter the `tenantId` of your Azure B2C Tenant (i.e., the `tenant id` of the Azure B2C tenant that was deployed as part of the Identity Foundation). You'll find it in the `config.json` file at `.deployment.azureb2c.tenantId`.
 
 ![image-20230112001210631](assets/readme/image-20230112001210631.png)
 
 ## How  to Deploy to Azure
 
-For deploying to Azure we suggest leveraging [GitHub Actions](https://github.com/features/actions). 
+For deploying the SaaS Permissions Service API to Azure we've provided a [GitHub Action](https://github.com/features/actions). Establishing a [CI/CD](CI/CD) pipeline from the onset provides automation which increases security and minimizes operations. We highly recommend using this or some other CI/CD tool. 
+
+During the deployment of the Identity Foundation, an [OIDC Connection](https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=openid) was established between your Azure resource group and your GitHub repo. This connection enables GitHub action to push updates directly to your Azure App Services. Leveraging [OIDC](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect) is the recommended authentication method for automated deployment, offering hardened security without the need to managing and keeping safe secrets or passwords.
 
 
 

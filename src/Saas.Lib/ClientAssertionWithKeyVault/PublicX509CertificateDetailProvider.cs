@@ -5,15 +5,27 @@ using ClientAssertionWithKeyVault.Model;
 using Microsoft.Extensions.Caching.Memory;
 using System.Security.Cryptography.X509Certificates;
 using ClientAssertionWithKeyVault.Util;
+using Microsoft.Extensions.Logging;
 
 namespace ClientAssertionWithKeyVault;
 public class PublicX509CertificateDetailProvider : IPublicX509CertificateDetailProvider
 {
+    private readonly ILogger _logger;
+
+    // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/loggermessage?view=aspnetcore-7.0
+    private static readonly Action<ILogger, Exception> _logError = LoggerMessage.Define(
+            LogLevel.Error,
+            new EventId(1, nameof(PublicX509CertificateDetailProvider)),
+            "Client Assertion Signing Provider");
+
     private readonly IMemoryCache _memoryCache;
     
-    public PublicX509CertificateDetailProvider(IMemoryCache memoryCache)
+    public PublicX509CertificateDetailProvider(
+        IMemoryCache memoryCache,
+        ILogger<PublicX509CertificateDetailProvider> logger)
     {
         _memoryCache = memoryCache;
+        _logger = logger;
     }
 
     public async Task<IPublicX509CertificateDetail> GetX509Detail(IKeyInfo keyInfo, TokenCredential credential)
@@ -45,9 +57,9 @@ public class PublicX509CertificateDetailProvider : IPublicX509CertificateDetailP
                 keyVaultPublicCertResponse.Value.KeyId,
                 keyVaultPublicCertResponse.Value.Name);
 
-            // The certificate details are cached for 24 hours since they rarely change. 
+            // The certificate details are cached for 2 hours since they rarely change. 
             var cacheOptions = new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(TimeSpan.FromHours(24));
+                .SetAbsoluteExpiration(TimeSpan.FromHours(2));
 
             _memoryCache.Set(cacheItemName, publicX509CertificateDetail, cacheOptions);
 
@@ -55,6 +67,7 @@ public class PublicX509CertificateDetailProvider : IPublicX509CertificateDetailP
         }
         catch (Exception ex)
         {
+            _logError(_logger, ex);
             throw;
         }
     }

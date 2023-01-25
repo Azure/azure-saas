@@ -1,31 +1,24 @@
-name: Deploy Permission API to Azure Web Services
+---
+name: ASDK Permissions Service API - Deploy to Azure Web Services
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   logLevel:
-    #     description: 'Log level'
-    #     required: true
-    #     default: 'warning'
-    #   tags:
-    #     description: 'Test scenario tags'
 
 permissions:
   id-token: write
   contents: read
 
 env:
-  AZURE_WEBAPP_NAME: "api-permission-asdk-test-b3yf" # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: "." # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: "7.x.x"
-  PROJECT_DIR: "./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1"
-  PROJECT_PATH: "./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1/Saas.Permissions.Service.csproj"
+  AZURE_WEBAPP_NAME: api-permission-asdk-test-b3yf           # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: 7.x.x
+  PROJECT_DIR: ./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1
+  PROJECT_PATH: ./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1/Saas.Permissions.Service.csproj
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-
       #azure login
       - uses: azure/login@v1
         with:
@@ -50,19 +43,16 @@ jobs:
         run: |
           dotnet restore ${{ env.PROJECT_DIR }}
 
-          dotnet build ${{ env.PROJECT_PATH }} \
-            --configuration Release
+          dotnet build ${{ env.PROJECT_PATH }} --configuration Release
 
-          dotnet publish ${{ env.PROJECT_PATH }} \
-            --configuration Release \
-            --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/{{ env.AZURE_WEBAPP_NAME }}'
+          dotnet publish ${{ env.PROJECT_PATH }} --configuration Release --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/{{ env.AZURE_WEBAPP_NAME }}'
 
       # Deploy to Azure Web apps
-      - name: "Run Azure webapp deploy action using publish profile credentials"
+      - name: Run Azure webapp deploy action using publish profile credentials
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
-          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/{{ env.AZURE_WEBAPP_NAME }}"
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/{{ env.AZURE_WEBAPP_NAME }}
           # slot-name: 'PermissionsApi-Staging'
 
       # Azure logout

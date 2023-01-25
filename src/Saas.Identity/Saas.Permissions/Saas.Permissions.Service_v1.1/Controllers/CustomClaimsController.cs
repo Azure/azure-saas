@@ -29,11 +29,11 @@ public class CustomClaimsController : ControllerBase
         _logger.LogDebug("Custom claims where requested for user id: {objectId}", request.ObjectId);
         var permissions = await _permissionsService.GetPermissionsAsync(request.ObjectId.ToString());
 
-        string[] permissionStrings = permissions.Select(x => x.ToTenantPermissionString())
-                                                     // Append default permission with the users object ID
+        // Append default permission with the users object ID
+        string[] permissionStrings = permissions.Select(x => x.ToTenantPermissionString())                                                     
                                                      .Append($"{request.ObjectId}.Self")
                                                      .ToArray();
-        PermissionsClaimResponse response = new PermissionsClaimResponse()
+        PermissionsClaimResponse response = new()
         {
             Permissions = permissionStrings
         };
@@ -51,7 +51,7 @@ public class CustomClaimsController : ControllerBase
     {
         var roles = await _graphAPIService.GetAppRolesAsync(request);
 
-        RolesClaimResponse response = new RolesClaimResponse()
+        RolesClaimResponse response = new()
         {
             Roles = roles
         };

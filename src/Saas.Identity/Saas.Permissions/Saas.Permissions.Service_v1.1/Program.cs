@@ -30,9 +30,6 @@ builder.Services.AddApplicationInsightsTelemetry();
     on how to set up and run this service in a local development environment - i.e., a local dev machine. 
 */
 
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-
 var logger = LoggerFactory.Create(config => config.AddConsole()).CreateLogger("Saas.Permissions.API");
 
 if (builder.Environment.IsDevelopment())
@@ -91,14 +88,17 @@ builder.Services.AddHttpClient<IGraphApiClientFactory, GraphApiClientFactory>()
 // Adding the service used to access MS Graph.
 builder.Services.AddScoped<IGraphAPIService, GraphAPIService>();
 
+builder.Logging.ClearProviders();
 // Register Identity service used to access Key Vault in a local development and in a production environment
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddSingleton<IKeyVaultCredentialService, DevelopmentKeyVaultIdentityService>();
+    builder.Logging.AddConsole();
 }
 else
 {
     builder.Services.AddSingleton<IKeyVaultCredentialService, ProductionManagedIdentityKeyVaultService>();
+    builder.Services.AddApplicationInsightsTelemetry();
 }
 
 var app = builder.Build();

@@ -4,6 +4,7 @@ using ClientAssertionWithKeyVault.Interface;
 using ClientAssertionWithKeyVault.Model;
 using ClientAssertionWithKeyVault.Util;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -14,31 +15,35 @@ using System.Text.Json;
 namespace ClientAssertionWithKeyVault;
 public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
 {
+    private readonly ILogger _logger;
     private readonly IMemoryCache _memoryCache;
     private readonly IPublicX509CertificateDetailProvider _publicX509CertificateDetailProvider;
 
     public ClientAssertionSigningProvider(
         IMemoryCache menoryCache,
+        ILogger<ClientAssertionSigningProvider> logger,
         IPublicX509CertificateDetailProvider? publicX509CertificateDetailProvider = null)
     {
+        _logger = logger;
         _memoryCache = menoryCache;
 
         _publicX509CertificateDetailProvider = publicX509CertificateDetailProvider is null 
             ? new PublicX509CertificateDetailProvider(menoryCache)
             : publicX509CertificateDetailProvider;
     }
-   
+
     public async Task<string> GetClientAssertion(string keyVaultUrl,
         string certKeyName,
         string audience,
         string clientId,
         TokenCredential credential,
-        TimeSpan lifetime = default)
-    {
-        IKeyInfo keyInfo = new KeyInfo(keyVaultUrl, certKeyName);
-
-        return await GetClientAssertion(keyInfo, audience, clientId, credential, lifetime);
-    }
+        TimeSpan lifetime = default) =>
+            await GetClientAssertion(
+                new KeyInfo(keyVaultUrl, certKeyName),
+                audience,
+                clientId,
+                credential,
+                lifetime);
 
     public async Task<string> GetClientAssertion(
         IKeyInfo keyInfo,
@@ -52,6 +57,7 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
         if (_memoryCache.TryGetValue<string>(cacheItemName, out var clientAssertion)
             && clientAssertion is not null)
         {
+            _logger.LogInformation($"Cache item found.", cacheItemName);
             return clientAssertion;
         }
 
@@ -96,11 +102,19 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
 
         var digest = SHA256.HashData(Encoding.UTF8.GetBytes(unsignedAssertion));
 
-        var signResult = await keyVaultCryptoClient.SignAsync(SignatureAlgorithm.RS256, digest);
+        try
+        {
+            var signResult = await keyVaultCryptoClient.SignAsync(SignatureAlgorithm.RS256, digest);
 
-        return (
-            $"{unsignedAssertion}.{signResult.Signature.Base64UrlEncode()}",
-            expiryTime);
+            return (
+                $"{unsignedAssertion}.{signResult.Signature.Base64UrlEncode()}",
+                expiryTime);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            throw;
+        }
     }
 
     private async Task<(string unsignedAssertion, IPublicX509CertificateDetail publicCertDetails)> CreateUnsignedAssertion(
@@ -108,16 +122,24 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
             Claim[] claims,
             TokenCredential credential)
     {
-        var publicCertDetails = 
-            await _publicX509CertificateDetailProvider.GetX509Detail(keyInfo, credential);
+        try
+        {
+            var publicCertDetails =
+        await _publicX509CertificateDetailProvider.GetX509Detail(keyInfo, credential);
 
-        var headerJson = $$"""{"alg":"RS256","typ":"JWT","x5t":"{{publicCertDetails.Kid}}"}""";
+            var headerJson = $$"""{"alg":"RS256","typ":"JWT","x5t":"{{publicCertDetails.Kid}}"}""";
 
-        JwtPayload payloadJwt = new(claims);
+            JwtPayload payloadJwt = new(claims);
 
-        var header = Base64UrlEncoder.Encode(headerJson);
-        var payload = Base64UrlEncoder.Encode(JsonSerializer.Serialize(payloadJwt));
+            var header = Base64UrlEncoder.Encode(headerJson);
+            var payload = Base64UrlEncoder.Encode(JsonSerializer.Serialize(payloadJwt));
 
-        return ($"{header}.{payload}", publicCertDetails);
+            return ($"{header}.{payload}", publicCertDetails);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError (ex, ex.Message);
+            throw;
+        }
     }
 }

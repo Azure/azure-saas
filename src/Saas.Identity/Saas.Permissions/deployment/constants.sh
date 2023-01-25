@@ -12,6 +12,9 @@ SP_USR_AZURE_CONFIG_DIR="${HOME}/sp/.azure"
 repo_base="$( git rev-parse --show-toplevel )"
 REPO_BASE="${repo_base}"
 
+WORKFLOW_BASE="${REPO_BASE}/.github/workflows"
+PERMISSIONS_DEPLOYMENT_WORKFLOW="${WORKFLOW_BASE}/permissions-api-deploy.yml"
+
 # script directories
 BASE_DIR="${ASDK_PERMISSIONS_API_DEPLOYMENT_BASE_DIR}"
 
