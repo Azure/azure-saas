@@ -40,30 +40,36 @@ echo "Adding app registrations to Azure B2C tenant." \
 # create the app registrations
 declare -i scopes_length
 declare -i permissions_length
-declare -i i
 
-b2c_name="$( get-value ".deployment.azureb2c.domainName" )"
-prefix="$( get-value ".initConfig.naming.solutionPrefix" )"
-postfix="$( get-value ".deployment.postfix" )"
-solution_name="$( get-value ".initConfig.naming.solutionName" )"
-app_id_uri="https://${b2c_name}/${prefix}-${solution_name}-${postfix}"
+# b2c_name="$( get-value ".deployment.azureb2c.name" )"
+# prefix="$( get-value ".initConfig.naming.solutionPrefix" )"
+# postfix="$( get-value ".deployment.postfix" )"
+# solution_name="$( get-value ".initConfig.naming.solutionName" )"
+# app_id_uri="api://${b2c_name}/${prefix}-${solution_name}-${postfix}"
+
+# put-value ".deployment.azureb2c.applicationIdUri" "${app_id_uri}"
 
 # read each item in the JSON array to an item in the Bash array
 readarray -t app_reg_array < <( jq --compact-output '.appRegistrations[]' "${CONFIG_FILE}")
 
-# counter for iterations on Bash array
-i=1
+# counter for iterations on Bash array - for testing purposes
+# declare -i i
+# i=1
 
 # iterate through the Bash array of app registrations
 for app in "${app_reg_array[@]}"; do
-    app_name=$( jq --raw-output '.name'                     <<< "${app}" )
-    app_id=$( jq --raw-output '.appId'                      <<< "${app}" )
-    has_cert=$( jq --raw-output '.certificate'              <<< "${app}" )
-    redirect_uri=$( jq --raw-output '.redirectUri'          <<< "${app}" )
-    permissions=$( jq --raw-output '.permissions'           <<< "${app}" )
-    permissions_length=$( jq '.permissions | length'        <<< "${app}" )
-    scopes=$( jq --raw-output '.scopes'                     <<< "${app}" )
-    scopes_length=$( jq --raw-output '.scopes | length'     <<< "${app}" )
+    app_name=$( jq --raw-output '.name'                                         <<< "${app}" )
+    app_id=$( jq --raw-output '.appId'                                          <<< "${app}" )
+    has_cert=$( jq --raw-output '.certificate'                                  <<< "${app}" )
+    redirect_uri=$( jq --raw-output '.redirectUri'                              <<< "${app}" )
+    app_id_uri=$( jq --raw-output '.applicationIdUri'                           <<< "${app}" )
+    sign_in_audience=$( jq --raw-output '.signInAudience'                       <<< "${app}" )
+    id_tokens=$( jq --raw-output '.idTokens'                                    <<< "${app}" )
+    is_allow_public_client_flows=$( jq --raw-output '.isAllowPublicClientFlows' <<< "${app}" )
+    permissions=$( jq --raw-output '.permissions'                               <<< "${app}" )
+    permissions_length=$( jq '.permissions | length'                            <<< "${app}" )
+    scopes=$( jq --raw-output '.scopes'                                         <<< "${app}" )
+    scopes_length=$( jq --raw-output '.scopes | length'                         <<< "${app}" )
     
     display_name="${app_name}"
 
@@ -120,6 +126,66 @@ for app in "${app_reg_array[@]}"; do
     # add appId to config
     put-app-id "${app_name}" "${app_id}"
     put-app-object-id "${app_name}" "${obj_id}"
+
+    # adding sign-in audience when set
+    if [[ "${sign_in_audience}" == "single" ]]; then
+        az ad app update \
+            --id "${app_id}" \
+            --set signInAudience="AzureADMyOrg" \
+            --only-show-errors \
+            | log-output \
+                --level info \
+            || echo "Failed to add single sign-in audience (single tenant) to app $app_name, ${app_id}" \
+                | log-output \
+                    --level error \
+                    --header "Critical error" \
+                || exit 1
+
+    fi
+
+    if [[ "${sign_in_audience}" == "multiple" ]]; then
+        az add app update \
+            --id "${app_id}" \
+            --set signInAudience="AzureADMultipleOrgs" \
+            --only-show-errors \
+            | log-output \
+                --level info \
+            || echo "Failed to add multiple sign-in audience (multi tenant) to app $app_name, ${app_id}" \
+                | log-output \
+                    --level error \
+                    --header "Critical error" \
+                || exit 1
+    fi
+
+    # add id-tokens to app registration if set
+    if [[ "${id_tokens}" == true || "${id_tokens}" == "true" ]]; then
+        az ad app update \
+            --id "${app_id}" \
+            --enable-id-token-issuance true \
+            --only-show-errors \
+            | log-output \
+                --level info \
+            || echo "Failed to add id-tokens to app $app_name, ${app_id}" \
+                | log-output \
+                    --level error \
+                    --header "Critical error" \
+                || exit 1
+    fi
+
+    ## add public client flows to app registration if set
+    if [[ "${is_allow_public_client_flows}" == true || "${is_allow_public_client_flows}" == "true" ]]; then
+        az ad app update \
+            --id "${app_id}" \
+            --is-fallback-public-client true \
+            --only-show-errors \
+            | log-output \
+                --level info \
+            || echo "Failed to add public client flows to app $app_name, ${app_id}" \
+                | log-output \
+                    --level error \
+                    --header "Critical error" \
+                || exit 1
+    fi
 
     # add certificate to app registration if cert is true
     if [[ "${has_cert}" == true || "${has_cert}" == "true" ]]; then

@@ -251,6 +251,11 @@ function populate-configuration-manifest() {
         "baseUrl" \
         "api-admin-${long_solution_name}"
 
+    put-app-value \
+        "admin-api" \
+        "applicationIdUri" \
+        "api://${b2c_name}/${long_solution_name}/admin-api"
+
     # adding redirecturl to signupadmin-app
     put-app-value \
         "signupadmin-app" \
@@ -282,8 +287,17 @@ function populate-configuration-manifest() {
         "permissions-api" \
         "rolesApiUrl" \
         "https://${permission_api_name}.azurewebsites.net/api/CustomClaims/roles"
-    
 
+    # adding redirecturl to IdentityExperienceFramework
+    put-app-value \
+        "IdentityExperienceFramework" \
+        "redirectUri" \
+        "https://${b2c_name}.b2clogin.com/${b2c_name}.onmicrosoft.com"
+
+    put-app-value \
+        "IdentityExperienceFramework" \
+        "applicationIdUri" \
+        "api://${b2c_name}/${long_solution_name}/identityexperienceframework"
 }
 
 function intialize-context-for-automation-users() {

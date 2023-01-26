@@ -68,7 +68,17 @@
       "name": "admin-api",
       "certificate": false,
       "redirectUri": null,
-      "permissions": null,
+      "applicationIdUri": null,
+      "permissions": [
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
+        }
+      ],
       "baseUrl": null,
       "appId": null,
       "objectId": null,
@@ -112,6 +122,8 @@
       "appId": null,
       "objectId": null,
       "scopes": null,
+      "publicKeyPath": null,
+      "certificateKeyName": null,
       "permissions": [
         {
           "endpoint": "admin-api",
@@ -141,26 +153,38 @@
       "appId": null,
       "objectId": null,
       "scopes": null,
+      "publicKeyPath": null,
+      "certificateKeyName": null,
       "permissions": [
         {
           "endpoint": "admin-api",
           "scopes": [
             "tenant.read"
           ]
+        },
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
         }
       ]
     },
     {
       "name": "permissions-api",
+      "apiName": null,
+      "appId": null,
+      "objectId": null,
+      "domain": null,
       "certificate": true,
       "redirectUri": null,
       "permissionsApiUrl": null,
       "rolesApiUrl": null,
-      "domain": null,
       "instance": "https://login.microsoftonline.com/",
-      "apiName": null,
-      "appId": null,
-      "objectId": null,
+      "publicKeyPath": null,
+      "certificateKeyName": null,
       "scopes": null,
       "permissions": [
         {
@@ -173,6 +197,14 @@
           "appRoles": [
             "User.Read.All"
           ]
+        },
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
         }
       ]
     },
@@ -182,7 +214,16 @@
       "redirectUri": null,
       "appId": null,
       "objectId": null,
-      "scopes": null,
+      "idTokens": true,
+      "signInAudience": "single",
+      "applicationIdUri": null,
+      "scopes": [
+        {
+          "name": "user_impersonation",
+          "description": "Access Identity Experience Framework",
+          "guid": null
+        }
+      ],
       "permissions": [
         {
           "grantAdminConsent": true,
@@ -197,11 +238,19 @@
     {
       "name": "ProxyIdentityExperienceFramework",
       "certificate": false,
-      "redirectUri": null,
+      "redirectUri": "myapp://auth",
       "appId": null,
       "objectId": null,
       "scopes": null,
+      "signInAudience": "single",
+      "isAllowPublicClientFlows": true,
       "permissions": [
+        {
+          "endpoint": "IdentityExperienceFramework",
+          "scopes": [
+            "user_impersonation"
+          ]
+        },
         {
           "grantAdminConsent": true,
           "resourceId": "00000003-0000-0000-c000-000000000000",
@@ -215,10 +264,6 @@
   ],
   "sql": {
     "sqlAdminLoginName": "sqlAdmin"
-  },
-  "container": {
-    "containerRegistryUrl": "https://ghcr.io",
-    "permissionsApiContainerImageTag": "ghcr.io/azure/azure-saas/asdk-permissions:v1.1"
   },
   "deployment": {
     "users": [],

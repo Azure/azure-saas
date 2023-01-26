@@ -4,13 +4,21 @@ This deployment script provisions and configures the Azure services defining the
 
 ## Before You begin
 
-Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this GitHub repository to you own GitHub account - i.e., make it your own. 
+Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this GitHub repository to you own GitHub account - i.e., make it your own.
 
- A main purpose of the Azure SaaS Dev Kit is to boost your SaaS journey by providing a foundation for a solid start. It is however just a start and soon you will want to make your own changes, evolve the repo into something that is yours. By start with forking the repository, you will be ready to [commit](https://github.com/git-guides/git-commit) and check in your own code to your own repository of the ASDK.
+> Tip: Sign up to GitHub for free here: [join](github.com/join).
 
-## Run the deployment script in a container, using docker (recommended)
+The purpose of the Azure SaaS Dev Kit is to boost your SaaS journey by providing a foundation and a solid start. It is however just a start and soon you will want to make your own changes and evolve the repo into something that is yours. By starting with forking the repository, you will be ready to [commit](https://github.com/git-guides/git-commit) and check in your own code to your own repository of the ASDK. You will also be able to leverage [GitHub Actions](https://github.com/features/actions) to deploy you're code and updates seamlessly.
 
-> Tip: Although using a container, utilizing Docker, to run the script is the recommended approach, you'll find the steps to run the script without a container in a later section below. 
+## Why Using a Deployment Script?
+
+*Question*: Can't I automate deployment using [ARM](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview) or even better [Bicep](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview?tabs=bicep)? 
+
+*Answer*: Yes, and no. In fact Bicep is used when ever possible as part of the deployment script. Yet, the ASDK Identity Foundation relies on [Azure Active Directory B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/overview) as well as defining [Azure Active Directory App Registrations](https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added). At the time of writing those resources and their configurations cannot be automated by ARM and Bicep.
+
+## Running the Deployment Script in a Container, Using Docker (recommended)
+
+Running the deployment script utilizing a container is highly recommend. Using a container will ensure that you have all the required dependencies in their correct configurations etc. In short; when the script runs and that you are running in a controlled environment. It will also minimize the chances that some other properties of your existing environment interferes with the script or that the script inadvertently interferes with your existing environment.
 
 ### Prerequisites 
 
@@ -20,38 +28,30 @@ The following platforms are supported:
 - Apple Mac (Intel or Apple Silicon based) with a recent version of MacOS (Ventura or later recommended).
 - Linux, like Ubuntu 22.04.
 
-#### Microsoft Windows 10/11
+#### Specifics Regarding Microsoft Windows 10/11
 
-Running on Windows 10/11 requires that [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install) have been enabled. WSL can be downloaded from the [Windows Store](https://www.microsoft.com/store/productId/9P9TQF7MRM4R). 
+Running the deployment script from a Windows 10/11 PC, requires that [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install) is  enabled. WSL can be downloaded and enabled freely from the [Windows Store](https://www.microsoft.com/store/productId/9P9TQF7MRM4R). 
 
 WSL lets you run a GNU/Linux environment (including [bash](https://www.gnu.org/software/bash/)) on Windows 10/11 without any modifications and without the need of a virtual machine.
 
-We suggest using [Ubuntu 22.04](https://releases.ubuntu.com/22.04/) on Windows, which can also also be downloaded from the [Windows Store](https://www.microsoft.com/store/productId/9PN20MSR04DW).
+We suggest using [Ubuntu 22.04](https://releases.ubuntu.com/22.04/) on Windows, which can also also be downloaded from the [Windows Store](https://www.microsoft.com/store/productId/9PN20MSR04DW), after WSL have been enabled.
 
 #### Tools
 
-No matter the operating system you're using, you will need these tools to be installed:
+No matter the operating system you're using, you will need these tools to be installed locally:
 
 - [**Docker Desktop**](https://docs.docker.com/get-docker/). 
   - If you have Docker already, make sure to get the latest updates before you begin. If you have Docker installed but haven't used it for a while. Reinstalling will often solve potential issues.
-
 - [Azure Command Line Interface (**az cli**)](https://learn.microsoft.com/en-us/cli/azure/what-is-azure-cli) from the terminal: [How to install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
 - [GitHub’s official command line tool (**gh**)]([GitHub CLI | Take GitHub to the command line](https://cli.github.com/)). For more on installation see [here](https://github.com/cli/cli#installation).
 - **Zip** which can be installed with the command: `sudo apt install zip` . 
   - Note: **zip** is already installed on MacOS per default.
 
-
-### Why use a container?
-
-There are two ways to run this deployment script. The recommended way to run the script is using a container that you build using [docker](https://docs.docker.com/get-docker/). 
-
-This containerized approach will ensure that you have all the required dependencies installed and that you are running the script in a controlled environment. It will also minimize the chances that some other properties of your existing environment interferes with the script or that the script inadvertently interferes with your existing environment.
-
 > Tip: On Windows 10/11, if you experience the error: *"The command 'docker' could not be found in this WSL 2 distro. We recommend to activate the WSL integration in Docker Desktop settings."*, then try to restart Docker Desktop or if that doesn't help, try and reinstall it. 
 
 ### Begin
 
-To begin; open your GNU Linux terminal to the directory where you've [cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the [forked](https://docs.github.com/en/get-started/quickstart/fork-a-repo) version of ASDK. Should be something like:
+To begin, please open your GNU Linux terminal to the directory where you've [cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the [forked](https://docs.github.com/en/get-started/quickstart/fork-a-repo) version of ASDK. Should be something like:
 
 ````bash
 .../src/Saas.Identity/Saas.IdentityProvider/deployment
@@ -70,9 +70,9 @@ chmod +x setup.sh # only needed the first time to set execute permissions on set
 ./setup.sh
 ```
 
-This will take a few minutes to complete and you will only need to do it once, as long as you make no changes to the `Dockerfile`. The container will be named `asdk-script-deployment`.
+This will take a few minutes to complete and you will only need to do it once. The container will be named `asdk-script-deployment`. 
 
-If you make changes to `Dockerfile` you can update the container by running `./build.sh` again.
+> Tip: If you make changes to `Dockerfile`, defining the container, you can update the container by running `./build.sh`.
 
 ### Running the deployment script using the container
 
@@ -83,9 +83,10 @@ chmod +x run.sh # only needed the first time to set execute permissions on run.s
 ./run.sh
 ```
 
-This will instantiate the container and mount the current root directory as a volume accessible from within the container. 
+This will instantiate the container and mount the current root directory as a number of volumes (i.e., directories) that will become accessible from within the container. 
 
-Mounting the root directory means that any edits to `config.json` or anything any of the script files will immediately becomes effective without having to re-build the container. All you need to do is tun `./run.sh` and any changes you've  made will now be effective.
+> Tip: The benefits of mounting volumes are that any edits to `config.json`, as well as anything any of the shell scripts, will immediately becomes effective without having to re-build the container. All you need to do is tun `./run.sh` and any changes you've made will now be effective.
+>
 
 ### Logging into az cli
 
@@ -97,9 +98,13 @@ az login --scope "https://graph.microsoft.com/.default"
 
 ###  Running the script the first time
 
-The first time you run the script, the script will automatically create a new instance of the file `./config/config.json`  (a copy of `./config/config-template.json`), after which the script will exit immediately with a request for additional information to be added to the configuration manifest in `config.json`. 
+The first time you run the script, the script will automatically create a new instance of the file `config.json`, after which the script will exit immediately with a request for additional information to be added to the configuration manifest in `config.json`. 
 
-Specifically, the `initConfig` section must be filled out (see more details below):
+> Tip #1: You'll find the `config.json` file in the folder `.../src/Saas.Identity/Saas.IdentityProvider/deployment/config` 
+>
+> Tip #2: The `config.json` it's a copy of the existing file `config-template.json`, found in the same directory.
+
+Specifically, the `initConfig` section of `config.json`must be filled out manually (see more details on how below):
 
 ```json
 {
@@ -130,13 +135,13 @@ az login # only do this if you're not logged in already
 az ad signed-in-user show --query id
 ```
 
-> Note: The reason that the script doesn't pull the `userPrincipalId` automatically, is that some organizations may require that this particular command can only be run from a *manage device*. Because the deployment script is run from inside a container this, the command may throw an error: "*AADSTS530003: Your device is required to be managed to access this resource.*", even if the device that the container is on, is managed.
+> Info: The reason that the script doesn't pull the `userPrincipalId` automatically, is that some organizations may require that this particular command can only be run from a *manage device*. Because the deployment script is run from inside a container this, the command may throw an error: "*AADSTS530003: Your device is required to be managed to access this resource.*", even if the device that the container is on, is managed.
 
 ### Azure Subscription Id
 
-You may have multiple Azure subscriptions and thus manually choosing which subscription you want to use is the most practical approach for filling in the `subscriptionId`value. You'll find your subscriptions in the [Azure Portal on the subscriptions page](https://ms.portal.azure.com/#view/Microsoft_Azure_Billing/SubscriptionsBlade), the value should be a GUID.
+You may have multiple Azure subscriptions and thus manually choosing which subscription you want to use is the most practical approach. You'll find your subscriptions in the [Azure Portal on the subscriptions page](https://ms.portal.azure.com/#view/Microsoft_Azure_Billing/SubscriptionsBlade), the value should be a GUID.
 
-Alternatively, get a list of your subscriptions of the tenant that you are logged into by running the az cli command and choose the one you want to use here:
+Alternatively, get to list of your subscriptions of the tenant that you are logged into by running this az cli command:
 
 ```bash
  az account subscription list --query "[].{DisplayName:displayName, Id:id}" --output table
@@ -144,7 +149,7 @@ Alternatively, get a list of your subscriptions of the tenant that you are logge
 
 ###  Tenant Id
 
-Get the `tenantId`by running the following command, which will respond with a GUID.
+Get the `tenantId`by running the following command:
 
 ```bash
 az login # only do this if you're not logged in already
@@ -176,21 +181,23 @@ Other values in `initConfig`:
 
 ### Running the script 
 
-After you've added the values outlined above to `config.json` you're ready to run the script again. 
+After you've added the values outlined above, to `config.json`, you're ready to run the script again. 
 
 While running the script the second time, you will be asked to log in once, and maybe twice. 
 
-1. The first log in, is for your main Azure tenant. This step will likely be skipped since you are already logged in to the specified tenant - i.e., using `az login --scope "https://graph.microsoft.com/.default"`
+1. The first log in, is for your main Azure tenant. 
 
-   > Tip: The script is smart enough to utilize your existing  Azure token, that is cached for your main az cli session, outside of the container. 
+   > Tip: This step will likely be skipped since you're already logged in to the specified tenant - i.e., when you used the command: `az login --scope "https://graph.microsoft.com/.default"` 
 
-2. The second login cannot be avoided, since it is for logging into the Azure B2C Tenant that have just been created. This login is needed to make further changes to the Azure B2C tenant. 
+   > Info: The script is smart enough to utilize your existing  Azure token, that is cached and persisted, outside of the container.
 
-   > Note: The script will cache the login session, so that if you need to run the script multiple times, you will not be asked to log in again. This login session for Azure B2C is cached here: `$HOME/asdk/.cache/`.
+2. The second login cannot be avoided, since it is for logging into the Azure B2C Tenant that is being created as part of the deployment script. This login is needed to make further changes to the Azure B2C tenant. 
 
-## Running deployment script on your computer without docker (not recommended)
+   > Info: The script will cache this login session too, so that if you need to run the script multiple times, you will not be asked to log in to your Azure AD B2C tenant again. The login session for Azure B2C is cached here: `$HOME/asdk/.cache/`.
 
-While not recommended, you can also run the deployment script *bare-bone* on you computing without using a container. It will generally run slower and since the run environment is not as controlled as when running the script using a dedicated container, there is a higher risk for something not working. That said, the script is tested for this and will work in most circumstances.
+## Running Deployment Script on Your Computer Without Docker (not recommended)
+
+While not recommended, you can also run the deployment script *bare-bone* on you computing without using a container. It will generally run slower. More importantly, since the run environment is not controlled, there is a higher risk for something going off the rails. That said, the script is tested for this and will work in many circumstances.
 
 The script have been tested on:
 
@@ -216,15 +223,17 @@ chmod +x start.sh
 
 From there on everything else is virtually identical to running the script from inside a container, as described above.
 
-## What if something goes wrong?
+## What If Something Goes Wrong?
 
-It should happen, but it does. In most cases, if something goes wrong along the way, all you'll need to do is to run the script again and it will skip the parts that have already been completed and re-try the parts that have not.
+It shouldn't happen, but we all know that it does - thank you [Murphy](https://en.wikipedia.org/wiki/Murphy%27s_law)! In most cases, when something goes wrong along the way, all you'll need to do is to run the script once again. The deployment script will skip the parts that have already been completed and re-try the parts that have not.
 
 > Tip #1: If something goes wrong with for instance the the App Registrations, try deleting all of them (or at least the one that is not correct) and then run the script again. Doing so will recreate the app registrations. 
 >
-> Tip #2: Please be aware that when you dele an App Registration it will move to `Deleted applications` and you will have to delete the deleted registration too using `Delete permanently` to fully purge it.
+> Tip #2: Please be aware that when you dele an App Registration it will move to `Deleted applications` and you will have to delete the deleted registration once more using `Delete permanently`, to actually fully purge it.
 >
 > Tip #3: Deleting an entity and then running the script again is a general a good suggestion for if you want to make changes. The script is designed with resilience in mind.
+
+### Logs
 
 If the script fails you may use the logs to investigate the issue. The logs are found in the [log](./log) directory in the project root. Every time the script is run a new folder with the time/date of the event is created. Inside this folder the `config.json` manifest file is stored twice. Once as it looks in the beginning of the script run and once who it looks at the end. The `config.json` manifest is an important file, if you need to run the script again.
 
@@ -232,7 +241,7 @@ If the script fails you may use the logs to investigate the issue. The logs are 
 
 ## Now what?
 
-The deployment script has run to it's completion and the Identity Framework have been deployed - providing that nothing went wrong, of course. 
+The deployment script has run to it's completion and the Identity Framework have been deployed - assuming that nothing went wrong, of course.
 
 ### Inspecting the Identity Foundation in the Azure Portal
 
