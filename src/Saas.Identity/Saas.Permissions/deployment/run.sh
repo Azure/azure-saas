@@ -6,18 +6,22 @@ git_org_project_name="$( git config --get remote.origin.url | sed 's/.*\/\([^ ]*
 gh_auth_token="$( gh auth token )"
 
 if [[ -z "${gh_auth_token}" ]]; then
-    echo "You are not loggged into your GitHub organization. GitHub auth token is not set. Please run command 'gh auth login', then run this script again."
+    echo "You are not loggged into your GitHub organization. GitHub auth token is not set and/or you haven't installed GitHub Cli." 
+    echo "Please make sure that GitHub Cli is installed and then run 'gh auth login', before running this script again."
+    echo "See readme.md for more info."
     exit 0
 fi
 
+# using volumes '--volume' to mount only the needed directories to the container. 
+# using ':ro' to make scrip directories etc. read-only. Only config and log directories are writable.
 docker run \
     --interactive \
     --tty \
     --rm \
     --volume "${repo_base}/src/Saas.Identity/Saas.Permissions/deployment/":/asdk/src/Saas.Identity/Saas.Permissions/deployment:ro \
-    --volume "${repo_base}/src/Saas.Identity/Saas.Permissions/deployment/":/asdk/src/Saas.Identity/Saas.Permissions/deployment/log \
     --volume "${repo_base}/src/Saas.Lib/Deployment.Script.Modules/":/asdk/src/Saas.Lib/Deployment.Script.Modules:ro \
     --volume "${repo_base}/src/Saas.Identity/Saas.IdentityProvider/deployment/config/":/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/config:ro \
+    --volume "${repo_base}/.github/workflows":/asdk/.github/workflows \
     --volume "${repo_base}/.git/":/asdk/.git:ro \
     --volume "${HOME}/.azure/":/asdk/.azure:ro \
     --volume "${HOME}/asdk/.cache/":/asdk/.cache \

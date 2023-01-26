@@ -1,16 +1,24 @@
-﻿using Azure.Core;
-using ClientAssertionWithKeyVault.Interface;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Options;
 using System.Net.Http.Headers;
+using ClientAssertionWithKeyVault.Interface;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Saas.Permissions.Service.Services;
 
 public class KeyVaultSigningCredentialsAuthProvider : IAuthenticationProvider
 {
+    private readonly ILogger _logger;
+
+    // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/loggermessage?view=aspnetcore-7.0
+    private static readonly Action<ILogger, Exception> _logError = LoggerMessage.Define(
+            LogLevel.Error,
+            new EventId(1, nameof(KeyVaultSigningCredentialsAuthProvider)),
+            "Client Assertion Signing Provider");
+
     private readonly MSGraphOptions _msGraphOptions;
     private readonly IClientAssertionSigningProvider _clientAssertionSigningProvider;
     private readonly IConfidentialClientApplication _msalClient;
@@ -19,21 +27,24 @@ public class KeyVaultSigningCredentialsAuthProvider : IAuthenticationProvider
         IOptions<MSGraphOptions> msGraphOptions,
         IOptions<PermissionApiOptions> permissionApiOptions,
         IClientAssertionSigningProvider clientAssertionSigningProvider,
-        IKeyVaultCredentialService credentialService)
+        IKeyVaultCredentialService credentialService,
+        ILogger<KeyVaultSigningCredentialsAuthProvider> logger)
     {
+        _logger= logger;
         _msGraphOptions = msGraphOptions.Value;
-
         _clientAssertionSigningProvider = clientAssertionSigningProvider;
 
         if (permissionApiOptions?.Value?.Certificates?[0] is null)
         {
+            logger.LogError("Certificate cannot be null.");
             throw new NullReferenceException("Certificate cannot be null.");
         }
 
         _msalClient = ConfidentialClientApplicationBuilder
         .Create(permissionApiOptions.Value.ClientId)
         .WithAuthority(AzureCloudInstance.AzurePublic, permissionApiOptions.Value.TenantId)
-        .WithClientAssertion((AssertionRequestOptions options) =>
+        .WithClientAssertion(
+            (AssertionRequestOptions options) =>
                 _clientAssertionSigningProvider.GetClientAssertion(
                     permissionApiOptions.Value.Certificates[0],
                     options.TokenEndpoint,
@@ -45,8 +56,16 @@ public class KeyVaultSigningCredentialsAuthProvider : IAuthenticationProvider
 
     public async Task AuthenticateRequestAsync(HttpRequestMessage requestMessage)
     {
-        requestMessage.Headers.Authorization =
-                new AuthenticationHeaderValue("bearer", await GetAccessTokenAsync());
+        try
+        {
+            requestMessage.Headers.Authorization =
+                    new AuthenticationHeaderValue("bearer", await GetAccessTokenAsync());
+        }
+        catch (Exception ex)
+        {
+            _logError(_logger, ex);
+            throw;
+        }
     }
 
     private async Task<string> GetAccessTokenAsync()

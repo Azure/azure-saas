@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Certificate;
-using Microsoft.AspNetCore.Authorization;
-using Saas.Permissions.Service.Exceptions;
+﻿using Saas.Permissions.Service.Exceptions;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models;
 
@@ -10,10 +8,11 @@ namespace Saas.Permissions.Service.Controllers;
 [ApiController]
 public class PermissionsController : ControllerBase
 {
-    private readonly IPermissionsService _permissionsService;
-    private readonly IGraphAPIService _graphAPIService;
     private readonly ILogger _logger;
 
+    private readonly IPermissionsService _permissionsService;
+    private readonly IGraphAPIService _graphAPIService;
+    
     public PermissionsController(IPermissionsService permissionsService, IGraphAPIService graphAPIService, ILogger<PermissionsController> logger)
     {
         _permissionsService = permissionsService;
@@ -31,7 +30,17 @@ public class PermissionsController : ControllerBase
     public async Task<ActionResult<IEnumerable<User>>> GetTenantUsers(string tenantId)
     {
         // Get user IDs from database
-        ICollection<string> userIds = await _permissionsService.GetTenantUsersAsync(tenantId);
+        ICollection<string> userIds;
+
+        try
+        {
+            userIds = await _permissionsService.GetTenantUsersAsync(tenantId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Unable to get Tenant Users.", ex);
+            throw;
+        }
         
         //
         // Next, we fetch the user objects with more data from the Microsoft Graph API
@@ -47,6 +56,11 @@ public class PermissionsController : ControllerBase
         catch (FormatException ex)
         {
             return BadRequest($"Tenant ID {tenantId} has a user assinged that has an invalid ID. Error: {ex.Message}");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Unhandled exception", ex);
             throw;
         }
     }

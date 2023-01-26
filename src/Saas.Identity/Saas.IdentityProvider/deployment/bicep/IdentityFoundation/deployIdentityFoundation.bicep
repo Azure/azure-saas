@@ -55,19 +55,19 @@ var permissionsSqlDatabaseName = 'sqldb-permissions-${solutionPrefix}-${solution
 var permissionsSqlServerName = 'sql-permissions-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var userAssignedIdentityName = 'user-assign-id-${solutionPrefix}-${solutionName}-${solutionPostfix}' 
 var applicationInsightsName = 'appi-${solutionPrefix}-${solutionName}-${solutionPostfix}'
+var logAnalyticsWorkspaceName = 'log-${solutionPrefix}-${solutionName}-${solutionPostfix}'
+var automationAccountName = 'aa-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: userAssignedIdentityName
   location: location
 }
-
 module secretGenerator './Module/createSecret.bicep' = {
   name: 'SecretsGenerator'
   params: {
     location: location
   }
 }
-
 module permissionsSqlModule './Module/permissionsSql.bicep' = {
   name: 'PermissionsSqlDeployment'
   params: {
@@ -96,7 +96,6 @@ module appConfigurationModule './Module/appConfigurationStore.bicep' = {
     location: location
   }
 }
-
 module keyVaultAccessPolicyModule 'Module/keyVaultAccessRBAC.bicep' = {
   name: 'KeyVaultAccessPolicyDeployment'
   params: {
@@ -107,7 +106,6 @@ module keyVaultAccessPolicyModule 'Module/keyVaultAccessRBAC.bicep' = {
     keyVault
   ]
 }
-
 module restApiKeyModule './Module/linkToExistingKeyVaultSecret.bicep' = {
   name: 'PermissionApiKeyDeployment'
   params: {
@@ -140,6 +138,8 @@ module permissionsApiModule './Module/permissionsApi.bicep' = {
     userAssignedIdentityName: userAssignedIdentity.name
     appConfigurationName: appConfigurationStore.name
     applicationInsightsName: applicationInsightsName
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+    automationAccountName: automationAccountName
   }
   dependsOn:  [
     appConfigurationModule
@@ -190,3 +190,5 @@ output userAssignedIdentityId string = userAssignedIdentity.id
 output permissionsSqlServerFQDN string = permissionsSqlModule.outputs.permissionsSqlServerFQDN
 output permissionsApiHostName string = permissionsApiModule.outputs.permissionsApiHostName
 output applicationInsightsName string = applicationInsightsName
+output logAnalyticsWorkspaceName string = logAnalyticsWorkspaceName
+output automationAccountName string = automationAccountName

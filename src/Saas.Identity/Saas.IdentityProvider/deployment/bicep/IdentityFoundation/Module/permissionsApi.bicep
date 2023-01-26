@@ -21,11 +21,56 @@ param userAssignedIdentityName string
 @description('The name of the Azure App Configuration.')
 param appConfigurationName string
 
+@description('The name of the Log Analytics Workspace used by Application Insigths.')
+param logAnalyticsWorkspaceName string
+
+@description('The name of the Automation Account.')
+param automationAccountName string
+
 @description('The name of Application Insights.')
 param applicationInsightsName string
 
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
   name: userAssignedIdentityName
+}
+
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
+  name: logAnalyticsWorkspaceName
+  location: location
+  properties: {
+    sku: {
+      name: 'PerGB2018'
+    }
+    retentionInDays: 30
+    features: {
+      enableLogAccessUsingOnlyResourcePermissions: true
+    }
+  }
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: { 
+      '${userAssignedIdentity.id}': {} 
+    }
+  }
+}
+
+resource automationAccount 'Microsoft.Automation/automationAccounts@2022-08-08' = {
+  name: automationAccountName
+  location: location
+  properties: {
+    sku: {
+      name: 'Basic'
+    }
+  }
+}
+
+var automationAccountLinkedWorkspaceName = 'Automation'
+
+resource automationAccountLinkedWorkspace 'Microsoft.OperationalInsights/workspaces/linkedServices@2020-08-01' = {
+  name: '${logAnalyticsWorkspace.name}/${automationAccountLinkedWorkspaceName}'
+  properties: {
+    resourceId: automationAccount.id
+  }
 }
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
@@ -36,6 +81,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
     Application_Type: 'web'
     publicNetworkAccessForIngestion: 'Enabled'
     publicNetworkAccessForQuery: 'Enabled'
+    WorkspaceResourceId: logAnalyticsWorkspace.id
   }
 }
 
@@ -89,8 +135,33 @@ resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
       ASPNETCORE_ENVIRONMENT: 'Production'
       UserAssignedManagedIdentityClientId: userAssignedIdentity.properties.clientId
       AppConfiguration__Endpoint : appConfig.properties.endpoint
-      APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
+      APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString // https://learn.microsoft.com/en-us/azure/azure-monitor/app/migrate-from-instrumentation-keys-to-connection-strings
+      ApplicationInsightsAgent_EXTENSION_VERSION: '~2'
     }
+  }
+}
+
+resource diagnosticsSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'string'
+  scope: permissionsApi
+  properties: {
+    logs: [
+      {
+        categoryGroup: 'allLogs'
+        enabled: true
+        retentionPolicy: {
+          days: 7
+          enabled: true
+        }
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+    workspaceId: logAnalyticsWorkspace.id
   }
 }
 
