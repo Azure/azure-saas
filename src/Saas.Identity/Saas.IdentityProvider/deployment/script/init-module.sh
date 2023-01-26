@@ -36,18 +36,20 @@ function final-state() {
                 --level success \
                 --header "Deployment script completion"
 
-
         resource_group="$( get-value ".deployment.resourceGroup.name" )"
         subscription_id="$( get-value ".initConfig.subscriptionId" )"
 
         echo "To see the deployed resources, please visit the Azure Portal and navigate to the resource group '${resource_group}': https://ms.portal.azure.com/#@microsoft.onmicrosoft.com/resource/subscriptions/${subscription_id}/resourceGroups/${resource_group}/overview" \
             | log-output \
-                --level info \
-                --header "Deployment script completion"
+                --level info
 
         b2c_tenant_id="$( get-value ".deployment.azureb2c.tenantId" )"
 
         echo "Your Azure B2C Tenant Id is: ${b2c_tenant_id}" \
+            | log-output \
+                --level info
+
+        echo "Link to visit your Azure B2C tenant: https://portal.azure.com/${b2c_tenant_id}" \
             | log-output \
                 --level info
 
