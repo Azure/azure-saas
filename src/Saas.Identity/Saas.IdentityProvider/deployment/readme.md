@@ -249,7 +249,7 @@ The Identity Framework is gathered in an Azure Resource group. In the Azure Port
 
 ![image-20230126000531416](assets/readme/image-20230126000531416.png)
 
-### Adding Other Modules
+### Adding the Other Modules
 
 With the Identity Foundation in place, it's time to kick the tires of the Azure SaaS Development Kit. The next step should be to add the ASDK Permission Service API, which is a core component. 
 

@@ -113,13 +113,15 @@ dig +short myip.opendns.com @resolver1.opendns.com
 
 ## Running the Permissions Service API, Locally
 
-When all of the above have been set up, you're ready to build and run the SaaS Permissions Services in your local development development. As you press debug/run, a browser will open and load a Swagger Page:
 
-> Tip: Swagger is only enabled when the API is running locally. You'll find the details of why that is in: `program.cs`.
+After all of the above have been set up, you're now ready to build and run the SaaS Permissions Services in your local development environment. As you press debug/run, a browser will open and load a Swagger Page:
+
+> Tip: Swagger is only enabled when the API is running locally. You'll find the details in `program.cs`.
 
 ![image-20230112000806828](assets/readme/image-20230112000806828.png)
 
 Now *try it out* by running `GET /api/Permissions/GetTenantUsers` API. The first time you execute the request, it will take about 20-40 seconds to complete the request. This is because the app will need to authenticate itself, including getting a signed assertion from the Key Vault in the Identity Foundation.
+
 
 Enter the `tenantId` of your Azure B2C Tenant (i.e., the `tenant id` of the Azure B2C tenant that was deployed as part of the Identity Foundation). You'll find it in the `config.json` file at `.deployment.azureb2c.tenantId`.
 
@@ -132,6 +134,7 @@ Enter the `tenantId` of your Azure B2C Tenant (i.e., the `tenant id` of the Azur
 For deploying the SaaS Permissions Service API to Azure a [GitHub Action](https://github.com/features/actions) is provide as part of the repo. 
 
 > Tip: Establishing a [CI/CD](CI/CD) pipeline from the onset provides automation which increases security and minimizes operations. We highly recommend using this or some other CI/CD tool. 
+
 
 > Info: During the deployment of the Identity Foundation, an [OIDC Connection](https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=openid) was established between your Azure resource group and your GitHub repo. This connection enables GitHub action to push updates directly to your Azure App Services. Leveraging [OIDC](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect) is the recommended authentication method for automated deployment, offering hardened security without the need to managing and keeping safe secrets or passwords.
 
