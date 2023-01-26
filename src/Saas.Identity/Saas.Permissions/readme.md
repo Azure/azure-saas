@@ -61,7 +61,7 @@ if (builder.Environment.IsDevelopment())
 }
 ```
 
-#### Access and Permissions to Azure App Configuration
+#### Access and permissions to Azure App Configuration
 
 To manage access to Azure App Configuration, securely, we need one more thing. 
 
@@ -111,29 +111,31 @@ dig +short myip.opendns.com @resolver1.opendns.com
 
 ![image-20230107210713030](assets/readme/image-20230107210713030.png)
 
-## Running the Permissions Service API
+## Running the Permissions Service API, Locally
 
-After all of the above have been set up, you're now ready to build and run the SaaS Permissions Services in your local development environment. As you press debug/run, a browser will open and load a Swagger Page:
+When all of the above have been set up, you're ready to build and run the SaaS Permissions Services in your local development development. As you press debug/run, a browser will open and load a Swagger Page:
 
-> Tip: Swagger is only enabled when the API is running locally. You'll find the details in `program.cs`.
+> Tip: Swagger is only enabled when the API is running locally. You'll find the details of why that is in: `program.cs`.
 
 ![image-20230112000806828](assets/readme/image-20230112000806828.png)
 
-Now *try it out* and run the `GetTenantUsers` API. It will take approx. 20-40 seconds to complete the request, the first time you run it, because the app will need to authenticate itself, including getting a signed assertion from Key Vault. 
-
-> Tip: After the first run the access token is cached for the duration of it's life time, so if you run the request a second time it will be much faster. 
+Now *try it out* by running `GET /api/Permissions/GetTenantUsers` API. The first time you execute the request, it will take about 20-40 seconds to complete the request. This is because the app will need to authenticate itself, including getting a signed assertion from the Key Vault in the Identity Foundation.
 
 Enter the `tenantId` of your Azure B2C Tenant (i.e., the `tenant id` of the Azure B2C tenant that was deployed as part of the Identity Foundation). You'll find it in the `config.json` file at `.deployment.azureb2c.tenantId`.
 
 ![image-20230112001210631](assets/readme/image-20230112001210631.png)
 
+> Tip: After the first run, the access token is cached for the duration of it's life time, so if you try and run the request for a second time, it will be much faster. 
+
 ## How  to Deploy to Azure
 
-For deploying the SaaS Permissions Service API to Azure we've provided a [GitHub Action](https://github.com/features/actions). Establishing a [CI/CD](CI/CD) pipeline from the onset provides automation which increases security and minimizes operations. We highly recommend using this or some other CI/CD tool. 
+For deploying the SaaS Permissions Service API to Azure a [GitHub Action](https://github.com/features/actions) is provide as part of the repo. 
 
-During the deployment of the Identity Foundation, an [OIDC Connection](https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=openid) was established between your Azure resource group and your GitHub repo. This connection enables GitHub action to push updates directly to your Azure App Services. Leveraging [OIDC](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect) is the recommended authentication method for automated deployment, offering hardened security without the need to managing and keeping safe secrets or passwords.
+> Tip: Establishing a [CI/CD](CI/CD) pipeline from the onset provides automation which increases security and minimizes operations. We highly recommend using this or some other CI/CD tool. 
 
+> Info: During the deployment of the Identity Foundation, an [OIDC Connection](https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=openid) was established between your Azure resource group and your GitHub repo. This connection enables GitHub action to push updates directly to your Azure App Services. Leveraging [OIDC](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect) is the recommended authentication method for automated deployment, offering hardened security without the need to managing and keeping safe secrets or passwords.
 
+To deploy the solution to Azure 
 
 ## How to debug in Azure
 

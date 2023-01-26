@@ -287,6 +287,28 @@ function put-scope-guid() {
             || exit 1
 }
 
+function put-scope-name() {
+    local app_name="$1"
+    local scope_name="$2"
+    local scope_guid="$3"
+
+    local json
+    
+    json="$( cat "${CONFIG_FILE}" )"
+
+    output="$( echo "${json}" \
+        | jq --arg x "${scope_guid}" \
+            --arg app_name "${app_name}" \
+            --arg scope_name "${scope_name}" \
+                "( .appRegistrations[] \
+                | select(.name == \$app_name ) \
+                | .scopes[] \
+                | select(.name == \$scope_name ).guid ) \
+                |= \$x " )" \
+            && echo "${output}" > "${CONFIG_FILE}" \
+            || exit 1
+}
+
 function get-app-role-guid() {
     local app_name="$1"
     local app_role_name="$2"
