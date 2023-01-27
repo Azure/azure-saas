@@ -43,7 +43,7 @@ No matter the operating system you're using, you will need these tools to be ins
 - [**Docker Desktop**](https://docs.docker.com/get-docker/). 
   - If you have Docker already, make sure to get the latest updates before you begin. If you have Docker installed but haven't used it for a while. Reinstalling will often solve potential issues.
 - [Azure Command Line Interface (**az cli**)](https://learn.microsoft.com/en-us/cli/azure/what-is-azure-cli) from the terminal: [How to install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
-- [GitHub’s official command line tool (**gh**)]([GitHub CLI | Take GitHub to the command line](https://cli.github.com/)). For more on installation see [here](https://github.com/cli/cli#installation).
+- [GitHub’s official command line tool (**gh**)](https://cli.github.com/). For more on installation see [here](https://github.com/cli/cli#installation).
 - **Zip** which can be installed with the command: `sudo apt install zip` . 
   - Note: **zip** is already installed on MacOS per default.
 

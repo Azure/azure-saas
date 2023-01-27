@@ -1,3 +1,4 @@
+---
 name: Deploy Permission API to Azure Web Services
 
 on:
@@ -15,7 +16,7 @@ permissions:
   contents: read
 
 env:
-  AZURE_WEBAPP_NAME: 'api-permission-asdk-test-b3yf' # set this to your application's name
+  AZURE_WEBAPP_NAME: 'api-permission-asdk-test-b3yf'       # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: "." # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: 7.x.x
   PROJECT_DIR: ./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1
@@ -27,16 +28,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+##################################################
+# this section is specific for local deployment. #
+##################################################
       # Azure login
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-      # checkout the repo specifying the branch name in 'ref:'
-      - uses: actions/checkout@v3
-        with:
-          ref: dev #IMPORTANT we're checking out and deploying the 'dev' branch here, not 'main'.
-          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # checkout the _local_ repository
+      - name: Checkout
+        uses: actions/checkout@v3
+#################################################
+# end of local deployment specific section.     #
+#################################################
 
       # Setup .NET Core SDK
       - name: Setup .NET Core

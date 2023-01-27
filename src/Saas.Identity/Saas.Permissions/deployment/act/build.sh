@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-repo_base="$( git rev-parse --show-toplevel )"
-docker_file_folder="${repo_base}/src/Saas.Identity/Saas.Permissions/deployment/act"
+# shellcheck disable=SC1091
+source "./../constants.sh"
 
-docker build --file "${docker_file_folder}/Dockerfile" --tag act-container:latest .
+docker build --file "${ACT_DIR}/Dockerfile" --tag "${ACT_CONTAINER_NAME}" .

@@ -9,6 +9,7 @@ using ClientAssertionWithKeyVault;
 using Saas.Permissions.Service.Middleware;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Polly;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -31,6 +32,8 @@ builder.Services.AddApplicationInsightsTelemetry();
 */
 
 var logger = LoggerFactory.Create(config => config.AddConsole()).CreateLogger("Saas.Permissions.API");
+
+logger.LogInformation("001");
 
 if (builder.Environment.IsDevelopment())
 {

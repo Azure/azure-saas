@@ -6,9 +6,9 @@ source "./constants.sh"
 echo "Setting up the deployment environment."
 echo "Settings execute permissions on necessary scripts files."
 
-sudo chmod +x ./*.sh
-sudo chmod +x ./script/*.sh
-sudo chmod +x ./script/*.py
+sudo chmod +x "${BASE_DIR}/*.sh"
+sudo chmod +x "${SCRIPT_DIR}/*.sh"
+sudo chmod +x "${SCRIPT_DIR}/*.py"
 
 echo
-echo "Setup complete. You can now run the deployment script using the command './run.sh'."
+echo "SaaS Permissions Service API environment setup complete. You can now run the deployment script using the command './run.sh'."

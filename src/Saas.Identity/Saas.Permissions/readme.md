@@ -19,8 +19,9 @@ To run the API locally, you must have the following installed on your developer 
 - [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) (recommended) or [Visual Studio Code](https://code.visualstudio.com/download).
 - [.NET 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 - [ASP.NET Core 7.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-7.0)
+- [GitHub’s official command line tool (**gh**)](https://cli.github.com/). For more on installation see [here](https://github.com/cli/cli#installation).
 
-> Tip: .NET 7.0 and ASP.NET Core 7.0 can be installed as part of the latest version Microsoft Visual Studio 2022.
+> Tip: .NET 7.0 and ASP.NET Core 7.0 can also be installed as part of the latest version Microsoft Visual Studio 2022.
 
 You will also need a deployed instance of the [Identity Framework](https://azure.github.io/azure-saas/quick-start/). For details visit the [Deploying the Identify Foundation Services readme](../Saas.Identity.Provider/readme.md).
 
@@ -111,7 +112,7 @@ dig +short myip.opendns.com @resolver1.opendns.com
 
 ![image-20230107210713030](assets/readme/image-20230107210713030.png)
 
-## Running the Permissions Service API, Locally
+## Running the SaaS Permissions Service API Locally
 
 
 After all of the above have been set up, you're now ready to build and run the SaaS Permissions Services in your local development environment. As you press debug/run, a browser will open and load a Swagger Page:
@@ -129,18 +130,105 @@ Enter the `tenantId` of your Azure B2C Tenant (i.e., the `tenant id` of the Azur
 
 > Tip: After the first run, the access token is cached for the duration of it's life time, so if you try and run the request for a second time, it will be much faster. 
 
-## How  to Deploy to Azure
+## How  to Deploy SaaS Permissions Service API to Azure
 
-For deploying the SaaS Permissions Service API to Azure a [GitHub Action](https://github.com/features/actions) is provide as part of the repo. 
+A [GitHub Action](https://github.com/features/actions) is provide for deploying the SaaS Permissions Service API to the Azure App Service that was provisioned . 
 
-> Tip: Establishing a [CI/CD](CI/CD) pipeline from the onset provides automation which increases security and minimizes operations. We highly recommend using this or some other CI/CD tool. 
+> Info #1 The GitHub Action is defined by a YAML file located in the `./.github/workflows` directory.
+>
+> Info #2: During the deployment of the Identity Foundation, an [OIDC Connection](https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=openid) was established between your Azure resource group and your GitHub repo. This connection enables GitHub action to push updates directly to your Azure App Service in the Azure Resource Group. Leveraging a [OIDC Connection](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect), is the recommended authentication method for automating deployment. OIDC offered hardened security without the need to managing and keeping safe secrets or passwords.
 
+### Setting up for deployment
 
-> Info: During the deployment of the Identity Foundation, an [OIDC Connection](https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=openid) was established between your Azure resource group and your GitHub repo. This connection enables GitHub action to push updates directly to your Azure App Services. Leveraging [OIDC](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect) is the recommended authentication method for automated deployment, offering hardened security without the need to managing and keeping safe secrets or passwords.
+Here are the steps to set things up for deploying the SaaS Permissions Service API to Azure. 
 
-To deploy the solution to Azure 
+1. Before we can use the GitHub Action, we need to update it with the right app name for the SaaS Permissions Service. To do this go to the terminal and change directory:
+
+```bash
+.../src/Saas.Identity/Saas.Permissions/deployment
+```
+
+2. From the directory, run these commands and bash shell scripts:
+
+```bash
+sudo chmod +c ./setup.sh \
+./setup.sh \
+./run.sh
+```
+
+This will update the `AZURE_WEBAPP_NAME` environment variable in the GitHub Action YAML file, specifying the name of the SaaS Permissions Service API, as seen here in the file `./.github/workflows/permissions-api-deploy.yaml`:
+
+![image-20230126230446548](assets/readme/image-20230126230446548.png)
+
+> Info: the SaaS Permissions Service API name is fetched from the `config.json` file that was created when running the Identity Foundation deployment script.
+
+3. You must now `git commit` the changes to the *main* branch and `git push` them to the GitHub repo (origin).
+
+### Deploying
+
+To deploy the SaaS Permissions Service API to your Azure environment you can run the GitHub action directly from your GitHub repository by:
+
+1. Press the **Actions** menu tab.
+2. Click on the **ASDK Permissions Service API - Deploy to Azure Web Services** workflow. 
+3. Click on the **Run workflow** drop-down button.
+4. Click the green **Run workflow** button.
+
+![image-20230126203229729](assets/readme/image-20230126203229729.png)
 
 ## How to debug in Azure
+
+The previous deployment, deployed a *Release* version of the SaaS Permissions Service API from the *main* branch to Azure. What if we want to debug the solution running in Azure instead? This section is dedicated to that question. 
+
+### Speeding up the inner loop of  GitHub Actions
+
+The first thing we need to do, to get started with debugging, testing and developing is to speed up your *inner loop*.  For testing, debugging and general development, we generally want to do as much work locally, but eventually we also want to understand how it runs Azure as well. 
+
+Chances are that we don't want to push every little change or test etc. to the *main* branch every time we something new or if we're troubleshoot, some issue etc. In fact, we'd encourage you to create *dev* branch and do most of that sort of work from there. 
+
+Working from the *dev* branch means that we need a different GitHub Action that pulls updates from the *dev* branch rather than the *main* branch. 
+
+We could easily create a 2nd GitHub Action for this, but here we suggest to do something different. Specifically, we can use a tool called [Act](https://github.com/nektos/act). Act allows us to run our GitHub Action locally, thus giving us much better speed, control, and insights into what's going on - all of which are exactly what we're looking for when doing debugging, testing and development work.
+
+Act can be run installed as an extension to GitHub cli. This extension is installed by running this command from the terminal:
+
+```bash
+gh extension install nektos/gh-act
+```
+
+Act uses containers to run GitHub Actions locally. The containers provided by Act doesn't include az cli by default, so we need to extend it. We're created a lite script to aid make this easier.
+
+> Info: We've already created this `Dockerfile` for you, but here it is for reference
+
+> ```docker
+> FROM ghcr.io/catthehacker/ubuntu:act-latest
+> 
+> RUN apt-get update && apt-get install -y \
+>     curl \
+>     && curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+> ```
+>
+
+Here are the steps for getting up and running with Act for doing local deployment:
+
+1. Go to the sub-directory: 
+
+   ```bash 
+   .../src/Saas.Identity/Saas.Permissions/deployment/act
+   ```
+
+2. 
+
+
+
+### Why not use Visual Studio 2022 to deploy. 
+
+
+
+
+
+
+
+Also, pushing an updated YAML file to the *main* branch of your repo every time you make a change to the definition get's old fast. 
 
 We're going to deploy for Windows, rather than Linux, because the Windows remote debugging is the most seamless, and we're expecting that you'll want to remote debug into the Azure instance to explore and see how the app runs there. That said, nothing prevents you from deploying to Linux for production, since ASP.NET Core 7 runs equally well on Linux.
 
