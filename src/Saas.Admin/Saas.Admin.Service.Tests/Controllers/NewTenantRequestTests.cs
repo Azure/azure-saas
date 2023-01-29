@@ -1,15 +1,12 @@
-namespace Saas.Admin.Service.Tests
+namespace Saas.Admin.Service.Tests;
+
+public class NewTenantRequestTests
 {
-    using Xunit;
-
-    public class NewTenantRequestTests
+    [Theory, AutoDataNSubstitute]
+    public void All_Values_Are_Copied_To_Tenant(NewTenantRequest tenantRequest)
     {
-        [Theory, AutoDataNSubstitute]
-        public void All_Values_Are_Copied_To_Tenant(NewTenantRequest tenantRequest)
-        {
-            Tenant tenant = tenantRequest.ToTenant();
+        Tenant tenant = tenantRequest.ToTenant();
 
-            AssertAdditions.AllPropertiesAreEqual(tenant, tenantRequest, nameof(tenant.ConcurrencyToken), nameof(tenant.CreatedTime), nameof(tenant.Id));
-        }
+        AssertAdditions.AllPropertiesAreEqual(tenant, tenantRequest, nameof(tenant.ConcurrencyToken), nameof(tenant.CreatedTime), nameof(tenant.Id));
     }
 }

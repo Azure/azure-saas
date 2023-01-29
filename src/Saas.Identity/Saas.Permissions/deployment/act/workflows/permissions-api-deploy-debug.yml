@@ -3,25 +3,22 @@ name: Deploy Permission API to Azure Web Services
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   logLevel:
-    #     description: 'Log level'
-    #     required: true
-    #     default: 'warning'
-    #   tags:
-    #     description: 'Test scenario tags'
 
 permissions:
   id-token: write
   contents: read
 
 env:
-  AZURE_WEBAPP_NAME: 'api-permission-asdk-test-b3yf'       # set this to your application's name
+  APP_NAME: permissions-api
+  AZURE_WEBAPP_NAME: api-permission-asdk-test-fd4k        # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: "." # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: 7.x.x
   PROJECT_DIR: ./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1
-  PROJECT_PATH: ./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1/Saas.Permissions.Service.csproj
-  OUTPUT_PATH: ./publish
+  PROJECT_PATH: ${{ env.PROJECT_DIR }}/Saas.Permissions.Service.csproj
+  PUBLISH_PATH: ./publish
+  OUTPUT_PATH: ${{ env.PUBLISH_PATH }}/${{ env.APP_NAME }}/package
+  SYMBOLS_PATH: ${{ env.PUBLISH_PATH }}/symbols
+  BUILD_CONFIGURATION: Debug # setting the configuration manager build configuration value for our workflow.
 
 jobs:
   build-and-deploy:
@@ -55,19 +52,31 @@ jobs:
           dotnet restore ${{ env.PROJECT_DIR }}
 
           dotnet build ${{ env.PROJECT_PATH }} \
-            --configuration Debug
+            --configuration ${{ env.BUILD_CONFIGURATION }}
 
           dotnet publish ${{ env.PROJECT_PATH }} \
-            --configuration Debug \
-            --output '${{ env.OUTPUT_PATH }}/{{ env.AZURE_WEBAPP_NAME }}'
+            --configuration ${{ env.BUILD_CONFIGURATION }} \
+            --output ${{ env.OUTPUT_PATH }}
 
       # Deploy to Azure Web apps
       - name: "Run Azure webapp deploy action using publish profile credentials"
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
-          package: ${{ env.OUTPUT_PATH }}/{{ env.AZURE_WEBAPP_NAME }}
+          package: ${{ env.OUTPUT_PATH }}
           # slot-name: 'PermissionsApi-Staging'
+      ######################
+      # *** Debug only *** #
+      ######################
+      # Copy symbols files (*.pdb)) to local publish folder # rm -rf ${{ env.OUTPUT_PATH }}/${{ env.AZURE_WEBAPP_NAME }}
+      - name: copy symbols files (*.pdb)) to local publish folder
+        run: |
+          mkdir -p ${{ env.PUBLISH_PATH }}/symbols
+          echo "Copying symbols files to '${{ env.SYMBOLS_PATH }}'"
+          cp -r ${{ env.OUTPUT_PATH }}/*.pdb ${{ env.SYMBOLS_PATH }}
+      ######################
+      # *** End ***        #
+      ######################
 
       # Azure logout
       - name: logout

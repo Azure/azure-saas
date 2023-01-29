@@ -2,7 +2,7 @@
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Saas.Permissions.Service.Interfaces;
-using Saas.Permissions.Service.Options;
+using Saas.Shared.Options;
 using System.Net.Http.Headers;
 using ClientAssertionWithKeyVault.Interface;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
@@ -25,7 +25,7 @@ public class KeyVaultSigningCredentialsAuthProvider : IAuthenticationProvider
 
     public KeyVaultSigningCredentialsAuthProvider(
         IOptions<MSGraphOptions> msGraphOptions,
-        IOptions<PermissionApiOptions> permissionApiOptions,
+        IOptions<AzureB2CPermissionsApiOptions> azureAdB2COptions,
         IClientAssertionSigningProvider clientAssertionSigningProvider,
         IKeyVaultCredentialService credentialService,
         ILogger<KeyVaultSigningCredentialsAuthProvider> logger)
@@ -34,19 +34,19 @@ public class KeyVaultSigningCredentialsAuthProvider : IAuthenticationProvider
         _msGraphOptions = msGraphOptions.Value;
         _clientAssertionSigningProvider = clientAssertionSigningProvider;
 
-        if (permissionApiOptions?.Value?.Certificates?[0] is null)
+        if (azureAdB2COptions?.Value?.ClientCertificates?[0] is null)
         {
             logger.LogError("Certificate cannot be null.");
             throw new NullReferenceException("Certificate cannot be null.");
         }
 
         _msalClient = ConfidentialClientApplicationBuilder
-        .Create(permissionApiOptions.Value.ClientId)
-        .WithAuthority(AzureCloudInstance.AzurePublic, permissionApiOptions.Value.TenantId)
+        .Create(azureAdB2COptions.Value.ClientId)
+        .WithAuthority(AzureCloudInstance.AzurePublic, azureAdB2COptions.Value.TenantId)
         .WithClientAssertion(
             (AssertionRequestOptions options) =>
                 _clientAssertionSigningProvider.GetClientAssertion(
-                    permissionApiOptions.Value.Certificates[0],
+                    azureAdB2COptions.Value.ClientCertificates[0],
                     options.TokenEndpoint,
                     options.ClientID,
                     credentialService.GetCredential(),

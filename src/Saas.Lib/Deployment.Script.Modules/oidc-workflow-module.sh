@@ -5,23 +5,17 @@ source "$SHARED_MODULE_DIR/config-module.sh"
 
 function federation-exist() {
     local app_id="$1"
-    local federation_credential_id="$2"
+    local subject="$2"
 
-    if [[ -z "${federation_id}" \
-        || "${federation_id}" == null \
-        || "${federation_id}" == "null" ]]; then
-
-        false
-        return
-    fi
-
-    federation_exist="$( az ad app federated-credential show \
+    response_subject="$( az ad app federated-credential list \
         --id "${app_id}" \
-        --federated-credential-id "${federation_credential_id}" \
-        --query "id=='${federation_credential_id}'" 2> /dev/null \
+        --query "[?issuer == 'https://token.actions.githubusercontent.com'] \
+            | [?contains(subject, '${subject}')].subject
+            | [0]" \
+        --output tsv \
         || false; return )"
 
-    if [ "${federation_exist}" == "true" ]; then
+    if [[ -n "${response_subject}" ]]; then
         true
         return
     else

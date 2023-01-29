@@ -4,11 +4,11 @@
     "parameters": {
         "version": {
             "value": null
-        },
-        "devMachineIp": {
+        },        
+        "environment": {
             "value": null
         },
-        "appSettingsAdminServiceBaseUrl": {
+        "devMachineIp": {
             "value": null
         },
         "solutionPostfix": {
@@ -21,27 +21,6 @@
             "value": null
         },
         "keyVaultName": {
-            "value": null
-        },
-        "azureB2CDomain": {
-            "value": null
-        },
-        "azureB2CLoginEndpoint": {
-            "value": null
-        },
-        "azureB2CTenantId": {
-            "value": null
-        },
-        "permissionsApiName": {
-            "value": null
-        },
-        "permissionApiClientId": {
-            "value": null
-        },
-        "permissionInstance": {
-            "value": null
-        },
-        "permissionCertificateName": {
             "value": null
         },
         "permissionApiKey": {

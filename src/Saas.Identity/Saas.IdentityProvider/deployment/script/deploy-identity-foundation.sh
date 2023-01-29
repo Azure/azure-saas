@@ -10,44 +10,47 @@ set -e -o pipefail
     source "$SHARED_MODULE_DIR/config-module.sh"
 }
 
-if ! [[ -f "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" ]]; then
-    echo "The file ${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE} does not exist, creating it now" \
-        | log-output \
+if [[ ! -s "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" ||
+    ! -f "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" ]]; then
+
+    echo "The file ${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE} does not exist or is empty, creating it now" |
+        log-output \
             --level info
     cp "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_TEMPLATE_FILE}" "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}"
 fi
 
 set -u
 
-"${SCRIPT_DIR}/map-identity-paramenters.py" "${CONFIG_FILE}" "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" \
-    | log-output \
+"${SCRIPT_DIR}/map-identity-paramenters.py" "${CONFIG_FILE}" "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" |
+    log-output \
         --level info \
-        --header "Generating Identity Foundation services parameters..." \
-    || echo "Failed to map Identity Foundation services parameters" \
-        | log-output \
-            --level error \
-            --header "Critical Error" \
-            || exit 1
+        --header "Generating Identity Foundation services parameters..." ||
+    echo "Failed to map Identity Foundation services parameters" |
+    log-output \
+        --level error \
+        --header "Critical Error" ||
+    exit 1
 
-resource_group="$( get-value ".deployment.resourceGroup.name" )"
+resource_group="$(get-value ".deployment.resourceGroup.name")"
+deployment_name="$(get-value ".deployment.identityFoundation.name")"
 
-echo "Provisioning Identity Foundation services in resource group ${resource_group}..." \
-    | log-output \
+echo "Provisioning '${deployment_name}' to resource group ${resource_group}..." |
+    log-output \
         --level info
 
 az deployment group create \
     --resource-group "${resource_group}" \
-    --name "IdentityBicepDeployment" \
+    --name "${deployment_name}" \
     --template-file "${DEPLOY_IDENTITY_FOUNDATION_FILE}" \
-    --parameters "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" \
-    | log-output \
-        --level info \
-    || echo "Failed to deploy Identity Foundation services" \
-        | log-output \
-            --level error \
-            --header "Critical Error" \
-            || exit 1
+    --parameters "${IDENTITY_FOUNDATION_BICEP_PARAMETERS_FILE}" |
+    log-output \
+        --level info ||
+    echo "Failed to deploy Identity Foundation services" |
+    log-output \
+        --level error \
+        --header "Critical Error" ||
+    exit 1
 
-echo "Indentity Foundation services successfully provisioned in resource group ${resource_group}..." \
-    | log-output \
+echo "'${deployment_name}' was successfully provisioned to resource group ${resource_group}..." |
+    log-output \
         --level success

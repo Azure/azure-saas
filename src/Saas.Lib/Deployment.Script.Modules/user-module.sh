@@ -133,3 +133,20 @@ function get-cached-session() {
         fi
     fi
 }
+
+function get-host-session() {
+    local azure_context_dir="$1"
+
+    cp -f /asdk/.azure/msal_token_cache.* "${azure_context_dir}"
+    cp -f /asdk/.azure/azureProfile.json "${azure_context_dir}"
+}
+
+
+function initialize-az-cli() {
+    local azure_context_dir="$1"
+
+    # initialize az cli
+    az --version > /dev/null
+
+    get-host-session "$azure_context_dir"            
+}

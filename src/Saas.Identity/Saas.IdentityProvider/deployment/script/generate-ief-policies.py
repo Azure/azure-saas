@@ -19,7 +19,7 @@ def create_appsettings_file(config_file: str, app_settings_file: str) -> None:
 
     # get the values to be added to the appsettings file
     name = config['environment']
-    production = config['production']
+    production = config['environment'] == 'Production'
     tenant = config['deployment']['azureb2c']['domainName']
     identityExperienceFrameworkAppId = get_app_value(config, "IdentityExperienceFramework", "appId")
     proxyIdentityExperienceFrameworkAppId = get_app_value(config, "ProxyIdentityExperienceFramework", "appId")

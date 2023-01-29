@@ -1,4 +1,4 @@
-﻿using ClientAssertionWithKeyVault.Interface;
+﻿using Saas.Interface;
 
 namespace ClientAssertionWithKeyVault.Model;
 internal record KeyInfo : IKeyInfo

@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Saas.Interface;
 
 namespace ClientAssertionWithKeyVault.Interface;
 

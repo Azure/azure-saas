@@ -16,8 +16,7 @@
     }
   },
   "version": "0.8.0",
-  "environment": "development",
-  "production": false,
+  "environment": "Production",
   "git": {
     "branch": "main"
   },
@@ -42,6 +41,8 @@
     }
   },
   "azureb2c": {
+    "signedOutCallBackPath": "/signout/B2C_1A_SIGNUP_SIGNIN",
+    "signUpSignInPolicyId": "B2C_1A_SIGNUP_SIGNIN",
     "policyKeys": [
       {
         "name": "TokenSigningKeyContainer",
@@ -62,10 +63,16 @@
         "keyUsage": "Signature"
       }
     ]
-  },      
+  },
+  "claimToRoleTransformer": {
+    "authenticationType": "MyCustomRoleAuth",
+    "roleClaimType": "MyCustomRole",
+    "sourceClaimType": "permissions"
+  },     
   "appRegistrations": [
     {
       "name": "admin-api",
+      "appServiceName": null,
       "certificate": false,
       "redirectUri": null,
       "applicationIdUri": null,
@@ -117,6 +124,7 @@
     },
     {
       "name": "signupadmin-app",
+      "appServiceName": null,
       "certificate": true,
       "redirectUri": null,
       "appId": null,
@@ -148,6 +156,7 @@
     },
     {
       "name": "saas-app",
+      "appServiceName": null,
       "certificate": true,
       "redirectUri": null,
       "appId": null,
@@ -174,6 +183,8 @@
     },
     {
       "name": "permissions-api",
+      "baseUrl": null,
+      "appServiceName": null,
       "apiName": null,
       "appId": null,
       "objectId": null,
@@ -182,7 +193,6 @@
       "redirectUri": null,
       "permissionsApiUrl": null,
       "rolesApiUrl": null,
-      "instance": "https://login.microsoftonline.com/",
       "publicKeyPath": null,
       "certificateKeyName": null,
       "scopes": null,
@@ -195,15 +205,8 @@
             "offline_access"
           ],
           "appRoles": [
-            "User.Read.All"
-          ]
-        },
-        {
-          "grantAdminConsent": true,
-          "resourceId": "00000003-0000-0000-c000-000000000000",
-          "scopes": [
-            "openid",
-            "offline_access"
+            "User.Read.All",
+            "Application.ReadWrite.OwnedBy"
           ]
         }
       ]
@@ -266,6 +269,18 @@
     "sqlAdminLoginName": "sqlAdmin"
   },
   "deployment": {
+    "identityFoundation": {
+      "name": "IdentityFoundationDeployment"
+    },
+    "adminServiceApi": {
+      "name": "AdminServiceAPIDeployment"
+    },
+    "signupAdministration": {
+      "name": "SignupAdmininstrationDeployment"
+    },
+    "permissionApi": {
+      "name": "PermissionApiDeployment"
+    },
     "users": [],
     "azureCli": {
       "configDir": null
