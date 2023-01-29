@@ -2,6 +2,12 @@
 
 export ASDK_CACHE_AZ_CLI_SESSIONS=true
 
+# if not running in a container
+if ! [ -f /.dockerenv ]; then
+    echo "Running outside of a container us not supported. Please run the deployment script using './run.sh'."
+    exit 0
+fi
+
 if [[ -z $ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE ]]; then
     # repo base
     echo "ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE is not set. Setting it to default value."
@@ -70,6 +76,7 @@ if ! [ -f /.dockerenv ]; then
     # make sure that the init script is executable
     chmod +x "$SCRIPT_DIR/init.sh"
 fi
+
 # initialize deployment environment
 "${SCRIPT_DIR}/init.sh" \
     || if [[ $? -eq 2 ]]; then exit 0; fi

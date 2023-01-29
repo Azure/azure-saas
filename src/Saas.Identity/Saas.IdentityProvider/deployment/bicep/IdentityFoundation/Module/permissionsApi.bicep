@@ -30,6 +30,13 @@ param automationAccountName string
 @description('The name of Application Insights.')
 param applicationInsightsName string
 
+@description('App Service Plan OS')
+@allowed([
+  'linux'
+  'windows'
+])
+param appServicePlanOS string
+
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
   name: userAssignedIdentityName
 }
@@ -88,18 +95,25 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: appServicePlanName
   location: location
-  kind: 'windows'
+  kind: appServicePlanOS
   sku: {
     name: 'S1'
   }
   properties: {
-    reserved: false // change to true to enable request Linux rather than Windows. Go figure :)
+    reserved: ((appServicePlanOS == 'linux') ? true : false)
   }
 }
 
 resource appConfig 'Microsoft.AppConfiguration/configurationStores@2022-05-01' existing = {
   name: appConfigurationName
 }
+
+// metadata :[
+//   {
+//     name:'CURRENT_STACK'
+//     value:'dotnetcode'
+//   }
+// ]
 
 resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
   name: permissionsApiName
@@ -109,14 +123,15 @@ resource permissionsApi 'Microsoft.Web/sites@2022-03-01' = {
     serverFarmId: appServicePlan.name
     httpsOnly: true
     // clientCertEnabled: true // https://learn.microsoft.com/en-us/azure/app-service/app-service-web-configure-tls-mutual-auth?tabs=bicep
-    clientCertMode: 'Required'
+    clientCertMode: 'Required' 
     siteConfig: {
       ftpsState: 'FtpsOnly'
       alwaysOn: true 
-      // linuxFxVersion: 'DOTNETCORE|7.0'
       http20Enabled: true
       keyVaultReferenceIdentity: userAssignedIdentity.id // Must specify this when using User Assigned Managed Identity. Read here: https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references?tabs=azure-cli#access-vaults-with-a-user-assigned-identity
       detailedErrorLoggingEnabled: true
+      netFrameworkVersion: 'v7.0'      
+      // linuxFxVersion: 'DOTNETCORE|7.0'
     }
   }
   identity: {

@@ -21,7 +21,7 @@ To run the API locally, you must have the following installed on your developer 
 - [ASP.NET Core 7.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-7.0)
 - [GitHub’s official command line tool (**gh**)](https://cli.github.com/). For more on installation see [here](https://github.com/cli/cli#installation).
 
-> Tip: .NET 7.0 and ASP.NET Core 7.0 can also be installed as part of the latest version Microsoft Visual Studio 2022.
+> *Tip*: .NET 7.0 and ASP.NET Core 7.0 can also be installed as part of the latest version Microsoft Visual Studio 2022.
 
 You will also need a deployed instance of the [Identity Framework](https://azure.github.io/azure-saas/quick-start/). For details visit the [Deploying the Identify Foundation Services readme](../Saas.Identity.Provider/readme.md).
 
@@ -87,7 +87,7 @@ dotnet user-secrets init #initialized your Secret Manager for the project.
 dotnet user-secrets set ConnectionStrings:AppConfig "<your_azure_app_config_connection_string>"
 ```
 
-> Tip: For more details on connecting a local development environment to Azure App Configuration please see: [Connect to the App Configuration store](https://learn.microsoft.com/en-us/azure/azure-app-configuration/quickstart-aspnet-core-app?tabs=core6x#connect-to-the-app-configuration-store). 
+> *Tip*: For more details on connecting a local development environment to Azure App Configuration please see: [Connect to the App Configuration store](https://learn.microsoft.com/en-us/azure/azure-app-configuration/quickstart-aspnet-core-app?tabs=core6x#connect-to-the-app-configuration-store). 
 
 ### Accessing the Azure SQL Server data from your developer environment
 
@@ -97,8 +97,7 @@ During the deployment of the Identity Foundation, the deployment script takes no
 
 Adding your public IP address is essential for your local development environment to be able to run. By default the configuration of the SQL Server only allow network access from IP addresses of services running *inside* the Azure environment. This default network security setting is great for production, however since your local development environment is not very likely to be running from within the Azure environment, this firewall restriction gets in the way.
 
-> Tip: You may want to work on you project from multiple locations and development environments, in which case you will need to make changes to the firewall rules of Azure SQL Server, allowing these additional public IPs to access the database.
->
+> *Tip*: You may want to work on you project from multiple locations and development environments, in which case you will need to make changes to the firewall rules of Azure SQL Server, allowing these additional public IPs to access the database.
 
 To add additional public IP addresses to the Azure SQL Service firewall rule, please do the following:
 
@@ -117,7 +116,7 @@ dig +short myip.opendns.com @resolver1.opendns.com
 
 After all of the above have been set up, you're now ready to build and run the SaaS Permissions Services in your local development environment. As you press debug/run, a browser will open and load a Swagger Page:
 
-> Tip: Swagger is only enabled when the API is running locally. You'll find the details in `program.cs`.
+> *Tip*: Swagger is only enabled when the API is running locally. You'll find the details in `program.cs`.
 
 ![image-20230112000806828](assets/readme/image-20230112000806828.png)
 
@@ -128,15 +127,15 @@ Enter the `tenantId` of your Azure B2C Tenant (i.e., the `tenant id` of the Azur
 
 ![image-20230112001210631](assets/readme/image-20230112001210631.png)
 
-> Tip: After the first run, the access token is cached for the duration of it's life time, so if you try and run the request for a second time, it will be much faster. 
+> *Tip*: After the first run, the access token is cached for the duration of it's life time, so if you try and run the request for a second time, it will be much faster. 
 
 ## How  to Deploy SaaS Permissions Service API to Azure
 
 A [GitHub Action](https://github.com/features/actions) is provide for deploying the SaaS Permissions Service API to the Azure App Service that was provisioned . 
 
-> Info #1 The GitHub Action is defined by a YAML file located in the `./.github/workflows` directory.
+> *Info #1*: The GitHub Action is defined by a YAML file located in the `./.github/workflows` directory.
 >
-> Info #2: During the deployment of the Identity Foundation, an [OIDC Connection](https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=openid) was established between your Azure resource group and your GitHub repo. This connection enables GitHub action to push updates directly to your Azure App Service in the Azure Resource Group. Leveraging a [OIDC Connection](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect), is the recommended authentication method for automating deployment. OIDC offered hardened security without the need to managing and keeping safe secrets or passwords.
+> *Info #2*: During the deployment of the Identity Foundation, an [OIDC Connection](https://learn.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=openid) was established between your Azure resource group and your GitHub repo. This connection enables GitHub action to push updates directly to your Azure App Service in the Azure Resource Group. Leveraging a [OIDC Connection](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect), is the recommended authentication method for automating deployment. OIDC offered hardened security without the need to managing and keeping safe secrets or passwords.
 
 ### Setting up for deployment
 
@@ -160,9 +159,9 @@ This will update the `AZURE_WEBAPP_NAME` environment variable in the GitHub Acti
 
 ![image-20230126230446548](assets/readme/image-20230126230446548.png)
 
-> Info: the SaaS Permissions Service API name is fetched from the `config.json` file that was created when running the Identity Foundation deployment script.
+> *Info*: the SaaS Permissions Service API name is fetched from the `config.json` file that was created when running the Identity Foundation deployment script.
 
-3. You must now `git commit` the changes to the *main* branch and `git push` them to the GitHub repo (origin).
+3. To push the update to your GitHub repository do a `git commit` (or merge) of the changes on *main* branch and do a `git push origin` to add the push the changes to the GitHub repo (origin).
 
 ### Deploying
 
@@ -175,38 +174,35 @@ To deploy the SaaS Permissions Service API to your Azure environment you can run
 
 ![image-20230126203229729](assets/readme/image-20230126203229729.png)
 
-## How to debug in Azure
+> *Tip*: In a real-life CI/CD scenario, we would not use the manual `workflow_dispatch` trigger, but would modify our `.github/workflows/permissions-api-deploy.yml` to use a different [GitHub Action Trigger](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows). 
 
-The previous deployment, deployed a *Release* version of the SaaS Permissions Service API from the *main* branch to Azure. What if we want to debug the solution running in Azure instead? This section is dedicated to that question. 
+## Debugging in Azure
 
-### Speeding up the inner loop of  GitHub Actions
+The previous section talked about deploying a *Release* version of the SaaS Permissions Service API from the *main* branch to Azure. 
 
-The first thing we need to do, to get started with debugging, testing and developing is to speed up your *inner loop*.  For testing, debugging and general development, we generally want to do as much work locally, but eventually we also want to understand how it runs Azure as well. 
+What if we want to *debug* the web app running in Azure instead? This section is dedicated to that question. 
 
-Chances are that we don't want to push every little change or test etc. to the *main* branch every time we something new or if we're troubleshoot, some issue etc. In fact, we'd encourage you to create *dev* branch and do most of that sort of work from there. 
+### Speeding up the inner deployment loop with  GitHub Actions
 
-Working from the *dev* branch means that we need a different GitHub Action that pulls updates from the *dev* branch rather than the *main* branch. 
+For testing, debugging and general development, we generally want to do as much work locally as possible, but eventually we also will need to test and understand how the web app runs in the Azure environment as well. There are different way for doing this. We want to pick the a process that a) is as close to production, while b) speeds up our *inner dev loop*. [Credits to @forrestbrazeal at Good Tech Things for humorously illustrating why](https://www.goodtechthings.com/pipeline/) an expedited inner loop is so important. 
 
-We could easily create a 2nd GitHub Action for this, but here we suggest to do something different. Specifically, we can use a tool called [Act](https://github.com/nektos/act). Act allows us to run our GitHub Action locally, thus giving us much better speed, control, and insights into what's going on - all of which are exactly what we're looking for when doing debugging, testing and development work.
+![Pipeline](https://www.goodtechthings.com/content/images/size/w1140/2022/12/Pipeline.png)
 
-Act can be run installed as an extension to GitHub cli. This extension is installed by running this command from the terminal:
+Chances are that we don't want to push every little change or test etc. to the *main* branch every time we test, troubleshoot etc. Hence, the first we must do is to create a separate *dev* branch. 
+
+#### Introducing Act
+
+Working from the *dev* branch means that we need a different GitHub Action that pulls updates from the *dev* branch rather than the *main* branch. We could easily create a 2nd GitHub Action for this, but here we suggest to do something different. Specifically, use [Act](https://github.com/nektos/act). 
+
+Act allows us to run our GitHub Action locally, thus giving us much better speed, control, and insights into what's going on. All of which being exactly what we're looking for when doing debugging, testing and development work.
+
+Act can be installed as an extension to GitHub cli, by running this command from the terminal:
 
 ```bash
 gh extension install nektos/gh-act
 ```
 
-Act uses containers to run GitHub Actions locally. The containers provided by Act doesn't include az cli by default, so we need to extend it. We're created a lite script to aid make this easier.
-
-> Info: We've already created this `Dockerfile` for you, but here it is for reference
-
-> ```docker
-> FROM ghcr.io/catthehacker/ubuntu:act-latest
-> 
-> RUN apt-get update && apt-get install -y \
->     curl \
->     && curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-> ```
->
+Like our own deployment script, Act uses a container to run GitHub Actions locally. The default container provided by Act doesn't include az cli by default, so we need to extend it. We're created a short bash shell script to make this process easy.
 
 Here are the steps for getting up and running with Act for doing local deployment:
 
@@ -216,34 +212,88 @@ Here are the steps for getting up and running with Act for doing local deploymen
    .../src/Saas.Identity/Saas.Permissions/deployment/act
    ```
 
-2. 
+2. Set up but running the command:
 
+   ```bash
+   chmod +x ./setup.sh
+   ./setup.sh
+   ```
 
+   > *Info*: this will set permissions for the scripts and well as extend and build the aforementioned act container
 
-### Why not use Visual Studio 2022 to deploy. 
+That's it. From hereon we can deploy our most recent code anytime we want by running this script:
 
+```
+./deploy.sh
+```
 
+> *Info*: The code that will be deployed are based on the current file in your project directory. No need neither git commit or git push the code to GitHub first.
+>
+> ***Important***: We're unable to leverage OIDC when running running deploy with Act. Instead our `./deploy.sh` script creates a credential using a client secret, which is stored in our local dev machine in the directory `$HOME/asdk/.secret/`. You can delete this secret by running `./clean.sh`, which will delete the local file as well as delete the credential in Azure. 
 
+#### Bonus question: Why not use Visual Studio 2022 to publish our code changes directly?
 
+Why all the hoops and loops of using command line, GitHub actions and Act? After all, Visual Studio 2022 have a build in feature for Publishing directly Azure from the Visual Studio 2022 IDE.
 
+![image-20230127151459605](assets/readme/image-20230127151459605.png)
 
+So wouldn't it be easier to use Visual Studio 2022's build in features? Yes and no. 
 
-Also, pushing an updated YAML file to the *main* branch of your repo every time you make a change to the definition get's old fast. 
+When the above have been set up as described, running the `.deploy.sh` shell script each time we want to deploy a change, is both quick and efficient, providing good control and feedback during the deployment process. More importantly, by used (almost) the same deployment pattern for both production automation (CI/CD) and for manual deployment, we will save time and hassle in the long run because our inner loop is the same for both scenarios.
 
-We're going to deploy for Windows, rather than Linux, because the Windows remote debugging is the most seamless, and we're expecting that you'll want to remote debug into the Azure instance to explore and see how the app runs there. That said, nothing prevents you from deploying to Linux for production, since ASP.NET Core 7 runs equally well on Linux.
+As a bonus, using Act, we can make changes to the deployment YAML file and test those changes immediately and interactively without having to first go though; a) *git commit*, b) *git merge to c) main* and *git push to origin*, for every change/test we make. Trust us when we say that this *abc* process quickly becomes rather tedious. Not to mention saving us all those *work in progress* commits, messing up our git commit history. You're welcome.
 
-For more on remote debugging with Visual Studio 2022 see: [Remote Debug ASP.NET Core on Azure App Service - Visual Studio (Windows) | Microsoft Learn](https://learn.microsoft.com/en-us/visualstudio/debugger/remote-debugging-azure-app-service?view=vs-2022). 
+### How to debug if the web app fails at start-up with Kudo
 
+The first time you deploy the code to Azure it should all work. Eventually, you might have made a change that breaks the start up of the web app. This section is dedicated to this scenario.
 
+Azure App Services includes useful tool for debugging the start-up of web app running in Azure App Service. The tool is called [Kudo](https://learn.microsoft.com/en-us/azure/app-service/resources-kudu). 
 
-## How to Debug in Azure
+To use Kudo do this:
 
-After deploying to Azure everything should work. But what if it doesn't? We could attach a debugger then. Sure, but what if the ASP.NET Core app isn't even starting? 
+1. Go to the Azure Portal 
 
-### My app won't start
+2. Find the The Identity Foundation Resource Group provisioned earlier.
 
-Command line to the rescue. 
+3. Select the SaaS Permission Service API App Service
+   ![image-20230128154233104](assets/readme/image-20230128154233104.png) 
 
-![image-20230120213644846](assets/readme/image-20230120213644846.png)
+4. Scroll the menu on the left down to Development Tools -> Choose Advanced Tools -> press the Go link.![image-20230128153624642](assets/readme/image-20230128153624642.png)
 
-<TO DO>
+5. Choose the **Debug console** drop-down box and choose **CMD**.![image-20230128153659108](assets/readme/image-20230128153659108.png)
+
+6. This will open a console on the web page. 
+   ![image-20230128154523352](assets/readme/image-20230128154523352.png)
+
+7. To start the SaaS Permissions Service API type:
+
+   ```bash
+   dotnet /home/site/wwwroot/Saas.Permissions.Service.dll
+   ```
+
+8. If anything fails at start-up the command will exit showing error and exceptions that may have been thrown. If nothing fails, the command will not exit and it will look something like this:
+   ![image-20230128154735945](assets/readme/image-20230128154735945.png)
+
+### How to attached a debugger to an app running in Azure App Service
+
+Sometimes debugging start-up of an app is not enough. To really see what's going on, we'd like to attach a debugger and set break point etc., the same way we would do when running the web app locally. 
+
+Here are the steps to do this with our SaaS Permissions Service API web app. 
+
+#### Enabling the app for debugging
+
+> *Important*: For remote debugging to work like outlined here, the web app must be running on a Windows App Service Plan. If the Azure App Service plan is set for Linux, please see details about the [Snapshot debugger](https://learn.microsoft.com/en-us/azure/azure-monitor/snapshot-debugger/snapshot-debugger) instead. Our recommendation is that you stick with Windows for dev, test and debugging. You can still decide to deploy to live production on Linux.
+
+1. In order to attach a debugger the code must be build for debugging. When using Act  for deployment this is already the case. For details see the [GitHub Action workflow YAML file](./deployment/act/workflow/permissions-api-deploy.debug.yml), specifically the environment variable `BUILD_CONFIGURATION`.
+
+2. After you've made sure that the deployed code is ready for debugging, please see this guide for how to set-up debugging: [Remote Debug ASP.NET Core on Azure App Service - Visual Studio (Windows) | Microsoft Learn](https://learn.microsoft.com/en-us/visualstudio/debugger/remote-debugging-azure-app-service?view=vs-2022).
+
+3. You will also need to get the right symbol files for the SaaS Permissions Service API. 
+
+   a) To get the symbols files, Kudo is our friend again. Using Kudo we're able to locate and download the two files we need: `ClientAssertionWithKeyVault.pdb` and `Saas.Permissions.Service.pdb` and then down load both of them to our local dev machine. 
+   ![image-20230128161825544](assets/readme/image-20230128161825544.png)
+
+   b) To reference the downloaded symbol files; from Visual Studio 2022 Navigate to **Debug > Windows > Modules**,  sort the list by version and then right click on each our two project dlls and choose **Load Symbols**, to load the symbol information (.pdb) just downloaded with Kudo,.
+   ![image-20230128163318970](assets/readme/image-20230128163318970.png) 
+
+Happy debugging...

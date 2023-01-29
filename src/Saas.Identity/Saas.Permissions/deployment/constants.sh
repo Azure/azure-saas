@@ -34,4 +34,5 @@ PERMISSIONS_DEPLOYMENT_WORKFLOW_FILE="${WORKFLOW_BASE}/permissions-api-deploy.ym
 ACT_PERMISSIONS_DEPLOYMENT_LOCAL_WORKFLOW_FILE="${ACT_DIR}/workflows/permissions-api-deploy-debug.yml"
 
 # secrets file
-SECRETS_FILE="${HOME}/asdk/.secret"
+ACT_SECRETS_DIR="/asdk/act/.secret"
+ACT_SECRETS_FILE="/asdk/act/.secret/secret"

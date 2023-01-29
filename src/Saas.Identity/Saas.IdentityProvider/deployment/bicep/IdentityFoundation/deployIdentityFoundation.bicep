@@ -49,6 +49,7 @@ param sqlAdministratorLogin string
 @description('The location for all resources.')
 param location string = resourceGroup().location
 
+var appServicePlanOS = 'windows'
 var appServicePlanName = 'plan-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var appConfigurationName = 'appconfig-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var permissionsSqlDatabaseName = 'sqldb-permissions-${solutionPrefix}-${solutionName}-${solutionPostfix}'
@@ -130,6 +131,7 @@ resource appConfigurationStore 'Microsoft.AppConfiguration/configurationStores@2
 module permissionsApiModule './Module/permissionsApi.bicep' = {
   name: 'PermissionsApiDeployment'
   params: {
+    appServicePlanOS: appServicePlanOS
     version: version
     appServicePlanName: appServicePlanName
     keyVaultUri: keyVault.properties.vaultUri

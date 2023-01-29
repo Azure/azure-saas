@@ -16,9 +16,11 @@ The purpose of the Azure SaaS Dev Kit is to boost your SaaS journey by providing
 
 *Answer*: Yes, and no. In fact Bicep is used when ever possible as part of the deployment script. Yet, the ASDK Identity Foundation relies on [Azure Active Directory B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/overview) as well as defining [Azure Active Directory App Registrations](https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added). At the time of writing those resources and their configurations cannot be automated by ARM and Bicep.
 
-## Running the Deployment Script in a Container, Using Docker (recommended)
+## Running the Deployment Script
 
-Running the deployment script utilizing a container is highly recommend. Using a container will ensure that you have all the required dependencies in their correct configurations etc. In short; when the script runs and that you are running in a controlled environment. It will also minimize the chances that some other properties of your existing environment interferes with the script or that the script inadvertently interferes with your existing environment.
+Running the deployment script requires utilizing a container and Docker. 
+
+Using a container will ensure that you have all the required dependencies in their correct configurations in a controlled environment. This will also minimize the chances that some other properties of your existing environment might with the script, or that the script inadvertently will interferes with your existing environment.
 
 ### Prerequisites 
 
@@ -194,34 +196,6 @@ While running the script the second time, you will be asked to log in once, and 
 2. The second login cannot be avoided, since it is for logging into the Azure B2C Tenant that is being created as part of the deployment script. This login is needed to make further changes to the Azure B2C tenant. 
 
    > Info: The script will cache this login session too, so that if you need to run the script multiple times, you will not be asked to log in to your Azure AD B2C tenant again. The login session for Azure B2C is cached here: `$HOME/asdk/.cache/`.
-
-## Running Deployment Script on Your Computer Without Docker (not recommended)
-
-While not recommended, you can also run the deployment script *bare-bone* on you computing without using a container. It will generally run slower. More importantly, since the run environment is not controlled, there is a higher risk for something going off the rails. That said, the script is tested for this and will work in many circumstances.
-
-The script have been tested on:
-
--  Windows 10/11 running in WSL with a Ubuntu 22.04 distro.
--  Ubuntu 22.04.
--  MacOS Ventura. 13.1+, including MacOS running on Apple Silicon.
--  While not tested on other configurations, it will likely run recent Linux distros and versions as well as and earlier and recent versions of MacOS too.
-
-Make sure that you have all the tools mentioned above as well as the following installed on your machine before running the script:
-
-- [JQ v1.6+](https://linuxhint.com/bash_jq_command/) for Bash.
-- [GitHub’s official command line tool (gh)](https://github.com/cli/cli#installation)
-- Specifically on MacOS, you'll need a more recent of `bash` as the default version is rather old. 
-  - To do this you can use homebrew: [`brew install bash`](https://formulae.brew.sh/formula/bash).
-
-
-When these requirements are met, the script can be run using the following command:
-
-```bash
-chmod +x start.sh
-./start.sh
-```
-
-From there on everything else is virtually identical to running the script from inside a container, as described above.
 
 ## What If Something Goes Wrong?
 

@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
 
+# if not running in a container
+if ! [ -f /.dockerenv ]; then
+    echo "Running outside of a container us not supported. Please run the script using './run.sh'."
+    exit 0
+fi
+
+# repo base
+repo_base="$( git rev-parse --show-toplevel )"
+base_dir="${repo_base}/src/Saas.Identity/Saas.Permissions/deployment"
+
 # shellcheck disable=SC1091
-# include script modules into current shell
 {
-    source "./constants.sh"
+    source "${base_dir}/constants.sh"
 }
 
-if [[ -f $CONFIG_FILE ]]; then
+if ! [[ -f $CONFIG_FILE ]]; then
     echo "The ASDK Identity Foundation has not completed. Please run the Identity Foundation deployment script first."
     exit 0
 fi
