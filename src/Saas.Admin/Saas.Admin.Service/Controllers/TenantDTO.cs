@@ -26,7 +26,9 @@ public class TenantDTO
         ProductTierId = tenant.ProductTierId;
         CategoryId = tenant.CategoryId;
 
-        Version = tenant.ConcurrencyToken != null ? Convert.ToBase64String(tenant.ConcurrencyToken) : null;
+        Version = tenant.ConcurrencyToken is not null 
+            ? Convert.ToBase64String(tenant.ConcurrencyToken) 
+            : null;
     }
 
     public Tenant ToTenant()

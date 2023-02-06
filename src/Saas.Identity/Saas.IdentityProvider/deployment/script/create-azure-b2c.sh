@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -u -e -o pipefail
 
-
 # shellcheck disable=SC1091
 {
     # include script modules into current shell
@@ -42,13 +41,18 @@ if ! resource-exist "${b2c_type_name}" "${b2c_name}" ; then
             name="${b2c_name}" \
             skuName="${b2c_sku_name}" \
             tier="${b2c_tier}" \
-        || echo "Azure B2C deployment failed." | log-output \
-            --level error \
-            --header "Critical error" \
+        || echo "Azure B2C deployment failed." \
+            | log-output \
+                --level error \
+                --header "Critical error" \
             || exit 1
 
-    echo "Provisionning of Azure B2C tenant Successful." | log-output --level success
+    echo "Provisionning of Azure B2C tenant Successful." |
+         log-output \
+            --level success
     
 else
-    echo "Existing Azure B2C tenant found and will be used." | log-output --level success
+    echo "Existing Azure B2C tenant found and will be used." |
+        log-output \
+            --level success
 fi

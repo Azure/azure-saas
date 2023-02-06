@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Saas.Interface;
 
 namespace ClientAssertionWithKeyVault;
 public class ClientAssertionSigningProvider : IClientAssertionSigningProvider

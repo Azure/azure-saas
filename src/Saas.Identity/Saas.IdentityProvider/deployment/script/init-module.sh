@@ -58,7 +58,7 @@ function final-state() {
             | log-output \
                 --level error \
                 --header "Deployment script completion" \
-            || echo "Please review the log file for more details: ${LOG_FILE_DIR}/${ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME}" \
+            || echo "Please review the log file for more details: ${LOG_FILE_DIR}/${ASDK_DEPLOYMENT_SCRIPT_RUN_TIME}" \
                 | log-output \
                     --level warn
     fi
@@ -246,27 +246,48 @@ function populate-configuration-manifest() {
     service_principal_name="${solution_prefix}-usr-sp-${postfix}"
     put-value ".deployment.azureb2c.servicePrincipal.username" "${service_principal_name}"
 
+    admin_api_name="admin-api-${long_solution_name}"
+
+    put-app-value \
+        "admin-api" \
+        "appServiceName" \
+        "${admin_api_name}"
+
     put-app-value \
         "admin-api" \
         "baseUrl" \
-        "api-admin-${long_solution_name}"
+        "https://${admin_api_name}.azurewebsites.net"
 
     put-app-value \
         "admin-api" \
         "applicationIdUri" \
         "api://${b2c_name}/${long_solution_name}/admin-api"
 
+    signup_admin_app_name="signupadmin-app-${long_solution_name}"
+
+    put-app-value \
+        "signupadmin-app" \
+        "appServiceName" \
+        "${signup_admin_app_name}"
+
     # adding redirecturl to signupadmin-app
     put-app-value \
         "signupadmin-app" \
         "redirectUri" \
-        "https://appsignup-${long_solution_name}.azurewebsites.net/signin-oidc"
+        "https://signupadmin-app-${long_solution_name}.azurewebsites.net/signin-oidc"
+
+    saas_app_name="saas-app-${long_solution_name}"
+
+    put-app-value \
+        "saas-app" \
+        "appServiceName" \
+        "${saas_app_name}"
 
     # adding redirecturl to saas-app
     put-app-value \
         "saas-app" \
         "redirectUri" \
-        "https://saasapp-${long_solution_name}.azurewebsites.net/signin-oidc"
+        "https://saas-app-${long_solution_name}.azurewebsites.net/signin-oidc"
 
     permission_api_name="api-permission-${long_solution_name}"
 
@@ -275,6 +296,16 @@ function populate-configuration-manifest() {
         "permissions-api" \
         "apiName" \
         "${permission_api_name}"
+
+    put-app-value \
+        "permissions-api" \
+        "appServiceName" \
+        "${permission_api_name}"
+
+    put-app-value \
+        "permissions-api" \
+        "baseUrl" \
+        "https://${permission_api_name}.azurewebsites.net"
 
     # adding permission API Url to permissions-api
     put-app-value \

@@ -74,7 +74,9 @@ chmod +x setup.sh # only needed the first time to set execute permissions on set
 
 This will take a few minutes to complete and you will only need to do it once. The container will be named `asdk-script-deployment`. 
 
-> Tip: If you make changes to `Dockerfile`, defining the container, you can update the container by running `./build.sh`.
+> *Tip #1*: If you make changes to `Dockerfile`, defining the container, you can update the container by running `./build.sh`.
+>
+> Tip #2: If you want to force a rebuild of the container, please us `./build.sh -f`. This can be handy if there's a new version of az cli or GitHub cli that you want to update the container with. 
 
 ### Running the deployment script using the container
 

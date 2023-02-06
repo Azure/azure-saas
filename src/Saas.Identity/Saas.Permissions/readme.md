@@ -1,14 +1,42 @@
 # SaaS Permissions Service API
 
-## Overview
-
-Section contains the ASDK Permissions Service API for handling role-based authorization of user. The service [depends](https://azure.github.io/azure-saas/components/identity/permissions-service#dependencies) on the Identity Foundation that was deployed a spart of the Identity Foundation and on the [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/use-the-api).
-
-For a complete overview, please see the [SaaS Permissions Service](https://azure.github.io/azure-saas/components/identity/permissions-service/) page in the documentation site.
-
-## How to Run Locally
+The SaaS Permissions Service API is a core component of the authorization system for the Azure SaaS Dev Kit. The API handles role-based authorization of user.
 
 Once deployed, this service is a web API exposing endpoints to perform CRUD operations on user permission settings.
+
+## Overview
+
+Within this folder you will find two subfolders:
+
+- **Saas.Permissions.Service** - the C# project for the API
+- **deployment** - a set of tools for deploying the API for production
+  - The sub-subfolder **[act](./deployment/act)** is for deploying the API for remote debugging 
+
+## Dependencies
+
+The service depends on:
+
+- The **Identity Foundation** that was deployed a spart of the Identity Foundation and on the [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/use-the-api).
+- The [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/overview). 
+
+## Provisioning the API
+
+To work with the SaaS Permissions API it must first be provisions to your Azure ASDK resource group. This is true even if you initially is planning to run the API in your local development environment. The provisioning ensure that configuration and settings to be correctly added to your Azure App Configuration store and readies the API for later deployment to Azure.
+
+Provisioning is easy:
+
+1. Navigate to the sub folder `deployment`.
+
+2. Run these commands:
+   ```bash
+   sudo chmod +x setup.sh
+   ./setup.sh
+   ./run.sh
+   ```
+
+Now you're ready to move on.
+
+## How to Run Locally
 
 The SaaS Permissions Service API can be run locally during development, testing and learning.
 
@@ -25,7 +53,7 @@ To run the API locally, you must have the following installed on your developer 
 
 You will also need a deployed instance of the [Identity Framework](https://azure.github.io/azure-saas/quick-start/). For details visit the [Deploying the Identify Foundation Services readme](../Saas.Identity.Provider/readme.md).
 
-###  App Configuration and Settings
+###  Configuration, settings and secrets when running locally
 
 To manage settings securely and efficiently, settings are being stored in [Azure App Configuration](https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview), while secrets and certificates are being stored in [Azure Key Vault](https://learn.microsoft.com/en-us/azure/key-vault/general/overview). Furthermore, secrets are represented with a reference (an URI) in Azure App Configuration pointing to the actual secret, which is kept safely and securely in Azure Key Vault. 
 
@@ -37,7 +65,7 @@ For running the SaaS Permission API Service in a local development environment, 
 
 #### Access and Permissions to Azure Key Vault 
 
-![image-20230125141953381](assets/readme/image-20230125141953381.png)
+![image-20230125141953381](.assets/readme/image-20230125141953381.png)
 
 For accessing Azure Key Vault, we will rely on [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) to provide the needed access token. For this to work, you should open a terminal from within Visual Studio (or Visual Studio Code) and run these commands:
 
@@ -78,7 +106,7 @@ az appconfig credential list --name "<name of your azure app configuration> --qu
 
 In the Azure Portal you can find the connection string here:
 
-![image-20230105174952120](assets/readme/image-20230105174952120.png)
+![image-20230105174952120](.assets/readme/image-20230105174952120.png)
 
 2. To add the `connection string` to the Secret Manager, run these commands in a terminal in the root directory of the project:
 
@@ -109,7 +137,7 @@ dig +short myip.opendns.com @resolver1.opendns.com
 
 2. Visit the Azure portal and add the global IP address of the computing you are running the Permission Service from. 
 
-![image-20230107210713030](assets/readme/image-20230107210713030.png)
+![image-20230107210713030](.assets/readme/image-20230107210713030.png)
 
 ## Running the SaaS Permissions Service API Locally
 
@@ -118,14 +146,14 @@ After all of the above have been set up, you're now ready to build and run the S
 
 > *Tip*: Swagger is only enabled when the API is running locally. You'll find the details in `program.cs`.
 
-![image-20230112000806828](assets/readme/image-20230112000806828.png)
+![image-20230112000806828](.assets/readme/image-20230112000806828.png)
 
 Now *try it out* by running `GET /api/Permissions/GetTenantUsers` API. The first time you execute the request, it will take about 20-40 seconds to complete the request. This is because the app will need to authenticate itself, including getting a signed assertion from the Key Vault in the Identity Foundation.
 
 
 Enter the `tenantId` of your Azure B2C Tenant (i.e., the `tenant id` of the Azure B2C tenant that was deployed as part of the Identity Foundation). You'll find it in the `config.json` file at `.deployment.azureb2c.tenantId`.
 
-![image-20230112001210631](assets/readme/image-20230112001210631.png)
+![image-20230112001210631](.assets/readme/image-20230112001210631.png)
 
 > *Tip*: After the first run, the access token is cached for the duration of it's life time, so if you try and run the request for a second time, it will be much faster. 
 
@@ -150,8 +178,8 @@ Here are the steps to set things up for deploying the SaaS Permissions Service A
 2. From the directory, run these commands and bash shell scripts:
 
 ```bash
-sudo chmod +c ./setup.sh \
-./setup.sh \
+sudo chmod +c ./setup.sh
+./setup.sh
 ./run.sh
 ```
 
@@ -172,7 +200,7 @@ To deploy the SaaS Permissions Service API to your Azure environment you can run
 3. Click on the **Run workflow** drop-down button.
 4. Click the green **Run workflow** button.
 
-![image-20230126203229729](assets/readme/image-20230126203229729.png)
+![image-20230126203229729](.assets/readme/image-20230126203229729.png)
 
 > *Tip*: In a real-life CI/CD scenario, we would not use the manual `workflow_dispatch` trigger, but would modify our `.github/workflows/permissions-api-deploy.yml` to use a different [GitHub Action Trigger](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows). 
 
@@ -235,7 +263,7 @@ That's it. From hereon we can deploy our most recent code anytime we want by run
 
 Why all the hoops and loops of using command line, GitHub actions and Act? After all, Visual Studio 2022 have a build in feature for Publishing directly Azure from the Visual Studio 2022 IDE.
 
-![image-20230127151459605](assets/readme/image-20230127151459605.png)
+![image-20230127151459605](.assets/readme/image-20230127151459605.png)
 
 So wouldn't it be easier to use Visual Studio 2022's build in features? Yes and no. 
 
@@ -256,14 +284,14 @@ To use Kudo do this:
 2. Find the The Identity Foundation Resource Group provisioned earlier.
 
 3. Select the SaaS Permission Service API App Service
-   ![image-20230128154233104](assets/readme/image-20230128154233104.png) 
+   ![image-20230128154233104](.assets/readme/image-20230128154233104.png) 
 
-4. Scroll the menu on the left down to Development Tools -> Choose Advanced Tools -> press the Go link.![image-20230128153624642](assets/readme/image-20230128153624642.png)
+4. Scroll the menu on the left down to Development Tools -> Choose Advanced Tools -> press the Go link.![image-20230128153624642](.assets/readme/image-20230128153624642.png)
 
-5. Choose the **Debug console** drop-down box and choose **CMD**.![image-20230128153659108](assets/readme/image-20230128153659108.png)
+5. Choose the **Debug console** drop-down box and choose **CMD**.![image-20230128153659108](.assets/readme/image-20230128153659108.png)
 
 6. This will open a console on the web page. 
-   ![image-20230128154523352](assets/readme/image-20230128154523352.png)
+   ![image-20230128154523352](.assets/readme/image-20230128154523352.png)
 
 7. To start the SaaS Permissions Service API type:
 
@@ -272,7 +300,7 @@ To use Kudo do this:
    ```
 
 8. If anything fails at start-up the command will exit showing error and exceptions that may have been thrown. If nothing fails, the command will not exit and it will look something like this:
-   ![image-20230128154735945](assets/readme/image-20230128154735945.png)
+   ![image-20230128154735945](.assets/readme/image-20230128154735945.png)
 
 ### How to attached a debugger to an app running in Azure App Service
 
@@ -288,12 +316,16 @@ Here are the steps to do this with our SaaS Permissions Service API web app.
 
 2. After you've made sure that the deployed code is ready for debugging, please see this guide for how to set-up debugging: [Remote Debug ASP.NET Core on Azure App Service - Visual Studio (Windows) | Microsoft Learn](https://learn.microsoft.com/en-us/visualstudio/debugger/remote-debugging-azure-app-service?view=vs-2022).
 
-3. You will also need to get the right symbol files for the SaaS Permissions Service API. 
+3. You will also need to get the right symbol files for the SaaS Permissions Service API. When using Act to deploy for remote debugging, you'll be able to locate those in the `./publish/symbols` directory in the root of your locally cloned GitHub repository, as soon as the deployment has completed.
 
-   a) To get the symbols files, Kudo is our friend again. Using Kudo we're able to locate and download the two files we need: `ClientAssertionWithKeyVault.pdb` and `Saas.Permissions.Service.pdb` and then down load both of them to our local dev machine. 
-   ![image-20230128161825544](assets/readme/image-20230128161825544.png)
+   To reference the symbol files: In Visual Studio 2022 Navigate to **Debug > Windows > Modules**,  sort the list by version and then right click on each our two project dlls and choose **Load Symbols**, to load the symbol information (.pdb).
+   ![image-20230128163318970](.assets/readme/image-20230128163318970.png)
 
-   b) To reference the downloaded symbol files; from Visual Studio 2022 Navigate to **Debug > Windows > Modules**,  sort the list by version and then right click on each our two project dlls and choose **Load Symbols**, to load the symbol information (.pdb) just downloaded with Kudo,.
-   ![image-20230128163318970](assets/readme/image-20230128163318970.png) 
+   *Tip*: The `./publish/symbols` directory is updated every time to you deploy any of the   
 
-Happy debugging...
+#### Bonus tip: Using Kudo to download symbol files for remote debugging
+
+You can also use Kudo to download symbol files from you deployed project(s): 
+![image-20230128161825544](.assets/readme/image-20230128161825544.png)
+
+ Happy debugging...

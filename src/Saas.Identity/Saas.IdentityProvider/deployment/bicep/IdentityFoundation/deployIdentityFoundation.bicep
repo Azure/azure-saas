@@ -1,11 +1,17 @@
 @description('Version')
 param version string
 
+@description('Environment')
+@allowed([
+  'Development'
+  'Staging'
+  'Production'
+])
+param environment string
+
 @description('The ip address of the dev machine')
 param devMachineIp string
 
-@description('URL for downstream admin service.')
-param appSettingsAdminServiceBaseUrl string
 
 @description('postfix')
 param solutionPostfix string
@@ -18,27 +24,6 @@ param solutionName string
 
 @description('The name of the key vault')
 param keyVaultName string
-
-@description('URL for downstream admin service.')
-param azureB2CDomain string
-
-@description('The B2C login endpoint in format of https://(Tenant Name).b2clogin.com.')
-param azureB2CLoginEndpoint string
-
-@description('Tenant Id found on your AD B2C dashboard.')
-param azureB2CTenantId string
-
-@description('The Client Id found on registered Permissions API app page.')
-param permissionApiClientId string
-
-@description('Permissions API Certificate Name')
-param permissionCertificateName string
-
-@description('Permissions API Instance')
-param permissionInstance string
-
-@description('Permission API Name')
-param permissionsApiName string
 
 @description('Permissions API Secret key')
 param permissionApiKey string
@@ -86,8 +71,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: keyVaultName
 }
 
-// Create object w/ array of objects containing the kayname and value to be stored in Azure App Configuration store.
-var permissionApi = 'PermissionApi'
+
 
 module appConfigurationModule './Module/appConfigurationStore.bicep' = {
   name: 'AppConfigurationDeployment'
@@ -107,6 +91,9 @@ module keyVaultAccessPolicyModule 'Module/keyVaultAccessRBAC.bicep' = {
     keyVault
   ]
 }
+
+// Create object w/ array of objects containing the kayname and value to be stored in Azure App Configuration store.
+var permissionsApiKeyName = 'PermissionsApi'
 module restApiKeyModule './Module/linkToExistingKeyVaultSecret.bicep' = {
   name: 'PermissionApiKeyDeployment'
   params: {
@@ -115,7 +102,7 @@ module restApiKeyModule './Module/linkToExistingKeyVaultSecret.bicep' = {
     appConfigurationName: appConfigurationName
     userAssignedIdentityName: userAssignedIdentity.name
     keyVaultKeyName: permissionApiKey
-    keyName: '${permissionApi}:apiKey'
+    keyName: '${permissionsApiKeyName}:ApiKey'
   }
   dependsOn: [
     keyVaultAccessPolicyModule
@@ -128,17 +115,13 @@ resource appConfigurationStore 'Microsoft.AppConfiguration/configurationStores@2
   name: appConfigurationName
 }
 
-module permissionsApiModule './Module/permissionsApi.bicep' = {
+module appPlanModule './Module/appPlan.bicep' = {
   name: 'PermissionsApiDeployment'
   params: {
     appServicePlanOS: appServicePlanOS
-    version: version
     appServicePlanName: appServicePlanName
-    keyVaultUri: keyVault.properties.vaultUri
     location: location
-    permissionsApiName: permissionsApiName
     userAssignedIdentityName: userAssignedIdentity.name
-    appConfigurationName: appConfigurationStore.name
     applicationInsightsName: applicationInsightsName
     logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
     automationAccountName: automationAccountName
@@ -155,17 +138,9 @@ module configurationEntriesModule './Module/addConfigEntries.bicep' = {
   name: 'ConfigurationEntriesDeployment'
   params: {
     version: version
-    appSettingsAdminServiceBaseUrl: appSettingsAdminServiceBaseUrl
     keyVaultName: keyVault.name
-    azureB2CDomain: azureB2CDomain
-    azureB2CLoginEndpoint: azureB2CLoginEndpoint
-    azureB2CTenantId: azureB2CTenantId
-    permissionApiClientId: permissionApiClientId
-    permissionCertificateName: permissionCertificateName
-    permissionInstance: permissionInstance
     sqlAdministratorLogin: sqlAdministratorLogin
     userAssignedIdentityName: userAssignedIdentity.name
-    keyVaultUrl: keyVault.properties.vaultUri
     appConfigurationName: appConfigurationStore.name
     permissionsSqlDatabaseName: permissionsSqlDatabaseName
     permissionsSqlServerFQDN: permissionsSqlModule.outputs.permissionsSqlServerFQDN
@@ -176,21 +151,21 @@ module configurationEntriesModule './Module/addConfigEntries.bicep' = {
     keyVaultAccessPolicyModule
     keyVault
     restApiKeyModule
-    permissionsApiModule
+    appPlanModule
   ]
 }
 
 output version string = version
 output location string = location
+output environment string = environment
 output appConfigurationName string = appConfigurationName
 output keyVaultName string = keyVault.name
 output keyVaultUri string = keyVault.properties.vaultUri
-output appServicePlanName string = permissionsApiModule.outputs.appServicePlanName
+output appServicePlanName string = appPlanModule.outputs.appServicePlanName
 output permissionsSqlServerName string = permissionsSqlModule.outputs.permissionsSqlServerName
 output userAssignedIdentityName string = userAssignedIdentity.name
 output userAssignedIdentityId string = userAssignedIdentity.id
 output permissionsSqlServerFQDN string = permissionsSqlModule.outputs.permissionsSqlServerFQDN
-output permissionsApiHostName string = permissionsApiModule.outputs.permissionsApiHostName
 output applicationInsightsName string = applicationInsightsName
 output logAnalyticsWorkspaceName string = logAnalyticsWorkspaceName
 output automationAccountName string = automationAccountName

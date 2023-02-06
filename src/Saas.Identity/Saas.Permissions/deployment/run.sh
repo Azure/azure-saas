@@ -1,33 +1,29 @@
 #!/usr/bin/env bash
 
-repo_base="$( git rev-parse --show-toplevel )"
-git_repo_origin="$( git config --get remote.origin.url )"
-git_org_project_name="$( git config --get remote.origin.url | sed 's/.*\/\([^ ]*\/[^.]*\).*/\1/' )"
-gh_auth_token="$( gh auth token )"
+source "./constants.sh"
 
-if [[ -z "${gh_auth_token}" ]]; then
-    echo "You are not loggged into your GitHub organization. GitHub auth token is not set and/or you haven't installed GitHub Cli." 
-    echo "Please make sure that GitHub Cli is installed and then run 'gh auth login', before running this script again."
-    echo "See readme.md for more info."
-    exit 0
-fi
+repo_base="$(git rev-parse --show-toplevel)"
+host_act_secrets_dir="${HOME}/asdk/act/.secret"
 
-# using volumes '--volume' to mount only the needed directories to the container. 
+host_deployment_dir="${repo_base}/src/Saas.Identity/Saas.Permissions/deployment"
+container_deployment_dir="/asdk/src/Saas.Identity/Saas.Permissions/deployment"
+
+# using volumes '--volume' to mount only the needed directories to the container.
 # using ':ro' to make scrip directories etc. read-only. Only config and log directories are writable.
 docker run \
     --interactive \
     --tty \
     --rm \
-    --volume "${repo_base}/src/Saas.Identity/Saas.Permissions/deployment/":/asdk/src/Saas.Identity/Saas.Permissions/deployment:ro \
-    --volume "${repo_base}/src/Saas.Lib/Deployment.Script.Modules/":/asdk/src/Saas.Lib/Deployment.Script.Modules:ro \
+    --volume "${host_deployment_dir}":"${container_deployment_dir}":ro \
+    --volume "${host_deployment_dir}/log":"${container_deployment_dir}/log" \
+    --volume "${host_deployment_dir}/Bicep/Parameters":"${container_deployment_dir}"/Bicep/Parameters \
     --volume "${repo_base}/src/Saas.Identity/Saas.IdentityProvider/deployment/config/":/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/config:ro \
+    --volume "${repo_base}/src/Saas.Lib/Deployment.Script.Modules/":/asdk/src/Saas.Lib/Deployment.Script.Modules:ro \
+    --volume "${repo_base}/src/Saas.Lib/Saas.Bicep.Module":/asdk/src/Saas.Lib/Saas.Bicep.Module:ro \
     --volume "${repo_base}/.github/workflows":/asdk/.github/workflows \
     --volume "${repo_base}/.git/":/asdk/.git:ro \
     --volume "${HOME}/.azure/":/asdk/.azure:ro \
-    --volume "${HOME}/asdk/.cache/":/asdk/.cache \
-    --env "ASDK_PERMISSIONS_API_DEPLOYMENT_BASE_DIR=/asdk/src/Saas.Identity/Saas.Permissions/deployment" \
-    --env "GIT_REPO_ORIGIN=${git_repo_origin}" \
-    --env "GIT_ORG_PROJECT_NAME=${git_org_project_name}" \
-    --env "GITHUB_AUTH_TOKEN=${gh_auth_token}" \
-    asdk-script-deployment:latest \
-    bash /asdk/src/Saas.Identity/Saas.Permissions/deployment/start.sh
+    --volume "${host_act_secrets_dir}":/asdk/act/.secret \
+    --env "ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE"="${container_deployment_dir}" \
+    "${DEPLOYMENT_CONTAINER_NAME}" \
+    bash ${container_deployment_dir}/start.sh

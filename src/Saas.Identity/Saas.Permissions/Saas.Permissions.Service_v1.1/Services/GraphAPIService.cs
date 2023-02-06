@@ -3,8 +3,8 @@ using Microsoft.Graph;
 using Saas.Permissions.Service.Exceptions;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models;
-using Saas.Permissions.Service.Options;
 using System.Text;
+using Saas.Shared.Options;
 
 namespace Saas.Permissions.Service.Services;
 
@@ -19,10 +19,10 @@ public class GraphAPIService : IGraphAPIService
             "Client Assertion Signing Provider");
 
     private readonly GraphServiceClient _graphServiceClient;
-    private readonly PermissionApiOptions _permissionOptions;
+    private readonly AzureB2CPermissionsApiOptions _permissionOptions;
 
     public GraphAPIService(
-        IOptions<PermissionApiOptions> permissionApiOptions,
+        IOptions<AzureB2CPermissionsApiOptions> permissionApiOptions,
         IGraphApiClientFactory graphClientFactory,
         ILogger<GraphAPIService> logger)
     {
@@ -121,8 +121,8 @@ public class GraphAPIService : IGraphAPIService
         try
         {
             var servicePrincipal = await _graphServiceClient.ServicePrincipals.Request()
-        .Filter($"appId eq '{clientId}'")
-        .GetAsync();
+                .Filter($"appId eq '{clientId}'")
+                .GetAsync();
 
             return servicePrincipal.SingleOrDefault();
         }

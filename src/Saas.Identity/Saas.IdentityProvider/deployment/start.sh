@@ -37,7 +37,7 @@ set -u -e -o pipefail
 now=$(date '+%Y-%m-%d--%H-%M-%S')
 
 # set run time for deployment script instance
-export ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME="${now}"
+export ASDK_DEPLOYMENT_SCRIPT_RUN_TIME="${now}"
 
 # create log file directory if it does not exist
 if ! [ -f /.dockerenv ] && [[ ! -d "${LOG_FILE_DIR}" ]]; then
@@ -46,7 +46,7 @@ if ! [ -f /.dockerenv ] && [[ ! -d "${LOG_FILE_DIR}" ]]; then
 fi
 
 # create log file for this deployment script instance
-touch "${LOG_FILE_DIR}/deploy-${ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME}.log"
+touch "${LOG_FILE_DIR}/deploy-${ASDK_DEPLOYMENT_SCRIPT_RUN_TIME}.log"
 
 echo "Welcome to the Azure SaaS Dev Kit - Azure B2C Identity Provider deployment script." \
     | log-output \
