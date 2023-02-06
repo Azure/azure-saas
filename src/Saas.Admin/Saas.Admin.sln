@@ -1,21 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saas.Admin.Service", "Saas.Admin.Service\Saas.Admin.Service.csproj", "{A6134452-BA8E-4C84-8879-C8EEF82ED5C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Service", "Saas.Admin.Service\Saas.Admin.Service.csproj", "{A6134452-BA8E-4C84-8879-C8EEF82ED5C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saas.Admin.Service.Tests", "Saas.Admin.Service.Tests\Saas.Admin.Service.Tests.csproj", "{5974515A-43DF-43E7-A1E6-FC97E47E480F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Service.Tests", "Saas.Admin.Service.Tests\Saas.Admin.Service.Tests.csproj", "{5974515A-43DF-43E7-A1E6-FC97E47E480F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestUtilities", "..\TestUtilities\TestUtilities.csproj", "{5A220537-38DA-495B-8CCF-723FA65310F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestUtilities", "..\TestUtilities\TestUtilities.csproj", "{5A220537-38DA-495B-8CCF-723FA65310F1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.AspNetCore.Authorization", "..\Saas.Lib\Saas.Authorization\Saas.AspNetCore.Authorization\Saas.AspNetCore.Authorization.csproj", "{9B4C4680-3BBA-419B-AF79-CB80E1422B1A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Shared", "..\Saas.Lib\Saas.Shared\Saas.Shared.csproj", "{E584B588-FBB6-4D30-9EA2-6B6E531F82EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A6134452-BA8E-4C84-8879-C8EEF82ED5C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +31,19 @@ Global
 		{5A220537-38DA-495B-8CCF-723FA65310F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A220537-38DA-495B-8CCF-723FA65310F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A220537-38DA-495B-8CCF-723FA65310F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B4C4680-3BBA-419B-AF79-CB80E1422B1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B4C4680-3BBA-419B-AF79-CB80E1422B1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B4C4680-3BBA-419B-AF79-CB80E1422B1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B4C4680-3BBA-419B-AF79-CB80E1422B1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E584B588-FBB6-4D30-9EA2-6B6E531F82EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E584B588-FBB6-4D30-9EA2-6B6E531F82EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E584B588-FBB6-4D30-9EA2-6B6E531F82EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E584B588-FBB6-4D30-9EA2-6B6E531F82EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {503B7AA4-0DAC-4A3D-95CE-B1D2DCAE55B0}
 	EndGlobalSection
 EndGlobal

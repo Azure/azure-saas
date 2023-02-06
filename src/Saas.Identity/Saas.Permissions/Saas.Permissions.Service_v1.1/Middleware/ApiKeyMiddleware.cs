@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Saas.Permissions.Service.Models;
-using Saas.Permissions.Service.Options;
+using Saas.Shared.Options;
 
 namespace Saas.Permissions.Service.Middleware;
 
@@ -8,9 +8,9 @@ public class ApiKeyMiddleware {
     
     private readonly RequestDelegate _next;
     private const string API_KEY = "x-api-key";
-    private readonly PermissionApiOptions _permissionOptions; 
+    private readonly PermissionsApiOptions _permissionOptions; 
     
-    public ApiKeyMiddleware(IOptions<PermissionApiOptions> permissionOptions, RequestDelegate next) {
+    public ApiKeyMiddleware(IOptions<PermissionsApiOptions> permissionOptions, RequestDelegate next) {
         _next = next;
         _permissionOptions = permissionOptions.Value;
     }

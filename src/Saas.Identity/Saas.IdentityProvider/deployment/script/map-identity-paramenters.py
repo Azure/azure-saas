@@ -17,11 +17,11 @@ def patch_paramenters_file(config_file: str, paramenter_file: str) -> None:
     parameters['parameters']['version']['value'] \
         = config['version']
 
+    parameters['parameters']['environment']['value'] \
+        = config['environment']
+
     parameters['parameters']['devMachineIp']['value'] \
         = config['deployment']['devMachine']['ip']
-
-    parameters['parameters']['appSettingsAdminServiceBaseUrl']['value'] \
-        = get_app_value(config, "admin-api", "baseUrl")
     
     parameters['parameters']['solutionPostfix']['value'] \
         = config['deployment']['postfix']
@@ -35,27 +35,6 @@ def patch_paramenters_file(config_file: str, paramenter_file: str) -> None:
     parameters['parameters']['keyVaultName']['value'] \
         = config['deployment']['keyVault']['name']
     
-    parameters['parameters']['azureB2CDomain']['value'] \
-        = config['deployment']['azureb2c']['domainName']
-
-    parameters['parameters']['azureB2CLoginEndpoint']['value'] \
-        = f"https://{config['deployment']['azureb2c']['name']}.b2clogin.com"
-
-    parameters['parameters']['azureB2CTenantId']['value'] \
-        = config['deployment']['azureb2c']['tenantId']
-
-    parameters['parameters']['permissionsApiName']['value'] \
-        = get_app_value(config, "permissions-api", "apiName")
-
-    parameters['parameters']['permissionApiClientId']['value'] \
-        = get_app_value(config, "permissions-api", "appId")
-    
-    parameters['parameters']['permissionInstance']['value'] \
-        = get_app_value(config, "permissions-api", "instance")
-
-    parameters['parameters']['permissionCertificateName']['value'] \
-        = get_app_value(config, "permissions-api", "certificateKeyName")
-
     parameters['parameters']['permissionApiKey']['value'] \
         = 'RestApiKey'
 

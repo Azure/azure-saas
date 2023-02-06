@@ -136,7 +136,7 @@ function backup-to-azure-blob-storage() {
             --level info \
             --header "Backup to Azure Blob Storage"
 
-    zip_file_name="${directory}/log-${ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME}.zip"
+    zip_file_name="${directory}/log-${ASDK_DEPLOYMENT_SCRIPT_RUN_TIME}.zip"
 
     zip -r -j "${zip_file_name}" "${directory}" > /dev/null \
         || echo "Failed to zip logs." \
@@ -148,7 +148,7 @@ function backup-to-azure-blob-storage() {
     az storage fs file upload \
         --account-name "${storage_account_name}" \
         --file-system "${container_name}" \
-        --path "log/${script_name}/${ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME}.zip" \
+        --path "log/${script_name}/${ASDK_DEPLOYMENT_SCRIPT_RUN_TIME}.zip" \
         --source "${zip_file_name}" \
         --auth-mode login \
         | log-output \

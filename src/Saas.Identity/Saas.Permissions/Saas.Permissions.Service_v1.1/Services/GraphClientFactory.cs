@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.Graph;
-using Saas.Permissions.Service.Options;
+using Saas.Shared.Options;
 using Saas.Permissions.Service.Interfaces;
 
 namespace Saas.Permissions.Service.Services;
@@ -24,7 +24,7 @@ public class GraphApiClientFactory : IGraphApiClientFactory
     public GraphServiceClient Create() => 
             new(_httpClient, _msGraphOptions.BaseUrl)
             {
-                AuthenticationProvider = _authenticationProvider,
+                AuthenticationProvider = _authenticationProvider
             };
     
 }

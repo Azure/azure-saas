@@ -9,13 +9,15 @@ permissions:
   contents: read
 
 env:
-  AZURE_WEBAPP_NAME: 'api-permission-asdk-test-b3yf'           # set this to your application's name
+  AZURE_WEBAPP_NAME: 'api-permission-asdk-test-fd4k' # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: 7.x.x
   PROJECT_DIR: ./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1
   PROJECT_PATH: ./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1/Saas.Permissions.Service.csproj
-  OUTPUT_PATH: ./publish
+  OUTPUT_PATH: ./publish/api-permission
+  BUILD_CONFIGURATION: Release # setting the configuration manager build configuration value for our workflow.
 
+  APP_NAME: permissions-api
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -30,7 +32,7 @@ jobs:
       # checkout the repo specifying the branch name in 'ref:'
       - uses: actions/checkout@v3
         with:
-          ref: main #IMPORTAT we're checking out and deploying the 'main' branch here
+          ref: main #IMPORTANT we're checking out and deploying the 'main' branch here
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # Setup .NET Core SDK
@@ -45,10 +47,10 @@ jobs:
           dotnet restore ${{ env.PROJECT_DIR }}
 
           dotnet build ${{ env.PROJECT_PATH }} \
-            --configuration Release
+            --configuration ${{ env.BUILD_CONFIGURATION }}
 
           dotnet publish ${{ env.PROJECT_PATH }} \
-            --configuration Release \
+            --configuration ${{ env.BUILD_CONFIGURATION }} \
             --output '${{ env.OUTPUT_PATH }}/{{ env.AZURE_WEBAPP_NAME }}'
 
       # Deploy to Azure Web apps

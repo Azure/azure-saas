@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System.Security.Cryptography.X509Certificates;
 using ClientAssertionWithKeyVault.Util;
 using Microsoft.Extensions.Logging;
+using Saas.Interface;
 
 namespace ClientAssertionWithKeyVault;
 public class PublicX509CertificateDetailProvider : IPublicX509CertificateDetailProvider

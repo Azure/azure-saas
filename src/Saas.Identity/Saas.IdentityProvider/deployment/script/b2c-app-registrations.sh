@@ -41,20 +41,26 @@ echo "Adding app registrations to Azure B2C tenant." \
 declare -i scopes_length
 declare -i permissions_length
 
-# b2c_name="$( get-value ".deployment.azureb2c.name" )"
-# prefix="$( get-value ".initConfig.naming.solutionPrefix" )"
-# postfix="$( get-value ".deployment.postfix" )"
-# solution_name="$( get-value ".initConfig.naming.solutionName" )"
-# app_id_uri="api://${b2c_name}/${prefix}-${solution_name}-${postfix}"
-
-# put-value ".deployment.azureb2c.applicationIdUri" "${app_id_uri}"
-
 # read each item in the JSON array to an item in the Bash array
 readarray -t app_reg_array < <( jq --compact-output '.appRegistrations[]' "${CONFIG_FILE}")
 
 # counter for iterations on Bash array - for testing purposes
 # declare -i i
 # i=1
+
+b2c_tenant_name="$(get-value ".deployment.azureb2c.name" )" \
+    || echo "Azure B2C tenant namenot found." \
+        | log-output \
+            --level error \
+            --header "Critical error" \
+            || exit 1
+
+echo "Setting instance ${b2c_tenant_name}.b2clogin.com" \
+    | log-output \
+        --level info \
+        --header "Azure B2C Instance"
+
+put-value ".deployment.azureb2c.instance" "https://${b2c_tenant_name}.b2clogin.com"
 
 # iterate through the Bash array of app registrations
 for app in "${app_reg_array[@]}"; do
@@ -74,9 +80,9 @@ for app in "${app_reg_array[@]}"; do
     display_name="${app_name}"
 
     echo "Provisioning app registration for: ${display_name}..." \
-        | log-output \
-            --level info \
-            --header "${display_name}"
+    | log-output \
+        --level info \
+        --header "${display_name}"
 
     if app-exist "${app_id}"; then
         echo "App registration for ${app_name} already exist. If you made changes or updated the certificate, you will have to delete the app registration to use this script to update it. " \

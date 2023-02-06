@@ -158,9 +158,9 @@ function log-output() {
     fi
 
     set +u
-    if [[ -z ${ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME} ]]; then
+    if [[ -z ${ASDK_DEPLOYMENT_SCRIPT_RUN_TIME} ]]; then
         now=$(date '+%Y-%m-%d--%H-%M-%S')
-        ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME="${now}"
+        ASDK_DEPLOYMENT_SCRIPT_RUN_TIME="${now}"
     fi
     set -u
 
@@ -172,7 +172,7 @@ function log-output() {
         else
             echo "# ${text}"
         fi
-    } >> "${LOG_FILE_DIR}/deploy-${ASDK_ID_PROVIDER_DEPLOYMENT_RUN_TIME}.log"
+    } >> "${LOG_FILE_DIR}/deploy-${ASDK_DEPLOYMENT_SCRIPT_RUN_TIME}.log"
 
     if [[ $is_error == true ]]; then
         exit 1

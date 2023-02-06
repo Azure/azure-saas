@@ -1,14 +1,15 @@
 using Azure.Identity;
 using Saas.Permissions.Service.Data;
 using Saas.Permissions.Service.Interfaces;
-using Saas.Permissions.Service.Options;
+using Saas.Shared.Options;
 using Saas.Permissions.Service.Services;
-using Saas.Permissions.Service.Swagger;
+using Saas.Swagger;
 using ClientAssertionWithKeyVault.Interface;
 using ClientAssertionWithKeyVault;
 using Saas.Permissions.Service.Middleware;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Polly;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -20,7 +21,7 @@ builder.Services.AddApplicationInsightsTelemetry();
     Instead we're utilizing the Azure App Configuration service for storing settings and the Azure Key Vault to store secrets.
     Azure App Configuration still hold references to the secret, but not the secret themselves.
 
-    This approach is more secure, and allows us to have a single source of truth 
+    This approach is more secure and allows us to have a single source of truth 
     for all settings and secrets. 
 
     The settings and secrets were provisioned to Azure App Configuration and Azure Key Vault 
@@ -30,7 +31,12 @@ builder.Services.AddApplicationInsightsTelemetry();
     on how to set up and run this service in a local development environment - i.e., a local dev machine. 
 */
 
-var logger = LoggerFactory.Create(config => config.AddConsole()).CreateLogger("Saas.Permissions.API");
+string projectName = Assembly.GetCallingAssembly().GetName().Name
+    ?? throw new NullReferenceException("Project name cannot be null");
+
+var logger = LoggerFactory.Create(config => config.AddConsole()).CreateLogger(projectName);
+
+logger.LogInformation("001");
 
 if (builder.Environment.IsDevelopment())
 {
@@ -43,8 +49,11 @@ else
 
 // Add configuration settings data using Options Pattern.
 // For more see: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-7.0
-builder.Services.Configure<PermissionApiOptions>(
-        builder.Configuration.GetRequiredSection(PermissionApiOptions.SectionName));
+builder.Services.Configure<PermissionsApiOptions>(
+        builder.Configuration.GetRequiredSection(PermissionsApiOptions.SectionName));
+
+builder.Services.Configure<AzureB2CPermissionsApiOptions>(
+        builder.Configuration.GetRequiredSection(AzureB2CPermissionsApiOptions.SectionName));
 
 builder.Services.Configure<SqlOptions>(
             builder.Configuration.GetRequiredSection(SqlOptions.SectionName));
@@ -140,7 +149,7 @@ void InitializeDevEnvironment()
 {
     // IMPORTANT
     // The current version.
-    // Must corresspond exactly to the version string of our deployment as specificed in the deployment config.json.
+    // Must correspond exactly to the version string of our deployment as specificed in the deployment config.json.
     var version = "ver0.8.0";
 
     logger.LogInformation("Version: {version}", version);
@@ -167,18 +176,16 @@ void InitializeDevEnvironment()
                 .ConfigureKeyVault(kv => kv.SetCredential(new ChainedTokenCredential(credential)))
             .Select(KeyFilter.Any, version)); // <-- Important: since we're using labels in our Azure App Configuration store
 
+    // Configuring Swagger.
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+
     // Enabling to option for add the 'x-api-key' header to swagger UI.
     builder.Services.AddSwaggerGen(option =>
     {
         option.SwaggerDoc("v1", new() { Title = "Permissions API", Version = "v1.1" });
         option.OperationFilter<SwagCustomHeaderFilter>();
     });
-
-    // Configuring Swagger.
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
-
 }
 
 void InitializeProdEnvironment()

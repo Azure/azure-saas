@@ -8,7 +8,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Permissions.Service", 
 		{5FF9E406-A16E-48B4-B6E2-E04B64F7BF28} = {5FF9E406-A16E-48B4-B6E2-E04B64F7BF28}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientAssertionWithKeyVault", "..\..\..\Saas.Lib\ClientAssertionWithKeyVault\ClientAssertionWithKeyVault.csproj", "{5FF9E406-A16E-48B4-B6E2-E04B64F7BF28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientAssertionWithKeyVault", "..\..\..\Saas.Lib\ClientAssertionWithKeyVault\ClientAssertionWithKeyVault.csproj", "{5FF9E406-A16E-48B4-B6E2-E04B64F7BF28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saas.Shared", "..\..\..\Saas.Lib\Saas.Shared\Saas.Shared.csproj", "{D8A87153-45CB-4212-8231-EA1D0FA71554}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,10 @@ Global
 		{5FF9E406-A16E-48B4-B6E2-E04B64F7BF28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FF9E406-A16E-48B4-B6E2-E04B64F7BF28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FF9E406-A16E-48B4-B6E2-E04B64F7BF28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A87153-45CB-4212-8231-EA1D0FA71554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A87153-45CB-4212-8231-EA1D0FA71554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A87153-45CB-4212-8231-EA1D0FA71554}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A87153-45CB-4212-8231-EA1D0FA71554}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -112,9 +112,7 @@ subject="repo:${git_org_project_name}:ref:refs/heads/main"
 
 put-value ".oidc.credentials.subject" "${subject}"
 
-federation_id="$( get-value ".oidc.federation.id" )"
-
-if ! federation-exist "${oidc_app_id}" "${federation_id}"; then
+if ! federation-exist "${oidc_app_id}" "${subject}" ; then
     echo "Creating OIDC Connect Workflow federation..." \
         | log-output \
             --level info
