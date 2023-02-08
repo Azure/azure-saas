@@ -91,19 +91,19 @@ builder.Services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>
 // Add the user details that come back from B2C
 builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
 
-var adminServiceBaseUrl = builder.Configuration.GetRequiredSection(AzureB2CAdminApiOptions.SectionName)
-    .Get<AzureB2CAdminApiOptions>()?.BaseUrl
+var applicationUri = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionName)
+    .Get<AdminApiOptions>()?.ApplicationIdUri
         ?? throw new NullReferenceException($"ApplicationIdUri cannot be null");
 
 var scopes = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionName)
     .Get<AdminApiOptions>()?.Scopes
         ?? throw new NullReferenceException("Scopes cannot be null");
 
+// Azure AD B2C requires scope config with a fully qualified url along with an identifier. To make configuring it more manageable and less
+// error prone, we store the names of the scopes separately from the application id uri and combine them when neded.
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, AzureB2CSignupAdminOptions.SectionName)
-    .EnableTokenAcquisitionToCallDownstreamApi(scopes.Select(scope => $"{adminServiceBaseUrl}/{scope}".Trim('/')))
+    .EnableTokenAcquisitionToCallDownstreamApi(scopes.Select(scope => $"{applicationUri}/{scope}".Trim('/')))
     .AddSessionTokenCaches();
-
-builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection(AzureB2CSignupAdminOptions.SectionName));
 
 builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
     .ConfigureHttpClient((serviceProvider, client) =>

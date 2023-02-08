@@ -261,7 +261,7 @@ function populate-configuration-manifest() {
     put-app-value \
         "admin-api" \
         "applicationIdUri" \
-        "api://${b2c_name}/${long_solution_name}/admin-api"
+        "https://${b2c_name}.onmicrosoft.com/admin-api"
 
     signup_admin_app_name="signupadmin-app-${long_solution_name}"
 
