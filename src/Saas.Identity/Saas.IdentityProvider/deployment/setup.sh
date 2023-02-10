@@ -54,6 +54,7 @@ echo "Building the deployment container."
     echo "Setting up policy folder..."
     mkdir -p "${IDENTITY_EXPERIENCE_FRAMEWORK_POLICY_ENVIRONMENT_DIR}" || exit 1
     sudo chown "${USER}" "${IDENTITY_EXPERIENCE_FRAMEWORK_POLICY_ENVIRONMENT_DIR}" || exit 1
+    touch "${IDENTITY_EXPERIENCE_FRAMEWORK_POLICY_APP_SETTINGS_FILE}" || exit 1
     sudo chown "${USER}" "${IDENTITY_EXPERIENCE_FRAMEWORK_POLICY_APP_SETTINGS_FILE}" || exit 1
 ) ||
     {

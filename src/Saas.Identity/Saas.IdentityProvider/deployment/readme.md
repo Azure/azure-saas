@@ -44,12 +44,17 @@ No matter the operating system you're using, you will need these tools to be ins
 
 - [**Docker Desktop**](https://docs.docker.com/get-docker/). 
   - If you have Docker already, make sure to get the latest updates before you begin. If you have Docker installed but haven't used it for a while. Reinstalling will often solve potential issues.
+  - Tip: On Windows 10/11, if you experience the error: *"The command 'docker' could not be found in this WSL 2 distro. We recommend to activate the WSL integration in Docker Desktop settings."*, then try to restart Docker Desktop or if that doesn't help, try and reinstall it. 
 - [Azure Command Line Interface (**az cli**)](https://learn.microsoft.com/en-us/cli/azure/what-is-azure-cli) from the terminal: [How to install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
-- [GitHub’s official command line tool (**gh**)](https://cli.github.com/). For more on installation see [here](https://github.com/cli/cli#installation).
-- **Zip** which can be installed with the command: `sudo apt install zip` . 
-  - Note: **zip** is already installed on MacOS per default.
+  - Tip: Must be installed from inside WSL on Windows 10/11).
 
-> Tip: On Windows 10/11, if you experience the error: *"The command 'docker' could not be found in this WSL 2 distro. We recommend to activate the WSL integration in Docker Desktop settings."*, then try to restart Docker Desktop or if that doesn't help, try and reinstall it. 
+- [GitHub’s official command line tool (**gh**)](https://cli.github.com/). For more on installation see [here](https://github.com/cli/cli#installation).
+  - Tip: Must be installed from inside WSL on Windows 10/11).
+
+- **Zip** which can be installed with the command: `sudo apt install zip` . 
+  - Tip: Must be installed from inside WSL on Windows 10/11).
+  - Tip: **zip** is already installed on MacOS per default.
+
 
 ### Begin
 
@@ -61,7 +66,11 @@ To begin, please open your GNU Linux terminal to the directory where you've [clo
 
 ![image-20230110094801956](assets/readme/image-20230110094801956.png)
 
-> Tip: You can open the deployment project in Visual Code by typing `code .` in the terminal (Mac or Windows with WSL) from the directory.
+> Tip #1: If you are on a Windows 10/11 PC and need to access your cloned Git repository one of your local drives, from the WSL Terminal, you can find the drives in the *mnt* directory - e.g., like this `cd /mnt/d/<path on d-drive>`.
+>
+> Tip #2: You can open the deployment project in Visual Code by typing `code .` in the terminal (Mac or Windows with WSL) from the directory.
+>
+> Tip #3: It's advisable to not clone git repositories to folders that er managed with OneDrive, Dropbox or similar type file synchronization services.
 
 ### Building the deployment script container
 
