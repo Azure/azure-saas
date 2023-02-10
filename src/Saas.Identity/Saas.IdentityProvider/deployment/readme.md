@@ -61,7 +61,9 @@ To begin, please open your GNU Linux terminal to the directory where you've [clo
 
 ![image-20230110094801956](assets/readme/image-20230110094801956.png)
 
-> Tip: You can open the deployment project in Visual Code by typing `code .` in the terminal (Mac or Windows with WSL) from the directory.
+> Tip #1: If you are on a Windows 10/11 PC and need to access your cloned Git repository one of your local drives, from the WSL Terminal, you can find the drives in the *mnt* directory - e.g., like this `cd /mnt/d/<path on d-drive>`.
+>
+> Tip #2: You can open the deployment project in Visual Code by typing `code .` in the terminal (Mac or Windows with WSL) from the directory.
 
 ### Building the deployment script container
 

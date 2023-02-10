@@ -328,7 +328,7 @@ function populate-configuration-manifest() {
     put-app-value \
         "IdentityExperienceFramework" \
         "applicationIdUri" \
-        "api://${b2c_name}/${long_solution_name}/identityexperienceframework"
+        "https://${b2c_name}.onmicrosoft.com/identityexperienceframework"
 }
 
 function intialize-context-for-automation-users() {
