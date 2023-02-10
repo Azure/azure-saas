@@ -186,7 +186,7 @@ Other values in `initConfig`:
 | Value                  | Default   | Comment                                                      |
 | ---------------------- | --------- | ------------------------------------------------------------ |
 | `solutionPrefix`       | asdk      | The suggestion is to leave it as-is.                         |
-| `solutionName`         | test      | The suggestion is to lead it as default or limit it to four letters. |
+| `solutionName`         | test      | The suggestion is to leave it as default or limit it to four letters. |
 | `azureb2c/location`    | N/A       | Note that this is not the same as the location above, but is rather the names of the Azure AD regions available. Unfortunately, there's currently no command available for getting the list. |
 | `azureb2c/countryCode` | N/A       | An available ISO country code                                |
 | `azureb2c/skuName`     | PremiumP1 | Available options are `Standard`, `Premium1` and `Premium2`  |
