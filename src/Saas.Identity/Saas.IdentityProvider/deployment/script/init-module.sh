@@ -274,6 +274,11 @@ function populate-configuration-manifest() {
         "redirectUri" \
         "https://signupadmin-app-${long_solution_name}.azurewebsites.net/signin-oidc"
 
+    put-app-value \
+        "signupadmin-app" \
+        "logoutUri" \
+        "https://signupadmin-app-${long_solution_name}.azurewebsites.net/signout-oidc"
+
     saas_app_name="saas-app-${long_solution_name}"
 
     put-app-value \
@@ -286,6 +291,11 @@ function populate-configuration-manifest() {
         "saas-app" \
         "redirectUri" \
         "https://saas-app-${long_solution_name}.azurewebsites.net/signin-oidc"
+
+    put-app-value \
+        "saas-app" \
+        "logoutUri" \
+        "https://saas-app-${long_solution_name}.azurewebsites.net/signout-oidc"
 
     permission_api_name="api-permission-${long_solution_name}"
 
