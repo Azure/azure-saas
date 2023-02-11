@@ -5,6 +5,21 @@
 source "$SHARED_MODULE_DIR/config-module.sh"
 source "$SHARED_MODULE_DIR/log-module.sh"
 
+function create-policy-key-create-request() {
+    local id="$1"
+
+    body_json="$(
+        cat <<-END
+{
+    "id": "B2C_1A_$id"
+}
+END
+    ) "
+
+    echo "${body_json}"
+    return
+}
+
 function create-policy-key-body() {
     local name="$1"
     local key_type="$2"
@@ -12,12 +27,15 @@ function create-policy-key-body() {
     local options="$4"
     local secret="$5"
 
+    nbf="$(date +%s)"
+    exp="$(date -d "+2 year" +%s)"
+
     case "${key_use}" in
     "Signature")
-        key_use="sig"
+        key_use_name="sig"
         ;;
     "Encryption")
-        key_use="enc"
+        key_use_name="enc"
         ;;
     *)
         echo "Invalid option: ${key_use}. Must be Signature or Encryption"
@@ -29,10 +47,10 @@ function create-policy-key-body() {
     "Generate")
         case "${key_type}" in
         "RSA")
-            key_type="rsa"
+            key_type_name="rsa"
             ;;
         "OCT")
-            key_type="oct"
+            key_type_name="oct"
             ;;
         *)
             echo "Invalid option: ${key_type}. Must be RSA or OCT"
@@ -42,10 +60,8 @@ function create-policy-key-body() {
         body_json="$(
             cat <<-END
 {
-    "option": "Generate",
-    "id": "$name",
-    "kty": "$key_type",
-    "use": "$key_use"
+    "kty": "$key_type_name",
+    "use": "$key_use_name"
 }
 END
         ) "
@@ -55,10 +71,8 @@ END
         body_json="$(
             cat <<-END
 {   
-    "option": "Manual",
-    "id": "$name",
     "k": "$secret",
-    "use": "$key_use"
+    "use": "$key_use_name"
 }
 END
         ) "
@@ -74,14 +88,46 @@ END
     return
 }
 
+function create-policy-key-set() {
+    local name="$1"
+    local key_type="$2"
+    local key_use="$3"
+    local options="$4"
+    local secret="$5"
+
+    create_uri="https://graph.microsoft.com/beta/trustFramework/keySets"
+
+    policy_key_create_body="$(create-policy-key-create-request "${name}")"
+
+    echo "Creating policy key-set '${name}' with body: ${policy_key_create_body}" |
+        log-output \
+            --level info
+
+    post-rest-request "${create_uri}" "${policy_key_create_body}" "POST"
+
+    echo "Waiting 10 seconds for key-set to settle..." | echo-color --level info
+    sleep 10
+
+    generate_uri="https://graph.microsoft.com/beta/trustFramework/keySets/B2C_1A_${name}/generateKey"
+
+    policy_key_generate_body="$(create-policy-key-body "${name}" "${key_type}" "${key_use}" "${options}" "${secret}")"
+
+    echo "Generating policy key for '${name}'." |
+        log-output \
+            --level info
+
+    post-rest-request "${generate_uri}" "${policy_key_generate_body}" "POST"
+}
+
 function post-rest-request() {
     local uri="$1"
     local body="$2"
+    local method="$3"
 
     az rest \
-        --method POST \
+        --method "${method}" \
         --uri "${uri}" \
-        --headers "Content-Type=application/json" \
+        --headers "Content-type=application/json" \
         --body "${body}" \
         --only-show-errors 1>/dev/null ||
         echo "Failed to send request to $uri" |
@@ -90,24 +136,6 @@ function post-rest-request() {
             --header "Critical Error" ||
         exit 1
 
-}
-
-function create-policy-key-set() {
-    local policy_key_body="$1"
-
-    uri="https://graph.microsoft.com/beta/trustFramework/keySets"
-
-    policy_key_body="$(jq --compact-output ". \
-        | to_entries \
-        | map(select(.key == \"id\")) \
-        | from_entries" \
-        <<<"${policy_key_body}")"
-
-    echo "Create policy key-set body: ${policy_key_body}" |
-        log-output \
-            --level info
-
-    post-rest-request "${uri}" "${policy_key_body}"
 }
 
 function upload-custom-policy() {
@@ -131,28 +159,28 @@ function upload-custom-policy() {
             --header "Critical Error"
 }
 
-function generate-policy-key() {
-    local id="$1"
-    local policy_key_body="$2"
+# function generate-policy-key() {
+#     local id="$1"
+#     local policy_key_body="$2"
 
-    generate_uri="https://graph.microsoft.com/beta/trustFramework/keySets/B2C_1A_${id}/generateKey"
+#     generate_uri="https://graph.microsoft.com/beta/trustFramework/keySets/B2C_1A_${id}/generateKey"
 
-    generate_body="$(jq 'del(.option) | del(.id)' <<<"${policy_key_body}")"
+#     generate_body="$(jq 'del(.option) | del(.id)' <<<"${policy_key_body}")"
 
-    post-rest-request "${generate_uri}" "${generate_body}"
-}
+#     post-rest-request "${generate_uri}" "${generate_body}"
+# }
 
-function upload-policy-secret() {
-    local id="$1"
-    local policy_key_body="$2"
+# function upload-policy-secret() {
+#     local id="$1"
+#     local policy_key_body="$2"
 
-    secret_update_uri="https://graph.microsoft.com/beta/trustFramework/keySets/B2C_1A_${id}/uploadSecret"
+#     secret_update_uri="https://graph.microsoft.com/beta/trustFramework/keySets/B2C_1A_${id}/uploadSecret"
 
-    secret_update_body="$(jq 'del(.option) | del(.id)' <<<"${policy_key_body}")"
+#     secret_update_body="$(jq 'del(.option) | del(.id)' <<<"${policy_key_body}")"
 
-    post-rest-request "${secret_update_uri}" "${secret_update_body}"
+#     post-rest-request "${secret_update_uri}" "${secret_update_body}"
 
-}
+# }
 
 function policy-key-exist() {
     local id="$1"
