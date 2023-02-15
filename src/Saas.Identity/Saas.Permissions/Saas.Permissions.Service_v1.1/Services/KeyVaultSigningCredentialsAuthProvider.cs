@@ -34,24 +34,32 @@ public class KeyVaultSigningCredentialsAuthProvider : IAuthenticationProvider
         _msGraphOptions = msGraphOptions.Value;
         _clientAssertionSigningProvider = clientAssertionSigningProvider;
 
-        if (azureAdB2COptions?.Value?.ClientCertificates?[0] is null)
+        if (azureAdB2COptions?.Value?.ClientCertificates?.FirstOrDefault() is null)
         {
             logger.LogError("Certificate cannot be null.");
             throw new NullReferenceException("Certificate cannot be null.");
         }
 
-        _msalClient = ConfidentialClientApplicationBuilder
-        .Create(azureAdB2COptions.Value.ClientId)
-        .WithAuthority(AzureCloudInstance.AzurePublic, azureAdB2COptions.Value.TenantId)
-        .WithClientAssertion(
-            (AssertionRequestOptions options) =>
-                _clientAssertionSigningProvider.GetClientAssertion(
-                    azureAdB2COptions.Value.ClientCertificates[0],
-                    options.TokenEndpoint,
-                    options.ClientID,
-                    credentialService.GetCredential(),
-                    TimeSpan.FromMinutes(10)))
-        .Build();
+        try
+        {
+            _msalClient = ConfidentialClientApplicationBuilder
+                .Create(azureAdB2COptions.Value.ClientId)
+                .WithAuthority(AzureCloudInstance.AzurePublic, azureAdB2COptions.Value.TenantId)
+                .WithClientAssertion(
+                    (AssertionRequestOptions options) =>
+                        _clientAssertionSigningProvider.GetClientAssertion(
+                            azureAdB2COptions.Value.ClientCertificates.First(),
+                            options.TokenEndpoint,
+                            options.ClientID,
+                            credentialService.GetCredential(),
+                            TimeSpan.FromMinutes(10)))
+            .Build();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message.ToString());
+            throw;
+        }
     }
 
     public async Task AuthenticateRequestAsync(HttpRequestMessage requestMessage)
@@ -73,10 +81,18 @@ public class KeyVaultSigningCredentialsAuthProvider : IAuthenticationProvider
         var scopes = _msGraphOptions?.Scopes?.Split(' ')
             ?? throw new NullReferenceException("Scopes cannot be null.");
 
-        var result = await _msalClient
-            .AcquireTokenForClient(scopes)
-            .ExecuteAsync();
+        try
+        {
+            var result = await _msalClient
+                .AcquireTokenForClient(scopes)
+                .ExecuteAsync();
 
-        return result.AccessToken;
+            return result.AccessToken;
+        }
+        catch (Exception ex)
+        {
+            _logError(_logger, ex);
+            throw;
+        }
     }
 }

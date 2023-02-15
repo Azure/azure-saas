@@ -1,4 +1,4 @@
-﻿namespace Saas.Interface;
+﻿﻿namespace Saas.Interface;
 
 public interface IKeyInfo
 {

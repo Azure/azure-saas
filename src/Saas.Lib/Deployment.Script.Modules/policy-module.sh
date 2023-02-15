@@ -159,29 +159,6 @@ function upload-custom-policy() {
             --header "Critical Error"
 }
 
-# function generate-policy-key() {
-#     local id="$1"
-#     local policy_key_body="$2"
-
-#     generate_uri="https://graph.microsoft.com/beta/trustFramework/keySets/B2C_1A_${id}/generateKey"
-
-#     generate_body="$(jq 'del(.option) | del(.id)' <<<"${policy_key_body}")"
-
-#     post-rest-request "${generate_uri}" "${generate_body}"
-# }
-
-# function upload-policy-secret() {
-#     local id="$1"
-#     local policy_key_body="$2"
-
-#     secret_update_uri="https://graph.microsoft.com/beta/trustFramework/keySets/B2C_1A_${id}/uploadSecret"
-
-#     secret_update_body="$(jq 'del(.option) | del(.id)' <<<"${policy_key_body}")"
-
-#     post-rest-request "${secret_update_uri}" "${secret_update_body}"
-
-# }
-
 function policy-key-exist() {
     local id="$1"
 

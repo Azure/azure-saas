@@ -1,19 +1,19 @@
 ﻿using Azure.Core;
 using Azure.Security.KeyVault.Keys.Cryptography;
-using ClientAssertionWithKeyVault.Interface;
-using ClientAssertionWithKeyVault.Model;
-using ClientAssertionWithKeyVault.Util;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Saas.Interface;
+using Saas.Identity.Interface;
+using Saas.Identity.Model;
+using Saas.Identity.Util;
 
-namespace ClientAssertionWithKeyVault;
+namespace Saas.Identity;
 public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
 {
     private readonly ILogger _logger;
@@ -31,7 +31,7 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
         IMemoryCache menoryCache,
         ILogger<ClientAssertionSigningProvider> logger,
         IPublicX509CertificateDetailProvider publicX509CertificateDetailProvider)
-    {   
+    {
         _logger = logger;
         _memoryCache = menoryCache;
 
@@ -45,14 +45,14 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
         TokenCredential credential,
         TimeSpan lifetime = default) =>
             await GetClientAssertion(
-                new CertificateDescription() { KeyVaultUrl = keyVaultUrl, KeyVaultCertificateName = certKeyName },
+                new KeyInfo(keyVaultUrl, certKeyName),
                 audience,
                 clientId,
                 credential,
                 lifetime);
 
     public async Task<string> GetClientAssertion(
-        CertificateDescription keyInfo,
+        IKeyInfo keyInfo,
         string audience,
         string clientId,
         TokenCredential credential,
@@ -67,11 +67,11 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
             return clientAssertion;
         }
 
-        (clientAssertion, DateTimeOffset expiryTime) = 
+        (clientAssertion, DateTimeOffset expiryTime) =
             await GetClientAssertionFromKeyVault(keyInfo, audience, clientId, credential, lifetime);
 
         // cached assertion expires with there's approx 10 % left of it's life time. 
-        var cacheExpiration = expiryTime - ((expiryTime - DateTimeOffset.UtcNow) / 10);
+        var cacheExpiration = expiryTime - (expiryTime - DateTimeOffset.UtcNow) / 10;
 
         var cacheOptions = new MemoryCacheEntryOptions()
             .SetAbsoluteExpiration(cacheExpiration);
@@ -82,14 +82,14 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
     }
 
     private async Task<(string clientAssertion, DateTimeOffset expiryTime)> GetClientAssertionFromKeyVault(
-        CertificateDescription keyInfo,
+        IKeyInfo keyInfo,
         string audience,
         string clientId,
         TokenCredential credential,
         TimeSpan lifetime = default)
     {
         var validFrom = DateTimeOffset.UtcNow;
-        var expiryTime = (DateTimeOffset.UtcNow + lifetime);
+        var expiryTime = DateTimeOffset.UtcNow + lifetime;
 
         var claims = new[]
         {
@@ -124,7 +124,7 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
     }
 
     private async Task<(string unsignedAssertion, IPublicX509CertificateDetail publicCertDetails)> CreateUnsignedAssertion(
-            CertificateDescription keyInfo,
+            IKeyInfo keyInfo,
             Claim[] claims,
             TokenCredential credential)
     {

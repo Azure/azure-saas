@@ -1,12 +1,12 @@
 ﻿using Azure.Core;
-using Microsoft.Identity.Web;
+using Saas.Interface;
 
-namespace ClientAssertionWithKeyVault.Interface;
+namespace Saas.Identity.Interface;
 
 public interface IClientAssertionSigningProvider
 {
     Task<string> GetClientAssertion(
-        CertificateDescription keyInfo,
+        IKeyInfo keyInfo,
         string audience,
         string clientId,
         TokenCredential credential,

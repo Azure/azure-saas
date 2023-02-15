@@ -1,6 +1,6 @@
 ﻿using Saas.Interface;
 
-namespace ClientAssertionWithKeyVault.Model;
+namespace Saas.Identity.Model;
 internal record KeyInfo : IKeyInfo
 {
     public KeyInfo(string keyVaultUrl, string keyVaultCertificateName)

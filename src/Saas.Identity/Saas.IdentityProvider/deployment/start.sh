@@ -171,59 +171,59 @@ put-value ".deployment.resourceGroup.provisionState" "provisioning"
     ) || exit 1
 
 # Creating storage it does not already exist
-# put-value ".deployment.storage.provisionState" "provisioning"
-# (
-#     storage_account_name="$(get-value ".deployment.storage.name")"
+put-value ".deployment.storage.provisionState" "provisioning"
+(
+    storage_account_name="$(get-value ".deployment.storage.name")"
 
-#     if ! storage-account-exist "${resource_group}" "${storage_account_name}"; then
+    if ! storage-account-exist "${resource_group}" "${storage_account_name}"; then
 
-#         storage_container_name="$(get-value ".deployment.storage.containerName")"
-#         subscription_id="$(get-value ".initConfig.subscriptionId")"
-#         user_principal_id="$(get-value ".initConfig.userPrincipalId")"
+        storage_container_name="$(get-value ".deployment.storage.containerName")"
+        subscription_id="$(get-value ".initConfig.subscriptionId")"
+        user_principal_id="$(get-value ".initConfig.userPrincipalId")"
 
-#         storage-create \
-#             "${resource_group}" \
-#             "${storage_account_name}" \
-#             "${location}" \
-#             "${storage_container_name}" \
-#             "${subscription_id}" \
-#             "${user_principal_id}" ||
-#             echo "Storage creation failed." |
-#             log-output \
-#                 --level error \
-#                 --header "Critical error" ||
-#             exit 1
-#     fi
-#     put-value ".deployment.storage.provisionState" "successful"
-# ) ||
-#     (
-#         put-value ".deployment.storage.provisionState" "failed" &&
-#             echo "Storage failed exists." |
-#             log-output \
-#                 --level error \
-#                 --header "Critical error" ||
-#             exit 1
-#     )
+        storage-create \
+            "${resource_group}" \
+            "${storage_account_name}" \
+            "${location}" \
+            "${storage_container_name}" \
+            "${subscription_id}" \
+            "${user_principal_id}" ||
+            echo "Storage creation failed." |
+            log-output \
+                --level error \
+                --header "Critical error" ||
+            exit 1
+    fi
+    put-value ".deployment.storage.provisionState" "successful"
+) ||
+    (
+        put-value ".deployment.storage.provisionState" "failed" &&
+            echo "Storage failed exists." |
+            log-output \
+                --level error \
+                --header "Critical error" ||
+            exit 1
+    )
 
-# put-value ".deployment.keyVault.provisionState" "provioning"
-# # Creating Azure Key Vault if it does not already exist
-# (
-#     "${SCRIPT_DIR}/create-key-vault.sh" &&
-#         put-value ".deployment.keyVault.provisionState" "successful"
-# ) ||
-#     (
-#         put-value ".deployment.keyVault.provisionState" "failed" &&
-#             echo "Creation of KeyVault failed." |
-#             log-output \
-#                 --level error \
-#                 --header "Critical error" ||
-#             exit 1
-#     )
+put-value ".deployment.keyVault.provisionState" "provioning"
+# Creating Azure Key Vault if it does not already exist
+(
+    "${SCRIPT_DIR}/create-key-vault.sh" &&
+        put-value ".deployment.keyVault.provisionState" "successful"
+) ||
+    (
+        put-value ".deployment.keyVault.provisionState" "failed" &&
+            echo "Creation of KeyVault failed." |
+            log-output \
+                --level error \
+                --header "Critical error" ||
+            exit 1
+    )
 
-# echo "Provisioning Azure B2C..." |
-#     log-output \
-#         --level info \
-#         --header "Azure B2C Tenant"
+echo "Provisioning Azure B2C..." |
+    log-output \
+        --level info \
+        --header "Azure B2C Tenant"
 
 put-value ".deployment.azureb2c.provisionState" "provisioning"
 # Creating Azure AD B2C Directory if it does not already exist
@@ -254,8 +254,6 @@ put-value ".deployment.azureb2c.configuration.provisionState" "provisioning"
                 --header "Critical error" ||
             exit 1
     )
-
-exit 1
 
 put-value ".deployment.identityFoundation.provisionState" "provisioning"
 # Deploying Identity Provider

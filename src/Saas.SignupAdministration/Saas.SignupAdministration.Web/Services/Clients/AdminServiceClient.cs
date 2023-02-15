@@ -6,7 +6,6 @@
 // Manual Modifications:
 // * Constructor arguments altered to include ITokenAcquisition input to satisfy parent class OAuthBaseClient logic
 // * Remove Serialization.JsonIgnore for null attributes on DTOs
-//
 //----------------------
 
 #pragma warning disable 108 // Disable "CS0108 '{derivedDto}.ToJson()' hides inherited member '{dtoBase}.ToJson()'. Use the new keyword if hiding was intended."
@@ -226,7 +225,7 @@ namespace Saas.SignupAdministration.Web.Services
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<System.Text.Json.JsonSerializerOptions> _settings;
 
-        public AdminServiceClient(IOptions<AppSettings> configuration, ITokenAcquisition tokenAcquisition, System.Net.Http.HttpClient httpClient) : base(tokenAcquisition, configuration)
+        public AdminServiceClient(System.Net.Http.HttpClient httpClient, ITokenAcquisition tokenAcquisition) : base(tokenAcquisition)
         {
             _httpClient = httpClient;
             _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings);
