@@ -108,37 +108,37 @@ var scopes = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionNam
         ?? throw new NullReferenceException("Scopes cannot be null");
 
 // Adding user authentication configuration leveraging Azure AD B2C.
-builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, AzureB2CSignupAdminOptions.SectionName)
-    .EnableTokenAcquisitionToCallDownstreamApi(scopes)
-    .AddSessionTokenCaches();
-
-//builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-//    .AddMicrosoftIdentityWebApp(identityOptions =>
-//    {
-//        builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, identityOptions);
-
-//        identityOptions.ClientCertificates = builder.Configuration.GetRequiredSection(AzureB2CSignupAdminOptions.SectionName)
-//            .Get<AzureB2CSignupAdminOptions>().ClientCertificates;
-
-//        identityOptions.Events.OnTokenValidated = async ctx =>
-//        {
-
-//        };
-
-//        identityOptions.Events.OnAuthenticationFailed = async ctx =>
-//        {
-
-//        };
-
-
-
-
-//    })
-//    .EnableTokenAcquisitionToCallDownstreamApi(confidentialClientAppOptions =>
-//    {
-
-//    })
+//builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, AzureB2CSignupAdminOptions.SectionName)
+//    .EnableTokenAcquisitionToCallDownstreamApi(scopes)
 //    .AddSessionTokenCaches();
+
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApp(identityOptions =>
+    {
+        builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, identityOptions);
+
+        //identityOptions.ClientCertificates = builder.Configuration.GetRequiredSection(AzureB2CSignupAdminOptions.SectionName)
+        //    .Get<AzureB2CSignupAdminOptions>().ClientCertificates;
+
+        //identityOptions.ClientSecret = "2aF8Q~gbKXexIMCnzP72igP2njwWQ-57pTNoNcS9";
+
+        identityOptions.Events.OnTokenValidated = async ctx =>
+        {
+
+        };
+
+        identityOptions.Events.OnAuthenticationFailed = async ctx =>
+        {
+
+        };
+
+    })
+    .EnableTokenAcquisitionToCallDownstreamApi(confidentialClientAppOptions =>
+    {
+
+    },
+    scopes)
+    .AddSessionTokenCaches();
 
 
 // builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, AzureB2CSignupAdminOptions.SectionName);
@@ -146,24 +146,33 @@ builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration,
 // Utilizing our SaaS Web API Authentication pattern, leveraging Key Vault and client assertion to do away with 'secrets'
 // https://github.com/uglide/azure-content/blob/master/articles/guidance/guidance-multitenant-identity-client-assertion.md
 // https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-net-client-assertions
-//builder.Services.AddSaasWebApiAuthentication(scopes);
+builder.Services.AddSaasWebApiAuthentication(scopes);
 
 // Adding our Saas Authentication Provider for acquiring access tokens for the App.
-//builder.Services.AddSingleton<SaasAuthenticationProvider<AzureB2CSignupAdminOptions>>();
+builder.Services.AddSingleton<SaasAuthenticationProvider<AzureB2CSignupAdminOptions>>();
 
 // Adding and defining http client for our AdminServiceClient accessing the Admin API,
 // using the SaaS Authentication Provider we just registered.
 builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
     .ConfigureHttpClient((serviceProvider, client) =>
     {
-        using var scope = serviceProvider.CreateScope();
+        if (builder.Environment.IsDevelopment())
+        {
+            client.BaseAddress = new Uri("http://localhost:5041");
+        }
+        else
+        {
+            using var scope = serviceProvider.CreateScope();
 
-        var adminServiceBaseUrl = scope.ServiceProvider.GetRequiredService<IOptions<AzureB2CAdminApiOptions>>().Value.BaseUrl
-            ?? throw new NullReferenceException($"{nameof(AdminServiceClient)} Url cannot be null");
+            var adminServiceBaseUrl = scope.ServiceProvider.GetRequiredService<IOptions<AzureB2CAdminApiOptions>>().Value.BaseUrl
+                ?? throw new NullReferenceException($"{nameof(AdminServiceClient)} Url cannot be null");
 
-        client.BaseAddress = new Uri(adminServiceBaseUrl);
-    })
-    .AddHttpMessageHandler<SaasAuthenticationProvider<AzureB2CSignupAdminOptions>>();
+            client.BaseAddress = new Uri(adminServiceBaseUrl);
+        }
+
+
+    });
+    //.AddHttpMessageHandler<SaasAuthenticationProvider<AzureB2CSignupAdminOptions>>();
 
 builder.Services.AddSession(options =>
 {

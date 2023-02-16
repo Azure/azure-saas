@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Shared", "..\Saas.Lib\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Identity", "..\Saas.Lib\Saas.Identity\Saas.Identity.csproj", "{A8768C17-E9E7-4F9C-A84B-787F1BEAE70D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Identity.Web", "..\..\..\microsoft-identity-web\src\Microsoft.Identity.Web\Microsoft.Identity.Web.csproj", "{FD55C071-48D1-4FE8-8B1D-773E067FEC91}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{A8768C17-E9E7-4F9C-A84B-787F1BEAE70D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8768C17-E9E7-4F9C-A84B-787F1BEAE70D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8768C17-E9E7-4F9C-A84B-787F1BEAE70D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD55C071-48D1-4FE8-8B1D-773E067FEC91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD55C071-48D1-4FE8-8B1D-773E067FEC91}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD55C071-48D1-4FE8-8B1D-773E067FEC91}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD55C071-48D1-4FE8-8B1D-773E067FEC91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

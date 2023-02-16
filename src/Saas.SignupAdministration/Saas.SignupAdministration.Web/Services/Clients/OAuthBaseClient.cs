@@ -1,4 +1,5 @@
-﻿using Saas.SignupAdministration.Web.Models;
+﻿using Saas.Identity.Model;
+using Saas.SignupAdministration.Web.Models;
 using System.Net.Http;
 using System.Threading;
 
@@ -8,13 +9,18 @@ namespace Saas.SignupAdministration.Web.Services;
 public abstract class OAuthBaseClient
 {
     //public string BearerToken { get; private set; } = string.Empty;
-    private readonly ITokenAcquisition? _tokenAcquisition;
+    private readonly ITokenAcquisition _tokenAcquisition;
+
+    private readonly IEnumerable<string>? _scopes;
 
     //private readonly AppSettings _appSettings;
 
-    public OAuthBaseClient(ITokenAcquisition tokenAcquisition)
+    public OAuthBaseClient(
+        ITokenAcquisition tokenAcquisition,
+        IOptions<SaaSAppScopeOptions> scopes)
     {
-        tokenAcquisition = tokenAcquisition ?? throw new ArgumentNullException(nameof(tokenAcquisition));
+        _tokenAcquisition = tokenAcquisition ?? throw new ArgumentNullException(nameof(tokenAcquisition));
+        _scopes = scopes.Value.Scopes;
         //_appSettings = appSettings.Value;
     }
 
@@ -28,7 +34,7 @@ public abstract class OAuthBaseClient
 
     private async Task<string> GetAccessToken()
     {
-        var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(new[] { "tenant.read"} );
+        var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
         // var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_appSettings.AdminServiceScopes.Split(" "));
         return accessToken;
     }

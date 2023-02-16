@@ -127,6 +127,7 @@
       "name": "signupadmin-app",
       "appServiceName": null,
       "certificate": true,
+      "hasSecret": true,
       "redirectUri": null,
       "redirectType": "web",
       "logoutUri": null,

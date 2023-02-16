@@ -37,8 +37,9 @@ param location string = resourceGroup().location
 var appServicePlanOS = 'windows'
 var appServicePlanName = 'plan-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var appConfigurationName = 'appconfig-${solutionPrefix}-${solutionName}-${solutionPostfix}'
+var sqlServerName = 'sqldb-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var permissionsSqlDatabaseName = 'sqldb-permissions-${solutionPrefix}-${solutionName}-${solutionPostfix}'
-var permissionsSqlServerName = 'sql-permissions-${solutionPrefix}-${solutionName}-${solutionPostfix}'
+var tenantSqlDatabaseName = 'sqldb-tenant-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var userAssignedIdentityName = 'user-assign-id-${solutionPrefix}-${solutionName}-${solutionPostfix}' 
 var applicationInsightsName = 'appi-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var logAnalyticsWorkspaceName = 'log-${solutionPrefix}-${solutionName}-${solutionPostfix}'
@@ -54,14 +55,15 @@ module secretGenerator './Module/createSecret.bicep' = {
     location: location
   }
 }
-module permissionsSqlModule './Module/permissionsSql.bicep' = {
+module sqlDbsModule './Module/sqlDbs.bicep' = {
   name: 'PermissionsSqlDeployment'
   params: {
     devMachineIp: devMachineIp
     location: location
     userAssignedIdentityName: userAssignedIdentity.name
+    sqlServerName: sqlServerName
     permissionsSqlDatabaseName: permissionsSqlDatabaseName
-    permissionsSqlServerName: permissionsSqlServerName
+    tenantSqlDatabaseName: tenantSqlDatabaseName
     sqlAdministratorLogin: sqlAdministratorLogin
     sqlAdministratorLoginPassword: secretGenerator.outputs.secret
   }
@@ -70,8 +72,6 @@ module permissionsSqlModule './Module/permissionsSql.bicep' = {
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: keyVaultName
 }
-
-
 
 module appConfigurationModule './Module/appConfigurationStore.bicep' = {
   name: 'AppConfigurationDeployment'
@@ -142,8 +142,9 @@ module configurationEntriesModule './Module/addConfigEntries.bicep' = {
     sqlAdministratorLogin: sqlAdministratorLogin
     userAssignedIdentityName: userAssignedIdentity.name
     appConfigurationName: appConfigurationStore.name
+    sqlServerFQDN: sqlDbsModule.outputs.sqlServerFQDN
     permissionsSqlDatabaseName: permissionsSqlDatabaseName
-    permissionsSqlServerFQDN: permissionsSqlModule.outputs.permissionsSqlServerFQDN
+    tenantSqlDatabaseName: tenantSqlDatabaseName
     sqlAdministratorLoginPassword: secretGenerator.outputs.secret
   }
   dependsOn: [
@@ -162,10 +163,10 @@ output appConfigurationName string = appConfigurationName
 output keyVaultName string = keyVault.name
 output keyVaultUri string = keyVault.properties.vaultUri
 output appServicePlanName string = appPlanModule.outputs.appServicePlanName
-output permissionsSqlServerName string = permissionsSqlModule.outputs.permissionsSqlServerName
 output userAssignedIdentityName string = userAssignedIdentity.name
 output userAssignedIdentityId string = userAssignedIdentity.id
-output permissionsSqlServerFQDN string = permissionsSqlModule.outputs.permissionsSqlServerFQDN
+output sqlServerFQDN string = sqlDbsModule.outputs.sqlServerFQDN
+output SqlDbServerName string = sqlDbsModule.outputs.sqlServerName
 output applicationInsightsName string = applicationInsightsName
 output logAnalyticsWorkspaceName string = logAnalyticsWorkspaceName
 output automationAccountName string = automationAccountName

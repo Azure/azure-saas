@@ -67,7 +67,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<PermissionsContext>(options =>
 {
     var sqlConnectionString = builder.Configuration.GetRequiredSection(SqlOptions.SectionName)
-        .Get<SqlOptions>()?.SQLConnectionString
+        .Get<SqlOptions>()?.PermissionsSQLConnectionString
             ?? throw new NullReferenceException("SQL Connection string cannot be null.");
 
     options.UseSqlServer(sqlConnectionString);

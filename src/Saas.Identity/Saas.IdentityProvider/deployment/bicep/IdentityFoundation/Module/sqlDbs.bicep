@@ -7,10 +7,13 @@ param devMachineIp string
 param location string
 
 @description('The Permissions SQL Server name.')
-param permissionsSqlServerName string
+param sqlServerName string
 
 @description('The Permissions SQL Database name.')
 param permissionsSqlDatabaseName string
+
+@description('The Tenant SQL Database name.')
+param tenantSqlDatabaseName string
 
 @description('The SQL Server administrator login.')
 param sqlAdministratorLogin string
@@ -22,8 +25,8 @@ param userAssignedIdentityName string
 @secure()
 param sqlAdministratorLoginPassword string
 
-resource permissionsSqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
-  name: permissionsSqlServerName
+resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
+  name: sqlServerName
   location: location
   properties: {
     administratorLogin: sqlAdministratorLogin
@@ -35,7 +38,7 @@ resource permissionsSqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
 // Allow all internal azure ips to access the sql server firewall
 resource allowAzureAccessFirewallRuleAzureInternal 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
   name: 'allowOnlyAllWindowsAzureIps'
-  parent: permissionsSqlServer
+  parent: sqlServer
   properties: {
     // Using 0.0.0.0 to specify all internal azure ips as found here: https://docs.microsoft.com/en-us/azure/templates/microsoft.sql/servers/firewallrules?tabs=bicep#serverfirewallruleproperties
     startIpAddress: '0.0.0.0'
@@ -46,7 +49,7 @@ resource allowAzureAccessFirewallRuleAzureInternal 'Microsoft.Sql/servers/firewa
 // Allow all internal azure ips to access the sql server firewall
 resource allowAzureAccessFirewallRuleDevMachine 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
   name: 'allowAccessToDevMachineIpAddress'
-  parent: permissionsSqlServer
+  parent: sqlServer
   properties: {
     // Using 0.0.0.0 to specify all internal azure ips as found here: https://docs.microsoft.com/en-us/azure/templates/microsoft.sql/servers/firewallrules?tabs=bicep#serverfirewallruleproperties
     startIpAddress: devMachineIp
@@ -55,8 +58,18 @@ resource allowAzureAccessFirewallRuleDevMachine 'Microsoft.Sql/servers/firewallR
 }
 
 resource permissionsSqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
-  parent: permissionsSqlServer
+  parent: sqlServer
   name: permissionsSqlDatabaseName
+  location: location
+  sku: {
+    name: 'Basic'
+    tier: 'Basic'
+  }
+}
+
+resource tenantSqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
+  parent: sqlServer
+  name: tenantSqlDatabaseName
   location: location
   sku: {
     name: 'Basic'
@@ -69,5 +82,5 @@ resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@
   location: location
 }
 
-output permissionsSqlServerFQDN string = permissionsSqlServer.properties.fullyQualifiedDomainName
-output permissionsSqlServerName string = permissionsSqlServer.name
+output sqlServerFQDN string = sqlServer.properties.fullyQualifiedDomainName
+output sqlServerName string = sqlServer.name

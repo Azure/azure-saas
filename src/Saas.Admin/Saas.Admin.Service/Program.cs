@@ -64,8 +64,10 @@ builder.Services.Configure<SqlOptions>(
 builder.Services.AddDbContext<TenantsContext>(options =>
 {  
     var sqlConnectionString = builder.Configuration.GetRequiredSection(SqlOptions.SectionName)
-        .Get<SqlOptions>()?.SQLConnectionString
+        .Get<SqlOptions>()?.TenantSQLConnectionString
             ?? throw new NullReferenceException("SQL Connection string cannot be null.");
+
+    options.UseSqlServer(sqlConnectionString);
 });
 
 // Add authentication for incoming requests
@@ -150,6 +152,7 @@ builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient
             ?? throw new NullReferenceException("Permissions Base Api Key cannot be null");
 
         client.BaseAddress = new Uri(baseUrl);
+
         client.DefaultRequestHeaders.Add("x-api-key", apiKey);
     });
 
@@ -218,7 +221,6 @@ void InitializeDevEnvironment()
     builder.Services.AddSwaggerGen(option =>
     {
         option.SwaggerDoc("v1", new() { Title = "Admin API", Version = "v1.1" });
-        option.OperationFilter<SwagCustomHeaderFilter>();
     });
 }
 
