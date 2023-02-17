@@ -2,24 +2,22 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Saas.AspNetCore.Authorization.AuthHandlers
+namespace Saas.AspNetCore.Authorization.AuthHandlers;
+
+public static class RouteBasedRoleHandlerExtensions
 {
-    public static class RouteBasedRoleHandlerExtensions
+    public static IServiceCollection AddRouteBasedRoleHandler(this IServiceCollection services, string routeValueName)
     {
-        public static IServiceCollection AddRouteBasedRoleHandler(this IServiceCollection services, string routeValueName)
+        services.AddHttpContextAccessor();
+
+        services.AddScoped<IAuthorizationHandler>(serviceprovider =>
         {
-            services.AddHttpContextAccessor();
+            IHttpContextAccessor httpContextAccessor = serviceprovider.GetRequiredService<IHttpContextAccessor>();
+            RouteBasedRoleCustomizer customizer = new(httpContextAccessor, routeValueName);
+            CustomRoleHandler customRoleHandler = new(customizer);
+            return customRoleHandler;
+        });
 
-            services.AddScoped<IAuthorizationHandler>(serviceprovider =>
-            {
-                IHttpContextAccessor httpContextAccessor = serviceprovider.GetRequiredService<IHttpContextAccessor>();
-                RouteBasedRoleCusomizer customizer = new RouteBasedRoleCusomizer(httpContextAccessor, routeValueName);
-                CustomRoleHandler customRoleHandler = new CustomRoleHandler(customizer);
-                return customRoleHandler;
-            });
-
-
-            return services;
-        }
+        return services;
     }
 }

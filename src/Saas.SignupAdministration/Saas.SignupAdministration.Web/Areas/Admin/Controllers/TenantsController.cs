@@ -56,14 +56,14 @@ public class TenantsController : Controller
     // GET: Admin/Tenants/Edit/5
     public async Task<IActionResult> Edit(string id)
     {
-        Guid guid = new Guid();
-        if (id == null || !Guid.TryParse(id, out guid))
+        Guid guid = new();
+        if (id is  null || !Guid.TryParse(id, out guid))
         {
             return NotFound();
         }
 
         var tenant = await _adminServiceClient.TenantsGETAsync(guid);
-        if (tenant == null)
+        if (tenant is null)
         {
             return NotFound();
         }
@@ -79,7 +79,7 @@ public class TenantsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Route,ProductTierId,CategoryId,CreatorEmail")] TenantDTO tenant)
     {
-        Guid guid = new Guid();
+        Guid guid = new();
         if (!Guid.TryParse(id, out guid) || guid != tenant.Id)
         {
             return NotFound();

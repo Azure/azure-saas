@@ -12,13 +12,13 @@ namespace Saas.AspNetCore.Authorization.ClaimTransformers;
 /// Transforms a custom claim in space delimited format to roles
 /// The user principal will factor in the custom roles when IsInRole is called
 /// </summary>
-public class ClaimToRoleTransformer : IClaimsTransformation
+public class ClaimPermissionToRoleTransformer : IClaimsTransformation
 {
     private readonly string _sourceClaimType;
     private readonly string _roleClaimType;
     private readonly string _authenticationType;
 
-    public ClaimToRoleTransformer(IOptions<ClaimToRoleTransformerOptions> claimToRoleTransformerOptions)
+    public ClaimPermissionToRoleTransformer(IOptions<ClaimToRoleTransformerOptions> claimToRoleTransformerOptions)
     {
         _sourceClaimType = claimToRoleTransformerOptions.Value.SourceClaimType
             ?? throw new NullReferenceException($"{nameof(claimToRoleTransformerOptions.Value.SourceClaimType)} cannot be null");

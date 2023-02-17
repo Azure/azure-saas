@@ -7,7 +7,6 @@ using Saas.Admin.Service.Data;
 using Saas.AspNetCore.Authorization.AuthHandlers;
 using Saas.AspNetCore.Authorization.ClaimTransformers;
 using Saas.Shared.Options;
-using Saas.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -48,9 +47,6 @@ else
 builder.Services.Configure<AzureB2CAdminApiOptions>(
         builder.Configuration.GetRequiredSection(AzureB2CAdminApiOptions.SectionName));
 
-builder.Services.Configure<ClaimToRoleTransformerOptions>(
-        builder.Configuration.GetRequiredSection(ClaimToRoleTransformerOptions.SectionName));
-
 builder.Services.Configure<AzureB2CPermissionsApiOptions>(
         builder.Configuration.GetRequiredSection(AzureB2CPermissionsApiOptions.SectionName));
 
@@ -59,6 +55,10 @@ builder.Services.Configure<PermissionsApiOptions>(
 
 builder.Services.Configure<SqlOptions>(
             builder.Configuration.GetRequiredSection(SqlOptions.SectionName));
+
+builder.Services.Configure<ClaimToRoleTransformerOptions>(
+        builder.Configuration.GetRequiredSection(ClaimToRoleTransformerOptions.SectionName));
+
 
 // Using Entity Framework for accessing permission data stored in the Permissions Db.
 builder.Services.AddDbContext<TenantsContext>(options =>
@@ -73,7 +73,7 @@ builder.Services.AddDbContext<TenantsContext>(options =>
 // Add authentication for incoming requests
 builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, AzureB2CAdminApiOptions.SectionName);
 
-builder.Services.AddTransient<IClaimsTransformation, ClaimToRoleTransformer>();
+builder.Services.AddTransient<IClaimsTransformation, ClaimPermissionToRoleTransformer>();
 
 builder.Services.AddRouteBasedRoleHandler("tenantId");
 builder.Services.AddRouteBasedRoleHandler("userId");

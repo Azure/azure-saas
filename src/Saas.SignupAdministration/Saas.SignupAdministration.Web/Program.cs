@@ -6,11 +6,8 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Saas.Shared.Options;
 using Saas.Identity;
-using Saas.Identity.Extensions;
 using Saas.Identity.Interface;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Extensions.Options;
-
+using Saas.Identity.Model;
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
 
@@ -65,10 +62,6 @@ builder.Services.Configure<AzureB2CAdminApiOptions>(
 builder.Services.Configure<AzureB2CSignupAdminOptions>(
         builder.Configuration.GetRequiredSection(AzureB2CSignupAdminOptions.SectionName));
 
-// Load the app settings
-//builder.Services.Configure<AppSettings>(
-//    builder.Configuration.GetSection(SR.AppSettingsProperty));
-
 // Load the email settings 
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(SR.EmailOptionsProperty));
@@ -97,56 +90,55 @@ builder.Services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>
 // Add the user details that come back from B2C
 builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
 
-// Azure AD B2C requires scope config with a fully qualified url along with an identifier. To make configuring it more manageable and less
-// error prone, we store the names of the scopes separately from the application id uri and combine them when neded.
 var applicationUri = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionName)
     .Get<AdminApiOptions>()?.ApplicationIdUri
         ?? throw new NullReferenceException($"ApplicationIdUri cannot be null");
 
 var scopes = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionName)
-    .Get<AdminApiOptions>()?.Scopes?.Select(scope => $"{applicationUri}/{scope}".Trim('/'))
+    .Get<AdminApiOptions>()?.Scopes
         ?? throw new NullReferenceException("Scopes cannot be null");
 
+// Azure AD B2C requires scope config with a fully qualified url along with an identifier. To make configuring it more manageable and less
+// error prone, we store the names of the scopes separately from the application id uri and combine them when neded.
+builder.Services.Configure<SaaSAppScopeOptions>(saasAppScopeOptions => 
+    saasAppScopeOptions.Scopes = scopes.Select(scope => $"{applicationUri}/{scope}".Trim('/')).ToArray());
+
 // Adding user authentication configuration leveraging Azure AD B2C.
-//builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, AzureB2CSignupAdminOptions.SectionName)
-//    .EnableTokenAcquisitionToCallDownstreamApi(scopes)
-//    .AddSessionTokenCaches();
-
-builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(identityOptions =>
-    {
-        builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, identityOptions);
-
-        //identityOptions.ClientCertificates = builder.Configuration.GetRequiredSection(AzureB2CSignupAdminOptions.SectionName)
-        //    .Get<AzureB2CSignupAdminOptions>().ClientCertificates;
-
-        //identityOptions.ClientSecret = "2aF8Q~gbKXexIMCnzP72igP2njwWQ-57pTNoNcS9";
-
-        identityOptions.Events.OnTokenValidated = async ctx =>
-        {
-
-        };
-
-        identityOptions.Events.OnAuthenticationFailed = async ctx =>
-        {
-
-        };
-
-    })
-    .EnableTokenAcquisitionToCallDownstreamApi(confidentialClientAppOptions =>
-    {
-
-    },
-    scopes)
+builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, AzureB2CSignupAdminOptions.SectionName)
+    .EnableTokenAcquisitionToCallDownstreamApi()
     .AddSessionTokenCaches();
 
+//builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+//    .AddMicrosoftIdentityWebApp(identityOptions =>
+//    {
+//        builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, identityOptions);
 
-// builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, AzureB2CSignupAdminOptions.SectionName);
+//        //identityOptions.ClientCertificates = builder.Configuration.GetRequiredSection(AzureB2CSignupAdminOptions.SectionName)
+//        //    .Get<AzureB2CSignupAdminOptions>().ClientCertificates;
+
+//        identityOptions.Events.OnTokenValidated = async ctx =>
+//        {
+
+//        };
+
+//        identityOptions.Events.OnAuthenticationFailed = async ctx =>
+//        {
+
+//        };
+
+//    })
+//    .EnableTokenAcquisitionToCallDownstreamApi(confidentialClientAppOptions =>
+//    {
+
+//    },
+//    scopes)
+//    .AddSessionTokenCaches();
+
 
 // Utilizing our SaaS Web API Authentication pattern, leveraging Key Vault and client assertion to do away with 'secrets'
 // https://github.com/uglide/azure-content/blob/master/articles/guidance/guidance-multitenant-identity-client-assertion.md
 // https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-net-client-assertions
-builder.Services.AddSaasWebApiAuthentication(scopes);
+// builder.Services.AddSaasWebApiAuthentication(scopes);
 
 // Adding our Saas Authentication Provider for acquiring access tokens for the App.
 builder.Services.AddSingleton<SaasAuthenticationProvider<AzureB2CSignupAdminOptions>>();
@@ -158,7 +150,7 @@ builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
     {
         if (builder.Environment.IsDevelopment())
         {
-            client.BaseAddress = new Uri("http://localhost:5041");
+            client.BaseAddress = new Uri("https://localhost:7041");
         }
         else
         {

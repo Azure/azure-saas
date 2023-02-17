@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Saas.AspNetCore.Authorization.AuthHandlers;
 
-public class RouteBasedRoleCusomizer : IRoleCustomizer
+public class RouteBasedRoleCustomizer : IRoleCustomizer
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    public RouteBasedRoleCusomizer(IHttpContextAccessor httpContextAccessor, string routeName, bool includeOriginals = false)
+    public RouteBasedRoleCustomizer(IHttpContextAccessor httpContextAccessor, string routeName, bool includeOriginals = false)
     {
         _httpContextAccessor = httpContextAccessor;
         IncludeOriginals = includeOriginals;
@@ -23,8 +23,7 @@ public class RouteBasedRoleCusomizer : IRoleCustomizer
     {
         HttpContext httpContext = _httpContextAccessor.HttpContext;
 
-        string context = httpContext.GetRouteValue(RouteName) as string
-            ?? throw new NullReferenceException("Routing name cannot be null");
+        string? context = httpContext.GetRouteValue(RouteName) as string;
 
         if (context is not null && allowedRoles is not null)
         {

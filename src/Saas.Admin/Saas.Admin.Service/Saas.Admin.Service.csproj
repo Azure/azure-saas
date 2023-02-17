@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="5.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.3" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.3">
