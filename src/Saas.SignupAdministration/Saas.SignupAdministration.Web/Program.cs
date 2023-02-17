@@ -5,9 +5,7 @@ using Saas.Application.Web;
 using System.Reflection;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Saas.Shared.Options;
-using Saas.Identity;
-using Saas.Identity.Interface;
-using Saas.Identity.Model;
+using Saas.SignupAdministration.Web.Options;
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
 
@@ -45,12 +43,10 @@ logger.LogInformation("Version: {version}", version);
 if (builder.Environment.IsDevelopment())
 {
     InitializeDevEnvironment();
-    builder.Services.AddSingleton<IKeyVaultCredentialService, DevelopmentKeyVaultCredentials>();
 }
 else
 {
     InitializeProdEnvironment();
-    builder.Services.AddSingleton<IKeyVaultCredentialService, ProductionKeyVaultCredentials>();
 }
 
 builder.Services.Configure<AdminApiOptions>(
@@ -100,7 +96,7 @@ var scopes = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionNam
 
 // Azure AD B2C requires scope config with a fully qualified url along with an identifier. To make configuring it more manageable and less
 // error prone, we store the names of the scopes separately from the application id uri and combine them when neded.
-builder.Services.Configure<SaaSAppScopeOptions>(saasAppScopeOptions => 
+builder.Services.Configure<SaasAppScopeOptions>(saasAppScopeOptions => 
     saasAppScopeOptions.Scopes = scopes.Select(scope => $"{applicationUri}/{scope}".Trim('/')).ToArray());
 
 // Adding user authentication configuration leveraging Azure AD B2C.
@@ -135,16 +131,6 @@ builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration,
 //    .AddSessionTokenCaches();
 
 
-// Utilizing our SaaS Web API Authentication pattern, leveraging Key Vault and client assertion to do away with 'secrets'
-// https://github.com/uglide/azure-content/blob/master/articles/guidance/guidance-multitenant-identity-client-assertion.md
-// https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-net-client-assertions
-// builder.Services.AddSaasWebApiAuthentication(scopes);
-
-// Adding our Saas Authentication Provider for acquiring access tokens for the App.
-builder.Services.AddSingleton<SaasAuthenticationProvider<AzureB2CSignupAdminOptions>>();
-
-// Adding and defining http client for our AdminServiceClient accessing the Admin API,
-// using the SaaS Authentication Provider we just registered.
 builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
     .ConfigureHttpClient((serviceProvider, client) =>
     {
@@ -161,10 +147,7 @@ builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
 
             client.BaseAddress = new Uri(adminServiceBaseUrl);
         }
-
-
     });
-    //.AddHttpMessageHandler<SaasAuthenticationProvider<AzureB2CSignupAdminOptions>>();
 
 builder.Services.AddSession(options =>
 {

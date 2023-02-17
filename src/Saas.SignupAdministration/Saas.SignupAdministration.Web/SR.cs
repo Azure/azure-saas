@@ -107,8 +107,6 @@ public static class SR
     // Startup Properties
     public const string IdentityDbConnectionProperty = "IdentityDbConnection";
     public const string AppSettingsProperty = "AppSettings";
-    // public const string AppInsightsConnectionProperty = "APPINSIGHTS_CONNECTIONSTRING";
-    // public const string CosmosDbProperty = "AppSettings:CosmosDb";
     public const string ErrorRoute = "/Home/Error";
     public const string MapControllerRoutePattern = "{controller=Home}/{action=Index}/{ id ?}";
     public const string DefaultName = "default";
@@ -116,12 +114,6 @@ public static class SR
     public const string ContainerNameProperty = "ContainerName";
     public const string AccountProperty = "Account";
     public const string KeyProperty = "Key";
-    // public const string CosmosNamePartitionKey = "/name";
-    // public const string AdminServiceBaseUrl = "AppSettings:AdminServiceBaseUrl";
-    //public const string AdminServiceScopesProperty = "AppSettings:AdminServiceScopes";
-    //public const string AdminServiceScopeBaseUrlProperty = "AppSettings:AdminServiceScopeBaseUrl";
-    //public const string AzureAdB2CProperty = "AzureAdB2C";
-    //public const string KeyVaultProperty = "KeyVault:Url";
     public const string EmailOptionsProperty = "EmailOptions";
 
     // Error Codes

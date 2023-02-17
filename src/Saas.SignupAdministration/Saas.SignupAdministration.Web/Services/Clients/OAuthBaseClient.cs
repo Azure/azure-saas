@@ -1,4 +1,4 @@
-﻿using Saas.Identity.Model;
+﻿using Saas.SignupAdministration.Web.Options;
 using System.Net.Http;
 using System.Threading;
 
@@ -13,7 +13,7 @@ public abstract class OAuthBaseClient
 
     public OAuthBaseClient(
         ITokenAcquisition tokenAcquisition,
-        IOptions<SaaSAppScopeOptions> scopes)
+        IOptions<SaasAppScopeOptions> scopes)
     {
         _tokenAcquisition = tokenAcquisition ?? throw new ArgumentNullException(nameof(tokenAcquisition));
         _scopes = scopes.Value.Scopes ?? throw new ArgumentNullException($"Scopes must be defined.");

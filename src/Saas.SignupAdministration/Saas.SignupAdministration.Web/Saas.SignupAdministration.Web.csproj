@@ -36,7 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Saas.Lib\Saas.Identity\Saas.Identity.csproj" />
     <ProjectReference Include="..\..\Saas.Lib\Saas.Shared\Saas.Shared.csproj" />
   </ItemGroup>
 

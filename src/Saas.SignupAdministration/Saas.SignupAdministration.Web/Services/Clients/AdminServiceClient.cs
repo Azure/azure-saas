@@ -19,7 +19,7 @@
 
 namespace Saas.SignupAdministration.Web.Services
 {
-    using Saas.Identity.Model;
+    using Saas.SignupAdministration.Web.Options;
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -229,7 +229,7 @@ namespace Saas.SignupAdministration.Web.Services
         public AdminServiceClient(
             System.Net.Http.HttpClient httpClient, 
             ITokenAcquisition tokenAcquisition,
-            IOptions<SaaSAppScopeOptions> scopes) : base(tokenAcquisition, scopes)
+            IOptions<SaasAppScopeOptions> scopes) : base(tokenAcquisition, scopes)
         {
             _httpClient = httpClient;
             _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings);
