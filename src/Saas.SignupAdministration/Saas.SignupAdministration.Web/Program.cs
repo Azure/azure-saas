@@ -6,6 +6,7 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Saas.Shared.Options;
 using Saas.SignupAdministration.Web.Options;
+
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
 
