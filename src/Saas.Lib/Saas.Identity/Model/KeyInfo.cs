@@ -1,7 +1,7 @@
 ﻿using Saas.Interface;
 
 namespace Saas.Identity.Model;
-internal record KeyInfo : IKeyInfo
+internal record KeyInfo : IKeyVaultInfo
 {
     public KeyInfo(string keyVaultUrl, string keyVaultCertificateName)
     {

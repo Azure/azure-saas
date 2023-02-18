@@ -2,8 +2,8 @@
 using Azure.Identity;
 using Saas.Identity.Interface;
 
-namespace Saas.Identity;
-public  class DevelopmentKeyVaultCredentials : IKeyVaultCredentialService
+namespace Saas.Identity.Helper;
+public class DevelopmentKeyVaultCredentials : IKeyVaultCredentialService
 {
     private readonly TokenCredential _tokenCredential;
 

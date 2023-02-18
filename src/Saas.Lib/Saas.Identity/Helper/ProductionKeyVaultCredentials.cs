@@ -3,8 +3,8 @@ using Azure.Identity;
 using Microsoft.Extensions.Configuration;
 using Saas.Identity.Interface;
 
-namespace Saas.Identity;
-public  class ProductionKeyVaultCredentials : IKeyVaultCredentialService
+namespace Saas.Identity.Helper;
+public class ProductionKeyVaultCredentials : IKeyVaultCredentialService
 {
     private readonly TokenCredential _tokenCredential;
 

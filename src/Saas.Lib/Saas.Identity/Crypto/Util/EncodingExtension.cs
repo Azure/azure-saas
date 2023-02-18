@@ -1,4 +1,4 @@
-﻿namespace Saas.Identity.Util;
+﻿namespace Saas.Identity.Crypto.Util;
 
 static internal class EncodingExtension
 {

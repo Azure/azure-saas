@@ -11,9 +11,9 @@ using System.Text.Json;
 using Saas.Interface;
 using Saas.Identity.Interface;
 using Saas.Identity.Model;
-using Saas.Identity.Util;
+using Saas.Identity.Crypto.Util;
 
-namespace Saas.Identity;
+namespace Saas.Identity.Crypto;
 public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
 {
     private readonly ILogger _logger;
@@ -52,7 +52,7 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
                 lifetime);
 
     public async Task<string> GetClientAssertion(
-        IKeyInfo keyInfo,
+        IKeyVaultInfo keyInfo,
         string audience,
         string clientId,
         TokenCredential credential,
@@ -82,7 +82,7 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
     }
 
     private async Task<(string clientAssertion, DateTimeOffset expiryTime)> GetClientAssertionFromKeyVault(
-        IKeyInfo keyInfo,
+        IKeyVaultInfo keyInfo,
         string audience,
         string clientId,
         TokenCredential credential,
@@ -124,7 +124,7 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
     }
 
     private async Task<(string unsignedAssertion, IPublicX509CertificateDetail publicCertDetails)> CreateUnsignedAssertion(
-            IKeyInfo keyInfo,
+            IKeyVaultInfo keyInfo,
             Claim[] claims,
             TokenCredential credential)
     {

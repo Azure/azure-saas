@@ -6,7 +6,7 @@ namespace Saas.Identity.Interface;
 public interface IClientAssertionSigningProvider
 {
     Task<string> GetClientAssertion(
-        IKeyInfo keyInfo,
+        IKeyVaultInfo keyInfo,
         string audience,
         string clientId,
         TokenCredential credential,

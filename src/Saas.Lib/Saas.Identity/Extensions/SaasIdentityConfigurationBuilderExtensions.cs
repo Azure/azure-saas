@@ -1,42 +1,71 @@
 ﻿
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Graph;
+using Saas.Identity.Crypto;
 using Saas.Identity.Interface;
-using Saas.Identity.Model;
+using Saas.Identity.Provider;
+using Saas.Shared.Interface;
+using Saas.Shared.Options;
 
 namespace Saas.Identity.Extensions;
 public static class SaasIdentityConfigurationBuilderExtensions
 {
-    public static void AddSaasWebApiAuthentication(
+    public static SaasApiClientCredentialBuilder<TProvider, TOptions> AddSaasApiCertificateClientCredentials<TProvider, TOptions>(
         this IServiceCollection services, 
-        IEnumerable<string> scopes)
+        IEnumerable<string>? scopes = default)
+        where TProvider : ISaasApi
+        where TOptions : AzureAdB2CBase
     {
+
         services.AddMemoryCache();
         services.AddSingleton<IPublicX509CertificateDetailProvider, PublicX509CertificateDetailProvider>();
         services.AddSingleton<IClientAssertionSigningProvider, ClientAssertionSigningProvider>();
+        services.AddScoped<SaasApiAuthenticationProvider<TProvider, TOptions>>();
 
+        switch (scopes)
+        {
+            case null when (typeof(TProvider).Equals(typeof(ISaasMicrosoftGraphApi))):
+                {
+                    services.Configure<SaasApiScopeOptions<TProvider>>(options
+                        => options.Scopes = new[] { "https://graph.microsoft.com/.default" });
+                    break;
+                }
+            case null:
+                throw new ArgumentException("Client Credentials scopes must be defined in the form: <Some App Id uri>/.default");
+            default:
+                {
+                    services.Configure<SaasApiScopeOptions<TProvider>>(options
+                        => options.Scopes = scopes.ToArray());
+                    break;
+                }
+        }
 
-        //services.Configure<SaaSAppScopeOptions>(option =>
-        //{
-        //    option = new() { Scopes = new[] {"1", "2"} };
-        //});
-
-        services.Configure<SaaSAppScopeOptions>(option => option.Scopes = scopes.ToArray());
-
-        // return new SaasWebApiBuilder(services);
+        return new SaasApiClientCredentialBuilder<TProvider, TOptions>(services);
     }
 }
 
-public class SaasWebApiBuilder
+public class SaasApiClientCredentialBuilder<TProvider, TOptions>
+    where TProvider : ISaasApi
+    where TOptions : AzureAdB2CBase
 {
     private readonly IServiceCollection _services;
 
-    public SaasWebApiBuilder(IServiceCollection services)
+    public SaasApiClientCredentialBuilder(IServiceCollection services)
     {
         _services = services;
     }
 
-    public void AddScopes(IEnumerable<string> scopes)
+    public IServiceCollection AddMicrosoftGraphAuthenticationProvider()
     {
-        _services.AddOptions<SaaSAppScopeOptions>().Configure(option => option = new() { Scopes = scopes.ToArray() });
+        if (typeof(TProvider).Equals(typeof(ISaasMicrosoftGraphApi)))
+        {
+            _services.AddScoped<IAuthenticationProvider, SaasGraphClientCredentialsProvider<TOptions>>();
+        }
+        else
+        {
+            throw new ArgumentException($"Provider type is of {typeof(TProvider)}, to add Microsoft Graph Autentication provider it must be of type {typeof(ISaasMicrosoftGraphApi)}");
+        }
+        
+        return _services;
     }
 }

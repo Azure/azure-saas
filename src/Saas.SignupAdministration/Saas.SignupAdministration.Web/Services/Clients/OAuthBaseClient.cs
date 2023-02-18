@@ -1,4 +1,4 @@
-﻿using Saas.SignupAdministration.Web.Options;
+﻿using Saas.Shared.Options;
 using System.Net.Http;
 using System.Threading;
 

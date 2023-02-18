@@ -1,19 +1,19 @@
-﻿using Azure.Core;
-using Azure.Identity;
-using Saas.Permissions.Service.Interfaces;
+﻿//using Azure.Core;
+//using Azure.Identity;
+//using Saas.Permissions.Service.Interfaces;
 
-namespace Saas.Permissions.Service.Services;
+//namespace Saas.Permissions.Service.Services;
 
-public class DevelopmentKeyVaultIdentityService : IKeyVaultCredentialService
-{
-    private readonly TokenCredential _tokenCredential;
+//public class DevelopmentKeyVaultIdentityService : IKeyVaultCredentialService
+//{
+//    private readonly TokenCredential _tokenCredential;
 
-    public DevelopmentKeyVaultIdentityService()
-    {
-        DefaultAzureCredential credential = new();
+//    public DevelopmentKeyVaultIdentityService()
+//    {
+//        DefaultAzureCredential credential = new();
 
-        _tokenCredential = credential;
-    }
+//        _tokenCredential = credential;
+//    }
 
-    public TokenCredential GetCredential() => _tokenCredential;
-}
+//    public TokenCredential GetCredential() => _tokenCredential;
+//}

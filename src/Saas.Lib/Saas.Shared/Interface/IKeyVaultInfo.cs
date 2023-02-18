@@ -1,6 +1,6 @@
 ﻿﻿namespace Saas.Interface;
 
-public interface IKeyInfo
+public interface IKeyVaultInfo
 {
     string? KeyVaultUrl { get; }
     string? KeyVaultCertificateName { get; }

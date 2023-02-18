@@ -2,14 +2,15 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
 using Saas.Identity.Interface;
-using Saas.Identity.Model;
+using Saas.Shared.Interface;
 using Saas.Shared.Options;
 using System.Net.Http.Headers;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace Saas.Identity;
+namespace Saas.Identity.Provider;
 
-public class SaasAuthenticationProvider<TOptions> : DelegatingHandler 
+public class SaasApiAuthenticationProvider<TProvider, TOptions> : DelegatingHandler
+    where TProvider : ISaasApi
     where TOptions : AzureAdB2CBase
 {
     private readonly ILogger _logger;
@@ -17,18 +18,18 @@ public class SaasAuthenticationProvider<TOptions> : DelegatingHandler
     // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/loggermessage?view=aspnetcore-7.0
     private static readonly Action<ILogger, Exception> _logError = LoggerMessage.Define(
             LogLevel.Error,
-            new EventId(1, nameof(SaasAuthenticationProvider<TOptions>)),
+            new EventId(1, nameof(SaasApiAuthenticationProvider<TProvider, TOptions>)),
             "Client Assertion Signing Provider");
 
     private readonly Lazy<IConfidentialClientApplication> _msalClient;
     private readonly IEnumerable<string>? _scopes;
 
-    public SaasAuthenticationProvider(
+    public SaasApiAuthenticationProvider(
         IClientAssertionSigningProvider clientAssertionSigningProvider,
         IOptions<TOptions> azureAdB2COptions,
-        IOptions<SaaSAppScopeOptions> scopes,
+        IOptions<SaasApiScopeOptions<TProvider>> scopes,
         IKeyVaultCredentialService credentialService,
-        ILogger<SaasAuthenticationProvider<TOptions>> logger)
+        ILogger<SaasApiAuthenticationProvider<TProvider, TOptions>> logger)
     {
         _logger = logger;
         _scopes = scopes.Value.Scopes;
@@ -39,13 +40,13 @@ public class SaasAuthenticationProvider<TOptions> : DelegatingHandler
             throw new NullReferenceException("Certificate cannot be null.");
         }
 
-        _msalClient = new Lazy<IConfidentialClientApplication>(() => 
+        _msalClient = new Lazy<IConfidentialClientApplication>(() =>
         {
             return ConfidentialClientApplicationBuilder
                 .Create(azureAdB2COptions.Value.ClientId)
                 .WithAuthority(AzureCloudInstance.AzurePublic, azureAdB2COptions.Value.TenantId)
                 .WithClientAssertion(
-                    (AssertionRequestOptions options) =>
+                    (options) =>
                         clientAssertionSigningProvider.GetClientAssertion(
                             azureAdB2COptions.Value.KeyVaultCertificateReferences.First(),
                             options.TokenEndpoint,
@@ -62,7 +63,7 @@ public class SaasAuthenticationProvider<TOptions> : DelegatingHandler
         {
             request.Headers.Authorization =
                     new AuthenticationHeaderValue("bearer", await GetAccessTokenAsync());
-            
+
             return await base.SendAsync(request, cancellationToken);
         }
         catch (Exception ex)
@@ -70,16 +71,12 @@ public class SaasAuthenticationProvider<TOptions> : DelegatingHandler
             _logError(_logger, ex);
             throw;
         }
-        
     }
 
-    private async Task<string> GetAccessTokenAsync()
+    internal async Task<string> GetAccessTokenAsync()
     {
-        //.AcquireTokenOnBehalfOf()
-
         try
         {
-
             var result = await _msalClient.Value
                 .AcquireTokenForClient(_scopes)
                 .ExecuteAsync();

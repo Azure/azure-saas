@@ -19,7 +19,7 @@
 
 namespace Saas.SignupAdministration.Web.Services
 {
-    using Saas.SignupAdministration.Web.Options;
+    using Saas.Shared.Options;
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]

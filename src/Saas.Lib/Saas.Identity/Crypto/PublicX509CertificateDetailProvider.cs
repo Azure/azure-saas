@@ -1,14 +1,14 @@
 ﻿using Azure.Core;
 using Azure.Security.KeyVault.Certificates;
-using ClientAssertionWithKeyVault.Interface;
-using ClientAssertionWithKeyVault.Model;
 using Microsoft.Extensions.Caching.Memory;
 using System.Security.Cryptography.X509Certificates;
-using ClientAssertionWithKeyVault.Util;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Web;
+using Saas.Interface;
+using Saas.Identity.Interface;
+using Saas.Identity.Model;
+using Saas.Identity.Crypto.Util;
 
-namespace ClientAssertionWithKeyVault;
+namespace Saas.Identity.Crypto;
 public class PublicX509CertificateDetailProvider : IPublicX509CertificateDetailProvider
 {
     private readonly ILogger _logger;
@@ -20,7 +20,7 @@ public class PublicX509CertificateDetailProvider : IPublicX509CertificateDetailP
             "Client Assertion Signing Provider");
 
     private readonly IMemoryCache _memoryCache;
-    
+
     public PublicX509CertificateDetailProvider(
         IMemoryCache memoryCache,
         ILogger<PublicX509CertificateDetailProvider> logger)
@@ -29,9 +29,9 @@ public class PublicX509CertificateDetailProvider : IPublicX509CertificateDetailP
         _logger = logger;
     }
 
-    public async Task<IPublicX509CertificateDetail> GetX509Detail(CertificateDescription keyInfo, TokenCredential credential)
+    public async Task<IPublicX509CertificateDetail> GetX509Detail(IKeyVaultInfo keyInfo, TokenCredential credential)
     {
-        if (! Uri.TryCreate(keyInfo.KeyVaultUrl, UriKind.Absolute, out Uri? keyVaultUri))
+        if (!Uri.TryCreate(keyInfo.KeyVaultUrl, UriKind.Absolute, out Uri? keyVaultUri))
         {
             throw new UriFormatException($"Invalid Key Vault Url format: '{keyInfo.KeyVaultUrl}'");
         }

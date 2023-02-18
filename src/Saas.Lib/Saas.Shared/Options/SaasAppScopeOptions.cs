@@ -1,4 +1,4 @@
-﻿namespace Saas.SignupAdministration.Web.Options;
+﻿namespace Saas.Shared.Options;
 
 public class SaasAppScopeOptions
 {

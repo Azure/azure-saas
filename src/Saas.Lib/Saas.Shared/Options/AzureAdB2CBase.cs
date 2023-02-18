@@ -1,5 +1,4 @@
 ﻿
-using Microsoft.Identity.Web;
 using Saas.Interface;
 
 namespace Saas.Shared.Options;
@@ -15,7 +14,6 @@ public record AzureAdB2CBase
     public string? TenantId { get; init; }
     public string? LoginEndpoint { get; init; }
     public string? BaseUrl { get; init; }
-
     public string? Certificate { get; init; }
 
     public KeyVaultCertificate[]? KeyVaultCertificateReferences { get; init; }
@@ -26,18 +24,18 @@ public record AzureAdB2CBase
     //                                 KeyVaultCertificateReferences.First().KeyVaultCertificateName)
     //};
 
-    public IEnumerable<CertificateDescription>? ClientCertificates => KeyVaultCertificateReferences?.Select(cert => new CertificateDescription
-    {
-        SourceType = CertificateSource.Base64Encoded,
-        Base64EncodedValue = Certificate
-        //SourceType = CertificateSource.KeyVault,
-        //KeyVaultUrl = cert.KeyVaultUrl,
-        //KeyVaultCertificateName = cert.KeyVaultCertificateName
-    });
+    //public IEnumerable<CertificateDescription>? ClientCertificates => KeyVaultCertificateReferences?.Select(cert => new CertificateDescription
+    //{
+    //    //SourceType = CertificateSource.Base64Encoded,
+    //    //Base64EncodedValue = Certificate
+    //    SourceType = CertificateSource.KeyVault,
+    //    KeyVaultUrl = cert.KeyVaultUrl,
+    //    KeyVaultCertificateName = cert.KeyVaultCertificateName
+    //});
 }
     
 
-public record KeyVaultCertificate : IKeyInfo
+public record KeyVaultCertificate : IKeyVaultInfo
 {
     public string? SourceType { get; init; }
     public string? KeyVaultUrl { get; init; }
