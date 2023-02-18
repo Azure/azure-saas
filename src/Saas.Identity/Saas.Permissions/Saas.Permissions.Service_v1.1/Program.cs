@@ -6,12 +6,12 @@ using Saas.Permissions.Service.Services;
 using Saas.Swagger;
 using Saas.Permissions.Service.Middleware;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-using Polly;
 using System.Reflection;
 using Saas.Identity.Extensions;
 using Saas.Shared.Interface;
 using Saas.Identity.Helper;
 using Saas.Identity.Interface;
+using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -84,22 +84,6 @@ builder.Services
     .AddTransientHttpErrorPolicy(builder =>
         builder.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))));
 
-// Custom auth provider for obtaining an access token for the Permission API to make requests to MS Graph.
-// Made singleton to cache access token.
-//builder.Services.AddSingleton<Microsoft.Graph.IAuthenticationProvider, KeyVaultSigningCredentialsAuthProvider>();
-
-// These two are used fetch the public key data we need for signing a client assertion
-// Both are made singletons to ensure that data is cached after first request.
-//builder.Services.AddSingleton<IPublicX509CertificateDetailProvider, PublicX509CertificateDetailProvider>();
-//builder.Services.AddSingleton<IClientAssertionSigningProvider, ClientAssertionSigningProvider>();
-
-// Create a httpClient using HttpClientFactory for MS Graph requests, which provides the ability to use Polly
-// For more see: https://learn.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
-// and see: https://learn.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/implement-http-call-retries-exponential-backoff-polly
-//builder.Services.AddHttpClient<IGraphApiClientFactory, GraphApiClientFactory>()
-//    .AddTransientHttpErrorPolicy(builder => 
-//        builder.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))));
-
 // Adding the service used when accessing MS Graph.
 builder.Services.AddScoped<IGraphAPIService, GraphAPIService>();
 
@@ -107,7 +91,7 @@ builder.Services.AddScoped<IGraphAPIService, GraphAPIService>();
 builder.Services.AddScoped<IPermissionsService, PermissionsService>();
 
 builder.Logging.ClearProviders();
-// Register Identity service used to access Key Vault in a local development and in a production environment
+
 if (builder.Environment.IsDevelopment())
 {
     builder.Logging.AddConsole();

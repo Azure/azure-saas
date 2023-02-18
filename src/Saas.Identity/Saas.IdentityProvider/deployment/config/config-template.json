@@ -135,6 +135,7 @@
       "objectId": null,
       "scopes": null,
       "publicKeyPath": null,
+      "secretPath": null,
       "certificateKeyName": null,
       "permissions": [
         {
@@ -169,6 +170,7 @@
       "objectId": null,
       "scopes": null,
       "publicKeyPath": null,
+      "secretPath": null,
       "certificateKeyName": null,
       "permissions": [
         {

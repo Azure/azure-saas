@@ -67,6 +67,7 @@ for app in "${app_reg_array[@]}"; do
     app_name=$(jq --raw-output '.name' <<<"${app}")
     app_id=$(jq --raw-output '.appId' <<<"${app}")
     has_cert=$(jq --raw-output '.certificate' <<<"${app}")
+    has_secret=$(jq --raw-output '.hasSecret' <<<"${app}")
     redirect_uri=$(jq --raw-output '.redirectUri' <<<"${app}")
     redirect_type=$(jq --raw-output '.redirectType' <<<"${app}")
     logout_uri=$(jq --raw-output '.logoutUri' <<<"${app}")
@@ -242,6 +243,32 @@ for app in "${app_reg_array[@]}"; do
             exit 1
 
         echo "Certificate added for: ${app_name}" |
+            log-output \
+                --level success
+    fi
+
+    # add secret to app registration if cert is true
+    if [[ "${has_secret}" == true || "${has_secret}" == "true" ]]; then
+        echo "Adding secret for: ${app_name}..." |
+            log-output --level info
+
+        secret_path=$USER/$ASDK_CURRENT_USER/.secret/$app_name.secret
+
+        az ad app credential reset \
+            --id "${obj_id}" \
+            --display-name "${app_name}" \
+            --end-date 9999-12-31 \
+            --query password \
+            --output tsv >"${secret_path}" ||
+            echo "Failed to add secret to app $app_name, ${app_id}" |
+            log-output \
+                --level error \
+                --header "Critical error" ||
+            exit 1
+
+        put-secret-path "${app_name}" "${secret_path}"
+
+        echo "Secret added for: ${app_name}" |
             log-output \
                 --level success
     fi

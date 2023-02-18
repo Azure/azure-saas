@@ -12,7 +12,6 @@ param environment string
 @description('The ip address of the dev machine')
 param devMachineIp string
 
-
 @description('postfix')
 param solutionPostfix string
 
@@ -44,6 +43,9 @@ var userAssignedIdentityName = 'user-assign-id-${solutionPrefix}-${solutionName}
 var applicationInsightsName = 'appi-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var logAnalyticsWorkspaceName = 'log-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var automationAccountName = 'aa-${solutionPrefix}-${solutionName}-${solutionPostfix}'
+
+var signupAdminAppName = 'signupadmin-app'
+var saasAppName = 'saas-app'
 
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: userAssignedIdentityName
@@ -92,7 +94,7 @@ module keyVaultAccessPolicyModule 'Module/keyVaultAccessRBAC.bicep' = {
   ]
 }
 
-// Create object w/ array of objects containing the kayname and value to be stored in Azure App Configuration store.
+// Create object w/ array of objects containing the keyname and value to be stored in Azure App Configuration store.
 var permissionsApiKeyName = 'PermissionsApi'
 module restApiKeyModule './Module/linkToExistingKeyVaultSecret.bicep' = {
   name: 'PermissionApiKeyDeployment'
@@ -103,6 +105,44 @@ module restApiKeyModule './Module/linkToExistingKeyVaultSecret.bicep' = {
     userAssignedIdentityName: userAssignedIdentity.name
     keyVaultKeyName: permissionApiKey
     keyName: '${permissionsApiKeyName}:ApiKey'
+  }
+  dependsOn: [
+    keyVaultAccessPolicyModule
+    keyVault
+    appConfigurationModule
+  ]
+}
+
+var azureAdB2cKeyName = 'AzureB2C'
+var signupAdminKeyName = 'SignupAdmin'
+module signupAdminModule './Module/linkToExistingKeyVaultSecret.bicep' = {
+  name: 'SignupAdminSecretDeployment'
+  params: {
+    label: version
+    keyVaultName: keyVault.name
+    appConfigurationName: appConfigurationName
+    userAssignedIdentityName: userAssignedIdentity.name
+    keyVaultKeyName: signupAdminAppName
+    keyName: '${signupAdminKeyName}:${azureAdB2cKeyName}:ClientSecret'
+  }
+  dependsOn: [
+    keyVaultAccessPolicyModule
+    keyVault
+    appConfigurationModule
+  ]
+}
+
+var saasAppKeyName = 'SaasApp'
+
+module saasAppModule './Module/linkToExistingKeyVaultSecret.bicep' = {
+  name: 'SaasAppSecretDeployment'
+  params: {
+    label: version
+    keyVaultName: keyVault.name
+    appConfigurationName: appConfigurationName
+    userAssignedIdentityName: userAssignedIdentity.name
+    keyVaultKeyName: saasAppName
+    keyName: '${saasAppKeyName}:${azureAdB2cKeyName}:ClientSecret'
   }
   dependsOn: [
     keyVaultAccessPolicyModule
@@ -130,7 +170,6 @@ module appPlanModule './Module/appPlan.bicep' = {
     appConfigurationModule
     keyVaultAccessPolicyModule
     keyVault
-    restApiKeyModule
   ]
 }
 
@@ -151,7 +190,6 @@ module configurationEntriesModule './Module/addConfigEntries.bicep' = {
     appConfigurationModule
     keyVaultAccessPolicyModule
     keyVault
-    restApiKeyModule
     appPlanModule
   ]
 }
