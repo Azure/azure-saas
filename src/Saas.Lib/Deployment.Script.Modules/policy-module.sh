@@ -108,13 +108,19 @@ function create-policy-key-set() {
     echo "Waiting 10 seconds for key-set to settle..." | echo-color --level info
     sleep 10
 
-    generate_uri="https://graph.microsoft.com/beta/trustFramework/keySets/B2C_1A_${name}/generateKey"
+    local generate_uri
 
-    policy_key_generate_body="$(create-policy-key-body "${name}" "${key_type}" "${key_use}" "${options}" "${secret}")"
+    if [[ "${options}" == "Generate" ]]; then
+        generate_uri="https://graph.microsoft.com/beta/trustFramework/keySets/B2C_1A_${name}/generateKey"
+    elif [[ "${options}" == "Manual" ]]; then
+        generate_uri="https://graph.microsoft.com/beta/trustFramework/keySets/B2C_1A_${name}/uploadSecret"
+    fi
 
-    echo "Generating policy key for '${name}'." |
+    echo "Generating policy key for '${name}' with option '${options}'." |
         log-output \
             --level info
+
+    policy_key_generate_body="$(create-policy-key-body "${name}" "${key_type}" "${key_use}" "${options}" "${secret}")"
 
     post-rest-request "${generate_uri}" "${policy_key_generate_body}" "POST"
 }
@@ -140,12 +146,25 @@ function post-rest-request() {
 
 function upload-custom-policy() {
     local id="$1"
-    local policy_xml_file="$2"
+    local policy_xml_path="$2"
 
     uri="https://graph.microsoft.com/beta/trustFramework/policies/${id}/\$value"
     headers="Content-Type=application/xml"
 
-    body="$(cat "${policy_xml_file}")"
+    # removing the BOM from the file or az rest will choke on it.
+    # https://en.wikipedia.org/wiki/Byte_order_mark
+    # sed -i '1s/^\xEF\xBB\xBF//' "${policy_xml_file}"
+
+    target_dir="${HOME}/temp"
+    mkdir -p "${target_dir}"
+    target_file="${target_dir}/${policy_xml_path##*/}"
+
+    dos2unix \
+        --quiet \
+        --remove-bom \
+        --newfile "${policy_xml_path}" "${target_file}"
+
+    body="$(cat "${target_file}")"
 
     az rest \
         --method PUT \
@@ -153,7 +172,7 @@ function upload-custom-policy() {
         --headers "${headers}" \
         --body "${body}" \
         --only-show-errors 1>/dev/null ||
-        echo "Failed to upload policy file: ${policy_xml_file} " |
+        echo "Failed to upload policy file: ${policy_xml_path} " |
         log-output \
             --level error \
             --header "Critical Error"

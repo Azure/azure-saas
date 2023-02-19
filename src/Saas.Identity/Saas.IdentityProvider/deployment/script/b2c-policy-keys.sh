@@ -14,6 +14,7 @@ set -u -e -o pipefail
 
 b2c_tenant_id="$(get-value ".deployment.azureb2c.tenantId")"
 service_principal_username="$(get-value ".deployment.azureb2c.servicePrincipal.username")"
+set-user-context "${service_principal_username}"
 
 credentials_path="$(get-user-value "${service_principal_username}" "credentialsPath")"
 app_id="$(get-value ".deployment.azureb2c.servicePrincipal.appId")"
@@ -74,13 +75,6 @@ for policy_key in "${policy_key_array[@]}"; do
                     --header "Critical Error" ||
                 exit 1
 
-            # echo "Waiting 10 seconds for key-set to settle..." | echo-color --level info
-            # sleep 10
-
-            # id="$(jq --raw-output '.id' <<<"${policy_key_body}")"
-
-            # generate-policy-key "${id}" "${policy_key_body}"
-
         elif [[ "${options}" == "Manual" ]]; then
             echo "Adding manual policy key" | log-output --level info
 
@@ -101,17 +95,6 @@ for policy_key in "${policy_key_array[@]}"; do
                         --level error \
                         --header "Critical Error" ||
                     exit 1
-
-                # policy_key_body="$(create-policy-key-body "${name}" "${key_type}" "${key_use}" "${options}" "${secret}")"
-
-                # create-policy-key-set "${policy_key_body}"
-
-                # id="$(jq --raw-output '.id' <<<"${policy_key_body}")"
-
-                # echo "Waiting 10 seconds for key-set to settle..." | echo-color --level info
-                # sleep 10
-
-                # upload-policy-secret "${id}" "${policy_key_body}"
             fi
         fi
 
@@ -121,3 +104,6 @@ for policy_key in "${policy_key_array[@]}"; do
         echo "Policy key ${name} already exist." | log-output --level info
     fi
 done
+
+# resetting user context to the default User
+reset-user-context

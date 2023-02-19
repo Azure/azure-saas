@@ -11,7 +11,7 @@ do
 done
 
 repo_base="$( git rev-parse --show-toplevel )"
-docker_file_folder="${repo_base}/src/Saas.lib/Deployment.Container"
+docker_file_folder="${repo_base}/src/Saas.Lib/Deployment.Container"
 
 
 # redirect to build.sh in the Deployment.Container folder

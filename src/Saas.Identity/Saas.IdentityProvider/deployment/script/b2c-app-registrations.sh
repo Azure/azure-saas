@@ -252,12 +252,16 @@ for app in "${app_reg_array[@]}"; do
         echo "Adding secret for: ${app_name}..." |
             log-output --level info
 
-        secret_path=$USER/$ASDK_CURRENT_USER/.secret/$app_name.secret
+        secret_dir=$HOME/$ASDK_CURRENT_USER/.secret
+        secret_path=$secret_dir/$app_name.secret
+
+        mkdir -p "${secret_dir}"
 
         az ad app credential reset \
             --id "${obj_id}" \
             --display-name "${app_name}" \
             --end-date 9999-12-31 \
+            --only-show-errors \
             --query password \
             --output tsv >"${secret_path}" ||
             echo "Failed to add secret to app $app_name, ${app_id}" |

@@ -33,16 +33,16 @@ environment="$(get-value ".environment")"
 dependency_sorted_array="$("${SCRIPT_DIR}/get-dependency-sorted-policies.py" \
     "${IDENTITY_EXPERIENCE_FRAMEWORK_POLICY_ENVIRONMENT_DIR}/${environment}")"
 
+# setting user context to the user that will be used to configure Azure B2C
+service_principal_username="$(get-value ".deployment.azureb2c.servicePrincipal.username")"
+set-user-context "${service_principal_username}"
+
 # iterate over each policy key in policy key array
 readarray -t policy_file_array < <(jq --compact-output '.[]' <<<"${dependency_sorted_array}")
 
 for policy in "${policy_file_array[@]}"; do
     id="$(jq --raw-output '.id' <<<"${policy}")"
     path="$(jq --raw-output '.path' <<<"${policy}")"
-
-    # removing the BOM from the file or az rest will choke on it.
-    # https://en.wikipedia.org/wiki/Byte_order_mark
-    sed -i '1s/^\xEF\xBB\xBF//' "${path}"
 
     echo "Uploading policy '${id}' from '${path}'" |
         log-output \

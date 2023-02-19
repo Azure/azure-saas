@@ -116,7 +116,7 @@ function init-key-vault-certificate-template() {
 
     # patching certificate policy to our liking, including making the certs none-exportable
     put-certificate-value '.keyProperties.exportable' "true"
-    put-certificate-value '.keyProperties.keySize' "4096"
+    put-certificate-value '.keyProperties.keySize' "2048"
     put-certificate-value '.x509CertificateProperties.subject' "CN=${b2c_name}"
 }
 
@@ -127,7 +127,7 @@ function create-certificate-in-vault() {
 
     # check if certificate doesn't not exist and create it if not
     if ! certificate-exist "${cert_name}"; then
-        echo "Creating a self-signing certificate called '${cert_name}' for '${cert_name}'..." | log-output
+        echo "Creating a self-signing certificate called '${cert_name}'..." | log-output
 
         az keyvault certificate create \
             --name "${cert_name}" \

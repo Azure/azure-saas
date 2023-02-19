@@ -22,7 +22,7 @@ repo_base="$(git rev-parse --show-toplevel)" ||
         exit 1
     }
 
-docker_file_folder="${repo_base}/src/Saas.lib/Deployment.Container"
+docker_file_folder="${repo_base}/src/Saas.Lib/Deployment.Container"
 
 # redirect to build.sh in the Deployment.Container folder
 sudo chmod +x "${docker_file_folder}/build.sh" ||

@@ -48,9 +48,10 @@ for app in "${app_reg_array[@]}"; do
         app_name=$(jq --raw-output '.name' <<<"${app}")
         secret_path=$(jq --raw-output '.secretPath' <<<"${app}")
 
-        secret=$(cat "${secret_path}")
+        if [[ -s "${secret_path}" ]]; then
 
-        if [[ -n "${secret}" ]]; then
+            secret=$(cat "${secret_path}")
+
             echo "Adding secret for ${app_name} to KeyVault" |
                 log-output \
                     --level info
@@ -76,14 +77,11 @@ for app in "${app_reg_array[@]}"; do
                     --header "Critical Error" ||
                 exit 1
         else
-            echo "Secret for ${app_name} is empty" |
+            echo "Secret for ${app_name} is empty. If the secret have already been defined then this is to be expected." |
                 log-output \
-                    --level error \
-                    --header "Critical Error" ||
-                exit 1
+                    --level info
         fi
     fi
-    echo
 done
 
 set-user-context "${b2c_config_usr_name}"
@@ -102,10 +100,6 @@ echo "Service principal update/creation completed." |
 # resetting user context to the default User
 reset-user-context
 
-# set the user context to the service principal to run shell script to configure the Azure B2C policy keys
-service_principal_username="$(get-value ".deployment.azureb2c.servicePrincipal.username")"
-set-user-context "${service_principal_username}"
-
 # run shell script for provisioning the Azure B2C policy keys
 "${SCRIPT_DIR}/b2c-policy-keys.sh" ||
     echo "B2C policy configuration script failed." |
@@ -118,5 +112,3 @@ echo "B2C policy configuration script has completed." |
     log-output \
         --level success
 
-# resetting user context to the default User
-reset-user-context
