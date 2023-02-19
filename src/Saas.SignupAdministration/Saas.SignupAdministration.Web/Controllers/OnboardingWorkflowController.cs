@@ -3,6 +3,7 @@
 namespace Saas.SignupAdministration.Web.Controllers;
 
 [Authorize()]
+// [AuthorizeForScopes(Scopes = new string[] { "tenant.read", "tenant.global.read", "tenant.write", "tenant.global.write", "tenant.delete", "tenant.global.delete" })]
 public class OnboardingWorkflowController : Controller
 {
     private readonly ILogger<OnboardingWorkflowController> _logger;

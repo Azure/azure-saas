@@ -1,4 +1,5 @@
-﻿using Saas.Shared.Options;
+﻿using Microsoft.Identity.Client;
+using Saas.Shared.Options;
 using System.Net.Http;
 using System.Threading;
 
@@ -29,7 +30,19 @@ public abstract class OAuthBaseClient
 
     private async Task<string> GetAccessToken()
     {
-        var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
-        return accessToken;
+        try
+        {
+            var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
+            return accessToken;
+        }
+        catch (MsalUiRequiredException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
     }
 }

@@ -5,6 +5,8 @@ using Saas.Application.Web;
 using System.Reflection;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Saas.Shared.Options;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Saas.SignupAdministration.Web.Utilities;
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
@@ -96,13 +98,21 @@ var scopes = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionNam
 
 // Azure AD B2C requires scope config with a fully qualified url along with an identifier. To make configuring it more manageable and less
 // error prone, we store the names of the scopes separately from the application id uri and combine them when neded.
-builder.Services.Configure<SaasAppScopeOptions>(saasAppScopeOptions => 
-    saasAppScopeOptions.Scopes = scopes.Select(scope => $"{applicationUri}/{scope}".Trim('/')).ToArray());
+var fullyQualifiedScopes = scopes.Select(scope => $"{applicationUri}/{scope}".Trim('/')).ToArray();
+
+// Registerer scopes to the Options collection
+builder.Services.Configure<SaasAppScopeOptions>(saasAppScopeOptions => saasAppScopeOptions.Scopes = fullyQualifiedScopes);
 
 // Adding user authentication configuration leveraging Azure AD B2C.
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, AzureB2CSignupAdminOptions.SectionName)
-    .EnableTokenAcquisitionToCallDownstreamApi()
-    .AddSessionTokenCaches();
+    .EnableTokenAcquisitionToCallDownstreamApi(fullyQualifiedScopes)
+    .AddInMemoryTokenCaches();
+
+// Managing the situation where the access token is not in cache.
+// For more details please see: https://github.com/AzureAD/microsoft-identity-web/issues/13
+builder.Services.Configure<CookieAuthenticationOptions>(
+    CookieAuthenticationDefaults.AuthenticationScheme,
+    options => options.Events = new RejectSessionCookieWhenAccountNotInCacheEvents(fullyQualifiedScopes));
 
 //builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApp(identityOptions =>
@@ -134,19 +144,21 @@ builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration,
 builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
     .ConfigureHttpClient((serviceProvider, client) =>
     {
+        using var scope = serviceProvider.CreateScope();
+        string adminApiBaseUrl;
+
         if (builder.Environment.IsDevelopment())
         {
-            client.BaseAddress = new Uri("https://localhost:7041");
+            adminApiBaseUrl = builder.Configuration.GetRequiredSection("adminApi:baseUrl").Value
+            ?? throw new NullReferenceException("Environment is running in development mode. Please specify the bvalue for 'adminApi:baseUrl' in appsettings.json."); ;
         }
         else
         {
-            using var scope = serviceProvider.CreateScope();
-
-            var adminServiceBaseUrl = scope.ServiceProvider.GetRequiredService<IOptions<AzureB2CAdminApiOptions>>().Value.BaseUrl
+            adminApiBaseUrl = scope.ServiceProvider.GetRequiredService<IOptions<AzureB2CAdminApiOptions>>().Value.BaseUrl
                 ?? throw new NullReferenceException($"{nameof(AdminServiceClient)} Url cannot be null");
-
-            client.BaseAddress = new Uri(adminServiceBaseUrl);
         }
+
+        client.BaseAddress = new Uri(adminApiBaseUrl);
     });
 
 builder.Services.AddSession(options =>
@@ -154,15 +166,9 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(10);
 });
 
-builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
-// Configuring appsettings section AzureAdB2C, into IOptions
-//builder.Services.AddOptions();
-
-//builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection(AzureB2CSignupAdminOptions.SectionName), options =>
-//{
-    
-//});
+builder.Services.AddControllersWithViews()
+    .AddMicrosoftIdentityUI();
 
 var app = builder.Build();
 

@@ -4,6 +4,7 @@ namespace Saas.SignupAdministration.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
 [Authorize]
+// [AuthorizeForScopes(Scopes = new string[] { "tenant.read", "tenant.global.read", "tenant.write", "tenant.global.write", "tenant.delete", "tenant.global.delete" })]
 public class TenantsController : Controller
 {
     private readonly IAdminServiceClient _adminServiceClient;
