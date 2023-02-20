@@ -226,6 +226,7 @@
       "certificate": false,
       "redirectUri": null,
       "redirectType": "web",
+      "setAccessTokenAcceptedVersionToOne": true,
       "appId": null,
       "objectId": null,
       "idTokens": true,
@@ -254,6 +255,7 @@
       "certificate": false,
       "redirectUri": "myapp://auth",
       "redirectType": "publicClient",
+      "setAccessTokenAcceptedVersionToOne": true,
       "appId": null,
       "objectId": null,
       "scopes": null,
@@ -292,6 +294,9 @@
     },
     "permissionApi": {
       "name": "PermissionApiDeployment"
+    },
+    "saasApp": {
+      "name": "SaaSApplicationDeployment"
     },
     "users": [],
     "azureCli": {

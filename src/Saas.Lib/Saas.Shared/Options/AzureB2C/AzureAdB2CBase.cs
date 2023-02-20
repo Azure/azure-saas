@@ -15,6 +15,7 @@ public record AzureAdB2CBase
     public string? LoginEndpoint { get; init; }
     public string? BaseUrl { get; init; }
     public string? Certificate { get; init; }
+    public string? ClientSecret { get; init; }
 
     public KeyVaultCertificate[]? KeyVaultCertificateReferences { get; init; }
 

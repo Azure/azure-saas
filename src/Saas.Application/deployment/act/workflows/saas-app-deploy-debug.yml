@@ -1,5 +1,5 @@
 ---
-name: ASDK Administration Service API - Deploy to Azure Web Services
+name: ASDK SaaS Application Web App - Deploy to Azure Web Services
 
 on:
   workflow_dispatch:
@@ -9,12 +9,12 @@ permissions:
   contents: read
 
 env:
-  APP_NAME: admin-api
-  AZURE_WEBAPP_NAME: admin-api-asdk-test-aiuq          # set this to your application's name
+  APP_NAME: saas-app
+  AZURE_WEBAPP_NAME: saas-app-asdk-test-aiuq       # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: 7.x.x
-  PROJECT_DIR: ./src/Saas.Admin/Saas.Admin.Service
-  PROJECT_PATH: ${{ env.PROJECT_DIR }}/Saas.Admin.Service.csproj
+  PROJECT_DIR: ./src/Saas.Application/Saas.Application.Web
+  PROJECT_PATH: ${{ env.PROJECT_DIR }}/Saas.Application.Web.csproj
   PUBLISH_PATH: ./publish
   OUTPUT_PATH: ${{ env.PUBLISH_PATH }}/${{ env.APP_NAME }}/package
   SYMBOLS_PATH: ${{ env.PUBLISH_PATH }}/symbols
@@ -25,9 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-##################################################################
-# this section is specifically changed for for local deployment. #
-##################################################################
+##################################################
+# this section is specific for local deployment. #
+##################################################
       # Azure login
       - uses: azure/login@v1
         with:
@@ -36,9 +36,9 @@ jobs:
       # checkout the _local_ repository
       - name: Checkout
         uses: actions/checkout@v3
-##################################################################
-# end of local deployment specific section.                      #
-##################################################################
+#################################################
+# end of local deployment specific section.     #
+#################################################
 
       # Setup .NET Core SDK
       - name: Setup .NET Core
@@ -76,7 +76,7 @@ jobs:
           cp -r ${{ env.OUTPUT_PATH }}/*.pdb ${{ env.SYMBOLS_PATH }}
       ######################
       # *** End ***        #
-      ######################   
+      ######################
 
       # Azure logout
       - name: logout

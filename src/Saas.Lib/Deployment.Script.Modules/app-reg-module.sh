@@ -427,6 +427,28 @@ END
     return
 }
 
+function set-access-token-accepted-version-to-one() {
+    local obj_id="$1"
+
+    body=$("create-access-token-accepted-version-to-one-body")
+    # Microsoft Graph API for applications
+    graph_url="https://graph.microsoft.com/v1.0/applications/${obj_id}"
+
+    # add permissions to app registration using Microsoft Graph API
+    az rest \
+        --method "PATCH" \
+        --uri "${graph_url}" \
+        --headers "Content-Type=application/json" \
+        --body "${body}" \
+        --only-show-errors |
+        log-output ||
+        echo "Failed to set access token accepted version to 'null'" |
+        log-output \
+            --level error \
+            --header "Critical error"
+    return
+}
+
 function add-signout-url() {
     local obj_id="$1"
     local signout_url="$2"
@@ -463,5 +485,20 @@ function create-signout-body() {
 END
     )"
     echo "${signout_body}"
+    return
+}
+
+function create-access-token-accepted-version-to-one-body() {
+
+    access_token_accepted_version_body="$(
+        cat <<-END
+{
+    "api": {
+        "requestedAccessTokenVersion": 1
+    }
+}
+END
+    )"
+    echo "${access_token_accepted_version_body}"
     return
 }

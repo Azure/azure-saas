@@ -1,40 +1,89 @@
 ﻿using Azure.Identity;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web.UI;
-using Microsoft.IdentityModel.Logging;
 using Saas.Application.Web;
 using Saas.Application.Web.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.HttpOverrides;
+using System.Reflection;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Saas.Shared.Options;
+using Saas.Identity.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddApplicationInsightsTelemetry();
 
-if (builder.Environment.IsProduction())
+string projectName = Assembly.GetCallingAssembly().GetName().Name
+    ?? throw new NullReferenceException("Project name cannot be null.");
+
+var version = builder.Configuration.GetRequiredSection("Version")?.Value
+        ?? throw new NullReferenceException("The Version value cannot be found. Has the 'Version' environment variable been set correctly for the Web App?");
+
+var logger = LoggerFactory.Create(config => config.AddConsole()).CreateLogger(projectName);
+
+logger.LogInformation("Debug edition: 001");
+logger.LogInformation("Version: {version}", version);
+
+/*  IMPORTANT
+    In the configuration pattern used here, we're seeking to minimize the use of appsettings.json, 
+    as well as eliminate the need for storing local secrets. 
+
+    Instead we're utilizing the Azure App Configuration service for storing settings and the Azure Key Vault to store secrets.
+    Azure App Configuration still hold references to the secret, but not the secret themselves.
+
+    This approach is more secure and allows us to have a single source of truth 
+    for all settings and secrets. 
+
+    The settings and secrets are provisioned by the deployment script made available for deploying this service.
+    Please see the readme for the project for details.
+
+    For local development, please see the ASDK Permission Service readme.md for more 
+    on how to set up and run this service in a local development environment - i.e., a local dev machine. 
+*/
+
+if (builder.Environment.IsDevelopment())
 {
-    // Get Secrets From Azure Key Vault if in production. If not in production, secrets are automatically loaded in from the .NET secrets manager
-    // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0
-
-    // We don't want to fetch all the secrets for the other microservices in the app/solution, so we only fetch the ones with the prefix of "signupadmin-".
-    // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix
-
-    builder.Configuration.AddAzureKeyVault(
-        new Uri(builder.Configuration[SR.KeyVaultProperty]),
-        new DefaultAzureCredential(),
-        // TODO (SaaS): Update secret manager key to one specific to the application
-        new CustomPrefixKeyVaultSecretManager("saasapplication"));
+    InitializeDevEnvironment();
+}
+else
+{
+    InitializeProdEnvironment();
 }
 
+builder.Services.Configure<AzureB2CSaasAppOptions>(
+        builder.Configuration.GetRequiredSection(AzureB2CSaasAppOptions.SectionName));
+
 builder.Services.AddRazorPages();
-// Load the app settings
-builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(SR.AppSettingsProperty));
 
 builder.Services.AddMvc();
 // Add this to allow for context to be shared outside of requests
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+// Get Application Id Uri for Admin Api.
+var applicationIdUri = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionName)
+    .Get<AdminApiOptions>()?.ApplicationIdUri
+        ?? throw new NullReferenceException($"ApplicationIdUri cannot be null");
+
+// Get scope names some Admin Api
+var scopes = new[] { "tenant.read" };
+//var scopes = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionName)
+//    .Get<AdminApiOptions>()?.Scopes
+//        ?? throw new NullReferenceException("Scopes cannot be null");
+
+// 
+builder.Services.AddSaasWebAppAuthentication(applicationIdUri, scopes, builder.Configuration)
+    .SaaSAppToCallDownstreamApiWithHttpClient<IAdminServiceClient, AdminServiceClient>((_, httpClient) =>
+    {
+        string adminApiBaseUrl = builder.Environment.IsDevelopment()
+            ? builder.Configuration.GetRequiredSection("adminApi:baseUrl").Value
+                ?? throw new NullReferenceException("Environment is running in development mode. Please specify the value for 'adminApi:baseUrl' in appsettings.json.")
+            : builder.Configuration.GetRequiredSection(AzureB2CAdminApiOptions.SectionName)?.Get<AzureB2CAdminApiOptions>()?.BaseUrl
+                ?? throw new NullReferenceException($"{nameof(AzureB2CAdminApiOptions)} Url cannot be null");
+
+        httpClient.BaseAddress = new Uri(adminApiBaseUrl);
+    });
+
+
 // Required for the JsonPersistenceProvider
 // Should be replaced based on the persistence scheme
-builder.Services.AddDistributedMemoryCache();
+builder.Services.AddMemoryCache();
 
 // TODO (SaaS): Replace with your implementation of persistence provider
 // Session persistence is the default
@@ -46,48 +95,17 @@ builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
-builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
-    .ConfigureHttpClient(client =>
-   client.BaseAddress = new Uri(builder.Configuration[SR.AdminServiceBaseUrl]));
 
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(10);
 });
 
-builder.Services.AddApplicationInsightsTelemetry(builder.Configuration[SR.AppInsightsConnectionProperty]);
+builder.Services.AddControllersWithViews()
+    .AddMicrosoftIdentityUI();
 
-// builder.Configuration to sign-in users with Azure AD B2C
 
-// Azure AD B2C requires scope config with a fully qualified url along with an identifier. To make configuring it more manageable and less
-// error prone, we store the names of the scopes separately from the base url with identifier and combine them here.
-var adminServiceScopes = builder.Configuration[SR.AdminServiceScopesProperty].Split(" ");
-var adminServiceScopeBaseUrl = builder.Configuration[SR.AdminServiceScopeBaseUrlProperty].Trim('/');
-for (var i = 0; i < adminServiceScopes.Length; i++)
-{
-    adminServiceScopes[i] = String.Format("{0}/{1}", adminServiceScopeBaseUrl, adminServiceScopes[i].Trim('/'));
-}
 
-// Set the newly-constructed form into memory for lookup when contacting Azure AD B2C later
-builder.Configuration[SR.AdminServiceScopesProperty] = string.Join(' ', adminServiceScopes);
-
-builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, Constants.AzureAdB2C)
-    .EnableTokenAcquisitionToCallDownstreamApi(adminServiceScopes)
-    .AddSessionTokenCaches();
-
-builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
-
-// This is required for auth to work correctly when running in a docker container because of SSL Termination
-// Remove this and the subsequent app.UseForwardedHeaders() line below if you choose to run the app without using containers
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
-    options.ForwardedProtoHeaderName = "X-Forwarded-Proto";
-});
-// Configuring appsettings section AzureAdB2C, into IOptions
-builder.Services.AddOptions();
-builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection(SR.AzureAdB2CProperty));
-// Add services to the container.
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -108,20 +126,73 @@ app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseForwardedHeaders();
+// app.UseForwardedHeaders();
 app.UseCookiePolicy(new CookiePolicyOptions
 {
     Secure = CookieSecurePolicy.Always
 });
 
-app.UseEndpoints(endpoints =>
-{
-    // default
-    endpoints.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
-
-    endpoints.MapRazorPages();
-});
+app.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
+app.MapRazorPages();
 
 AppHttpContext.Services = ((IApplicationBuilder)app).ApplicationServices;
 
 app.Run();
+
+/*---------------
+  local methods
+----------------*/
+
+void InitializeDevEnvironment()
+{
+    // IMPORTANT
+    // The current version.
+    // Must corresspond exactly to the version string of our deployment as specificed in the deployment config.json.
+
+    logger.LogInformation($"Is Development.");
+
+    // For local development, use the Secret Manager feature of .NET to store a connection string
+    // and likewise for storing a secret for the permission-api app. 
+    // https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows
+
+    var appConfigurationconnectionString = builder.Configuration.GetConnectionString("AppConfig")
+        ?? throw new NullReferenceException("App config missing.");
+
+    // Use the connection string to access Azure App Configuration to get access to app settings stored there.
+    // To gain access to Azure Key Vault use 'Azure Cli: az login' to log into Azure.
+    // This login on will also now provide valid access tokens to the local development environment.
+    // For more details and the option to chain and combine multiple credential options with `ChainedTokenCredential`
+    // please see: https://learn.microsoft.com/en-us/dotnet/api/overview/azure/identity-readme?view=azure-dotnet#define-a-custom-authentication-flow-with-chainedtokencredential
+
+    AzureCliCredential credential = new();
+
+    builder.Configuration.AddAzureAppConfiguration(options =>
+            options.Connect(appConfigurationconnectionString)
+                .ConfigureKeyVault(kv => kv.SetCredential(credential))
+            .Select(KeyFilter.Any, version)); // <-- Important: since we're using labels in our Azure App Configuration store
+
+    logger.LogInformation($"Initialization complete.");
+}
+
+void InitializeProdEnvironment()
+{
+    // For procution environment, we'll configured Managed Identities for managing access Azure App Services
+    // and Key Vault. The Azure App Services endpoint is stored in an environment variable for the web app.
+
+    logger.LogInformation($"Is Production.");
+
+    var appConfigurationEndpoint = builder.Configuration.GetRequiredSection("AppConfiguration:Endpoint")?.Value
+        ?? throw new NullReferenceException("The Azure App Configuration Endpoint cannot be found. Has the endpoint environment variable been set correctly for the Web App?");
+
+    // Get the ClientId of the UserAssignedIdentity
+    // If we don't set this ClientID in the ManagedIdentityCredential constructor, it doesn't know it should use the user assigned managed id.
+    var managedIdentityClientId = builder.Configuration.GetRequiredSection("UserAssignedManagedIdentityClientId")?.Value
+        ?? throw new NullReferenceException("The Environment Variable 'UserAssignedManagedIdentityClientId' cannot be null. Check the App Service Configuration.");
+
+    ManagedIdentityCredential userAssignedManagedCredentials = new(managedIdentityClientId);
+
+    builder.Configuration.AddAzureAppConfiguration(options =>
+        options.Connect(new Uri(appConfigurationEndpoint), userAssignedManagedCredentials)
+            .ConfigureKeyVault(kv => kv.SetCredential(userAssignedManagedCredentials))
+        .Select(KeyFilter.Any, version)); // <-- Important since we're using labels in our Azure App Configuration store
+}

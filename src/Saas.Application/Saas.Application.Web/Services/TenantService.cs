@@ -1,31 +1,30 @@
 ﻿using Saas.Application.Web.Interfaces;
 
-namespace Saas.Application.Web.Services
+namespace Saas.Application.Web.Services;
+
+public class TenantService : ITenantService
 {
-    public class TenantService : ITenantService
+    private readonly IAdminServiceClient _adminServiceClient;
+    public TenantService(IAdminServiceClient adminServiceClient)
     {
-        private HttpClient _client;
-        private IAdminServiceClient _adminServiceClient;
-        private IOptions<AppSettings> _appSettings;
-        public TenantService(HttpClient client, IAdminServiceClient adminServiceClient, IOptions<AppSettings> appSettings)
-        {
-            _client = client;
-            _adminServiceClient = adminServiceClient;
-            _appSettings = appSettings;
-        }
+        _adminServiceClient = adminServiceClient;
+    }
 
-        // TODO (SaaS): Define the necessary public tenant information necessary for non-member users
+    // TODO (SaaS): Define the necessary public tenant information necessary for non-member users
 
-        public async Task<TenantViewModel> GetTenantInfoByRouteAsync(string route)
-        {
-            TenantInfoDTO? tenant = null;
+    public async Task<TenantViewModel> GetTenantInfoByRouteAsync(string route)
+    {
+        TenantInfoDTO? tenant = null;
 
-            await _adminServiceClient.IsValidPathAsync(route);
+        await _adminServiceClient.IsValidPathAsync(route);
 
-            if (route != null)
-                tenant = await _adminServiceClient.TenantinfoAsync(route);
+        if (route is not null)
+            tenant = await _adminServiceClient.TenantinfoAsync(route);
 
-            return new TenantViewModel() { Id = tenant?.Id ?? Guid.Empty, Name = tenant?.Name ?? "Unknown" };
-        }
+        return new TenantViewModel() 
+        { 
+            Id = tenant?.Id ?? Guid.Empty, 
+            Name = tenant?.Name ?? "Unknown" 
+        };
     }
 }

@@ -79,6 +79,7 @@ for app in "${app_reg_array[@]}"; do
     permissions_length=$(jq '.permissions | length' <<<"${app}")
     scopes=$(jq --raw-output '.scopes' <<<"${app}")
     scopes_length=$(jq --raw-output '.scopes | length' <<<"${app}")
+    set_acess_token_accepted_version_to_one=$(jq --raw-output '.setAccessTokenAcceptedVersionToOne' <<<"${app}")
 
     display_name="${app_name}"
 
@@ -275,6 +276,21 @@ for app in "${app_reg_array[@]}"; do
         echo "Secret added for: ${app_name}" |
             log-output \
                 --level success
+    fi
+
+    if [[ "${set_acess_token_accepted_version_to_one}" == true ||
+        "${set_acess_token_accepted_version_to_one}" == "true" ]]; then
+
+        echo "Setting accessTokenAcceptedVersion to null for: ${app_name}..." |
+            log-output \
+                --level info
+
+        set-access-token-accepted-version-to-one "${obj_id}" ||
+            echo "Failed to set accessTokenAcceptedVersion to null for app $app_name, ${app_id}" |
+            log-output \
+                --level error \
+                --header "Critical error" ||
+            exit 1
     fi
 
     # add identifier uri when scopes are present

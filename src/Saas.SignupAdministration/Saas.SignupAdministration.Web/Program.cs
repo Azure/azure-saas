@@ -51,12 +51,6 @@ else
     InitializeProdEnvironment();
 }
 
-builder.Services.Configure<AdminApiOptions>(
-        builder.Configuration.GetRequiredSection(AdminApiOptions.SectionName));
-
-builder.Services.Configure<AzureB2CAdminApiOptions>(
-        builder.Configuration.GetRequiredSection(AzureB2CAdminApiOptions.SectionName));
-
 builder.Services.Configure<AzureB2CSignupAdminOptions>(
         builder.Configuration.GetRequiredSection(AzureB2CSignupAdminOptions.SectionName));
 
@@ -150,7 +144,7 @@ builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
         if (builder.Environment.IsDevelopment())
         {
             adminApiBaseUrl = builder.Configuration.GetRequiredSection("adminApi:baseUrl").Value
-            ?? throw new NullReferenceException("Environment is running in development mode. Please specify the bvalue for 'adminApi:baseUrl' in appsettings.json."); ;
+            ?? throw new NullReferenceException("Environment is running in development mode. Please specify the bvalue for 'adminApi:baseUrl' in appsettings.json.");
         }
         else
         {
@@ -166,9 +160,16 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(10);
 });
 
-
 builder.Services.AddControllersWithViews()
     .AddMicrosoftIdentityUI();
+
+// This is required for auth to work correctly when running in a docker container because of SSL Termination
+// Remove this and the subsequent app.UseForwardedHeaders() line below if you choose to run the app without using containers
+//builder.Services.Configure<ForwardedHeadersOptions>(options =>
+//{
+//    options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
+//    options.ForwardedProtoHeaderName = "X-Forwarded-Proto";
+//});
 
 var app = builder.Build();
 

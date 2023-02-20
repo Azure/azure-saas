@@ -8,8 +8,9 @@ using Saas.Shared.Interface;
 using Saas.Shared.Options;
 
 namespace Saas.Identity.Extensions;
-public static class SaasIdentityConfigurationBuilderExtensions
+public static partial class SaasIdentityConfigurationBuilderExtensions
 {
+
     public static SaasApiClientCredentialBuilder<TProvider, TOptions> AddSaasApiCertificateClientCredentials<TProvider, TOptions>(
         this IServiceCollection services, 
         IEnumerable<string>? scopes = default)

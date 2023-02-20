@@ -9,15 +9,15 @@ permissions:
   contents: read
 
 env:
-  AZURE_WEBAPP_NAME: 'admin-api-asdk-test-aiuq'       # set this to your application's name
+  AZURE_WEBAPP_NAME: 'saas-app-asdk-test-aiuq'       # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: 7.x.x
-  PROJECT_DIR: ./src/Saas.Admin/Saas.Admin.Service
-  PROJECT_PATH: ./src/Saas.Admin/Saas.Admin.Service/Saas.Admin.Service.csproj
-  OUTPUT_PATH: ./publish/admin-api
+  PROJECT_DIR: ./src/Saas.Application/Saas.Application.Web
+  PROJECT_PATH: ./src/Saas.Application/Saas.Application.Web/Saas.Application.Web.csproj
+  OUTPUT_PATH: ./publish/saas-app
   BUILD_CONFIGURATION: Release # setting the configuration manager build configuration value for our workflow.
 
-  APP_NAME: admin-api
+  APP_NAME: saas-app
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

@@ -1,35 +1,49 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.Identity.Web;
-using System.Net.Http;
-using System.Threading;
+﻿using Microsoft.Identity.Client;
+using Saas.Shared.Options;
 
 namespace Saas.Application.Web.Services;
 
 // Create base client for Nswag generated clients that gets an access token using the passed in ITokenAcquisition interface.
 public abstract class OAuthBaseClient
 {
-    public string BearerToken { get; private set; } = string.Empty;
     private readonly ITokenAcquisition _tokenAcquisition;
 
-    private readonly AppSettings _appSettings;
+    private readonly IEnumerable<string> _scopes;
 
-    public OAuthBaseClient(ITokenAcquisition tokenAcquisition, IOptions<AppSettings> appSettings)
+    public OAuthBaseClient(
+        ITokenAcquisition tokenAcquisition,
+        IOptions<SaasAppScopeOptions> scopes)
     {
-        _appSettings = appSettings.Value;
-        _tokenAcquisition = tokenAcquisition;
+        _tokenAcquisition = tokenAcquisition ?? throw new ArgumentNullException(nameof(tokenAcquisition));
+        _scopes = scopes.Value.Scopes ?? throw new ArgumentNullException($"Scopes must be defined.");
     }
 
-    protected async Task<HttpRequestMessage> CreateHttpRequestMessageAsync(CancellationToken cancellationToken)
+    protected async Task<HttpRequestMessage> CreateHttpRequestMessageAsync(CancellationToken ct)
     {
-        HttpRequestMessage msg = new HttpRequestMessage();
-        BearerToken = await GetAccessToken();
-        msg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", BearerToken);
+        HttpRequestMessage msg = new();
+        var bearerToken = await GetAccessToken(ct).ConfigureAwait(false);
+        msg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", bearerToken);
         return await Task.FromResult(msg);
     }
 
-    private async Task<string> GetAccessToken()
+    private async Task<string> GetAccessToken(CancellationToken ct)
     {
-        var accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_appSettings.AdminServiceScopes.Split(" ") ?? new string[0]); 
-        return accessToken;
+        try
+        {
+            var accessToken = await _tokenAcquisition
+                .GetAccessTokenForUserAsync(_scopes)
+                .ConfigureAwait(false);
+            
+            return accessToken;
+        }
+        catch (MsalUiRequiredException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
     }
 }

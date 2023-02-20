@@ -17,18 +17,6 @@ def get_b2c_value(
             }
         }
 
-def get_claimTransformer_value(
-    config: dict,
-    key: str,
-    keyName: str) -> 'dict[str, dict[str, str]]':
-
-    value = config['claimToRoleTransformer'][key]
-    return {
-            keyName: {
-                'value': value
-            }
-        }
-
 def get_deploy_b2c_value(
     config: dict,
     key: str,
@@ -94,10 +82,6 @@ def patch_paramenters_file(
 
     parameters['parameters'].update(get_app_value(config, app_name, 'appId', 'clientId'))
     parameters['parameters'].update(get_app_value(config, app_name, 'certificateKeyName', 'certificateKeyName'))
-
-    parameters['parameters'].update(get_claimTransformer_value(config, 'authenticationType', 'authenticationType'))
-    parameters['parameters'].update(get_claimTransformer_value(config, 'roleClaimType', 'roleClaimType'))
-    parameters['parameters'].update(get_claimTransformer_value(config, 'sourceClaimType', 'sourceClaimType'))
 
     with open(paramenter_file, 'w+') as f:
         f.write(json.dumps(parameters, indent=4))
