@@ -14,12 +14,11 @@ public class CustomRoleHandler : AuthorizationHandler<RolesAuthorizationRequirem
     public CustomRoleHandler(IRoleCustomizer customizer)
     {
         _customizer = customizer;
-
     }
 
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, RolesAuthorizationRequirement requirement)
     {
-        List<string> customRoles = _customizer.CustomizeRoles(requirement.AllowedRoles).ToList();
+        var customRoles = _customizer.CustomizeRoles(requirement.AllowedRoles);
 
         if (customRoles is not null)
         {

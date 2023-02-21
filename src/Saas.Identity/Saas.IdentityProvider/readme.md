@@ -4,23 +4,21 @@ This deployment script provisions and configures the Azure services defining the
 
 ## Before You begin
 
-Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this GitHub repository to you own GitHub account - i.e., make it your own.
+Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this GitHub repository to you own GitHub account to make it your own.
 
-> Tip: Sign up to GitHub for free here: [join](github.com/join).
+> Tip: Sign up to GitHub for free: [join](github.com/join).
 
-The purpose of the Azure SaaS Dev Kit is to boost your SaaS journey by providing a foundation and a solid start. It is however just a start and soon you will want to make your own changes and evolve the repo into something that is yours. By starting with forking the repository, you will be ready to [commit](https://github.com/git-guides/git-commit) and check in your own code to your own repository of the ASDK. You will also be able to leverage [GitHub Actions](https://github.com/features/actions) to deploy you're code and updates seamlessly.
+### Purpose
 
-## Why Using a Deployment Script?
+The purpose of the Azure SaaS Dev Kit is to boost your SaaS journey by providing a foundation and a solid start. It is however just a start and soon you will want to make your own changes and evolve the repo into something that is yours.
 
-*Question*: Can't I automate deployment using [ARM](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview) or even better [Bicep](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview?tabs=bicep)? 
+By starting by forking the repository, you will be ready to [commit](https://github.com/git-guides/git-commit) and check in your own code to your own repository of the ASDK from the very beginning. You will also be able to leverage [GitHub Actions](https://github.com/features/actions) to deploy you're code and updates to production seamlessly.
 
-*Answer*: Yes, and no. In fact Bicep is used when ever possible as part of the deployment script. Yet, the ASDK Identity Foundation relies on [Azure Active Directory B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/overview) as well as defining [Azure Active Directory App Registrations](https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added). At the time of writing those resources and their configurations cannot be automated by ARM and Bicep.
+For more details please read the [FAQ](./faq.md):
 
 ## Running the Deployment Script
 
 Running the deployment script requires utilizing a container and Docker. 
-
-Using a container will ensure that you have all the required dependencies in their correct configurations in a controlled environment. This will also minimize the chances that some other properties of your existing environment might with the script, or that the script inadvertently will interferes with your existing environment.
 
 ### Prerequisites 
 
@@ -51,9 +49,6 @@ No matter the operating system you're using, you will need these tools to be ins
 - [GitHub’s official command line tool (**gh**)](https://cli.github.com/). For more on installation see [here](https://github.com/cli/cli#installation).
   - Tip: Must be installed from inside WSL on Windows 10/11).
 
-- **Zip** which can be installed with the command: `sudo apt install zip` . 
-  - Tip: Must be installed from inside WSL on Windows 10/11).
-  - Tip: **zip** is already installed on MacOS per default.
 
 
 ### Begin
@@ -66,11 +61,11 @@ To begin, please open your GNU Linux terminal to the directory where you've [clo
 
 ![image-20230110094801956](assets/readme/image-20230110094801956.png)
 
-> Tip #1: If you are on a Windows 10/11 PC and need to access your cloned Git repository one of your local drives, from the WSL Terminal, you can find the drives in the *mnt* directory - e.g., like this `cd /mnt/d/<path on d-drive>`.
+> *Tip #1*: If you are on a Windows 10/11 PC and need to access your cloned Git repository one of your local drives, from the WSL Terminal, you can find the drives in the *`mnt`* directory - e.g., like this `cd /mnt/d/<path on d-drive>`.
 >
-> Tip #2: You can open the deployment project in Visual Code by typing `code .` in the terminal (Mac or Windows with WSL) from the directory.
+> *Tip #2*: You can open the deployment project in Visual Code by typing `code .` in the terminal (Mac or Windows with WSL) from the directory.
 >
-> Tip #3: It's advisable to not clone git repositories to folders that er managed with OneDrive, Dropbox or similar type file synchronization services.
+> *Tip #3*: It's advisable to not clone git repositories to folders that er managed with OneDrive, Dropbox or similar type file synchronization services.
 
 ### Building the deployment script container
 
@@ -85,7 +80,7 @@ This will take a few minutes to complete and you will only need to do it once. T
 
 > *Tip #1*: If you make changes to `Dockerfile`, defining the container, you can update the container by running `./build.sh`.
 >
-> Tip #2: If you want to force a rebuild of the container, please us `./build.sh -f`. This can be handy if there's a new version of az cli or GitHub cli that you want to update the container with. 
+> *Tip #2*: If you want to force a rebuild of the container, please us `./build.sh -f`. This can be handy if there's a new version of az cli or GitHub cli that you want to update the container with. 
 
 ### Running the deployment script using the container
 
@@ -98,12 +93,11 @@ chmod +x run.sh # only needed the first time to set execute permissions on run.s
 
 This will instantiate the container and mount the current root directory as a number of volumes (i.e., directories) that will become accessible from within the container. 
 
-> Tip: The benefits of mounting volumes are that any edits to `config.json`, as well as anything any of the shell scripts, will immediately becomes effective without having to re-build the container. All you need to do is tun `./run.sh` and any changes you've made will now be effective.
->
+> *Tip*: The benefits of mounting volumes are that any edits to `config.json`, as well as anything any of the shell scripts, will immediately becomes effective without having to re-build the container. All you need to do is tun `./run.sh` and any changes you've made will now be effective.
 
 ### Logging into az cli
 
-To ensure that you are correctly logged into your Azure tenant, please run this command and follow the instructions. 
+To ensure that you are correctly logged into your Azure tenant, please run this Az Cli command and follow the instructions. 
 
 ```bash
 az login --scope "https://graph.microsoft.com/.default"
@@ -113,9 +107,11 @@ az login --scope "https://graph.microsoft.com/.default"
 
 The first time you run the script, the script will automatically create a new instance of the file `config.json`, after which the script will exit immediately with a request for additional information to be added to the configuration manifest in `config.json`. 
 
-> Tip #1: You'll find the `config.json` file in the folder `.../src/Saas.Identity/Saas.IdentityProvider/deployment/config` 
+
+
+> *Tip #1*: You'll find the `config.json` file in the folder `.../src/Saas.Identity/Saas.IdentityProvider/deployment/config` 
 >
-> Tip #2: The `config.json` it's a copy of the existing file `config-template.json`, found in the same directory.
+> *Tip #2*: The `config.json` it's a copy of the existing file `config-template.json`, found in the same directory.
 
 Specifically, the `initConfig` section of `config.json`must be filled out manually (see more details on how below):
 
@@ -220,7 +216,7 @@ It shouldn't happen, but we all know that it does - thank you [Murphy](https://e
 
 ### Logs
 
-If the script fails you may use the logs to investigate the issue. The logs are found in the [log](./log) directory in the project root. Every time the script is run a new folder with the time/date of the event is created. Inside this folder the `config.json` manifest file is stored twice. Once as it looks in the beginning of the script run and once who it looks at the end. The `config.json` manifest is an important file, if you need to run the script again.
+If the script fails you may use the logs to investigate the issue. The logs are found in the [log](./deployment/log) directory in the project root. Every time the script is run a new folder with the time/date of the event is created. Inside this folder the `config.json` manifest file is stored twice. Once as it looks in the beginning of the script run and once who it looks at the end. The `config.json` manifest is an important file, if you need to run the script again.
 
 > Tip : The `config.json`and the logs are both excluded from the any git commit made on the project as defined in `.gitignore`. This is done for both practical reasons and security reasons. However, each time you run the script, both the logs and the configuration files are uploaded and stored in an Azure Storage Account in you Azure Resource Group.
 
@@ -240,7 +236,7 @@ With the Identity Foundation in place, it's time to kick the tires of the Azure 
 
 We suggest that you run the Permission API service locally first. This will give you an opportunity to attach a debugger to it to explore and learn more about what's going on. 
 
-So, please head over to the [SaaS Permissions Service ReadMe](../../Saas.Permissions/readme.md), for more details on running the Permissions Service API locally, as well as deploying it to Azure, when you are ready to do so.
+So, please head over to the [SaaS Permissions Service ReadMe](../Saas.Permissions/readme.md), for more details on running the Permissions Service API locally, as well as deploying it to Azure, when you are ready to do so.
 
 > Tip: The Permission Service is part of the repository that you *git cloned*, after you *git forked* it. You'll find it here: `.../src/Saas.Identity/Saas.Permissions`.
 

@@ -77,17 +77,6 @@ resource adminApi 'Microsoft.Web/sites@2021-03-01' = {
   }
 }
 
-// Resource - Admin Api - Deployment
-//////////////////////////////////////////////////
-// resource adminApiDeployment 'Microsoft.Web/sites/extensions@2021-03-01' = {
-//   parent: adminApi
-//   name: 'MSDeploy'
-//   properties: {
-//     packageUri: 'https://stsaasdev001.blob.${environment().suffixes.storage}/artifacts/saas-provider/Saas.Provider.Web.zip?sv=2020-04-08&st=2021-06-07T19%3A23%3A20Z&se=2022-06-08T19%3A23%3A00Z&sr=c&sp=rl&sig=kNf0qwTfaCJg02xYeUHlfmHOJvI1bGU1HftjUJ5hl5o%3D'
-//   }
-// }
 
-// Outputs
-//////////////////////////////////////////////////
 output adminApiHostName string = 'https://${adminApi.properties.defaultHostName}'
 output systemAssignedManagedIdentityPrincipalId string = adminApi.identity.principalId

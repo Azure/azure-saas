@@ -31,10 +31,15 @@ public abstract class OAuthBaseClient
         try
         {
             var accessToken = await _tokenAcquisition
-                .GetAccessTokenForUserAsync(_scopes)
-                .ConfigureAwait(false);
+                .GetAccessTokenForUserAsync(_scopes);
+                //.ConfigureAwait(false);
             
             return accessToken;
+        }
+        catch (MicrosoftIdentityWebChallengeUserException ex)
+           when (AccountDoesNotExitInTokenCache(ex))
+        {
+            throw;
         }
         catch (MsalUiRequiredException ex)
         {
@@ -46,4 +51,8 @@ public abstract class OAuthBaseClient
             throw;
         }
     }
+
+    private static bool AccountDoesNotExitInTokenCache(MicrosoftIdentityWebChallengeUserException ex)
+        => ex.InnerException is MsalUiRequiredException msalUiRequiredException
+                    && msalUiRequiredException.ErrorCode is "user_null";
 }

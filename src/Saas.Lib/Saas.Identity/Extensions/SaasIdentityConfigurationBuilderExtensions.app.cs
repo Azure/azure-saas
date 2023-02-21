@@ -28,6 +28,7 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
             .AddMicrosoftIdentityWebApp(options =>
             {
                 configuration.Bind(AzureB2CSaasAppOptions.SectionName, options);
+
             });
 
         // Managing the situation where the access token is not in cache.
@@ -36,7 +37,7 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
             CookieAuthenticationDefaults.AuthenticationScheme,
             options => options.Events = new RejectSessionCookieWhenAccountNotInCacheEvents(fullyQualifiedScopes));
 
-        return new SaasWebAppClientCredentialBuilder(services, authenticationBuilder, scopes);
+        return new SaasWebAppClientCredentialBuilder(services, authenticationBuilder, fullyQualifiedScopes);
     }
 
     public class SaasWebAppClientCredentialBuilder
@@ -60,7 +61,12 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
             where TClient : class, TIClient
         {
             _authenticationBuilder
-                .EnableTokenAcquisitionToCallDownstreamApi(_scopes)
+                .EnableTokenAcquisitionToCallDownstreamApi(
+                    options =>
+                    {
+                        
+                    },
+                    _scopes)
                 .AddInMemoryTokenCaches();
 
             return _services.AddHttpClient<TIClient, TClient>(action);
