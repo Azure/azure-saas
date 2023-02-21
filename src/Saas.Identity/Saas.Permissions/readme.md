@@ -16,14 +16,15 @@ Within this folder you will find two subfolders:
 
 The service depends on:
 
-- The **Identity Foundation** that was deployed a spart of the Identity Foundation and on the [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/use-the-api).
-- The [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/overview). 
+- The **Identity Foundation** that was provisioned in the [previous step](../Saas.IdentityProvider/readme.md).
 
 ## Provisioning the API
 
-To work with the SaaS Permissions API it must first be provisions to your Azure ASDK resource group. This is true even if you initially is planning to run the API in your local development environment. The provisioning ensure that configuration and settings to be correctly added to your Azure App Configuration store and readies the API for later deployment to Azure.
+To work with the SaaS Permissions API it must first be provisions to your Azure ASDK resource group. This is true even if you initially is planning to run the API in your local development environment. 
 
-Provisioning is easy:
+The provisioning step ensure that configuration and settings to be correctly added to your Azure App Configuration store and readies the API for later deployment to Azure.
+
+Provisioning is an easy two step process:
 
 1. Navigate to the sub folder `deployment`.
 
@@ -33,8 +34,6 @@ Provisioning is easy:
    ./setup.sh
    ./run.sh
    ```
-
-Now you're ready to move on.
 
 ## How to Run Locally
 
@@ -47,17 +46,14 @@ To run the API locally, you must have the following installed on your developer 
 - [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) (recommended) or [Visual Studio Code](https://code.visualstudio.com/download).
 - [.NET 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 - [ASP.NET Core 7.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-7.0)
-- [GitHub’s official command line tool (**gh**)](https://cli.github.com/). For more on installation see [here](https://github.com/cli/cli#installation).
 
 > *Tip*: .NET 7.0 and ASP.NET Core 7.0 can also be installed as part of the latest version Microsoft Visual Studio 2022.
-
-You will also need a deployed instance of the [Identity Framework](https://azure.github.io/azure-saas/quick-start/). For details visit the [Deploying the Identify Foundation Services readme](../Saas.Identity.Provider/readme.md).
 
 ###  Configuration, settings and secrets when running locally
 
 To manage settings securely and efficiently, settings are being stored in [Azure App Configuration](https://learn.microsoft.com/en-us/azure/azure-app-configuration/overview), while secrets and certificates are being stored in [Azure Key Vault](https://learn.microsoft.com/en-us/azure/key-vault/general/overview). Furthermore, secrets are represented with a reference (an URI) in Azure App Configuration pointing to the actual secret, which is kept safely and securely in Azure Key Vault. 
 
-All necessary settings, certificates and secrets needed for running the SaaS Permissions API, where automatically created and provisioned during the deployment of the Identity Framework. 
+All necessary settings, certificates and secrets needed for running the SaaS Permissions API, were automatically created and provisioned during the deployment of the Identity Framework and the provisioning of the API.
 
 ### Setting up the local development environment
 

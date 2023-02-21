@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+
 namespace Saas.Permissions.Service.Models;
 
 public record ClaimsRequest

@@ -3,6 +3,8 @@
 [Area("Admin")]
 [Controller]
 [Route("[area]/tenants/{tenantid}/users")]
+[Authorize]
+// [AuthorizeForScopes(Scopes = new string[] { "tenant.read", "tenant.global.read", "tenant.write", "tenant.global.write", "tenant.delete", "tenant.global.delete" })]
 public class UsersController : Controller
 {
     private readonly IAdminServiceClient _adminServiceClient;

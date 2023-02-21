@@ -61,7 +61,7 @@ var appConfigStore = {
   label: version
   entries: [
     {
-      key: '${permissionsApiKeyName}:${azureB2CKeyName}:ClientCertificates'
+      key: '${permissionsApiKeyName}:${azureB2CKeyName}:KeyVaultCertificateReferences'
       value: ' ${string(certificates)}' // notice the space before the string, this is a necessary hack. https://github.com/Azure/bicep/issues/6167
       isSecret: false
       contentType: 'application/json'

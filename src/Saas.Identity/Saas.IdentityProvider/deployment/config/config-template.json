@@ -75,6 +75,7 @@
       "appServiceName": null,
       "certificate": false,
       "redirectUri": null,
+      "redirectType": "web",
       "applicationIdUri": null,
       "permissions": [
         {
@@ -126,11 +127,15 @@
       "name": "signupadmin-app",
       "appServiceName": null,
       "certificate": true,
+      "hasSecret": true,
       "redirectUri": null,
+      "redirectType": "web",
+      "logoutUri": null,
       "appId": null,
       "objectId": null,
       "scopes": null,
       "publicKeyPath": null,
+      "secretPath": null,
       "certificateKeyName": null,
       "permissions": [
         {
@@ -158,11 +163,15 @@
       "name": "saas-app",
       "appServiceName": null,
       "certificate": true,
+      "hasSecret": true,
       "redirectUri": null,
+      "redirectType": "web",
+      "logoutUri": null,
       "appId": null,
       "objectId": null,
       "scopes": null,
       "publicKeyPath": null,
+      "secretPath": null,
       "certificateKeyName": null,
       "permissions": [
         {
@@ -191,6 +200,7 @@
       "domain": null,
       "certificate": true,
       "redirectUri": null,
+      "redirectType": "web",
       "permissionsApiUrl": null,
       "rolesApiUrl": null,
       "publicKeyPath": null,
@@ -215,6 +225,8 @@
       "name": "IdentityExperienceFramework",
       "certificate": false,
       "redirectUri": null,
+      "redirectType": "web",
+      "setAccessTokenAcceptedVersionToOne": true,
       "appId": null,
       "objectId": null,
       "idTokens": true,
@@ -242,6 +254,8 @@
       "name": "ProxyIdentityExperienceFramework",
       "certificate": false,
       "redirectUri": "myapp://auth",
+      "redirectType": "publicClient",
+      "setAccessTokenAcceptedVersionToOne": true,
       "appId": null,
       "objectId": null,
       "scopes": null,
@@ -280,6 +294,9 @@
     },
     "permissionApi": {
       "name": "PermissionApiDeployment"
+    },
+    "saasApp": {
+      "name": "SaaSApplicationDeployment"
     },
     "users": [],
     "azureCli": {

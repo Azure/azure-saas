@@ -20,6 +20,7 @@
 
 namespace Saas.Application.Web.Services
 {
+    using Saas.Shared.Options;
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -226,7 +227,10 @@ namespace Saas.Application.Web.Services
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<System.Text.Json.JsonSerializerOptions> _settings;
 
-        public AdminServiceClient(IOptions<AppSettings> configuration, ITokenAcquisition tokenAcquisition, System.Net.Http.HttpClient httpClient) : base(tokenAcquisition, configuration)
+        public AdminServiceClient(
+            System.Net.Http.HttpClient httpClient,
+            ITokenAcquisition tokenAcquisition,
+            IOptions<SaasAppScopeOptions> scopes) : base(tokenAcquisition, scopes)
         {
             _httpClient = httpClient;
             _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings);

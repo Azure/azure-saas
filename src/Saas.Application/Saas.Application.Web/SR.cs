@@ -13,16 +13,9 @@ public static class SR
     public const string CatalogApiKeyParameter = "@apiKey";
 
     // Startup Properties
-    public const string AppSettingsProperty = "AppSettings";
-    public const string AppInsightsConnectionProperty = "APPINSIGHTS_CONNECTIONSTRING";
     public const string ErrorRoute = "/Error";
     public const string MapControllerRoutePattern = "{action=Index}/{ id ?}";
     public const string DefaultName = "default";
-    public const string AdminServiceBaseUrl = "AppSettings:AdminServiceBaseUrl";
-    public const string AdminServiceScopesProperty = "AppSettings:AdminServiceScopes";
-    public const string AdminServiceScopeBaseUrlProperty = "AppSettings:AdminServiceScopeBaseUrl";
-    public const string AzureAdB2CProperty = "AzureAdB2C";
-    public const string KeyVaultProperty = "KeyVault:Url";
 
     // Claim Types
     public const string EmailAddressClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";

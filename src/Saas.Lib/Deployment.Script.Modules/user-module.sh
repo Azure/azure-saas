@@ -4,17 +4,17 @@
 # include script modules into current shell
 source "$SHARED_MODULE_DIR/util-module.sh"
 source "$SHARED_MODULE_DIR/log-module.sh"
-    
+
 # load the appropriate user module for the OS
-what_os="$( get-os )"
+what_os="$(get-os)"
 
 if [[ "${what_os}" == "linux" ]]; then
     source "${SHARED_MODULE_DIR}/linux-ubuntu/linux-user-module.sh"
 elif [[ "${what_os}" == "macos" ]]; then
     source "${SHARED_MODULE_DIR}/macos/macos-user-module.sh"
 else
-    echo "Unsupported OS: ${what_os}" \
-        | log-output \
+    echo "Unsupported OS: ${what_os}" |
+        log-output \
             --level error \
             --header "Critical Error"
     exit 1
@@ -24,7 +24,7 @@ function delete-user-context-data() {
     local user_name="$1"
 
     local context_dir
-    context_dir="$( get-user-context-dir "${user_name}" )"
+    context_dir="$(get-user-context-dir "${user_name}")"
 
     # check if the context directory is valid to protect against deleting the wrong directory
     if is-valid-context-dir "${context_dir}/data" "${user_name}"; then
@@ -46,14 +46,14 @@ function create-user-context() {
     put-user-context "${user_name}" "${user_context_dir}"
 
     if [[ -d "${azure_context_dir}" ]]; then
-        echo "Azure context directory already exist and will be used: ${azure_context_dir}" \
-            | log-output \
+        echo "Azure context directory already exist and will be used: ${azure_context_dir}" |
+            log-output \
                 --level warning
     else
-        mkdir -p "${azure_context_dir}" \
-            || echo "Failed to create az cli context directory ${azure_context_dir}" \
-                | log-output \
-                    --level warning
+        mkdir -p "${azure_context_dir}" ||
+            echo "Failed to create az cli context directory ${azure_context_dir}" |
+            log-output \
+                --level warning
     fi
 
     # when not running in container, set ownership of the context directory
@@ -61,14 +61,14 @@ function create-user-context() {
         sudo chown -R "${USER}" "${azure_context_dir}"
     fi
 
-    if [[ $ASDK_CACHE_AZ_CLI_SESSIONS == true ]]  && $user_session_cachable; then
+    if [[ $ASDK_CACHE_AZ_CLI_SESSIONS == true ]] && $user_session_cachable; then
         get-cached-session "${user_name}" "${azure_context_dir}"
     fi
 
     if [[ -n "${sub_path}" ]]; then
-        mkdir -p "${user_context_dir}/data/${sub_path}" \
-            || echo "Failed to create user sub directory ${user_context_dir}/data/${sub_path}" \
-                | log-output --level warning
+        mkdir -p "${user_context_dir}/data/${sub_path}" ||
+            echo "Failed to create user sub directory ${user_context_dir}/data/${sub_path}" |
+            log-output --level warning
 
         put-user-value "${user_name}" "${sub_path_name}" "${user_context_dir}/data/${sub_path}"
     fi
@@ -81,7 +81,7 @@ function set-user-context() {
 
     export ASDK_CURRENT_USER="${user_name}"
 
-    user_context_dir="$( get-user-context-dir "${user_name}" )"
+    user_context_dir="$(get-user-context-dir "${user_name}")"
     local azure_context_dir="${user_context_dir}/.azure"
 
     set-azure-cli-context "${azure_context_dir}"
@@ -118,7 +118,7 @@ function get-cached-session() {
         return
     fi
     set -u
-    
+
     # when running in container, get previously cached sessions
     if [ -f /.dockerenv ]; then
         if [ -d "/asdk/.cache/$user_name" ]; then
@@ -141,12 +141,11 @@ function get-host-session() {
     cp -f /asdk/.azure/azureProfile.json "${azure_context_dir}"
 }
 
-
 function initialize-az-cli() {
     local azure_context_dir="$1"
 
     # initialize az cli
-    az --version > /dev/null
+    az --version >/dev/null
 
-    get-host-session "$azure_context_dir"            
+    get-host-session "$azure_context_dir"
 }

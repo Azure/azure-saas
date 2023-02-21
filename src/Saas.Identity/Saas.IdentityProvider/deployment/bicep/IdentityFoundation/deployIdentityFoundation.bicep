@@ -12,7 +12,6 @@ param environment string
 @description('The ip address of the dev machine')
 param devMachineIp string
 
-
 @description('postfix')
 param solutionPostfix string
 
@@ -37,12 +36,16 @@ param location string = resourceGroup().location
 var appServicePlanOS = 'windows'
 var appServicePlanName = 'plan-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var appConfigurationName = 'appconfig-${solutionPrefix}-${solutionName}-${solutionPostfix}'
+var sqlServerName = 'sqldb-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var permissionsSqlDatabaseName = 'sqldb-permissions-${solutionPrefix}-${solutionName}-${solutionPostfix}'
-var permissionsSqlServerName = 'sql-permissions-${solutionPrefix}-${solutionName}-${solutionPostfix}'
+var tenantSqlDatabaseName = 'sqldb-tenant-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var userAssignedIdentityName = 'user-assign-id-${solutionPrefix}-${solutionName}-${solutionPostfix}' 
 var applicationInsightsName = 'appi-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var logAnalyticsWorkspaceName = 'log-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var automationAccountName = 'aa-${solutionPrefix}-${solutionName}-${solutionPostfix}'
+
+var signupAdminAppName = 'signupadmin-app'
+var saasAppName = 'saas-app'
 
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: userAssignedIdentityName
@@ -54,14 +57,15 @@ module secretGenerator './Module/createSecret.bicep' = {
     location: location
   }
 }
-module permissionsSqlModule './Module/permissionsSql.bicep' = {
+module sqlDbsModule './Module/sqlDbs.bicep' = {
   name: 'PermissionsSqlDeployment'
   params: {
     devMachineIp: devMachineIp
     location: location
     userAssignedIdentityName: userAssignedIdentity.name
+    sqlServerName: sqlServerName
     permissionsSqlDatabaseName: permissionsSqlDatabaseName
-    permissionsSqlServerName: permissionsSqlServerName
+    tenantSqlDatabaseName: tenantSqlDatabaseName
     sqlAdministratorLogin: sqlAdministratorLogin
     sqlAdministratorLoginPassword: secretGenerator.outputs.secret
   }
@@ -70,8 +74,6 @@ module permissionsSqlModule './Module/permissionsSql.bicep' = {
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: keyVaultName
 }
-
-
 
 module appConfigurationModule './Module/appConfigurationStore.bicep' = {
   name: 'AppConfigurationDeployment'
@@ -92,7 +94,7 @@ module keyVaultAccessPolicyModule 'Module/keyVaultAccessRBAC.bicep' = {
   ]
 }
 
-// Create object w/ array of objects containing the kayname and value to be stored in Azure App Configuration store.
+// Create object w/ array of objects containing the keyname and value to be stored in Azure App Configuration store.
 var permissionsApiKeyName = 'PermissionsApi'
 module restApiKeyModule './Module/linkToExistingKeyVaultSecret.bicep' = {
   name: 'PermissionApiKeyDeployment'
@@ -103,6 +105,44 @@ module restApiKeyModule './Module/linkToExistingKeyVaultSecret.bicep' = {
     userAssignedIdentityName: userAssignedIdentity.name
     keyVaultKeyName: permissionApiKey
     keyName: '${permissionsApiKeyName}:ApiKey'
+  }
+  dependsOn: [
+    keyVaultAccessPolicyModule
+    keyVault
+    appConfigurationModule
+  ]
+}
+
+var azureAdB2cKeyName = 'AzureB2C'
+var signupAdminKeyName = 'SignupAdmin'
+module signupAdminModule './Module/linkToExistingKeyVaultSecret.bicep' = {
+  name: 'SignupAdminSecretDeployment'
+  params: {
+    label: version
+    keyVaultName: keyVault.name
+    appConfigurationName: appConfigurationName
+    userAssignedIdentityName: userAssignedIdentity.name
+    keyVaultKeyName: signupAdminAppName
+    keyName: '${signupAdminKeyName}:${azureAdB2cKeyName}:ClientSecret'
+  }
+  dependsOn: [
+    keyVaultAccessPolicyModule
+    keyVault
+    appConfigurationModule
+  ]
+}
+
+var saasAppKeyName = 'SaasApp'
+
+module saasAppModule './Module/linkToExistingKeyVaultSecret.bicep' = {
+  name: 'SaasAppSecretDeployment'
+  params: {
+    label: version
+    keyVaultName: keyVault.name
+    appConfigurationName: appConfigurationName
+    userAssignedIdentityName: userAssignedIdentity.name
+    keyVaultKeyName: saasAppName
+    keyName: '${saasAppKeyName}:${azureAdB2cKeyName}:ClientSecret'
   }
   dependsOn: [
     keyVaultAccessPolicyModule
@@ -130,7 +170,6 @@ module appPlanModule './Module/appPlan.bicep' = {
     appConfigurationModule
     keyVaultAccessPolicyModule
     keyVault
-    restApiKeyModule
   ]
 }
 
@@ -142,15 +181,15 @@ module configurationEntriesModule './Module/addConfigEntries.bicep' = {
     sqlAdministratorLogin: sqlAdministratorLogin
     userAssignedIdentityName: userAssignedIdentity.name
     appConfigurationName: appConfigurationStore.name
+    sqlServerFQDN: sqlDbsModule.outputs.sqlServerFQDN
     permissionsSqlDatabaseName: permissionsSqlDatabaseName
-    permissionsSqlServerFQDN: permissionsSqlModule.outputs.permissionsSqlServerFQDN
+    tenantSqlDatabaseName: tenantSqlDatabaseName
     sqlAdministratorLoginPassword: secretGenerator.outputs.secret
   }
   dependsOn: [
     appConfigurationModule
     keyVaultAccessPolicyModule
     keyVault
-    restApiKeyModule
     appPlanModule
   ]
 }
@@ -162,10 +201,10 @@ output appConfigurationName string = appConfigurationName
 output keyVaultName string = keyVault.name
 output keyVaultUri string = keyVault.properties.vaultUri
 output appServicePlanName string = appPlanModule.outputs.appServicePlanName
-output permissionsSqlServerName string = permissionsSqlModule.outputs.permissionsSqlServerName
 output userAssignedIdentityName string = userAssignedIdentity.name
 output userAssignedIdentityId string = userAssignedIdentity.id
-output permissionsSqlServerFQDN string = permissionsSqlModule.outputs.permissionsSqlServerFQDN
+output sqlServerFQDN string = sqlDbsModule.outputs.sqlServerFQDN
+output SqlDbServerName string = sqlDbsModule.outputs.sqlServerName
 output applicationInsightsName string = applicationInsightsName
 output logAnalyticsWorkspaceName string = logAnalyticsWorkspaceName
 output automationAccountName string = automationAccountName

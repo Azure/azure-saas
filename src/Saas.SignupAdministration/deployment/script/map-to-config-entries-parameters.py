@@ -93,14 +93,13 @@ def patch_paramenters_file(
     parameters['parameters'].update(get_b2c_value(config, 'signUpSignInPolicyId', 'signUpSignInPolicyId'))
 
     parameters['parameters'].update(get_app_value(config, app_name, 'appId', 'clientId'))
-
     parameters['parameters'].update(get_app_value(config, app_name, 'certificateKeyName', 'certificateKeyName'))
 
     parameters['parameters'].update(get_claimTransformer_value(config, 'authenticationType', 'authenticationType'))
     parameters['parameters'].update(get_claimTransformer_value(config, 'roleClaimType', 'roleClaimType'))
     parameters['parameters'].update(get_claimTransformer_value(config, 'sourceClaimType', 'sourceClaimType'))
 
-    with open(paramenter_file, 'w') as f:
+    with open(paramenter_file, 'w+') as f:
         f.write(json.dumps(parameters, indent=4))
 
 # Main entry point for the script 

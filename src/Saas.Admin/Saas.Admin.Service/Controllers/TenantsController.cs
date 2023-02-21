@@ -375,7 +375,7 @@ public class TenantsController : ControllerBase
     [HttpGet("IsValidPath/{path}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
 
-    [Authorize(Policy = AppConstants.Policies.CreateTenant)]
+    [Authorize(Policy = AppConstants.Policies.TenantRead)]
     public async Task<ActionResult<bool>> IsValidPath(string path)
     {
         _logger.LogDebug("Validating Path {path}", path);

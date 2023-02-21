@@ -1,15 +1,12 @@
 using Azure.Identity;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web.UI;
 using Saas.SignupAdministration.Web;
-using Microsoft.AspNetCore.HttpOverrides;
 using Saas.Application.Web;
 using System.Reflection;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Saas.Shared.Options;
-using Microsoft.IdentityModel.Logging;
-using System.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Saas.SignupAdministration.Web.Utilities;
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
@@ -20,9 +17,13 @@ builder.Services.AddApplicationInsightsTelemetry();
 string projectName = Assembly.GetCallingAssembly().GetName().Name
     ?? throw new NullReferenceException("Project name cannot be null.");
 
+var version = builder.Configuration.GetRequiredSection("Version")?.Value
+        ?? throw new NullReferenceException("The Version value cannot be found. Has the 'Version' environment variable been set correctly for the Web App?");
+
 var logger = LoggerFactory.Create(config => config.AddConsole()).CreateLogger(projectName);
 
-logger.LogInformation("001");
+logger.LogInformation("Debug edition: 001");
+logger.LogInformation("Version: {version}", version);
 
 /*  IMPORTANT
     In the configuration pattern used here, we're seeking to minimize the use of appsettings.json, 
@@ -50,18 +51,8 @@ else
     InitializeProdEnvironment();
 }
 
-builder.Services.Configure<AdminApiOptions>(
-        builder.Configuration.GetRequiredSection(AdminApiOptions.SectionName));
-
-builder.Services.Configure<AzureB2CAdminApiOptions>(
-        builder.Configuration.GetRequiredSection(AzureB2CAdminApiOptions.SectionName));
-
 builder.Services.Configure<AzureB2CSignupAdminOptions>(
         builder.Configuration.GetRequiredSection(AzureB2CSignupAdminOptions.SectionName));
-
-// Load the app settings
-builder.Services.Configure<AppSettings>(
-    builder.Configuration.GetSection(SR.AppSettingsProperty));
 
 // Load the email settings 
 builder.Services.Configure<EmailOptions>(
@@ -101,18 +92,67 @@ var scopes = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionNam
 
 // Azure AD B2C requires scope config with a fully qualified url along with an identifier. To make configuring it more manageable and less
 // error prone, we store the names of the scopes separately from the application id uri and combine them when neded.
+var fullyQualifiedScopes = scopes.Select(scope => $"{applicationUri}/{scope}".Trim('/')).ToArray();
+
+// Registerer scopes to the Options collection
+builder.Services.Configure<SaasAppScopeOptions>(saasAppScopeOptions => saasAppScopeOptions.Scopes = fullyQualifiedScopes);
+
+// Adding user authentication configuration leveraging Azure AD B2C.
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, AzureB2CSignupAdminOptions.SectionName)
-    .EnableTokenAcquisitionToCallDownstreamApi(scopes.Select(scope => $"{applicationUri}/{scope}".Trim('/')))
-    .AddSessionTokenCaches();
+    .EnableTokenAcquisitionToCallDownstreamApi(fullyQualifiedScopes)
+    .AddInMemoryTokenCaches();
+
+// Managing the situation where the access token is not in cache.
+// For more details please see: https://github.com/AzureAD/microsoft-identity-web/issues/13
+builder.Services.Configure<CookieAuthenticationOptions>(
+    CookieAuthenticationDefaults.AuthenticationScheme,
+    options => options.Events = new RejectSessionCookieWhenAccountNotInCacheEvents(fullyQualifiedScopes));
+
+//builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+//    .AddMicrosoftIdentityWebApp(identityOptions =>
+//    {
+//        builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, identityOptions);
+
+//        //identityOptions.ClientCertificates = builder.Configuration.GetRequiredSection(AzureB2CSignupAdminOptions.SectionName)
+//        //    .Get<AzureB2CSignupAdminOptions>().ClientCertificates;
+
+//        identityOptions.Events.OnTokenValidated = async ctx =>
+//        {
+
+//        };
+
+//        identityOptions.Events.OnAuthenticationFailed = async ctx =>
+//        {
+
+//        };
+
+//    })
+//    .EnableTokenAcquisitionToCallDownstreamApi(confidentialClientAppOptions =>
+//    {
+
+//    },
+//    scopes)
+//    .AddSessionTokenCaches();
+
 
 builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
     .ConfigureHttpClient((serviceProvider, client) =>
     {
         using var scope = serviceProvider.CreateScope();
-        var adminServiceBaseUrl = scope.ServiceProvider.GetRequiredService<IOptions<AzureB2CAdminApiOptions>>().Value.BaseUrl
-            ?? throw new NullReferenceException("Permissions Base Url cannot be null");
+        string adminApiBaseUrl;
 
-        client.BaseAddress = new Uri(adminServiceBaseUrl);
+        if (builder.Environment.IsDevelopment())
+        {
+            adminApiBaseUrl = builder.Configuration.GetRequiredSection("adminApi:baseUrl").Value
+            ?? throw new NullReferenceException("Environment is running in development mode. Please specify the bvalue for 'adminApi:baseUrl' in appsettings.json.");
+        }
+        else
+        {
+            adminApiBaseUrl = scope.ServiceProvider.GetRequiredService<IOptions<AzureB2CAdminApiOptions>>().Value.BaseUrl
+                ?? throw new NullReferenceException($"{nameof(AdminServiceClient)} Url cannot be null");
+        }
+
+        client.BaseAddress = new Uri(adminApiBaseUrl);
     });
 
 builder.Services.AddSession(options =>
@@ -120,19 +160,8 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(10);
 });
 
-
-builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
-
-// Configuring appsettings section AzureAdB2C, into IOptions
-builder.Services.AddOptions();
-
-builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection(AzureB2CSignupAdminOptions.SectionName));
-
-
-//builder.Services.Configure<OpenIdConnectOptions>(options =>
-//{
-//    options.
-//});
+builder.Services.AddControllersWithViews()
+    .AddMicrosoftIdentityUI();
 
 // This is required for auth to work correctly when running in a docker container because of SSL Termination
 // Remove this and the subsequent app.UseForwardedHeaders() line below if you choose to run the app without using containers
@@ -190,9 +219,7 @@ void InitializeDevEnvironment()
     // IMPORTANT
     // The current version.
     // Must corresspond exactly to the version string of our deployment as specificed in the deployment config.json.
-    var version = "ver0.8.0";
-
-    logger.LogInformation("Version: {version}", version);
+    
     logger.LogInformation($"Is Development.");
 
     // For local development, use the Secret Manager feature of .NET to store a connection string
@@ -212,7 +239,7 @@ void InitializeDevEnvironment()
 
     builder.Configuration.AddAzureAppConfiguration(options =>
             options.Connect(appConfigurationconnectionString)
-                .ConfigureKeyVault(kv => kv.SetCredential(new ChainedTokenCredential(credential)))
+                .ConfigureKeyVault(kv => kv.SetCredential(credential))
             .Select(KeyFilter.Any, version)); // <-- Important: since we're using labels in our Azure App Configuration store
 
     logger.LogInformation($"Initialization complete.");
@@ -223,10 +250,6 @@ void InitializeProdEnvironment()
     // For procution environment, we'll configured Managed Identities for managing access Azure App Services
     // and Key Vault. The Azure App Services endpoint is stored in an environment variable for the web app.
 
-    var version = builder.Configuration.GetRequiredSection("Version")?.Value
-        ?? throw new NullReferenceException("The Version value cannot be found. Has the 'Version' environment variable been set correctly for the Web App?");
-
-    logger.LogInformation("Version: {version}", version);
     logger.LogInformation($"Is Production.");
 
     var appConfigurationEndpoint = builder.Configuration.GetRequiredSection("AppConfiguration:Endpoint")?.Value
