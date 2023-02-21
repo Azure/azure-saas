@@ -21,11 +21,12 @@ The service depends on:
 - The **Identity Foundation** that was deployed a spart of the Identity Foundation and on the [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/use-the-api).
 - The **[SaaS Permissions Services API](./../Saas.Identity/Saas.Permissions/readme.md)**.
 - The **[SaaS Administration Service API](./../Saas.Admin/readme.md)**.
-- The [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/overview). 
 
 ## Provisioning the  Web App
 
-To work with the SaaS Signup Administration Web app it must first be provisions to your Azure ASDK resource group. This is true even if you initially is planning to run the API in your local development environment. The provisioning ensure that configuration and settings to be correctly added to your Azure App Configuration store and readies the API for later deployment to Azure.
+To work with the SaaS Signup Administration Web app it must first be provisions to your Azure ASDK resource group. This is true even if you initially is planning to run the API in your local development environment. 
+
+The provisioning ensure that configuration and settings to be correctly added to your Azure App Configuration store and readies the API for later deployment to Azure.
 
 Provisioning is easy:
 
@@ -59,7 +60,7 @@ Guidelines for getting up and running with SaaS Signup Administration in your lo
 
 The guidelines are identity to *[How to Deploy SaaS Permissions Service API to Azure](./../Saas.Identity/Saas.Permissions/readme.md#how--to-deploy-saas-permissions-service-api-to-azure)*.
 
-## Debugging in Azure
+## Debugging Remotely in Azure
 
 The guidelines are identity to *[Debugging in Azure](./../Saas.Identity/Saas.Permissions/readme.md#debugging-in-azure)* for the SaaS Permissions Service API
 

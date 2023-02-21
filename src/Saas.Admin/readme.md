@@ -57,7 +57,7 @@ Guidelines for getting up and running with SaaS Signup Administration in your lo
 
 The guidelines are identity to *[How to Deploy SaaS Permissions Service API to Azure](./../Saas.Identity/Saas.Permissions/readme.md#how--to-deploy-saas-permissions-service-api-to-azure)*.
 
-## Debugging in Azure
+## Debugging Remotely in Azure
 
 The guidelines are identity to *[Debugging in Azure](./../Saas.Identity/Saas.Permissions/readme.md#debugging-in-azure)* for the SaaS Permissions Service API.
 

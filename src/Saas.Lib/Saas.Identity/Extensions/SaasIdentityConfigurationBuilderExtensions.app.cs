@@ -1,10 +1,8 @@
-﻿
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
-using Saas.Identity.Helper;
 using Saas.Shared.Options;
 
 namespace Saas.Identity.Extensions;
@@ -12,32 +10,22 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
 {
     public static SaasWebAppClientCredentialBuilder AddSaasWebAppAuthentication(
         this IServiceCollection services,
-        string applicationIdUri,
-        IEnumerable<string> scopes,
-        ConfigurationManager configuration)
-    {
-        // Azure AD B2C requires scope config with a fully qualified url along with an identifier. To make configuring it more manageable and less
-        // error prone, we store the names of the scopes separately from the application id uri and combine them when neded.
-        var fullyQualifiedScopes = scopes.Select(scope => $"{applicationIdUri}/{scope}".Trim('/'));
-
+        string configSectionName,
+        ConfigurationManager configuration,
+        IEnumerable<string> scopes)
+    {        
         // Registerer scopes to the Options collection
         services.Configure<SaasAppScopeOptions>(saasAppScopeOptions => 
-            saasAppScopeOptions.Scopes = fullyQualifiedScopes.ToArray());
+            saasAppScopeOptions.Scopes = scopes.ToArray());
+
 
         var authenticationBuilder = services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApp(options =>
             {
-                configuration.Bind(AzureB2CSaasAppOptions.SectionName, options);
+                configuration.Bind(configSectionName, options);
+            });     
 
-            });
-
-        // Managing the situation where the access token is not in cache.
-        // For more details please see: https://github.com/AzureAD/microsoft-identity-web/issues/13
-        services.Configure<CookieAuthenticationOptions>(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            options => options.Events = new RejectSessionCookieWhenAccountNotInCacheEvents(fullyQualifiedScopes));
-
-        return new SaasWebAppClientCredentialBuilder(services, authenticationBuilder, fullyQualifiedScopes);
+        return new SaasWebAppClientCredentialBuilder(services, authenticationBuilder, scopes);
     }
 
     public class SaasWebAppClientCredentialBuilder
@@ -56,30 +44,14 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
             _scopes= scopes;
         }
 
-        public IHttpClientBuilder SaaSAppToCallDownstreamApiWithHttpClient<TIClient, TClient>(Action<IServiceProvider, HttpClient> action)
-            where TIClient : class
-            where TClient : class, TIClient
+        public MicrosoftIdentityAppCallsWebApiAuthenticationBuilder SaaSAppCallDownstreamApi(IEnumerable<string>? scopes = default)
         {
-            _authenticationBuilder
+            return _authenticationBuilder
                 .EnableTokenAcquisitionToCallDownstreamApi(
                     options =>
                     {
-                        
+                        // In case of wanting to make changes to the ConfidentialClientApplicationOptions
                     },
-                    _scopes)
-                .AddInMemoryTokenCaches();
-
-            return _services.AddHttpClient<TIClient, TClient>(action);
-        }
-
-        public IHttpClientBuilder SaaSAppToCallDownstreamApiWithHttpClient<TIClient, TClient>(string baseUrl)
-            where TIClient : class
-            where TClient: class, TIClient
-        {
-            Action<IServiceProvider, HttpClient> action = 
-                (serviceProvider, client) => client.BaseAddress = new Uri(baseUrl);
-
-            return SaaSAppToCallDownstreamApiWithHttpClient<TIClient, TClient>(action);
-        }
+                    scopes ?? _scopes);
+        }}
     }
-}

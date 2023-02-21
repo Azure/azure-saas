@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Saas.Shared.Options;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Saas.SignupAdministration.Web.Utilities;
+using Saas.Identity.Extensions;
+using Saas.Identity.Helper;
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
@@ -94,12 +96,9 @@ var scopes = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionNam
 // error prone, we store the names of the scopes separately from the application id uri and combine them when neded.
 var fullyQualifiedScopes = scopes.Select(scope => $"{applicationUri}/{scope}".Trim('/')).ToArray();
 
-// Registerer scopes to the Options collection
-builder.Services.Configure<SaasAppScopeOptions>(saasAppScopeOptions => saasAppScopeOptions.Scopes = fullyQualifiedScopes);
-
-// Adding user authentication configuration leveraging Azure AD B2C.
-builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, AzureB2CSignupAdminOptions.SectionName)
-    .EnableTokenAcquisitionToCallDownstreamApi(fullyQualifiedScopes)
+// Adding SaaS Authentication and setting web app up for calling the Admin API
+builder.Services.AddSaasWebAppAuthentication(AzureB2CSignupAdminOptions.SectionName, builder.Configuration, fullyQualifiedScopes)
+    .SaaSAppCallDownstreamApi()
     .AddInMemoryTokenCaches();
 
 // Managing the situation where the access token is not in cache.
@@ -108,52 +107,16 @@ builder.Services.Configure<CookieAuthenticationOptions>(
     CookieAuthenticationDefaults.AuthenticationScheme,
     options => options.Events = new RejectSessionCookieWhenAccountNotInCacheEvents(fullyQualifiedScopes));
 
-//builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-//    .AddMicrosoftIdentityWebApp(identityOptions =>
-//    {
-//        builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, identityOptions);
+builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>(httpClient =>
+{
+    string adminApiBaseUrl = builder.Environment.IsDevelopment()
+        ? builder.Configuration.GetRequiredSection("adminApi:baseUrl").Value
+            ?? throw new NullReferenceException("Environment is running in development mode. Please specify the value for 'adminApi:baseUrl' in appsettings.json.")
+        : builder.Configuration.GetRequiredSection(AzureB2CAdminApiOptions.SectionName)?.Get<AzureB2CAdminApiOptions>()?.BaseUrl
+            ?? throw new NullReferenceException($"{nameof(AzureB2CAdminApiOptions)} Url cannot be null");
 
-//        //identityOptions.ClientCertificates = builder.Configuration.GetRequiredSection(AzureB2CSignupAdminOptions.SectionName)
-//        //    .Get<AzureB2CSignupAdminOptions>().ClientCertificates;
-
-//        identityOptions.Events.OnTokenValidated = async ctx =>
-//        {
-
-//        };
-
-//        identityOptions.Events.OnAuthenticationFailed = async ctx =>
-//        {
-
-//        };
-
-//    })
-//    .EnableTokenAcquisitionToCallDownstreamApi(confidentialClientAppOptions =>
-//    {
-
-//    },
-//    scopes)
-//    .AddSessionTokenCaches();
-
-
-builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>()
-    .ConfigureHttpClient((serviceProvider, client) =>
-    {
-        using var scope = serviceProvider.CreateScope();
-        string adminApiBaseUrl;
-
-        if (builder.Environment.IsDevelopment())
-        {
-            adminApiBaseUrl = builder.Configuration.GetRequiredSection("adminApi:baseUrl").Value
-            ?? throw new NullReferenceException("Environment is running in development mode. Please specify the bvalue for 'adminApi:baseUrl' in appsettings.json.");
-        }
-        else
-        {
-            adminApiBaseUrl = scope.ServiceProvider.GetRequiredService<IOptions<AzureB2CAdminApiOptions>>().Value.BaseUrl
-                ?? throw new NullReferenceException($"{nameof(AdminServiceClient)} Url cannot be null");
-        }
-
-        client.BaseAddress = new Uri(adminApiBaseUrl);
-    });
+    httpClient.BaseAddress = new Uri(adminApiBaseUrl);
+});
 
 builder.Services.AddSession(options =>
 {
