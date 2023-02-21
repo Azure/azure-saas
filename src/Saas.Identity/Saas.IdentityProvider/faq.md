@@ -2,6 +2,10 @@
 
 ## Scripting
 
+### Why GNU Bash?
+
+For scripting we looked at PowerShell and GNU Bash. We chose GNU Bash for it's versatility and ubiquity across platforms. With the advert of Windows Subsystem for Linux, the GNU Bash experience is as good on Windows as on Mac and Linux.
+
 ### Can I automate deployment using [ARM](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview) or even better [Bicep](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview?tabs=bicep)? 
 
 Yes, and no. Bicep (ARM) is used when ever possible as part of the deployment script. The ASDK Identity Foundation relies on [Azure Active Directory B2C](https://learn.microsoft.com/en-us/azure/active-directory-b2c/overview) including [Azure Active Directory App Registrations](https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added) and the provisioning of custom policies etc. At the time of writing those resources and their configurations cannot be fully automated by ARM and Bicep, unless augmented with embedded scripting, which leads to the next question.

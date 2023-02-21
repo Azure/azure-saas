@@ -59,13 +59,23 @@ To begin, please open your GNU Linux terminal to the directory where you've [clo
 .../src/Saas.Identity/Saas.IdentityProvider/deployment
 ````
 
-![image-20230110094801956](assets/readme/image-20230110094801956.png)
+![image-20230110094801956](.assets/readme/image-20230110094801956.png)
 
 > *Tip #1*: If you are on a Windows 10/11 PC and need to access your cloned Git repository one of your local drives, from the WSL Terminal, you can find the drives in the *`mnt`* directory - e.g., like this `cd /mnt/d/<path on d-drive>`.
 >
 > *Tip #2*: You can open the deployment project in Visual Code by typing `code .` in the terminal (Mac or Windows with WSL) from the directory.
 >
 > *Tip #3*: It's advisable to not clone git repositories to folders that er managed with OneDrive, Dropbox or similar type file synchronization services.
+
+### Logging into az cli
+
+To ensure that you are correctly logged into your Azure tenant, please run this Az Cli command and follow the instructions. 
+
+```bash
+az login --scope "https://graph.microsoft.com/.default"
+```
+
+> *Important*: The deployment script expects that you have permissions normally associated development and managing resources on the Azure tenant you are planning to use.
 
 ### Building the deployment script container
 
@@ -75,6 +85,8 @@ To run the script you must first setup of the deployment environment and build t
 chmod +x setup.sh # only needed the first time to set execute permissions on setup.sh
 ./setup.sh
 ```
+
+![image-20230221115203497](.assets/readme/image-20230221115203497.png)
 
 This will take a few minutes to complete and you will only need to do it once. The container will be named `asdk-script-deployment`. 
 
@@ -87,33 +99,24 @@ This will take a few minutes to complete and you will only need to do it once. T
 When the container build have completed, run the script with the following commands:
 
 ```bash 
-chmod +x run.sh # only needed the first time to set execute permissions on run.sh
 ./run.sh
 ```
+
+![image-20230221115249541](.assets/readme/image-20230221115249541.png)
 
 This will instantiate the container and mount the current root directory as a number of volumes (i.e., directories) that will become accessible from within the container. 
 
 > *Tip*: The benefits of mounting volumes are that any edits to `config.json`, as well as anything any of the shell scripts, will immediately becomes effective without having to re-build the container. All you need to do is tun `./run.sh` and any changes you've made will now be effective.
 
-### Logging into az cli
-
-To ensure that you are correctly logged into your Azure tenant, please run this Az Cli command and follow the instructions. 
-
-```bash
-az login --scope "https://graph.microsoft.com/.default"
-```
-
 ###  Running the script the first time
 
-The first time you run the script, the script will automatically create a new instance of the file `config.json`, after which the script will exit immediately with a request for additional information to be added to the configuration manifest in `config.json`. 
-
-
+The first time you run the script, the script will automatically create a new instance of the file `config.json`, after which the script will exit immediately, with a request for additional information to be added to the configuration manifest in `config.json`. 
 
 > *Tip #1*: You'll find the `config.json` file in the folder `.../src/Saas.Identity/Saas.IdentityProvider/deployment/config` 
 >
 > *Tip #2*: The `config.json` it's a copy of the existing file `config-template.json`, found in the same directory.
 
-Specifically, the `initConfig` section of `config.json`must be filled out manually (see more details on how below):
+The `initConfig` section of `config.json`must be filled out manually (see more details on how below):
 
 ```json
 {
@@ -140,11 +143,10 @@ Specifically, the `initConfig` section of `config.json`must be filled out manual
 Get the `userPrincipalId` by running the following command, which will respond with a GUID:
 
 ```bash
-az login # only do this if you're not logged in already
 az ad signed-in-user show --query id
 ```
 
-> Info: The reason that the script doesn't pull the `userPrincipalId` automatically, is that some organizations may require that this particular command can only be run from a *manage device*. Because the deployment script is run from inside a container this, the command may throw an error: "*AADSTS530003: Your device is required to be managed to access this resource.*", even if the device that the container is on, is managed.
+> *Info:* The reason that the script doesn't pull the `userPrincipalId` automatically, is that some organizations may require that this particular command can only be run from a *manage device*. Because the deployment script is run from inside a container this, the command may throw an error: "*AADSTS530003: Your device is required to be managed to access this resource.*", even if the device that the container is on, is managed.
 
 ### Azure Subscription Id
 
@@ -161,7 +163,6 @@ Alternatively, get to list of your subscriptions of the tenant that you are logg
 Get the `tenantId`by running the following command:
 
 ```bash
-az login # only do this if you're not logged in already
 az account show --query tenantId
 ```
 
@@ -196,29 +197,31 @@ While running the script the second time, you will be asked to log in once, and 
 
 1. The first log in, is for your main Azure tenant. 
 
-   > Tip: This step will likely be skipped since you're already logged in to the specified tenant - i.e., when you used the command: `az login --scope "https://graph.microsoft.com/.default"` 
+   > *Tip*: This step will likely be skipped since you're already logged in to the specified tenant - i.e., when you used the command: `az login --scope "https://graph.microsoft.com/.default"` 
 
-   > Info: The script is smart enough to utilize your existing  Azure token, that is cached and persisted, outside of the container.
+   > *Info*: The script is smart enough to utilize your existing  Azure token, that is cached and persisted, outside of the container.
 
-2. The second login cannot be avoided, since it is for logging into the Azure B2C Tenant that is being created as part of the deployment script. This login is needed to make further changes to the Azure B2C tenant. 
+2. The second login cannot be avoided as it is for logging into the Azure B2C Tenant that is just being created, as part of the deployment script. This login is needed to make any further changes to the Azure B2C tenant. 
 
-   > Info: The script will cache this login session too, so that if you need to run the script multiple times, you will not be asked to log in to your Azure AD B2C tenant again. The login session for Azure B2C is cached here: `$HOME/asdk/.cache/`.
+   > *Info*: The script will cache this login session too, so that if you need to run the script multiple times, you will not be asked to log in to your Azure AD B2C tenant again. The login session for Azure B2C is cached here: `$HOME/asdk/.cache/`.
 
 ## What If Something Goes Wrong?
 
-It shouldn't happen, but we all know that it does - thank you [Murphy](https://en.wikipedia.org/wiki/Murphy%27s_law)! In most cases, when something goes wrong along the way, all you'll need to do is to run the script once again. The deployment script will skip the parts that have already been completed and re-try the parts that have not.
+It shouldn't happen, but we all know that it does from time to time - thank you [Murphy](https://en.wikipedia.org/wiki/Murphy%27s_law)! 
 
-> Tip #1: If something goes wrong with for instance the the App Registrations, try deleting all of them (or at least the one that is not correct) and then run the script again. Doing so will recreate the app registrations. 
+In most cases, when something goes wrong along the way, all you'll need to do is to run the script once again. The deployment script will skip the parts that have already been completed and re-try the parts that have not.
+
+> *Tip #1*: If something goes wrong with for instance the the App Registrations, try deleting all of them before trying again.
 >
-> Tip #2: Please be aware that when you dele an App Registration it will move to `Deleted applications` and you will have to delete the deleted registration once more using `Delete permanently`, to actually fully purge it.
+> *Tip #2*: Please be aware that when you delete an App Registration it will move to `Deleted applications` and you will have to delete the deleted registration once more using `Delete permanently`, to actually fully purge it.
 >
-> Tip #3: Deleting an entity and then running the script again is a general a good suggestion for if you want to make changes. The script is designed with resilience in mind.
+> *Tip #3*: Deleting an entity and then running the script again is a general a good suggestion for if you want to make changes. The script is designed with this level of resilience in mind.
 
 ### Logs
 
 If the script fails you may use the logs to investigate the issue. The logs are found in the [log](./deployment/log) directory in the project root. Every time the script is run a new folder with the time/date of the event is created. Inside this folder the `config.json` manifest file is stored twice. Once as it looks in the beginning of the script run and once who it looks at the end. The `config.json` manifest is an important file, if you need to run the script again.
 
-> Tip : The `config.json`and the logs are both excluded from the any git commit made on the project as defined in `.gitignore`. This is done for both practical reasons and security reasons. However, each time you run the script, both the logs and the configuration files are uploaded and stored in an Azure Storage Account in you Azure Resource Group.
+> *Tip*: The `config.json`and the logs are both excluded from the any git commit made on the project as defined in `.gitignore`. This is done for both practical reasons and security reasons. However, each time you run the script, both the logs and the configuration files are uploaded and stored in an Azure Storage Account in you Azure Resource Group.
 
 ## Now what?
 
@@ -228,15 +231,17 @@ The deployment script has run to it's completion and the Identity Framework have
 
 The Identity Framework is gathered in an Azure Resource group. In the Azure Portal it will look something like this: 
 
-![image-20230126000531416](assets/readme/image-20230126000531416.png)
+![image-20230221121152035](.assets/readme/image-20230221121152035.png)
 
 ### Adding the Other Modules
 
-With the Identity Foundation in place, it's time to kick the tires of the Azure SaaS Development Kit. The next step should be to add the ASDK Permission Service API, which is a core component. 
+With the Identity Foundation in place, it's time to kick the tires of the Azure SaaS Development Kit. 
 
-We suggest that you run the Permission API service locally first. This will give you an opportunity to attach a debugger to it to explore and learn more about what's going on. 
+The next step should be to add the ASDK Permission Service API, which is the core component for adding permissions.
 
-So, please head over to the [SaaS Permissions Service ReadMe](../Saas.Permissions/readme.md), for more details on running the Permissions Service API locally, as well as deploying it to Azure, when you are ready to do so.
+We suggest that you run the Permission API service locally first. This will give you an opportunity to attach a debugger to it to explore and learn more about what's going on before moving it to production and/or live remote debugging.
+
+Please head over to the [SaaS Permissions Service ReadMe](../Saas.Permissions/readme.md), for more details getting the the Permissions Service API up and running.
 
 > Tip: The Permission Service is part of the repository that you *git cloned*, after you *git forked* it. You'll find it here: `.../src/Saas.Identity/Saas.Permissions`.
 
