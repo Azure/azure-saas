@@ -1,4 +1,6 @@
-﻿using System.Net.Mime;
+﻿using Saas.Identity.Authorization.Attribute;
+using Saas.Identity.Authorization.Enum;
+using System.Net.Mime;
 
 namespace Saas.Admin.Service.Controllers;
 
@@ -256,7 +258,8 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
     [Route("{tenantId}/users")]
-    [Authorize(Policy = AppConstants.Policies.TenantRead)]
+    //[Authorize(Policy = AppConstants.Policies.TenantRead)]
+    [SaasTenantPermissions(SaasTenantPermission.Read)]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetTenantUsers(string tenantId)
     {
         try

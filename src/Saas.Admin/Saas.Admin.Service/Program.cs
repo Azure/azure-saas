@@ -6,6 +6,7 @@ using Saas.Admin.Service;
 using Saas.Admin.Service.Data;
 using Saas.AspNetCore.Authorization.AuthHandlers;
 using Saas.AspNetCore.Authorization.ClaimTransformers;
+using Saas.Identity.Authorization;
 using Saas.Shared.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,65 +76,72 @@ builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration,
 
 builder.Services.AddTransient<IClaimsTransformation, ClaimPermissionToRoleTransformer>();
 
-builder.Services.AddRouteBasedRoleHandler("tenantId");
-builder.Services.AddRouteBasedRoleHandler("userId");
+// builder.Services.AddRouteBasedRoleHandler("tenantId");
+//builder.Services.AddRouteBasedRoleHandler("userId");
+
+builder.Services.AddHttpContextAccessor();
+
+// builder.Services.AddScoped<IRoleCustomizer, RouteBasedRoleCustomizer>();
 
 // TODO (SaaS): Add necessary roles to scopes for SaaS App operations
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy(AppConstants.Policies.Authenticated, policyBuilder =>
-    {
-        policyBuilder.RequireAuthenticatedUser();
-    });
+builder.Services.AddSingleton<IAuthorizationHandler, SaasTenantPermissionAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, SaasTenantPermissionAuthorizationPolicyProvider>();
 
-    options.AddPolicy(AppConstants.Policies.GlobalAdmin, policyBuilder =>
-    {
-        policyBuilder.RequireAuthenticatedUser();
-        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
-                                  AppConstants.Roles.Self);
-    });
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy(AppConstants.Policies.Authenticated, policyBuilder =>
+//    {
+//        policyBuilder.RequireAuthenticatedUser();
+//    });
 
-    options.AddPolicy(AppConstants.Policies.CreateTenant, policyBuilder =>
-    {
-        policyBuilder.RequireAuthenticatedUser();
-    });
+//    options.AddPolicy(AppConstants.Policies.GlobalAdmin, policyBuilder =>
+//    {
+//        policyBuilder.RequireAuthenticatedUser();
+//        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
+//                                  AppConstants.Roles.Self);
+//    });
 
-    options.AddPolicy(AppConstants.Policies.TenantGlobalRead, policyBuilder =>
-    {
-        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin);
-        policyBuilder.RequireScope(AppConstants.Scopes.GlobalRead);
-    });
+//    options.AddPolicy(AppConstants.Policies.CreateTenant, policyBuilder =>
+//    {
+//        policyBuilder.RequireAuthenticatedUser();
+//    });
 
-    options.AddPolicy(AppConstants.Policies.TenantRead, policyBuilder =>
-    {
-        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
-                                  AppConstants.Roles.TenantUser,
-                                  AppConstants.Roles.TenantAdmin);
+//    options.AddPolicy(AppConstants.Policies.TenantGlobalRead, policyBuilder =>
+//    {
+//        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin);
+//        policyBuilder.RequireScope(AppConstants.Scopes.GlobalRead);
+//    });
 
-        policyBuilder.RequireScope(AppConstants.Scopes.Read,
-                                   AppConstants.Scopes.GlobalRead);
-    });
+//    options.AddPolicy(AppConstants.Policies.TenantRead, policyBuilder =>
+//    {
+//        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
+//                                  AppConstants.Roles.TenantUser,
+//                                  AppConstants.Roles.TenantAdmin);
 
-    options.AddPolicy(AppConstants.Policies.TenantWrite, policyBuilder =>
-    {
-        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
-                                  AppConstants.Roles.TenantAdmin);
+//        policyBuilder.RequireScope(AppConstants.Scopes.Read,
+//                                   AppConstants.Scopes.GlobalRead);
+//    });
 
-        policyBuilder.RequireScope(AppConstants.Scopes.GlobalWrite,
-                                   AppConstants.Scopes.Write);
-    });
+//    options.AddPolicy(AppConstants.Policies.TenantWrite, policyBuilder =>
+//    {
+//        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
+//                                  AppConstants.Roles.TenantAdmin);
 
-    options.AddPolicy(AppConstants.Policies.TenantDelete, policyBuilder =>
-    {
-        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
-                                  AppConstants.Roles.TenantAdmin);
+//        policyBuilder.RequireScope(AppConstants.Scopes.GlobalWrite,
+//                                   AppConstants.Scopes.Write);
+//    });
 
-        policyBuilder.RequireScope(AppConstants.Scopes.GlobalDelete,
-                                   AppConstants.Scopes.Delete);
-    });
+//    options.AddPolicy(AppConstants.Policies.TenantDelete, policyBuilder =>
+//    {
+//        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
+//                                  AppConstants.Roles.TenantAdmin);
 
-});
+//        policyBuilder.RequireScope(AppConstants.Scopes.GlobalDelete,
+//                                   AppConstants.Scopes.Delete);
+//    });
+
+//});
 
 builder.Services.AddControllers();
 

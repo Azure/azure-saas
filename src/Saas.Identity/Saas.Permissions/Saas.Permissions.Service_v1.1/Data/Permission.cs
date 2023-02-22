@@ -12,7 +12,7 @@ public class Permission
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal string ToTenantPermissionString()
     {
-        return $"{TenantId}.{PermissionStr}";
+        return $"Tenant.{TenantId}.{PermissionStr}";
     }
 
 }

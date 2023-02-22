@@ -31,7 +31,7 @@ public class CustomClaimsController : ControllerBase
 
         // Append default permission with the users object ID
         string[] permissionStrings = permissions.Select(x => x.ToTenantPermissionString())                                                     
-                                                     .Append($"{request.ObjectId}.Self")
+                                                     .Append($"User.{request.ObjectId}.Self")
                                                      .ToArray();
         PermissionsClaimResponse response = new()
         {
