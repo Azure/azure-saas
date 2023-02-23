@@ -1,9 +1,8 @@
-namespace Saas.SignupAdministration.Web.Models
-{
-    public class ErrorViewModel
-    {
-        public string RequestId { get; set; } = string.Empty;
+namespace Saas.SignupAdministration.Web.Models;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
-    }
+public class ErrorViewModel
+{
+    public string RequestId { get; set; } = string.Empty;
+
+    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 }

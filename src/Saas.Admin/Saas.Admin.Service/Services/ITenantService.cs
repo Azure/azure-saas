@@ -7,9 +7,9 @@ public interface ITenantService
     Task<IEnumerable<TenantDTO>> GetAllTenantsAsync();
 
     Task<TenantDTO> GetTenantAsync(Guid tenantId);
-    Task<IEnumerable<TenantDTO>> GetTenantsByIdAsync(IEnumerable<string> ids);
+    Task<IEnumerable<TenantDTO>> GetTenantsByIdAsync(IEnumerable<Guid> ids);
 
-    Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, string adminId);
+    Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, Guid adminId);
 
     Task<TenantDTO> UpdateTenantAsync(TenantDTO tenant);
 

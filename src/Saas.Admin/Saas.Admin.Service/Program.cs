@@ -1,12 +1,11 @@
 using Azure.Identity;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Options;
-using Saas.Admin.Service;
 using Saas.Admin.Service.Data;
-using Saas.AspNetCore.Authorization.AuthHandlers;
-using Saas.AspNetCore.Authorization.ClaimTransformers;
-using Saas.Identity.Authorization;
+using Saas.Identity.Authorization.Handler;
+using Saas.Identity.Authorization.Option;
+using Saas.Identity.Authorization.Provider;
+using Saas.Permissions.Client;
 using Saas.Shared.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,9 +56,8 @@ builder.Services.Configure<PermissionsApiOptions>(
 builder.Services.Configure<SqlOptions>(
             builder.Configuration.GetRequiredSection(SqlOptions.SectionName));
 
-builder.Services.Configure<ClaimToRoleTransformerOptions>(
-        builder.Configuration.GetRequiredSection(ClaimToRoleTransformerOptions.SectionName));
-
+builder.Services.Configure<SaasAuthorizationOptions>(
+    builder.Configuration.GetRequiredSection(SaasAuthorizationOptions.SectionName));
 
 // Using Entity Framework for accessing permission data stored in the Permissions Db.
 builder.Services.AddDbContext<TenantsContext>(options =>
@@ -74,81 +72,26 @@ builder.Services.AddDbContext<TenantsContext>(options =>
 // Add authentication for incoming requests
 builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, AzureB2CAdminApiOptions.SectionName);
 
-builder.Services.AddTransient<IClaimsTransformation, ClaimPermissionToRoleTransformer>();
-
-// builder.Services.AddRouteBasedRoleHandler("tenantId");
-//builder.Services.AddRouteBasedRoleHandler("userId");
-
 builder.Services.AddHttpContextAccessor();
-
-// builder.Services.AddScoped<IRoleCustomizer, RouteBasedRoleCustomizer>();
 
 // TODO (SaaS): Add necessary roles to scopes for SaaS App operations
 
 builder.Services.AddSingleton<IAuthorizationHandler, SaasTenantPermissionAuthorizationHandler>();
-builder.Services.AddSingleton<IAuthorizationPolicyProvider, SaasTenantPermissionAuthorizationPolicyProvider>();
+builder.Services.AddSingleton<IAuthorizationHandler, SaasUserPermissionAuthorizationHandler>();
 
-//builder.Services.AddAuthorization(options =>
-//{
-//    options.AddPolicy(AppConstants.Policies.Authenticated, policyBuilder =>
-//    {
-//        policyBuilder.RequireAuthenticatedUser();
-//    });
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, SaasPermissionAuthorizationPolicyProvider>();
 
-//    options.AddPolicy(AppConstants.Policies.GlobalAdmin, policyBuilder =>
-//    {
-//        policyBuilder.RequireAuthenticatedUser();
-//        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
-//                                  AppConstants.Roles.Self);
-//    });
+//builder.Services.Configure<ClaimToRoleTransformerOptions>(
+//        builder.Configuration.GetRequiredSection(ClaimToRoleTransformerOptions.SectionName));
 
-//    options.AddPolicy(AppConstants.Policies.CreateTenant, policyBuilder =>
-//    {
-//        policyBuilder.RequireAuthenticatedUser();
-//    });
-
-//    options.AddPolicy(AppConstants.Policies.TenantGlobalRead, policyBuilder =>
-//    {
-//        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin);
-//        policyBuilder.RequireScope(AppConstants.Scopes.GlobalRead);
-//    });
-
-//    options.AddPolicy(AppConstants.Policies.TenantRead, policyBuilder =>
-//    {
-//        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
-//                                  AppConstants.Roles.TenantUser,
-//                                  AppConstants.Roles.TenantAdmin);
-
-//        policyBuilder.RequireScope(AppConstants.Scopes.Read,
-//                                   AppConstants.Scopes.GlobalRead);
-//    });
-
-//    options.AddPolicy(AppConstants.Policies.TenantWrite, policyBuilder =>
-//    {
-//        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
-//                                  AppConstants.Roles.TenantAdmin);
-
-//        policyBuilder.RequireScope(AppConstants.Scopes.GlobalWrite,
-//                                   AppConstants.Scopes.Write);
-//    });
-
-//    options.AddPolicy(AppConstants.Policies.TenantDelete, policyBuilder =>
-//    {
-//        policyBuilder.RequireRole(AppConstants.Roles.GlobalAdmin,
-//                                  AppConstants.Roles.TenantAdmin);
-
-//        policyBuilder.RequireScope(AppConstants.Scopes.GlobalDelete,
-//                                   AppConstants.Scopes.Delete);
-//    });
-
-//});
+// builder.Services.AddTransient<IClaimsTransformation, ClaimPermissionToRoleTransformer>();
 
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
-builder.Services.AddScoped<IPermissionService, PermissionService>();
+// builder.Services.AddScoped<IPermissionService, PermissionService>();
 
-builder.Services.AddHttpClient<IPermissionServiceClient, PermissionServiceClient>()
+builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClient>()
     .ConfigureHttpClient((serviceProvider, client) =>
     {
         using var scope = serviceProvider.CreateScope();

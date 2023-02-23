@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+﻿using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
@@ -24,6 +23,22 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
             {
                 configuration.Bind(configSectionName, options);
             });     
+
+        return new SaasWebAppClientCredentialBuilder(services, authenticationBuilder, scopes);
+    }
+
+    public static SaasWebAppClientCredentialBuilder AddSaasWebAppAuthentication(
+    this IServiceCollection services,
+    IEnumerable<string> scopes,
+    Action<MicrosoftIdentityOptions> configureMicrosoftIdentityOptions)
+    {
+        // Registerer scopes to the Options collection
+        services.Configure<SaasAppScopeOptions>(saasAppScopeOptions =>
+            saasAppScopeOptions.Scopes = scopes.ToArray());
+
+
+        var authenticationBuilder = services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+            .AddMicrosoftIdentityWebApp(configureMicrosoftIdentityOptions);
 
         return new SaasWebAppClientCredentialBuilder(services, authenticationBuilder, scopes);
     }

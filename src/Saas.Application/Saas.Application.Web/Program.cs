@@ -8,6 +8,8 @@ using Saas.Shared.Options;
 using Saas.Identity.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Saas.Identity.Helper;
+using Saas.SignupAdministration.Web.Services;
+using Saas.Admin.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();

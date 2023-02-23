@@ -4,13 +4,14 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;Multi Debug</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Azure.Security.KeyVault.Keys" Version="4.4.0" />
     <PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.4.0" />
-    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="1.26.0" />
+    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="2.5.0" />
     <PackageReference Include="Microsoft.Graph" Version="4.54.0" />
   </ItemGroup>
 

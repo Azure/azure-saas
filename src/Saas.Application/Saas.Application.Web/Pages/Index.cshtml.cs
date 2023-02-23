@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Saas.Application.Web.Interfaces;
 
 namespace Saas.Application.Web.Pages;
@@ -14,7 +13,7 @@ public class IndexModel : PageModel
     public TenantViewModel? tenantData;
     private string activeRoute = string.Empty;
 
-    public bool DisplayTenantInfo => _applicationUser != null && !string.IsNullOrWhiteSpace(activeRoute);
+    public bool DisplayTenantInfo => _applicationUser is not null && !string.IsNullOrWhiteSpace(activeRoute);
 
     public IndexModel(ILogger<IndexModel> logger, ITenantService tenantService, IApplicationUser applicationUser)
     {
@@ -29,7 +28,14 @@ public class IndexModel : PageModel
 
         if (DisplayTenantInfo)
         {
-            tenantData = await _tenantService.GetTenantInfoByRouteAsync(activeRoute);
+            try
+            {
+                tenantData = await _tenantService.GetTenantInfoByRouteAsync(activeRoute);
+            }
+            catch
+            {
+
+            }            
         }
 
         return Page();

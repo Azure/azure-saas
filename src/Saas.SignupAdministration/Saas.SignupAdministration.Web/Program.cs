@@ -6,9 +6,9 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Saas.Shared.Options;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Saas.SignupAdministration.Web.Utilities;
 using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
+using Saas.Admin.Client;
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
@@ -97,7 +97,12 @@ var scopes = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionNam
 var fullyQualifiedScopes = scopes.Select(scope => $"{applicationUri}/{scope}".Trim('/')).ToArray();
 
 // Adding SaaS Authentication and setting web app up for calling the Admin API
-builder.Services.AddSaasWebAppAuthentication(AzureB2CSignupAdminOptions.SectionName, builder.Configuration, fullyQualifiedScopes)
+builder.Services.AddSaasWebAppAuthentication(
+    fullyQualifiedScopes,
+    options =>
+    {
+        builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, options);
+    })
     .SaaSAppCallDownstreamApi()
     .AddInMemoryTokenCaches();
 
@@ -206,6 +211,8 @@ void InitializeDevEnvironment()
             .Select(KeyFilter.Any, version)); // <-- Important: since we're using labels in our Azure App Configuration store
 
     logger.LogInformation($"Initialization complete.");
+
+    builder.Services.AddSwaggerGen();
 }
 
 void InitializeProdEnvironment()

@@ -1,4 +1,5 @@
-﻿using Saas.Application.Web.Interfaces;
+﻿using Saas.Admin.Client;
+using Saas.Application.Web.Interfaces;
 
 namespace Saas.Application.Web.Services;
 
@@ -19,7 +20,9 @@ public class TenantService : ITenantService
         await _adminServiceClient.IsValidPathAsync(route);
 
         if (route is not null)
+        {
             tenant = await _adminServiceClient.TenantinfoAsync(route);
+        }
 
         return new TenantViewModel() 
         { 

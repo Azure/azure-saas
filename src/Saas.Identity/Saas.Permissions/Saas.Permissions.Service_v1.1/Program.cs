@@ -3,7 +3,6 @@ using Saas.Permissions.Service.Data;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Shared.Options;
 using Saas.Permissions.Service.Services;
-using Saas.Swagger;
 using Saas.Permissions.Service.Middleware;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using System.Reflection;
@@ -12,6 +11,7 @@ using Saas.Shared.Interface;
 using Saas.Identity.Helper;
 using Saas.Identity.Interface;
 using Polly;
+using Saas.Permissions.Service.Data.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -68,7 +68,7 @@ builder.Services.Configure<MSGraphOptions>(
 builder.Services.AddControllers();
 
 // Using Entity Framework for accessing permission data stored in the Permissions Db.
-builder.Services.AddDbContext<PermissionsContext>(options =>
+builder.Services.AddDbContext<SaasPermissionsContext>(options =>
 {
     var sqlConnectionString = builder.Configuration.GetRequiredSection(SqlOptions.SectionName)
         .Get<SqlOptions>()?.PermissionsSQLConnectionString
@@ -174,7 +174,7 @@ void InitializeDevEnvironment()
     builder.Services.AddSwaggerGen(option =>
     {
         option.SwaggerDoc("v1", new() { Title = "Permissions API", Version = "v1.1" });
-        option.OperationFilter<SwagCustomHeaderFilter>();
+        // option.OperationFilter<SwagCustomHeaderFilter>();
     });
 }
 

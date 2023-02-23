@@ -1,15 +1,16 @@
-﻿using Saas.Permissions.Service.Data;
-using Saas.Permissions.Service.Models;
+﻿using Saas.Identity.Authorization.Model.Data;
 
 namespace Saas.Permissions.Service.Interfaces;
 
 public interface IPermissionsService
 {
-    public Task<ICollection<Permission>> GetPermissionsAsync(string userId);
-    public Task<ICollection<string>> GetTenantUsersAsync(string tenantId);
-    public Task<ICollection<string>> GetUserPermissionsForTenantAsync(string tenantId, string userId);
-    public Task AddUserPermissionsToTenantAsync(string tenantId, string userId, string[] permissions);
-    public Task AddUserPermissionsToTenantByEmailAsync(string tenantId, string userEmail, string[] permissions);
-    public Task RemoveUserPermissionsFromTenantAsync(string tenantId, string userId, string[] permissions);
-    public Task<ICollection<string>> GetTenantsForUserAsync(string userId);    
+    Task<ICollection<SaasPermission>> GetPermissionsAsync(Guid userId);
+    Task<ICollection<Guid>> GetTenantUsersAsync(Guid tenantId);
+    Task<ICollection<string>> GetUserPermissionClaimsForTenantAsync(Guid tenantId, Guid userId);
+    Task AddNewTenantAsync(Guid tenantId, Guid userId);
+    Task AddUserPermissionsToTenantAsync(Guid tenantId, Guid userId, string[] permissions);
+    Task AddUserPermissionsToUserAsync(Guid tenantId, Guid userId, string[] permissions);
+    Task AddUserPermissionsToTenantByEmailAsync(Guid tenantId, string userEmail, string[] permissions);
+    Task RemoveUserPermissionsFromTenantAsync(Guid tenantId, Guid userId, string[] permissions);
+    Task<ICollection<Guid>> GetTenantsForUserAsync(Guid userId);    
 }

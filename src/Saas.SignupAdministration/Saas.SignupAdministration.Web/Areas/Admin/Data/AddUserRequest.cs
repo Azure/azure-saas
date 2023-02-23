@@ -1,8 +1,8 @@
 ﻿namespace Saas.SignupAdministration.Web.Areas.Admin.Data;
 
-public class AddUserRequest
+public record AddUserRequest
 {
-    public string TenantId { get; set; } = string.Empty;
-    public string UserEmail { get; set; } = string.Empty;
-    public string ConfirmUserEmail { get; set; } = string.Empty;
+    public string TenantId { get; init; } = null!;
+    public string UserEmail { get; init; } = null!;
+    public string ConfirmUserEmail { get; init; } = null!;
 }

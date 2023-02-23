@@ -2,95 +2,94 @@
 using Saas.SignupAdministration.Web.Utilities;
 using System.Security.Claims;
 
-namespace Saas.SignupAdministration.Web.Models
+namespace Saas.SignupAdministration.Web.Models;
+
+public class ApplicationUser : ClaimsIdentity, IApplicationUser
 {
-    public class ApplicationUser : ClaimsIdentity, IApplicationUser
+    private static ClaimsIdentity? Identity => AppHttpContext.Current?.User.Identity as ClaimsIdentity;
+
+    public string EmailAddress
     {
-        private static ClaimsIdentity? Identity => AppHttpContext.Current?.User.Identity as ClaimsIdentity;
-
-        public string EmailAddress
+        get
         {
-            get
-            {
-                var claim = Identity?.FindFirst(SR.EmailAddressClaimType);
-                string emailAddress = claim?.Value ?? string.Empty;
+            var claim = Identity?.FindFirst(SR.EmailAddressClaimType);
+            string emailAddress = claim?.Value ?? string.Empty;
 
-                return (!string.IsNullOrWhiteSpace(emailAddress) || RegexUtilities.IsValidEmail(emailAddress)) ? emailAddress : (emailAddress == null) ? throw new ArgumentNullException("EmailAddress") : throw new ArgumentException("The email addres must be in a valid format", "EmailAddress");
-            }
+            return (!string.IsNullOrWhiteSpace(emailAddress) || RegexUtilities.IsValidEmail(emailAddress)) ? emailAddress : (emailAddress == null) ? throw new ArgumentNullException("EmailAddress") : throw new ArgumentException("The email addres must be in a valid format", "EmailAddress");
         }
+    }
 
-        public Guid NameIdentifier
+    public Guid NameIdentifier
+    {
+        get
         {
-            get
-            {
-                var claim = Identity?.FindFirst(SR.NameIdentifierClaimType);
+            var claim = Identity?.FindFirst(SR.NameIdentifierClaimType);
 
-                return (Guid.TryParse(claim?.Value, out Guid nameIdentifier)) ? nameIdentifier : throw new ArgumentNullException("NameIdentifier");
-            }
+            return (Guid.TryParse(claim?.Value, out Guid nameIdentifier)) ? nameIdentifier : throw new ArgumentNullException("NameIdentifier");
         }
+    }
 
-        public string AuthenticationClassReference
+    public string AuthenticationClassReference
+    {
+        get
         {
-            get
-            {
-                var claim = Identity?.FindFirst(SR.AuthenticationClassReferenceClaimType);
+            var claim = Identity?.FindFirst(SR.AuthenticationClassReferenceClaimType);
 
-                return claim?.Value ?? string.Empty;
-            }
+            return claim?.Value ?? string.Empty;
         }
+    }
 
-        public DateTime AuthenticationTime
+    public DateTime AuthenticationTime
+    {
+        get
         {
-            get
-            {
-                var claim = Identity?.FindFirst(SR.AuthenticationTimeClaimType);
+            var claim = Identity?.FindFirst(SR.AuthenticationTimeClaimType);
 
-                bool success = long.TryParse(claim?.Value, out long ticks);
+            bool success = long.TryParse(claim?.Value, out long ticks);
 
-                return new DateTime((success) ? ticks : 0);
-            }
+            return new DateTime((success) ? ticks : 0);
         }
+    }
 
-        public long AuthenticationTimeTicks
+    public long AuthenticationTimeTicks
+    {
+        get
         {
-            get
-            {
-                var claim = Identity?.FindFirst(SR.AuthenticationTimeClaimType);
+            var claim = Identity?.FindFirst(SR.AuthenticationTimeClaimType);
 
-                bool success = long.TryParse(claim?.Value, out long ticks);
+            bool success = long.TryParse(claim?.Value, out long ticks);
 
-                return (success) ? ticks : 0;
-            }
+            return (success) ? ticks : 0;
         }
+    }
 
-        public string GivenName
+    public string GivenName
+    {
+        get
         {
-            get
-            {
-                var claim = Identity?.FindFirst(SR.GivenNamClaimType);
+            var claim = Identity?.FindFirst(SR.GivenNamClaimType);
 
-                return claim?.Value ?? string.Empty;
-            }
+            return claim?.Value ?? string.Empty;
         }
+    }
 
-        public string Surname
+    public string Surname
+    {
+        get
         {
-            get
-            {
-                var claim = Identity?.FindFirst(SR.SurnameClaimType);
+            var claim = Identity?.FindFirst(SR.SurnameClaimType);
 
-                return claim?.Value ?? string.Empty;
-            }
+            return claim?.Value ?? string.Empty;
         }
+    }
 
-        public Guid TenantId
+    public Guid TenantId
+    {
+        get
         {
-            get
-            {
-                var claim = Identity?.FindFirst(SR.TenantIdClaimType);
+            var claim = Identity?.FindFirst(SR.TenantIdClaimType);
 
-                return (Guid.TryParse(claim?.Value, out Guid tenantId)) ? tenantId : throw new ArgumentNullException("TenantId");
-            }
+            return (Guid.TryParse(claim?.Value, out Guid tenantId)) ? tenantId : throw new ArgumentNullException("TenantId");
         }
     }
 }

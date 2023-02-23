@@ -1,19 +1,25 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Saas.Identity.Authorization.Attribute;
+using Saas.Identity.Authorization.Model;
+using Saas.Identity.Authorization.Model.Data;
+using Saas.Identity.Authorization.Model.Kind;
 
 namespace Saas.Identity.Authorization.Requirement;
 
-public class SaasTenantPermissionRequirement : IAuthorizationRequirement
+[SaasRequirement(TenantPermission.EntityName)]
+public sealed record SaasTenantPermissionRequirement : SaasRequirementBase, ISaasRequirement
 {
-    public string TypeName { get; init; } = "permissions";
+    public static string PermissionEntityName => TenantPermission.EntityName;
 
-    public string PermissionName { get; init; } = "Tenant";
+    public SaasTenantPermissionRequirement(SaasPolicy policy) : base(policy) { }
 
-    public string RouteKeyName { get; init; } = "tenantId";
-
-    public string Permission { get; }
-
-    public SaasTenantPermissionRequirement(string permission)
+    public SaasTenantPermissionRequirement()
     {
-        Permission = permission;
+    }
+
+    public override int PermissionValue()
+    {
+        return Enum.TryParse<TenantPermissionKind>(Policy.Value, out var saasTenantPermission)
+            ? (int)saasTenantPermission
+            : throw new InvalidOperationException($"Unable to parse policy value '{Policy?.Value}' to enum of type {nameof(TenantPermissionKind)}");
     }
 }

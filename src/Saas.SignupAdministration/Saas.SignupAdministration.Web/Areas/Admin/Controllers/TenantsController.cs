@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Saas.Admin.Client;
 
 namespace Saas.SignupAdministration.Web.Areas.Admin.Controllers;
 
@@ -26,26 +27,28 @@ public class TenantsController : Controller
     // GET: Admin/Tenants
     public async Task<IActionResult> Index()
     {
-        var items = await _adminServiceClient.TenantsAsync(HttpContext.User.GetNameIdentifierId());
+        if (!Guid.TryParse(HttpContext.User.GetNameIdentifierId(), out Guid userId))
+        {
+            throw new InvalidOperationException($"User name identifier is invalid '{HttpContext.User.GetNameIdentifierId()}'. The claim must be a Guid.");
+        }
+
+        var items = await _adminServiceClient.TenantsAsync(userId);
         return View(items.Select(x => new TenantViewModel(x, ReferenceData.TenantCategories, ReferenceData.ProductServicePlans)));
     }
 
     // GET: Admin/Tenants/Details/5
     public async Task<IActionResult> Details(string id)
     {
-        Guid guid = new Guid();
-        if (id == null || !Guid.TryParse(id, out guid))
+        if (!Guid.TryParse(id, out var guid))
         {
             return NotFound();
         }
 
         var tenant = await _adminServiceClient.TenantsGETAsync(guid);
-        if (tenant == null)
-        {
-            return NotFound();
-        }
-
-        return View(new TenantViewModel(tenant, ReferenceData.TenantCategories, ReferenceData.ProductServicePlans));
+        
+        return tenant == null
+            ? (IActionResult)NotFound()
+            : View(new TenantViewModel(tenant, ReferenceData.TenantCategories, ReferenceData.ProductServicePlans));
     }
 
     // GET: Admin/Tenants/Create
