@@ -97,6 +97,7 @@ public class GraphAPIService : IGraphAPIService
         {
             var graphUsers = await _graphServiceClient.Users
                 .Request()
+                .Filter(filter.ToString())
                 .GetAsync();
 
             userList.AddRange(ToUserObjects(graphUsers));

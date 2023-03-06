@@ -6,7 +6,7 @@ using Microsoft.Identity.Web;
 namespace Saas.Identity.Helper;
 
 // For more details please see: https://github.com/AzureAD/microsoft-identity-web/issues/13#issuecomment-878528492
-internal class RejectSessionCookieWhenAccountNotInCacheEvents : CookieAuthenticationEvents
+public class RejectSessionCookieWhenAccountNotInCacheEvents : CookieAuthenticationEvents
 {
     private readonly IEnumerable<string> _scopes;
 

@@ -44,7 +44,7 @@ jobs:
       # Run dotnet build and publish
       - name: dotnet build and publish
         run: |
-          dotnet restore ${{ env.PROJECT_DIR }}
+          dotnet restore ${{ env.PROJECT_PATH }}
 
           dotnet build ${{ env.PROJECT_PATH }} \
             --configuration ${{ env.BUILD_CONFIGURATION }}

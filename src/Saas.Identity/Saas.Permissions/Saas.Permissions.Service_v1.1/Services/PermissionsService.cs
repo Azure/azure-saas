@@ -1,4 +1,6 @@
-﻿using Saas.Permissions.Service.Data;
+﻿using Saas.Identity.Authorization.Model.Data;
+using Saas.Identity.Authorization.Model.Kind;
+using Saas.Permissions.Service.Data.Context;
 using Saas.Permissions.Service.Exceptions;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models;
@@ -7,64 +9,117 @@ namespace Saas.Permissions.Service.Services;
 
 public class PermissionsService : IPermissionsService
 {
-    private readonly PermissionsContext _context;
+    private readonly SaasPermissionsContext _permissionsContext;
     private readonly ILogger _logger;
     private readonly IGraphAPIService _graphAPIService;
     
     public PermissionsService(
-        PermissionsContext permissionsContext, 
+        SaasPermissionsContext permissionsContext,
         ILogger<PermissionsService> logger, 
         IGraphAPIService graphAPIService)
     {
-        _context = permissionsContext;
+        _permissionsContext = permissionsContext;
+
         _logger = logger;
         _graphAPIService = graphAPIService;
     }
 
-    public async Task<ICollection<Permission>> GetPermissionsAsync(string userId)
+    public async Task<ICollection<SaasPermission>> GetPermissionsAsync(Guid userId)
     {
         _logger.LogDebug("User {userId} tried to get permissions", userId);
-        return await _context.Permissions
+
+        return await _permissionsContext.SaasPermissions
+            .Include(x => x.UserPermissions)
+            .Include(x => x.TenantPermissions)
             .Where(x => x.UserId == userId)
+            .Select(x => x.IncludeAllPermissionSets())
             .ToListAsync();
     }
 
-    public async Task<ICollection<string>> GetTenantUsersAsync(string tenantId)
+    public async Task<ICollection<Guid>> GetTenantUsersAsync(Guid tenantId)
     {
         _logger.LogDebug("Users are requested from {tenantId}", tenantId);
 
-        return await _context.Permissions
+
+        return await _permissionsContext.SaasPermissions
             .Where(x => x.TenantId == tenantId)
             .Select(x => x.UserId)
             .ToListAsync();
     }
 
-    public async Task<ICollection<string>> GetUserPermissionsForTenantAsync(string tenantId, string userId)
+    public async Task<ICollection<string>> GetUserPermissionClaimsForTenantAsync(Guid tenantId, Guid userId)
     {
         _logger.LogDebug("User permissions where requested for {userId} for {tenantId}", userId, tenantId);
-        return await _context.Permissions
+
+        var permission =  await _permissionsContext.SaasPermissions
+            .Include(x => x.UserPermissions)
+            .Include(x => x.TenantPermissions)
             .Where(x => x.UserId == userId && x.TenantId == tenantId)
-            .Select(x => x.ToTenantPermissionString())
+            .Select(x => x.IncludeAllPermissionSets())
             .ToListAsync();
+
+        return permission.SelectMany(x => x.TenantPermissions.Select(t => t.ToClaim())
+                .Concat(x.UserPermissions.Select(u => u.ToClaim()))).ToList();
     }
 
-    public async Task AddUserPermissionsToTenantAsync(string tenantId, string userId, string[] permissions)
+    public async Task AddNewTenantAsync(Guid tenantId, Guid userId)
     {
-        _logger.LogDebug("User permissions where requested to be added to {userId} on {tenantId}", userId, tenantId);
-        foreach (var permission in permissions)
-        {
-            if (await GetPermissionExistsAsync(tenantId, userId, permission))
-            {
-                throw new ItemAlreadyExistsException($"User: {userId} has already been granted {permission} on tenant: {tenantId}");
-            }
+        _logger.LogDebug("New Tenant creation was requested by {userId} for {tenantId}", userId, tenantId);
 
-            _context.Permissions.Add(new Permission { TenantId = tenantId, UserId = userId, PermissionStr = permission });
-        }
-        await _context.SaveChangesAsync();
+        TenantPermission newTenantPermissions = new()
+        {
+            PermissionStr = TenantPermissionKind.Admin.ToString(),
+        };
+
+        UserPermission newUserPermission = new()
+        {
+            PermissionStr = UserPermissionKind.Self.ToString(),
+        };
+
+        _permissionsContext.SaasPermissions.Add(new SaasPermission
+        {
+            TenantId = tenantId,
+            UserId = userId,
+            TenantPermissions = new TenantPermission[] { newTenantPermissions },
+            UserPermissions = new UserPermission[] { newUserPermission }
+        });
+
+        await _permissionsContext.SaveChangesAsync();
+
         return;
     }
 
-    public async Task AddUserPermissionsToTenantByEmailAsync(string tenantId, string userEmail, string[] permissions)
+    public async Task AddUserPermissionsToUserAsync(Guid tenantId, Guid userId, string[] permissions)
+    {
+        _logger.LogDebug($"User permissions where requested to be added to user with id '{userId}' on tenant with id '{tenantId}'");
+
+        _permissionsContext.SaasPermissions.Add(new SaasPermission
+        {
+            TenantId = tenantId,
+            UserId = userId,
+            UserPermissions = permissions.Select(permission => new UserPermission { PermissionStr = permission }).ToList(),
+        });
+
+        await _permissionsContext.SaveChangesAsync();
+    }
+
+    public async Task AddUserPermissionsToTenantAsync(Guid tenantId, Guid userId, string[] permissions)
+    {
+        _logger.LogDebug("User permissions where requested to be added to {userId} on {tenantId}", userId, tenantId);
+
+        _permissionsContext.SaasPermissions.Add(new SaasPermission
+        {
+            TenantId = tenantId,
+            UserId = userId,
+            TenantPermissions = permissions.Select(permission => new TenantPermission { PermissionStr = permission }).ToList()
+        });
+
+        await _permissionsContext.SaveChangesAsync();
+
+        return;
+    }
+
+    public async Task AddUserPermissionsToTenantByEmailAsync(Guid tenantId, string userEmail, string[] permissions)
     {
         _logger.LogDebug($"User permissions where requested to be added to {userEmail} on {tenantId}");
         
@@ -75,55 +130,52 @@ public class PermissionsService : IPermissionsService
             throw new ItemNotFoundException($"User with email: {userEmail} was not found");
         }
 
-        foreach (var permission in permissions)
+        if (!Guid.TryParse(user?.UserId, out Guid userIdGuid))
         {
-            if (await GetPermissionExistsAsync(tenantId, user.UserId, permission))
-            {
-                throw new ItemAlreadyExistsException($"User: {user.UserId} has already been granted {permission} on tenant: {tenantId}");
-            }
-
-            _context.Permissions.Add(new Permission { TenantId = tenantId, UserId = user.UserId, PermissionStr = permission });
+            throw new InvalidOperationException($"User id '{user?.UserId}' is not a guid.");
         }
-        await _context.SaveChangesAsync();
-        return;
+                
+        _permissionsContext.SaasPermissions
+            .Update(new SaasPermission
+            {
+                TenantId = tenantId,
+                UserId = userIdGuid,
+                TenantPermissions = permissions.Select(permission => new TenantPermission { PermissionStr = permission }).ToArray()
+            });
+
+        await _permissionsContext.SaveChangesAsync();
     }
 
-    public async Task RemoveUserPermissionsFromTenantAsync(string tenantId, string userId, string[] permissions)
+    public async Task RemoveUserPermissionsFromTenantAsync(Guid tenantId, Guid userId, string[] permissions)
     {
         _logger.LogDebug("Permissions were requested to be removed for {userId} on {tenantId}", userId, tenantId);
-        foreach (var permission in permissions)
-        {
-            Permission? dbPermission = await _context.Permissions.FirstOrDefaultAsync(x => 
-            x.TenantId == tenantId && 
-            x.UserId == userId && 
-            x.PermissionStr == permission);
 
-            if (dbPermission == null) {
-                throw new ItemNotFoundException($"Permission {permission} not found for User {userId} on Tenant {tenantId}");
-            }
+        var removeTenantPermission = await _permissionsContext.SaasPermissions
+            .Include(x => x.TenantPermissions)
+            .Where(x => x.TenantId == tenantId && x.UserId == userId)
+            .Select(x => x.IncludeTenantPermissions())
+            .SelectMany(x => x.TenantPermissions.Where(x => permissions.Contains(x.PermissionStr)))
+            .ToListAsync();
 
-            _context.Permissions.Remove(dbPermission);
-        }
-        await _context.SaveChangesAsync();
+        _permissionsContext.SaasPermissions
+            .RemoveRange(removeTenantPermission
+                .Select(x => new SaasPermission 
+                { 
+                    TenantId = tenantId,
+                    UserId = userId,
+                    TenantPermissions = new[] { x } 
+                }));
 
+        await _permissionsContext.SaveChangesAsync();
     }
 
-    public async Task<ICollection<string>> GetTenantsForUserAsync(string userId)
+    public async Task<ICollection<Guid>> GetTenantsForUserAsync(Guid userId)
     {
         _logger.LogDebug("{userId} has requested tenants", userId);
-        return await _context.Permissions
+
+        return await _permissionsContext.SaasPermissions
             .Where(x => x.UserId == userId)
             .Select(x => x.TenantId)
             .ToListAsync();
     }
-
-    private async Task<bool> GetPermissionExistsAsync(string tenantId, string userId, string permission)
-    {
-        _logger.LogDebug("{userId} is checking if {permission} exists on {tenantId}", userId, permission, tenantId);
-        return await _context.Permissions.AnyAsync(x =>
-        x.UserId == userId &&
-        x.TenantId == tenantId &&
-        x.PermissionStr == permission);
-    }
-
 }

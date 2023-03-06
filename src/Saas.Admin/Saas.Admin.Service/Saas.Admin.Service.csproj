@@ -7,6 +7,7 @@
 		<UserSecretsId>aspnet-Saas.Admin.Service-5358E0C3-EA51-44EA-B381-CA2F9D9710D3</UserSecretsId>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+		<Configurations>Debug;Release;Multi Debug</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -24,9 +25,9 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Identity.Web" Version="1.26.0" />
-		<PackageReference Include="Microsoft.Identity.Web.UI" Version="1.26.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.3" />
+		<PackageReference Include="Microsoft.Identity.Web" Version="2.5.0" />
+		<PackageReference Include="Microsoft.Identity.Web.UI" Version="2.5.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.4" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 	<ItemGroup>
@@ -35,7 +36,8 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Saas.Lib\Saas.Authorization\Saas.AspNetCore.Authorization\Saas.AspNetCore.Authorization.csproj" />
+	  <ProjectReference Include="..\..\Saas.Identity\Saas.Permissions\Saas.Permissions.Client\Saas.Permissions.Client.csproj" />
+	  <ProjectReference Include="..\..\Saas.Lib\Saas.Identity\Saas.Identity.csproj" />
 	  <ProjectReference Include="..\..\Saas.Lib\Saas.Shared\Saas.Shared.csproj" />
 	</ItemGroup>
 </Project>

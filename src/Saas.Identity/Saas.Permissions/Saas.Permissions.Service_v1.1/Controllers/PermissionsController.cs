@@ -27,10 +27,10 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Route("GetTenantUsers")]
-    public async Task<ActionResult<IEnumerable<User>>> GetTenantUsers(string tenantId)
+    public async Task<ActionResult<IEnumerable<User>>> GetTenantUsers(Guid tenantId)
     {
         // Get user IDs from database
-        ICollection<string> userIds;
+        ICollection<Guid> userIds;
 
         try
         {
@@ -41,7 +41,12 @@ public class PermissionsController : ControllerBase
             _logger.LogError("Unable to get Tenant Users.", ex);
             throw;
         }
-        
+
+        if (userIds is null || userIds.Count == 0)
+        {
+            return Ok(new List<User>());
+        }
+                    
         //
         // Next, we fetch the user objects with more data from the Microsoft Graph API
         //
@@ -50,7 +55,9 @@ public class PermissionsController : ControllerBase
         // If you are not using our identity framework, you will need to replace the following try/catch block with an implementation to fetch your user information from your user store.
         try
         {
-            var enrichedUsers = await _graphAPIService.GetUsersByIds(userIds.Select(stringId => Guid.Parse(stringId)).ToList());
+            var enrichedUsers = await _graphAPIService
+                .GetUsersByIds(userIds);
+
             return Ok(enrichedUsers);
         } 
         catch (FormatException ex)
@@ -71,9 +78,30 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Route("GetUserPermissionsForTenant")]
-    public async Task<ICollection<string>> GetUserPermissionsForTenant(string tenantId, string userId)
+    public async Task<ICollection<string>> GetUserPermissionsForTenant(Guid tenantId, Guid userId)
     {
-        return await _permissionsService.GetUserPermissionsForTenantAsync(tenantId, userId);
+        return await _permissionsService.GetUserPermissionClaimsForTenantAsync(tenantId, userId);
+    }
+
+    [HttpPost]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Route("AddNewTenant")]
+    public async Task<IActionResult> AddNewTenant(Guid tenantId, Guid userId)
+    {
+        try
+        {
+            await _permissionsService.AddNewTenantAsync(tenantId, userId);
+            return Ok();
+        }
+        catch (ItemAlreadyExistsException ex)
+        {
+            _logger.LogError("Permissions were not able to be added to {userId} on {tenantId}", userId, tenantId);
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost]
@@ -83,7 +111,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Route("AddUserPermissionsToTenant")]
-    public async Task<IActionResult> AddUserPermissionsToTenant(string tenantId, string userId, string[] permissions)
+    public async Task<IActionResult> AddUserPermissionsToTenant(Guid tenantId, Guid userId, string[] permissions)
     {
         try
         {
@@ -103,8 +131,29 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Route("AddUserPermissionsToUser")]
+    public async Task<IActionResult> AddUserPermissionsToUser(Guid tenantId, Guid userId, string[] permissions)
+    {
+        try
+        {
+            await _permissionsService.AddUserPermissionsToUserAsync(tenantId, userId, permissions);
+            return Ok();
+        }
+        catch (ItemAlreadyExistsException ex)
+        {
+            _logger.LogError("Permissions were not able to be added to {userId}.", userId);
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Route("AddUserPermissionsToTenantByEmail")]
-    public async Task<IActionResult> AddUserPermissionsToTenantByEmail(string tenantId, string userEmail, string[] permissions)
+    public async Task<IActionResult> AddUserPermissionsToTenantByEmail(Guid tenantId, string userEmail, string[] permissions)
     {
         try
         {
@@ -130,7 +179,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Route("RemoveUserPermissionsFromTenant")]
-    public async Task<IActionResult> RemoveUserPermissionsFromTenant(string tenantId, string userId, string[] permissions)
+    public async Task<IActionResult> RemoveUserPermissionsFromTenant(Guid tenantId, Guid userId, string[] permissions)
     {
         try
         {
@@ -150,7 +199,7 @@ public class PermissionsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Route("GetTenantsForUser")]
-    public async Task<ICollection<string>> GetTenantsForUser(string userId)
+    public async Task<ICollection<Guid>> GetTenantsForUser(Guid userId)
     {
         return await _permissionsService.GetTenantsForUserAsync(userId);
     }

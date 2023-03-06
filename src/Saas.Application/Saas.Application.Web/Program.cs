@@ -6,6 +6,10 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Saas.Shared.Options;
 using Saas.Identity.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Saas.Identity.Helper;
+using Saas.SignupAdministration.Web.Services;
+using Saas.Admin.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -67,19 +71,31 @@ var scopes = new[] { "tenant.read" };
 //    .Get<AdminApiOptions>()?.Scopes
 //        ?? throw new NullReferenceException("Scopes cannot be null");
 
-// 
-builder.Services.AddSaasWebAppAuthentication(applicationIdUri, scopes, builder.Configuration)
-    .SaaSAppToCallDownstreamApiWithHttpClient<IAdminServiceClient, AdminServiceClient>((_, httpClient) =>
-    {
-        string adminApiBaseUrl = builder.Environment.IsDevelopment()
-            ? builder.Configuration.GetRequiredSection("adminApi:baseUrl").Value
-                ?? throw new NullReferenceException("Environment is running in development mode. Please specify the value for 'adminApi:baseUrl' in appsettings.json.")
-            : builder.Configuration.GetRequiredSection(AzureB2CAdminApiOptions.SectionName)?.Get<AzureB2CAdminApiOptions>()?.BaseUrl
-                ?? throw new NullReferenceException($"{nameof(AzureB2CAdminApiOptions)} Url cannot be null");
+// Azure AD B2C requires scope config with a fully qualified url along with an identifier. To make configuring it more manageable and less
+// error prone, we store the names of the scopes separately from the application id uri and combine them when neded.
+var fullyQualifiedScopes = scopes.Select(scope => $"{applicationIdUri}/{scope}".Trim('/'));
 
-        httpClient.BaseAddress = new Uri(adminApiBaseUrl);
-    });
+// Adding SaaS Authentication and setting web app up for calling the Admin API
+builder.Services.AddSaasWebAppAuthentication(AzureB2CSaasAppOptions.SectionName, builder.Configuration, fullyQualifiedScopes)
+    .SaaSAppCallDownstreamApi()
+    .AddInMemoryTokenCaches();
 
+// Managing the situation where the access token is not in cache.
+// For more details please see: https://github.com/AzureAD/microsoft-identity-web/issues/13
+builder.Services.Configure<CookieAuthenticationOptions>(
+    CookieAuthenticationDefaults.AuthenticationScheme,
+    options => options.Events = new RejectSessionCookieWhenAccountNotInCacheEvents(fullyQualifiedScopes));
+
+builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>(httpClient =>
+{
+    string adminApiBaseUrl = builder.Environment.IsDevelopment()
+        ? builder.Configuration.GetRequiredSection("adminApi:baseUrl").Value
+            ?? throw new NullReferenceException("Environment is running in development mode. Please specify the value for 'adminApi:baseUrl' in appsettings.json.")
+        : builder.Configuration.GetRequiredSection(AzureB2CAdminApiOptions.SectionName)?.Get<AzureB2CAdminApiOptions>()?.BaseUrl
+            ?? throw new NullReferenceException($"{nameof(AzureB2CAdminApiOptions)} Url cannot be null");
+
+    httpClient.BaseAddress = new Uri(adminApiBaseUrl);
+});
 
 // Required for the JsonPersistenceProvider
 // Should be replaced based on the persistence scheme

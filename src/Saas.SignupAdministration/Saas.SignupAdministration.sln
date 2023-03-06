@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.SignupAdministration.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Shared", "..\Saas.Lib\Saas.Shared\Saas.Shared.csproj", "{7611AF38-07BB-47AA-A002-9BBA79444E90}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Identity", "..\Saas.Lib\Saas.Identity\Saas.Identity.csproj", "{7E6F5E35-997D-4800-BD03-3CCE40877271}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Client", "..\Saas.Admin\Saas.Admin.Client\Saas.Admin.Client.csproj", "{AE4FBD02-B570-4DCC-BCC8-AED74791D457}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{7611AF38-07BB-47AA-A002-9BBA79444E90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7611AF38-07BB-47AA-A002-9BBA79444E90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7611AF38-07BB-47AA-A002-9BBA79444E90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E6F5E35-997D-4800-BD03-3CCE40877271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E6F5E35-997D-4800-BD03-3CCE40877271}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E6F5E35-997D-4800-BD03-3CCE40877271}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E6F5E35-997D-4800-BD03-3CCE40877271}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE4FBD02-B570-4DCC-BCC8-AED74791D457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE4FBD02-B570-4DCC-BCC8-AED74791D457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE4FBD02-B570-4DCC-BCC8-AED74791D457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE4FBD02-B570-4DCC-BCC8-AED74791D457}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

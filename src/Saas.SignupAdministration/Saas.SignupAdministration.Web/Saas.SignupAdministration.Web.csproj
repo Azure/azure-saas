@@ -6,6 +6,7 @@
     <UserSecretsId>7b599cf5-3102-4740-ab34-69dd240f9ea3</UserSecretsId>
     <ApplicationInsightsResourceId>/subscriptions/357c83c2-bed7-4fe7-af6a-95835c6e2d91/resourceGroups/rg-saas-dev-001/providers/microsoft.insights/components/app-provider-dev-001</ApplicationInsightsResourceId>
     <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;Multi Debug</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,11 +23,11 @@
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.32.0" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.32.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="5.2.0" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.50.0" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="1.26.0" />
-    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.26.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="2.5.0" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="2.5.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.4" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
   </ItemGroup>
@@ -36,6 +37,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Saas.Admin\Saas.Admin.Client\Saas.Admin.Client.csproj" />
+    <ProjectReference Include="..\..\Saas.Lib\Saas.Identity\Saas.Identity.csproj" />
     <ProjectReference Include="..\..\Saas.Lib\Saas.Shared\Saas.Shared.csproj" />
   </ItemGroup>
 

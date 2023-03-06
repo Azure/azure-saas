@@ -1,4 +1,6 @@
-﻿namespace Saas.SignupAdministration.Web.Areas.Admin.Controllers;
+﻿using Saas.Admin.Client;
+
+namespace Saas.SignupAdministration.Web.Areas.Admin.Controllers;
 
 [Area("Admin")]
 [Controller]
@@ -15,7 +17,7 @@ public class UsersController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string tenantid)
+    public async Task<IActionResult> Index(Guid tenantid)
     {
         var users = await _adminServiceClient.UsersAsync(tenantid);
         var userViewModels = await users
@@ -43,25 +45,37 @@ public class UsersController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Route("AddUserToTenant")]
-    public async Task<IActionResult> AddUserToTenant(string tenantid, [Bind("TenantId, UserEmail, ConfirmUserEmail")] AddUserRequest addUserRequest)
+    public async Task<IActionResult> AddUserToTenant(Guid tenantid, [Bind("TenantId, UserEmail, ConfirmUserEmail")] AddUserRequest addUserRequest)
     {
-        Guid guid = new Guid();
-        if (!Guid.TryParse(tenantid, out guid) || string.Compare(tenantid, addUserRequest.TenantId) != 0)
+        if (string.Compare(tenantid.ToString(), addUserRequest.TenantId) != 0)
         {
             return NotFound();
         }
 
-        if (ModelState.IsValid && string.Compare(addUserRequest.UserEmail, addUserRequest.ConfirmUserEmail)==0)
+        if (!Guid.TryParse(addUserRequest.TenantId, out var userTenantId)) 
+        {
+            throw new ArgumentException($"The added user tenant id value is invalid '{addUserRequest.TenantId}'. Vakue must be a guid. ");
+        }
+
+        if (ModelState.IsValid 
+            && string.Compare(addUserRequest.UserEmail, addUserRequest.ConfirmUserEmail) == 0)
         {
             try
             {
-                await _adminServiceClient.InviteAsync(addUserRequest.TenantId, addUserRequest.UserEmail);
+                await _adminServiceClient.InviteAsync(userTenantId, addUserRequest.UserEmail);
             }
             catch (ApiException)
             {
                 return NotFound();
             }
-            return RedirectToAction("Index", new { area = "Admin", controller = "users", tenantid = addUserRequest.TenantId });
+            return RedirectToAction(
+                "Index", 
+                new 
+                { 
+                    area = "Admin", 
+                    controller = "users", 
+                    tenantid = addUserRequest.TenantId 
+                });
         }
         return View(addUserRequest);
     }
