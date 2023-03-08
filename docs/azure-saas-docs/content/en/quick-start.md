@@ -20,7 +20,7 @@ The Azure SaaS Dev Kit provides an excellent starting point for launching your S
 
 This project uses [Azure Active Directory B2C](https://docs.microsoft.com/azure/active-directory-b2c/overview) for an IdP (Identity Provider). The first step in setting up this project is to configure a new Azure AD B2C instance to house your local user accounts.
 
-To provision the Identity Framework please follow this [readme](https://github.com/landonpierce/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider).
+To provision the Identity Framework please follow this [readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider).
 
 ## Provisioning the SaaS Permissions API
 
@@ -28,7 +28,7 @@ After provisioning the Identity Framework, you should provision the Azure servic
 
 The Azure AD B2C configuration that was provisioned as part of the Identity Foundation Services relies on the Saas Permissions API to provide permission claims. When a user logs into your SaaS solution, these permissions claims are added to the users JWT access token.
 
-To provision the SaaS Permissions API please follow the [readme](https://github.com/landonpierce/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions).
+To provision the SaaS Permissions API please follow the [readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions).
 
 ## Provisioning the Saas Admin API
 
@@ -36,13 +36,13 @@ The SaaS Admin API is allowed to write data to the Permissions API. This means t
 
 In addition, the SaaS Admin API provides secure endpoints that only allow access to users with the specific permissions defined of each of the endpoints. These permissions match the permissions in the claims that are returned by the Permissions API.
 
-To provision the SaaS Admin API please follow the [readme](https://github.com/landonpierce/azure-saas/tree/main/src/Saas.Admin).
+To provision the SaaS Admin API please follow the [readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin).
 
 ## Provisioning the Sign-Up Administration Web Application
 
 The Sign-up Administration Web Application provides a UI for adding new SaaS tenant(*) and for managing permissions and users. The Sign-up Administration Web Application relies on the SaaS Admin API to provide read and write access to the permissions database.
 
-To provision the SaaS Sign-up Administration Web Application please follow the [readme](https://github.com/landonpierce/azure-saas/tree/main/src/Saas.SignupAdministration).
+To provision the SaaS Sign-up Administration Web Application please follow the [readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration).
 
 > (*) Note that the term *tenant* is overloaded. A SaaS Tenant is not that same as an Azure AD tenant. The SaaS tenant references each instance of your multi-tenanted application.
 
@@ -50,7 +50,7 @@ To provision the SaaS Sign-up Administration Web Application please follow the [
 
 The SaaS Application is a sample application that serves as an example of where your SaaS Solution would fit in. It relies on all the other components mentioned here.
 
-To provision the SaaS Application please follow the [readme](https://github.com/landonpierce/azure-saas/tree/main/src/Saas.Application).
+To provision the SaaS Application please follow the [readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.Application).
 
 ## (Optional) Configure Email Provider
 
