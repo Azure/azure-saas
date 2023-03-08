@@ -12,21 +12,21 @@ On this page, you will find instructions for how to run the dev kit in your loca
 
 ## Before You begin
 
-Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the ASDK GitHub repository to you own GitHub account to make it your own.
+Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the Azure SaaS Dev Kit GitHub repository to to your own GitHub account to make it your own.
 
-The Azure SaaS Dev Kit provides an excellent starting point for launching your SaaS solution. To truly reap the benefits, it is essential to customize the ASDK to suit your particular requirements. By tailoring the ASDK, you achieve the solution that aligns with your specific objectives.
+The Azure SaaS Dev Kit provides an excellent starting point for launching your SaaS solution. To truly reap the benefits, it is essential to customize the dev kit to suit your particular requirements. By tailoring the dev kit, you achieve the solution that aligns with your specific objectives.
 
-## Provisioning the Identity Foundation Services
+## Provisioning the Identity Framework
 
-This project uses [Azure Active Directory B2C](https://docs.microsoft.com/azure/active-directory-b2c/overview) for an IdP (Identity Provider). The first step in setting up this project is to configure a new Azure AD B2C instance to house your local user accounts. 
+This project uses [Azure Active Directory B2C](https://docs.microsoft.com/azure/active-directory-b2c/overview) for an IdP (Identity Provider). The first step in setting up this project is to configure a new Azure AD B2C instance to house your local user accounts.
 
-To provision the Identity Foundation Service please follow this [readme](https://github.com/landonpierce/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider).
+To provision the Identity Framework please follow this [readme](https://github.com/landonpierce/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider).
 
-## Provisioning the SaaS Permissions API. 
+## Provisioning the SaaS Permissions API
 
-After provisioning the Identity foundation Services, you should provision the Azure services and configuration needed for running the [Permissions API](../components/identity/permissions-service) locally or deploying it to Azure. 
+After provisioning the Identity Framework, you should provision the Azure services and configuration needed for running the [Permissions API](../components/identity/permissions-service) locally or deploying it to Azure.
 
-The Azure AD B2C configuration that was provisioned as oart of the Identity Foundation Services, rely on the Saas Permissions API to provide permission claims. When a user logs into you SaaS solution these permissions claims are added to the users JWT access token.
+The Azure AD B2C configuration that was provisioned as part of the Identity Foundation Services relies on the Saas Permissions API to provide permission claims. When a user logs into your SaaS solution, these permissions claims are added to the users JWT access token.
 
 To provision the SaaS Permissions API please follow the [readme](https://github.com/landonpierce/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions).
 
@@ -40,15 +40,15 @@ To provision the SaaS Admin API please follow the [readme](https://github.com/la
 
 ## Provisioning the Sign-Up Administration Web Application
 
-The Sign-up Administration Web Application provides a UI for adding new SaaS tenant(*) and for managing permissions and users. The Sigh-up Administration Web Application relies on the SaaS Admin API to provide read and write access to the permissions database.
+The Sign-up Administration Web Application provides a UI for adding new SaaS tenant(*) and for managing permissions and users. The Sign-up Administration Web Application relies on the SaaS Admin API to provide read and write access to the permissions database.
 
 To provision the SaaS Sign-up Administration Web Application please follow the [readme](https://github.com/landonpierce/azure-saas/tree/main/src/Saas.SignupAdministration).
 
-> (*) Note that the term *tenant* is overloaded. A SaaS Tenant is not that same as an Azure AD tenant. The SaaS Tenant reference to each instance of your multi-tenanted application.
+> (*) Note that the term *tenant* is overloaded. A SaaS Tenant is not that same as an Azure AD tenant. The SaaS tenant references each instance of your multi-tenanted application.
 
 ## Provisoning the Saas Application
 
-The SaaS Application is a sample of your SaaS Solution. It relies on all the other componets mentioned here. 
+The SaaS Application is a sample application that serves as an example of where your SaaS Solution would fit in. It relies on all the other components mentioned here.
 
 To provision the SaaS Application please follow the [readme](https://github.com/landonpierce/azure-saas/tree/main/src/Saas.Application).
 
@@ -60,9 +60,9 @@ The SaaS.Notifications module **need page and link** is an Azure Logic App respo
 
 Now that you've seen how to run the code locally as well as deploy your code to Azure (in a repeatable and code-first way), you can integrate your own code into the solution.
 
-We've included a basic application within the `Saas.Application.Web` project that demonstrates a SaaS solution called "BadgeMeUp". BadgeMeUp is simply a badge sharing site that *Contoso* (representing your company) can sell to end customers.
+We've included a basic application within the `Saas.Application.Web` project that demonstrates a SaaS solution called "BadgeMeUp". BadgeMeUp is a simple badge sharing site that *Contoso* (representing your company) can sell to end customers.
 
-> SaaS solutions come in many shapes as sizes. We picked "BadgeMeUp", because it's a fairly simple scenario to understand. [You can read more about this particular SaaS scenario here](../resources/contoso-badgemeup/).
+> SaaS solutions come in many shapes and sizes. We picked "BadgeMeUp", because it's a fairly simple scenario to understand. [You can read more about this particular SaaS scenario here](../resources/contoso-badgemeup/).
 
 ## More Info
 
