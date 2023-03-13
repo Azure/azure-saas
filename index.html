@@ -21,8 +21,8 @@
 
 <title>Azure SaaS Dev Kit Docs</title>
 <meta name="description" content="Welcome to the Azure SaaS Dev Kit!
-Software as a Service (SaaS) doesn’t need to be complex and time consuming.
-The Azure SaaS Development Kit is a …">
+Getting of to a great and solid start buidling your own cloud-native Software as a Service (SaaS).
+The Azure SaaS …">
 <meta property="og:title" content="" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
@@ -36,8 +36,8 @@ The Azure SaaS Development Kit is a …">
 
 
 
-<link rel="preload" href="/azure-saas/scss/main.min.01c7095646f7a5d136fb587e37c85d2417a71539f94cd281b6c32ecdf0171086.css" as="style">
-<link href="/azure-saas/scss/main.min.01c7095646f7a5d136fb587e37c85d2417a71539f94cd281b6c32ecdf0171086.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/azure-saas/scss/main.min.3767a8089fe064c87ba45eaa60a7f3aa19063f04135e11a525abf1d287ade7c8.css" as="style">
+<link href="/azure-saas/scss/main.min.3767a8089fe064c87ba45eaa60a7f3aa19063f04135e11a525abf1d287ade7c8.css" rel="stylesheet" integrity="">
 
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -259,12 +259,13 @@ The Azure SaaS Development Kit is a …">
 		
 	</header>
 	<h1 id="welcome-to-the-azure-saas-dev-kit">Welcome to the Azure SaaS Dev Kit!</h1>
-<p><a href="https://azure.microsoft.com/en-us/overview/what-is-saas/">Software as a Service (SaaS)</a> doesn’t need to be complex and time consuming.</p>
-<p>The Azure SaaS Development Kit is a deployable reference implementation of pre-built modules designed to help you launch your SaaS offering faster:</p>
+<p>Getting of to a great and solid start buidling your own cloud-native <a href="https://azure.microsoft.com/en-us/overview/what-is-saas/">Software as a Service (SaaS)</a>.</p>
+<p>The Azure SaaS Development Kit is a deployable reference implementation with pre-built modules designed to help you build  you own cloud-native SaaS offerings:</p>
 <ul>
-<li>It is a control plane implementation that includes commonly needed SaaS components such as identity, onboarding, and tenant management.</li>
+<li>It is a <a href="https://learn.microsoft.com/en-us/dotnet/architecture/cloud-native/definition">cloud-native</a> control plane implementation that includes commonly needed SaaS components such as identity, onboarding, tenant management and permissions.</li>
 <li>It is <a href="https://github.com/Azure/azure-saas">100% open-source code</a>, allowing you to build by example or modify/extend to be purpose-built for your particular scenario.</li>
 <li>The code is fully documented, making it clear how the code functions, and why key design decisions were made.</li>
+<li>It comes with comprehensive CI/DC DevOps deployment scripts to get quickl up and running and ready for customization as the solution grows.</li>
 </ul>
 <h2 id="usage-options">Usage Options</h2>
 <p>How you use the dev kit is up to you, here are some ideas to get you started:</p>
@@ -273,15 +274,14 @@ The Azure SaaS Development Kit is a …">
 <li>Developing a greenfield SaaS offering for the first time.</li>
 <li>Migrating a SaaS offering from another cloud to Azure.</li>
 </ul>
-<p>This is not a one-size-fits-all solution. Use as little or as much as you like. It is designed to be both a modular deployable reference implementation and also a reference architecture. You are free to use and change the code contained within this project in any way you&rsquo;d like (following the terms of the <a href="https://github.com/Azure/azure-saas/blob/main/LICENSE">license</a>)):</p>
+<p>This is not a one-size-fits-all solution. Use as little or as much as you like. It is designed to be both a modular deployable reference implementation and also a reference architecture. You are free to use and change the code contained within this project in any way you&rsquo;d like (following the terms of the <a href="https://github.com/Azure/azure-saas/blob/main/LICENSE">license</a>:</p>
 <ul>
-<li>Deploy the entire solution to Azure using the <a href="https://docs.microsoft.com/azure/azure-resource-manager/bicep/">Bicep</a> templates we provide, make changes to fit your exact use case, and start building your SaaS application from there.</li>
+<li>Deploy the entire solution to Azure using the deployment scripts provided and make changes to fit your exact use case, and start building your SaaS application from there.</li>
 <li>Deploy one or more of our modules and hook it into your existing SaaS application.</li>
 <li>Reference our code &amp; architecture and build something entirely custom using the best practices we outlined.</li>
 <li>Or, simply gain inspiration from this codebase.</li>
 </ul>
 <h2 id="modular-architecture">Modular Architecture</h2>
-<p>This kit uses a <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/architect-microservice-container-applications/microservices-architecture">microservices architecture</a> so that each module is self-contained and can be used independently.</p>
 <ul>
 <li>
 <p><a href="components/identity"><strong>Identity Framework</strong></a></p>
@@ -353,7 +353,7 @@ The Azure SaaS Development Kit is a …">
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified July 6, 2022: <a href="https://github.com/Azure/azure-saas/commit/95ecb9e8b9d4d49bc724d109cff90cfa275d1e2b">change wording on homepage (95ecb9e)</a>
+  Last modified February 23, 2023: <a href="https://github.com/Azure/azure-saas/commit/d007bb8d874045585c9978b848163e0cdbcea064">Improved Permissions Scheme and readme (d007bb8)</a>
 </div>
 
 </div>
