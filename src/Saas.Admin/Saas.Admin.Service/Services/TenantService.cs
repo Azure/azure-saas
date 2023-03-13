@@ -1,15 +1,16 @@
 ﻿using Saas.Admin.Service.Controllers;
 using Saas.Admin.Service.Data;
+using Saas.Permissions.Client;
 
 namespace Saas.Admin.Service.Services;
 
 public class TenantService : ITenantService
 {
     private readonly TenantsContext _context;
-    private readonly IPermissionService _permissionService;
+    private readonly IPermissionsServiceClient _permissionService;
     private readonly ILogger _logger;
 
-    public TenantService(TenantsContext tenantContext, IPermissionService permissionService, ILogger<TenantService> logger)
+    public TenantService(TenantsContext tenantContext, IPermissionsServiceClient permissionService, ILogger<TenantService> logger)
     {
         _context = tenantContext;
         _permissionService = permissionService;
@@ -25,25 +26,22 @@ public class TenantService : ITenantService
 
     public async Task<TenantDTO> GetTenantAsync(Guid tenantId)
     {
-        Tenant? tenant = await _context.Tenants.FindAsync(tenantId);
-        if (tenant == null)
-        {
-            throw new ItemNotFoundExcepton("Tenant");
-        }
-
-        TenantDTO returnValue = new TenantDTO(tenant);
+        Tenant? tenant = await _context.Tenants.FindAsync(tenantId) 
+            ?? throw new ItemNotFoundExcepton("Tenant");
+        
+        TenantDTO returnValue = new(tenant);
         return returnValue;
     }
 
-    public async Task<IEnumerable<TenantDTO>> GetTenantsByIdAsync(IEnumerable<string> ids)
+    public async Task<IEnumerable<TenantDTO>> GetTenantsByIdAsync(IEnumerable<Guid> ids)
     {
-        IQueryable<Tenant>? tenants = _context.Tenants.Where(t => ids.Contains(t.Id.ToString()));
+        IQueryable<Tenant>? tenants = _context.Tenants.Where(t => ids.Contains(t.Id));
 
         List<TenantDTO>? returnValue = await tenants.Select(t => new TenantDTO(t)).ToListAsync();
         return returnValue;
     }
 
-    public async Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, string adminId)
+    public async Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, Guid adminId)
     {
         Tenant tenant = newTenantRequest.ToTenant();
         _context.Tenants.Add(tenant);
@@ -51,7 +49,7 @@ public class TenantService : ITenantService
 
         try
         {
-            await _permissionService.AddUserPermissionsToTenantAsync(tenant.Id.ToString(), adminId, AppConstants.Roles.TenantAdmin);
+            await _permissionService.AddNewTenantAsync(tenant.Id, adminId);
         }
         catch (Exception ex)
         {
@@ -61,19 +59,15 @@ public class TenantService : ITenantService
             throw;
         }
 
-        TenantDTO? returnValue = new TenantDTO(tenant);
+        TenantDTO? returnValue = new(tenant);
         return returnValue;
     }
 
     public async Task<TenantDTO> UpdateTenantAsync(TenantDTO tenantDto)
     {
-        Tenant? fromDB = await _context.Tenants.FindAsync(tenantDto.Id);
-
-        if (fromDB == null)
-        {
-            throw new ItemNotFoundExcepton("Tenant");
-        }
-
+        Tenant? fromDB = await _context.Tenants.FindAsync(tenantDto.Id) 
+            ?? throw new ItemNotFoundExcepton("Tenant");
+        
         tenantDto.CopyTo(fromDB);
         _context.Entry(fromDB).State = EntityState.Modified;
 
@@ -87,18 +81,15 @@ public class TenantService : ITenantService
             throw;
         }
 
-        TenantDTO returnValue = new TenantDTO(fromDB);
+        TenantDTO returnValue = new(fromDB);
         return returnValue;
     }
 
     public async Task DeleteTenantAsync(Guid tenantId)
     {
-        Tenant? tenant = await _context.Tenants.FindAsync(tenantId);
-        if (tenant == null)
-        {
-            throw new ItemNotFoundExcepton("Tenant");
-        }
-
+        Tenant? tenant = await _context.Tenants.FindAsync(tenantId) 
+            ?? throw new ItemNotFoundExcepton("Tenant");
+        
         _context.Tenants.Remove(tenant);
         await _context.SaveChangesAsync();
     }
@@ -110,8 +101,11 @@ public class TenantService : ITenantService
 
     public async Task<TenantInfoDTO> GetTenantInfoByRouteAsync(string route)
     {
-        var tenant = await _context.Tenants.FirstOrDefaultAsync(x => route != null && x.Route.Length == route.Length && EF.Functions.Like(x.Route, $"%{route}%"));
-        TenantInfoDTO returnValue = new TenantInfoDTO(tenant);
+        var tenant = await _context.Tenants.FirstOrDefaultAsync(x => 
+            route != null
+            && x.Route.Length == route.Length 
+            && EF.Functions.Like(x.Route, $"%{route}%"));
+        TenantInfoDTO returnValue = new(tenant);
         return returnValue;
     }
 
@@ -128,6 +122,4 @@ public class TenantService : ITenantService
             throw;
         }
     }
-
-
 }

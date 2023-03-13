@@ -1,0 +1,306 @@
+{ 
+  "initConfig": {
+    "userPrincipalId": "",
+    "subscriptionId": "",
+    "tenantId": "",
+    "location": "",
+    "naming": {
+      "solutionPrefix": "asdk",
+      "solutionName": "test"
+    },
+    "azureb2c": {
+      "location": "Europe",
+      "countryCode": "DK",
+      "skuName": "PremiumP1",
+      "tier": "A0"
+    }
+  },
+  "version": "0.8.0",
+  "environment": "Production",
+  "git": {
+    "branch": "main"
+  },
+  "oidc": 
+  {
+    "name": null,
+    "objectId": null,
+    "appId": null,
+    "assigneeObjectId": null,
+    "federation": {
+      "id": null
+    },
+    "credentials": 
+    {
+      "name": null,
+      "issuer": "https://token.actions.githubusercontent.com",
+      "subject": null,
+      "description": "OIDC Workflow credentials for GitHub Actions for ASDK",
+      "audiences": [
+        "api://AzureADTokenExchange"
+      ]
+    }
+  },
+  "azureb2c": {
+    "signedOutCallBackPath": "/signout/B2C_1A_SIGNUP_SIGNIN",
+    "signUpSignInPolicyId": "B2C_1A_SIGNUP_SIGNIN",
+    "policyKeys": [
+      {
+        "name": "TokenSigningKeyContainer",
+        "options": "Generate",
+        "keyType": "RSA",
+        "keyUsage": "Signature"
+      },
+      {
+        "name": "TokenEncryptionKeyContainer",
+        "options": "Generate",
+        "keyType": "RSA",
+        "keyUsage": "Encryption"
+      },
+      {
+        "name": "RestApiKey",
+        "options": "Manual",
+        "hasSecret": true,
+        "keyUsage": "Signature"
+      }
+    ]
+  },
+  "claimToRoleTransformer": {
+    "authenticationType": "MyCustomRoleAuth",
+    "roleClaimType": "MyCustomRole",
+    "sourceClaimType": "permissions"
+  },     
+  "appRegistrations": [
+    {
+      "name": "admin-api",
+      "appServiceName": null,
+      "certificate": false,
+      "redirectUri": null,
+      "redirectType": "web",
+      "applicationIdUri": null,
+      "permissions": [
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
+        }
+      ],
+      "baseUrl": null,
+      "appId": null,
+      "objectId": null,
+      "scopes": [
+        {
+          "name": "tenant.read",
+          "description": "Read a customer's own Tenant data",
+          "guid": null
+        },
+        {
+          "name": "tenant.global.read",
+          "description": "Admin-level read permissions for all Tenants",
+          "guid": null
+        },
+        {
+          "name": "tenant.write",
+          "description": "Alter a customer's own Tenant data",
+          "guid": null
+        },
+        {
+          "name": "tenant.global.write",
+          "description": "Admin-level write permissions for all Tenants",
+          "guid": null
+        },
+        {
+          "name": "tenant.delete",
+          "description": "Delete a customer's own Tenant data",
+          "guid": null
+        },
+        {
+          "name": "tenant.global.delete",
+          "description": "Admin-level delete permissions for all Tenants",
+          "guid": null
+        }
+      ]
+    },
+    {
+      "name": "signupadmin-app",
+      "appServiceName": null,
+      "certificate": true,
+      "hasSecret": true,
+      "redirectUri": null,
+      "redirectType": "web",
+      "logoutUri": null,
+      "appId": null,
+      "objectId": null,
+      "scopes": null,
+      "publicKeyPath": null,
+      "secretPath": null,
+      "certificateKeyName": null,
+      "permissions": [
+        {
+          "endpoint": "admin-api",
+          "scopes": [
+            "tenant.read",
+            "tenant.global.read",
+            "tenant.write",
+            "tenant.global.write",
+            "tenant.delete",
+            "tenant.global.delete"
+          ]
+        },
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "saas-app",
+      "appServiceName": null,
+      "certificate": true,
+      "hasSecret": true,
+      "redirectUri": null,
+      "redirectType": "web",
+      "logoutUri": null,
+      "appId": null,
+      "objectId": null,
+      "scopes": null,
+      "publicKeyPath": null,
+      "secretPath": null,
+      "certificateKeyName": null,
+      "permissions": [
+        {
+          "endpoint": "admin-api",
+          "scopes": [
+            "tenant.read"
+          ]
+        },
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "permissions-api",
+      "baseUrl": null,
+      "appServiceName": null,
+      "apiName": null,
+      "appId": null,
+      "objectId": null,
+      "domain": null,
+      "certificate": true,
+      "redirectUri": null,
+      "redirectType": "web",
+      "permissionsApiUrl": null,
+      "rolesApiUrl": null,
+      "publicKeyPath": null,
+      "certificateKeyName": null,
+      "scopes": null,
+      "permissions": [
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ],
+          "appRoles": [
+            "User.Read.All",
+            "Application.ReadWrite.OwnedBy"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IdentityExperienceFramework",
+      "certificate": false,
+      "redirectUri": null,
+      "redirectType": "web",
+      "setAccessTokenAcceptedVersionToOne": true,
+      "appId": null,
+      "objectId": null,
+      "idTokens": true,
+      "signInAudience": "single",
+      "applicationIdUri": null,
+      "scopes": [
+        {
+          "name": "user_impersonation",
+          "description": "Access Identity Experience Framework",
+          "guid": null
+        }
+      ],
+      "permissions": [
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ProxyIdentityExperienceFramework",
+      "certificate": false,
+      "redirectUri": "myapp://auth",
+      "redirectType": "publicClient",
+      "setAccessTokenAcceptedVersionToOne": true,
+      "appId": null,
+      "objectId": null,
+      "scopes": null,
+      "signInAudience": "single",
+      "isAllowPublicClientFlows": true,
+      "permissions": [
+        {
+          "endpoint": "IdentityExperienceFramework",
+          "scopes": [
+            "user_impersonation"
+          ]
+        },
+        {
+          "grantAdminConsent": true,
+          "resourceId": "00000003-0000-0000-c000-000000000000",
+          "scopes": [
+            "openid",
+            "offline_access"
+          ]
+        }
+      ]
+    }
+  ],
+  "sql": {
+    "sqlAdminLoginName": "sqlAdmin"
+  },
+  "deployment": {
+    "identityFoundation": {
+      "name": "IdentityFoundationDeployment"
+    },
+    "adminServiceApi": {
+      "name": "AdminServiceAPIDeployment"
+    },
+    "signupAdministration": {
+      "name": "SignupAdmininstrationDeployment"
+    },
+    "permissionApi": {
+      "name": "PermissionApiDeployment"
+    },
+    "saasApp": {
+      "name": "SaaSApplicationDeployment"
+    },
+    "users": [],
+    "azureCli": {
+      "configDir": null
+    }
+  }
+}

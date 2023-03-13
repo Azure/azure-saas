@@ -1,4 +1,10 @@
-﻿using System.Net.Mime;
+﻿using Saas.Identity.Authorization.Attribute;
+using Saas.Identity.Authorization.Model.Claim;
+using Saas.Identity.Authorization.Model.Data;
+using Saas.Identity.Authorization.Model.Kind;
+using Saas.Identity.Authorization.Requirement;
+using Saas.Permissions.Client;
+using System.Net.Mime;
 
 namespace Saas.Admin.Service.Controllers;
 
@@ -8,14 +14,20 @@ namespace Saas.Admin.Service.Controllers;
 public class TenantsController : ControllerBase
 {
     private readonly ITenantService _tenantService;
-    private readonly IPermissionService _permissionService;
+    private readonly IPermissionsServiceClient _permissionsServiceClient;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger _logger;
 
-    public TenantsController(ITenantService tenantService, IPermissionService permissionService, ILogger<TenantsController> logger)
+    public TenantsController(
+        ITenantService tenantService, 
+        IPermissionsServiceClient permissionService,
+        IHttpContextAccessor httpContextAccessor,
+        ILogger<TenantsController> logger)
     {
         _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
         _tenantService = tenantService;
-        _permissionService = permissionService;
+        _permissionsServiceClient = permissionService;
     }
 
     /// <summary>
@@ -32,7 +44,7 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-    [Authorize(Policy = AppConstants.Policies.TenantGlobalRead)]
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Read)]
     public async Task<ActionResult<IEnumerable<TenantDTO>>> GetAllTenants()
     {
         try
@@ -66,10 +78,10 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [Authorize(Policy = AppConstants.Policies.TenantRead)]
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Read, "tenantId")]
     public async Task<ActionResult<TenantDTO>> GetTenant(Guid tenantId)
     {
-        _logger.LogDebug("{User} requested tenant with ID {TeanntID}", User?.Identity?.Name, tenantId);
+        _logger.LogDebug("{User} requested tenant with ID {TenantID}", User?.Identity?.Name, tenantId);
         try
         {
             TenantDTO tenant = await _tenantService.GetTenantAsync(tenantId);
@@ -107,15 +119,22 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-    [Authorize(Policy = AppConstants.Policies.CreateTenant)]
+    [Authorize] 
     public async Task<ActionResult<TenantDTO>> PostTenant(NewTenantRequest tenantRequest)
     {
         try
         {
             _logger.LogInformation("Creating a new tenant: {NewTenantName} for {OwnerID}, requested by {User}", tenantRequest.Name, tenantRequest.CreatorEmail, User?.Identity?.Name);
-            TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest, User?.GetNameIdentifierId()!);
+            
+            if (! Guid.TryParse(User?.GetNameIdentifierId(), out var userId)) 
+            {
+                throw new InvalidOperationException("The the User Name Identifier must be a Guid.");
+            }
+            
+            TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest, userId);
 
             _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.Route, tenant.Id);
+            
             return CreatedAtAction(nameof(GetTenant), new { tenantId = tenant.Id }, tenant);
         }
         catch (DbUpdateException ex)
@@ -144,7 +163,7 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [Authorize(Policy = AppConstants.Policies.TenantWrite)]
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Update, "tenantId")]
     public async Task<IActionResult> PutTenant(Guid tenantId, TenantDTO tenantDTO)
     {
         _logger.LogDebug("Updating tenant {TenantID} by {User}", tenantId, User?.Identity?.Name);
@@ -182,7 +201,7 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [Authorize(Policy = AppConstants.Policies.TenantDelete)]
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Delete, "tenantId")]
     public async Task<IActionResult> DeleteTenant(Guid tenantId)
     {
         try
@@ -218,16 +237,43 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [Authorize(Policy = AppConstants.Policies.Authenticated)]
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Read)]
     public async Task<ActionResult<TenantInfoDTO>> GetTenantInfoByRoute(string route)
     {
         _logger.LogDebug("{User} requested tenant for route {Route}", User?.Identity?.Name, route);
+
         try
         {
-            var tenant = await _tenantService.GetTenantInfoByRouteAsync(route);
-            _logger.LogDebug("Found {TenantName} with route {Route}", tenant.Name, route);
+            var tenantPermissions = _httpContextAccessor?.HttpContext?.User.Claims
+                .Where(c => c.Type == SaasPermissionClaim<TenantPermissionKind>.PermissionClaimsIdentifier)
+                .Select(claim => new SaasPermissionClaim<TenantPermissionKind>(claim.Value, TenantPermission.EntityName))
+                .Where(permission => permission.IsValid);
 
-            return Ok(tenant);
+            if (tenantPermissions is null)
+            {
+                _logger.LogDebug("No tenant permissions for looking up {Route}", route);
+                return NotFound();
+            }
+
+            var tenant = await _tenantService.GetTenantInfoByRouteAsync(route);
+
+            if (tenant is null)
+            {
+                _logger.LogDebug("Was not able to find tenant with route {Route}", route);
+                return NotFound();
+            }
+
+            if (tenantPermissions.Any(permission => permission.Entity == tenant.Id))
+            {
+                _logger.LogDebug("Found {TenantName} with route {Route}", tenant.Name, route);
+
+                return Ok(tenant);
+            }
+            else
+            {
+                _logger.LogDebug("Found {TenantName} with route {Route}, but requesting user does not have access to it.", tenant.Name, route);
+                return NotFound();
+            }
         }
         catch (ItemNotFoundExcepton)
         {
@@ -256,14 +302,16 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
     [Route("{tenantId}/users")]
-    [Authorize(Policy = AppConstants.Policies.TenantRead)]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetTenantUsers(string tenantId)
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(permissionValue: TenantPermissionKind.Read, "tenantId")]
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetTenantUsers(Guid tenantId)
     {
         try
         {
             _logger.LogDebug("Retrieving users for tenant {TenantID} by {User}", tenantId, User?.Identity?.Name);
-            IEnumerable<UserDTO> users = await _permissionService.GetTenantUsersAsync(tenantId);
-            List<UserDTO> returnValue = users.ToList();
+
+            ICollection<User>? users = await _permissionsServiceClient.GetTenantUsersAsync(tenantId);
+
+            List<UserDTO> returnValue = users.Select(u => new UserDTO(u.UserId, u.DisplayName)).ToList();
 
             _logger.LogDebug("Returning {UserCount} users for tenant {TenantID} to {User}", returnValue.Count, tenantId, User?.Identity?.Name);
             return Ok(returnValue);
@@ -287,10 +335,11 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [Authorize(Policy = AppConstants.Policies.TenantRead)]
-    public async Task<ActionResult<IEnumerable<string>>> GetUserPermissions(string tenantId, string userId)
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Read, "tenantId")]
+    [SaasAuthorize<SaasUserPermissionRequirement, UserPermissionKind>(UserPermissionKind.Read, "userId")]
+    public async Task<ActionResult<IEnumerable<string>>> GetUserPermissions(Guid tenantId, Guid userId)
     {
-        IEnumerable<string> permissions = await _permissionService.GetUserPermissionsForTenantAsync(tenantId, userId);
+        IEnumerable<string> permissions = await _permissionsServiceClient.GetUserPermissionsForTenantAsync(tenantId, userId);
         return permissions.ToList();
     }
 
@@ -306,13 +355,13 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [Authorize(Policy = AppConstants.Policies.TenantWrite)]
-    public async Task<IActionResult> PostUserPermissions(string tenantId, string userId, [FromBody] string[] permissions)
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Admin, "tenantId")]
+    [SaasAuthorize<SaasUserPermissionRequirement, UserPermissionKind>(UserPermissionKind.Create, "userId")]
+    public async Task<IActionResult> PostUserPermissions(Guid tenantId, Guid userId, [FromBody] string[] permissions)
     {
-        await _permissionService.AddUserPermissionsToTenantAsync(tenantId, userId, permissions);
+        await _permissionsServiceClient.AddUserPermissionsToTenantAsync(tenantId, userId, permissions);
         return NoContent();
     }
-
 
     /// <summary>
     /// Add a set of permissions for a user on a tenant
@@ -325,10 +374,14 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [Authorize(Policy = AppConstants.Policies.TenantWrite)]
-    public async Task<IActionResult> InviteUserToTenant(string tenantId, string userEmail)
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Admin, "tenantId")]
+    public async Task<IActionResult> InviteUserToTenant(Guid tenantId, string userEmail)
     {
-        await _permissionService.AddUserPermissionsToTenantByEmailAsync(tenantId, userEmail, AppConstants.Roles.TenantAdmin);
+        await _permissionsServiceClient.AddUserPermissionsToTenantByEmailAsync(
+            tenantId, 
+            userEmail, 
+            new string[] { TenantPermissionKind.Admin.ToString() });
+        
         return NoContent();
     }
 
@@ -344,10 +397,11 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [Authorize(Policy = AppConstants.Policies.TenantWrite)]
-    public async Task<IActionResult> DeleteUserPermissions(string tenantId, string userId, [FromBody] string[] permissions)
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Admin, "tenantId")]
+    [SaasAuthorize<SaasUserPermissionRequirement, UserPermissionKind>(UserPermissionKind.Delete, "userId")]
+    public async Task<IActionResult> DeleteUserPermissions(Guid tenantId, Guid userId, [FromBody] string[] permissions)
     {
-        await _permissionService.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
+        await _permissionsServiceClient.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
         return NoContent();
     }
 
@@ -362,12 +416,12 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [Authorize(Policy = AppConstants.Policies.GlobalAdmin)]
-    public async Task<ActionResult<IEnumerable<TenantDTO>>> UserTenants(string userId)
+    [SaasAuthorize<SaasUserPermissionRequirement, UserPermissionKind>(UserPermissionKind.Self, "userId")]
+    public async Task<ActionResult<IEnumerable<TenantDTO>>> UserTenants(Guid userId)
     {
         _logger.LogDebug("Getting all tenants for user {userID}", userId);
 
-        IEnumerable<string> tenantIds = await _permissionService.GetTenantsForUserAsync(userId);
+        IEnumerable<Guid> tenantIds = await _permissionsServiceClient.GetTenantsForUserAsync(userId);
         IEnumerable<TenantDTO>? tenants = await _tenantService.GetTenantsByIdAsync(tenantIds);
         return tenants.ToList();
     }
@@ -375,7 +429,7 @@ public class TenantsController : ControllerBase
     [HttpGet("IsValidPath/{path}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
 
-    [Authorize(Policy = AppConstants.Policies.CreateTenant)]
+    [Authorize]
     public async Task<ActionResult<bool>> IsValidPath(string path)
     {
         _logger.LogDebug("Validating Path {path}", path);

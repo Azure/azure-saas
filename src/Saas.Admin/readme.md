@@ -1,76 +1,64 @@
-# Saas.Admin.Service
+# SaaS Admin Service API
 
-The SaaS Admin Service is an API that is reponsible for tenant management operations. Within this folder, you will find 3 sections:
+The SaaS Admin Service is an API that is reponsible for tenant management operations. 
 
-1. Saas.Admin.Service - The .NET Web API project containing the code for the API
+This project hosts a service API which serves as a gateway to administrate the SaaS ecosystem of Tenants.
 
-2. Saas.Admin.Service.Deployment - The bicep module for deploying the infrastructure required to host the API in Azure
+## Overview
 
-3. Saas.Admin.Service.Tests - Unit tests for the service
+Within this folder you will find two subfolders:
 
-## 1. Module Overview
+- **Saas.Permissions.Service** - the C# project for the API
+- **deployment** - a set of tools for deploying the API for production
+  - The sub-subfolder **[act](./deployment/act)** is for deploying the API for remote debugging 
+- Saas.Admin.Service.Tests - Unit tests for the API.
 
-This project hosts a service api which serves as a gateway to administrate the SaaS ecosystem of Tenants. It is fully self-contained such that it includes complete copies of all necessary classes for operation. Since it contains no direct references to the other projects, it can be extracted to launch in isolation. However, keep in mind that some functionality within the API does have [dependencies](https://azure.github.io/azure-saas/components/admin-service/#dependencies) on other services.
+## Dependencies
+
+The service depends on:
+
+- The **Identity Foundation** that was deployed a spart of the Identity Foundation and on the [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/use-the-api).
+- The **[SaaS Permissions Services API](./../Saas.Identity/Saas.Permissions/readme.md)**.
+- The [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/overview). 
 
 For a complete overview, please see the [SaaS.Admin.Service](https://azure.github.io/azure-saas/components/admin-service/) page in our documentation site.
 
-## 2. How to Run Locally
+## Provisioning the API
 
-Once configured, this app presents an api service which exposes endpoints to perform CRUD operations on application tenant data. It may be run locally during development of service logic and for regenerating its included NSwag api client. (An NSwag file is included in the Admin project to generate its client.)
+To work with the SaaS Admin Services API it must first be provisions to your Azure ASDK resource group. This is true even if you initially is planning to run the API in your local development environment. The provisioning ensure that configuration and settings to be correctly added to your Azure App Configuration store and readies the API for later deployment to Azure.
 
-### i. Requirements
+Provisioning is easy:
 
-To run the web api, you must have the following installed on your machine:
+1. Navigate to the sub folder `deployment`.
 
-- [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
-- [ASP.NET Core 6.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-6.0)
-- (Recommended) [Visual Studio](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download)
-- A connection string to a running, empty SQL Server Database.
-    - [Local DB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver15) (Windows Only) - See `Additional Resources` below for basic config secret
-    - [SQL Server Docker Container](https://hub.docker.com/_/microsoft-mssql-server)
-    - [SQL Server Developer Edition](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
-- A deployed [Identity Framework](https://azure.github.io/azure-saas/quick-start/) instance
-    - [Azure AD B2C](https://azure.microsoft.com/en-us/services/active-directory/external-identities/b2c/) - created automatically with Bicep deployment
+2. Run these commands:
 
-### ii. Development Tools
+   ```bash
+   sudo chmod +x setup.sh
+   ./setup.sh
+   ./run.sh
+   ```
 
-- [NSwag](https://github.com/RicoSuter/NSwag) - An NSwag configuration file has been included to generate an appropriate client from the included Admin project.
-    *Consumes Clients:*
-	- [permissions-service-client-generator.nswag](Saas.Admin.Service/permissions-service-client-generator.nswag)
-	*Consumed By:*
-    - [Saas.SignupAdministration](../Saas.SignupAdministration)
-    - [Saas.Application](../Saas.Application)
+Now you're ready to move on.
 
-### iii. App Settings
+## How to Run Locally
 
-In order to run the project locally, the App Settings marked as `secret: true` must be set using the [.NET secrets manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&tabs=windows). When deployed to azure using the bicep deployments, these secrets are [loaded from Azure Key Vault](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment) instead.
+Guidelines for getting up and running with SaaS Signup Administration in your local development, are identical to the guidelines found the *[Requirements](./../Saas.Identity/Saas.Permissions/readme.md#Requirements)* and the *[Configuration, settings and secrets when running locally](./../Saas.Identity/Saas.Permissions/readme.md#running-the-saas-permissions-service-api-locally)* section in the [SaaS Permissions Service readme](./../Saas.Identity/Saas.Permissions/readme.md). 
 
-Default values for non secret app settings can be found in [appsettings.json](Saas.Admin.Service/appsettings.json)
+## Running the SaaS Administration Service API Locally
 
-| AppSetting Key                             |  Description                                                                                                                            | Secret | Default Value                         |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------- |
-| AzureAdB2C:ClientId                        | The service client corresponding to the Signup Admin application                                                                        | true   |                                       |
-| AzureAdB2C:Domain                          | Domain name for the Azure AD B2C instance                                                                                               | true   |                                       |
-| AzureAdB2C:Instance                        | URL for the root of the Azure AD B2C instance                                                                                           | true   |                                       |
-| AzureAdB2C:SignedOutCallbackPath           | Callback path (not full url) contacted after signout                                                                                    | false  | /signout/B2C_1A_SIGNUP_SIGNIN         |
-| AzureAdB2C:SignUpSignInPolicyId            | Name of signup/signin policy                                                                                                            | false  | B2C_1A_SIGNUP_SIGNIN                  |
-| AzureAdB2C:TenantId                        | Identifier for the overall Azure AD B2C tenant for the overall SaaS ecosystem                                                           | true   |                                       |
-| ClaimToRoleTransformer:AuthenticationType  | Indicates the Authentication type for new identity                                                                                      | false  | MyCustomRoleAuth                      |
-| ClaimToRoleTransformer:RoleClaimtype       | Type of the claim to use in the new Identity, works alongside built-in                                                                  | false  | MyCustomRoles                         |
-| ClaimToRoleTransformer:SourceClaimType     | Name of the claim custom roles are in                                                                                                   | false  | permissions                           |
-| ConnectionStrings:TenantsContext           | Connection String to SQL server database used to store permission data.                                                                 | true   | (localdb connnection string)          |
-| KeyVault:Url                               | KeyVault URL to pull secret values from in production                                                                                   | false  |                                       |
-| Logging:LogLevel:Default                   | Logging level when no configured provider is matched                                                                                    | false  | Information                           |
-| Logging:LogLevel:Microsoft.AspNetCore      | Logging level for AspNetCore logging                                                                                                    | false  | Warning                               |
-| PermissionsApi:BaseUrl                     | URL for downstream [Permissions API](../Saas.Identity/Saas.Permissions/readme.md)                                                       | false  |                                       |
-| PermissionsApi:ApiKey                      | API Key to use for authentication with the downstream [Permissions API](../Saas.Identity/Saas.Permissions/readme.md) | true  |                                       |
+--- TODO BEGIN --- 
 
-### iv. Starting the App
+*Add some guidelines about how to create valid JWT tokens to test the API locally etc...* 
 
-1. Insert secrets marked as required for running locally into your secrets manager (such as by using provided script).
-1. Start app. Service will launch as presented Swagger API.
+---TODO END ---
 
-## 3. Additional Resources
+## How to Deploy the SaaS Administration Service API to Azure
 
-### i. LocalDB
-If using the LocalDB persistance for local development, tables and data can be interacted with directly through Visual Studio. Under the `View` menu, find `SQL Server Object Explorer`. Additional documentation is available [here](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver16)
+The guidelines are identity to *[How to Deploy SaaS Permissions Service API to Azure](./../Saas.Identity/Saas.Permissions/readme.md#how--to-deploy-saas-permissions-service-api-to-azure)*.
+
+## Debugging Remotely in Azure
+
+The guidelines are identity to *[Debugging in Azure](./../Saas.Identity/Saas.Permissions/readme.md#debugging-in-azure)* for the SaaS Permissions Service API.
+
+Happy debugging!

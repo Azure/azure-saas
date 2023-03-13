@@ -2,7 +2,6 @@
 
 public static class TenantDbInitializer
 {
-
     public static void ConfigureDatabase(this IHost host)
     {
         using IServiceScope scope = host.Services.CreateScope();

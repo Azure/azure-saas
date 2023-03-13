@@ -1,22 +1,43 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saas.Application.Web", "Saas.Application.Web\Saas.Application.Web.csproj", "{4B94B14A-D6DF-446E-BAE7-C4DE1DD1C0CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Application.Web", "Saas.Application.Web\Saas.Application.Web.csproj", "{4B94B14A-D6DF-446E-BAE7-C4DE1DD1C0CB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Shared", "..\Saas.Lib\Saas.Shared\Saas.Shared.csproj", "{B143C95A-4D6C-4FC1-9CEB-59C631742FEA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Identity", "..\Saas.Lib\Saas.Identity\Saas.Identity.csproj", "{311C5EF9-32BA-4F4F-A79D-32806A79D911}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Admin.Client", "..\Saas.Admin\Saas.Admin.Client\Saas.Admin.Client.csproj", "{391C41A6-A249-42DE-BA0D-0098292D9B61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4B94B14A-D6DF-446E-BAE7-C4DE1DD1C0CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4B94B14A-D6DF-446E-BAE7-C4DE1DD1C0CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B94B14A-D6DF-446E-BAE7-C4DE1DD1C0CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B94B14A-D6DF-446E-BAE7-C4DE1DD1C0CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B143C95A-4D6C-4FC1-9CEB-59C631742FEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B143C95A-4D6C-4FC1-9CEB-59C631742FEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B143C95A-4D6C-4FC1-9CEB-59C631742FEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B143C95A-4D6C-4FC1-9CEB-59C631742FEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{311C5EF9-32BA-4F4F-A79D-32806A79D911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{311C5EF9-32BA-4F4F-A79D-32806A79D911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{311C5EF9-32BA-4F4F-A79D-32806A79D911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{311C5EF9-32BA-4F4F-A79D-32806A79D911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{391C41A6-A249-42DE-BA0D-0098292D9B61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{391C41A6-A249-42DE-BA0D-0098292D9B61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{391C41A6-A249-42DE-BA0D-0098292D9B61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{391C41A6-A249-42DE-BA0D-0098292D9B61}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2ECC2B98-3E31-47C9-8A52-1149AE57C7D2}
 	EndGlobalSection
 EndGlobal

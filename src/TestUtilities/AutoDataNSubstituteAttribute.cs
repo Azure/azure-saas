@@ -30,14 +30,14 @@ public class AutoDataNSubstituteAttribute : AutoDataAttribute
     public AutoDataNSubstituteAttribute(AutoDataOptions options = AutoDataOptions.Default, params Type[] customizations)
         : base(GetFactory(options, customizations))
     {
-        this._skipLiveTest = (options & AutoDataOptions.SkipLiveTest) == AutoDataOptions.SkipLiveTest;
+        _skipLiveTest = (options & AutoDataOptions.SkipLiveTest) == AutoDataOptions.SkipLiveTest;
     }
 
     public AutoDataNSubstituteAttribute(params Type[] customizations) : this(AutoDataOptions.Default, customizations)
     { }
 
 #pragma warning disable CS8603 // Possible null reference return.
-    public override string Skip => LiveUnitTestUtil.SkipIfLiveUnitTest(this._skipLiveTest);
+    public override string Skip => LiveUnitTestUtil.SkipIfLiveUnitTest(_skipLiveTest);
 #pragma warning restore CS8603 // Possible null reference return.
 
     private static Func<IFixture> GetFactory(AutoDataOptions options, Type[] cusomizations)
@@ -52,12 +52,16 @@ public class AutoDataNSubstituteAttribute : AutoDataAttribute
                 {
                     if (typeof(ISpecimenBuilder).IsAssignableFrom(customizationType))
                     {
-                        var specimentBuilder = Activator.CreateInstance(customizationType) as ISpecimenBuilder;
+                        ISpecimenBuilder specimentBuilder = Activator.CreateInstance(customizationType) as ISpecimenBuilder
+                            ?? throw new NullReferenceException("SpecimentBuilder cannot be null");
+
                         fixture.Customizations.Add(specimentBuilder);
                     }
                     else if (typeof(ICustomization).IsAssignableFrom(customizationType))
                     {
-                        var customization = Activator.CreateInstance(customizationType) as ICustomization;
+                        ICustomization customization = Activator.CreateInstance(customizationType) as ICustomization
+                            ?? throw new NullReferenceException("Customization cannot be null");
+
                         fixture = fixture.Customize(customization);
                     }
                     else

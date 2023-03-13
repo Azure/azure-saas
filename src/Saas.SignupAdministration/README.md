@@ -1,83 +1,71 @@
-# Saas.SignupAdministration.Web
+# SaaS Sign-Up Administration Web App
 
-## 1. Module Overview
-
-This project hosts an application for the onboarding and administration of new tenants in your SaaS ecosystem. It is fully self-contained such that it includes complete copies of all necessary classes for operation. However, keep in mind that some functionality within the app does have [dependencies](https://azure.github.io/azure-saas/components/signup-administration#dependencies) on other services
-
-For a complete overview, please see the [SaaS.SignupAdministration.Web](https://azure.github.io/azure-saas/components/signup-administration/) page in our documentation site.
+This SaaS Sign-up an Administration Web App is an application for the onboarding and administration of tenants.
 
 The application has been developed in [MVC](https://docs.microsoft.com/en-us/aspnet/core/mvc/overview?view=aspnetcore-6.0) format, its pages built by respective Controllers paired to Views. See the Views and Controllers directories for relevant service logic or display logic.
 
-## 2. How to Run Locally
+For a complete overview, please see the [SaaS.SignupAdministration.Web](https://azure.github.io/azure-saas/components/signup-administration/) page in our documentation site.
 
-Once configured, this app creates new Tenants to be persisted by the Admin service. These tenants can then be administrated and have users added to them for reference from the proper SaaS application. System users in this process do not require any preconfigured roles to use the new tenant workflow.
+## Overview
 
-### i. Requirements
+Within this folder you will find two subfolders:
 
-To run the web api, you must have the following installed on your machine:
+- **Saas.SignupAdministration.Web** - the C# project for the web app.
+- **deployment** - a set of tools for deploying the web app for production
+  - The sub-subfolder **[act](./deployment/act)** is for deploying the web app for remote debugging 
 
-- [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
-- [ASP.NET Core 6.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-6.0)
-- (Recommended) [Visual Studio](https://visualstudio.microsoft.com/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download)
-- A deployed [Identity Framework](https://azure.github.io/azure-saas/quick-start/) instance
-    - [Azure AD B2C](https://azure.microsoft.com/en-us/services/active-directory/external-identities/b2c/) - created automatically with Bicep deployment
+## Dependencies
 
-### ii. Development Tools
+The service depends on:
 
-- [NSwag](https://github.com/RicoSuter/NSwag) - An NSwag configuration file has been included to generate an appropriate client from the included Admin project.
-    *Consumes Clients:*
-	- [admin-service-client-generator.nswag](Saas.SignupAdministration.Web/admin-service-client-generator.nswag)
-	
-### iii. App Settings
+- The **Identity Foundation** that was deployed a spart of the Identity Foundation and on the [Microsoft Graph API](https://learn.microsoft.com/en-us/graph/use-the-api).
+- The **[SaaS Permissions Services API](./../Saas.Identity/Saas.Permissions/readme.md)**.
+- The **[SaaS Administration Service API](./../Saas.Admin/readme.md)**.
 
-In order to run the project locally, the App Settings marked as `secret: true` must be set using the [.NET secrets manager](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-6.0&tabs=windows). If developing in Visual Studio, right click the project in the Solution Explorer and select `Manage User Secrets`.
+## Provisioning the  Web App
 
-> The secrets indicated here are for Azure AD B2C integration. You must have an existing user store to reference which is configured to redirect to localhost on your debugging port in order to function correctly.
+To work with the SaaS Signup Administration Web app it must first be provisions to your Azure ASDK resource group. This is true even if you initially is planning to run the API in your local development environment. 
 
-When deployed to Azure using the Bicep deployments, these secrets are [loaded from Azure Key Vault](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment) instead.
-Default values for non secret app settings can be found in [appsettings.json](Saas.SignupAdministration.Web/appsettings.json)
+The provisioning ensure that configuration and settings to be correctly added to your Azure App Configuration store and readies the API for later deployment to Azure.
 
-| AppSetting Key                              | Description                                                                    | Secret | Default Value                  |
-| ------------------------------------------- | ------------------------------------------------------------------------------ | ------ | ------------------------------ |
-| AppSettings:AdminServiceBaseUrl             | URL for downstream admin service                                               | false  | https://localhost:7041/        |
-| AppSettings:AdminServiceScopeBaseUrl        | The Base URL/Prefix for the scopes to request an access token on the downstream admin service for.                                       | false  |                                |
-| AppSettings:AdminServiceScopes              | List of scopes to authorize user for on the admin service. Space delimited     | false  |                                |
-| AzureAdB2C:ClientId                         | The service client corresponding to the Signup Admin application               | true   |                                |
-| AzureAdB2C:ClientSecret                     | Unique secret for the application client provided to authenticate the app      | true   |                                |
-| AzureAdB2C:Domain                           | Domain name for the Azure AD B2C instance                                      | true   |                                |
-| AzureAdB2C:Instance                         | URL for the root of the Azure AD B2C instance                                  | true   |                                |
-| AzureAdB2C:SignedOutCallbackPath            | Callback path (not full url) contacted after signout                           | false  | /signout/B2C_1A_SIGNUP_SIGNIN  |
-| AzureAdB2C:SignUpSignInPolicyId             | Name of signup/signin policy                                                   | false  | B2C_1A_SIGNUP_SIGNIN           |
-| AzureAdB2C:TenantId                         | Identifier for the overall Azure AD B2C tenant for the overall SaaS ecosystem  | true   |                                |
-| EmailOptions:Body                           | Signup notification email body text                                            | false  |                                |
-| EmailOptions:EndPoint                       | Service endpoint to send confirmation email                                    | true   |                                |
-| EmailOptions:FromAddress                    | Signup notification email source                                               | false  |                                |
-| EmailOptions:Subject                        | Signup notification email subject line                                         | false  |                                |
-| KeyVault:Url                                | KeyVault URL to pull secret values from in production                          | false  |                                |
-| Logging:LogLevel:Default                    | Logging level when no configured provider is matched                           | false  | Information                    |
-| Logging:LogLevel:Microsoft                  | Logging level for Microsoft logging                                            | false  | Warning                        |
-| Logging:LogLevel:Microsoft.Hosting.Lifetime | Logging level for Hosting Lifetime logging                                     | false  | Information                    |
- 
-### iv. Starting the App
+Provisioning is easy:
 
-These instructions cover running the app using its existing implementations and included modules locally. Substituting other module implementations or class implementations may make existing secrets irrelevant.
+1. Navigate to the sub folder `deployment`.
 
-1. Insert secrets marked as required for running locally into your secrets manager (such as by using provided script).
-1. Configure multiple projects to launch: Saas.SignupAdministration.Web, Saas.Permissions.Service and Saas.Admin.Service. In Visual Studio, this can be accomplished by right clicking the project and selecting `Set Startup Projects...` for local debugging.
-1. Start apps. Services will launch as presented Swagger APIs. Web app will launch MVC ASP.NET Core application.
+2. Run these commands:
 
-## 3. Additional Resources
+   ```bash
+   sudo chmod +x setup.sh
+   ./setup.sh
+   ./run.sh
+   ```
 
-### i. Azure AD B2C
+Now you're ready to move on.
 
-You'll need to configure your B2C instance for an external authentication provider. Additional documentation is available [here](https://docs.microsoft.com/en-us/azure/active-directory-b2c/identity-provider-azure-ad-multi-tenant?pivots=b2c-user-flow).
+## How to Run Locally
 
-### ii. JsonSessionPersistenceProvider
+Guidelines for getting up and running with SaaS Signup Administration in your local development, are identical to the guidelines found the *[Requirements](./../Saas.Identity/Saas.Permissions/readme.md#Requirements)* and the *[Configuration, settings and secrets when running locally](./../Saas.Identity/Saas.Permissions/readme.md#running-the-saas-permissions-service-api-locally)* section in the [SaaS Permissions Service readme](./../Saas.Identity/Saas.Permissions/readme.md). 
 
-The JsonSessionPersistenceProvider maintains the state of the onboarding workflow for each user and allows for forward and backward movment in the app with access to all of the values of the Tenant. Custom providers can be used as long as they inherit from the IPersistenceProvider interface. 
+## Running the SaaS Sign-up Administration Web App Locally
 
-The 2 methods are: 
-- public void Persist(string key, object value);
-- public T Retrieve<T>(string key);
+--- TODO BEGIN --- 
 
-The included implementation simply stores the session data within memory of the server app, making unsuitable at scale or when multiple app instances are deployed. A caching service able to perform realtime updates is ideal to maximize scalability. Consider replacing the implementation of the JsonSessionPersistenceProvider class with a new implementation using something like [Azure Cache for Redis](https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-overview). Alternatively, you can configure session persistence to ensure your users are always routed to the same server.
+*Needs more investigation.*
+
+*Add some guidelines about how to do this. Probably by leveraging [ngrok](https://ngrok.com/)...* 
+
+---TODO END ---
+
+## How to Deploy the SaaS Administration Service API to Azure
+
+The guidelines are identity to *[How to Deploy SaaS Permissions Service API to Azure](./../Saas.Identity/Saas.Permissions/readme.md#how--to-deploy-saas-permissions-service-api-to-azure)*.
+
+## Debugging Remotely in Azure
+
+The guidelines are identity to *[Debugging in Azure](./../Saas.Identity/Saas.Permissions/readme.md#debugging-in-azure)* for the SaaS Permissions Service API
+
+## Debugging Azure B2C
+
+
+
+[Troubleshoot custom policies with Application Insights - Azure AD B2C | Microsoft Learn](https://learn.microsoft.com/en-us/azure/active-directory-b2c/troubleshoot-with-application-insights?pivots=b2c-custom-policy)

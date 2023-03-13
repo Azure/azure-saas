@@ -10,115 +10,59 @@ On this page, you will find instructions for how to run the dev kit in your loca
 
 > Tip: If you're new here and want to learn what is Azure SaaS Dev Kit, check out the [welcome page](..)
 
-## 1. Setup Identity Framework
+## Before You begin
 
-This project uses [Azure Active Directory B2C](https://docs.microsoft.com/azure/active-directory-b2c/overview) for an IdP (Identity Provider). The first step in setting up this project is to configure a new Azure AD B2C instance to house your local user accounts. You will also need to deploy the [Permissions API](../components/identity/permissions-service), as Azure AD B2C will have a dependency on it.
+Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the Azure SaaS Dev Kit GitHub repository to to your own GitHub account to make it your own.
 
-To setup the Identity Framework, we have provided an interactive PowerShell script that automates the setup for you by calling the necessary Microsoft Graph API endpoints. Upon running, it will ask you to sign into your home azure account, ask you a few questions, and then begin the setup process. This PowerShell script will output a parameters file that you'll need to provide when deploying the solution to Azure in step 2.b.
+The Azure SaaS Dev Kit provides an excellent starting point for launching your SaaS solution. To truly reap the benefits, it is essential to customize the dev kit to suit your particular requirements. By tailoring the dev kit, you achieve the solution that aligns with your specific objectives.
 
-> NOTE: The Microsoft Graph API endpoints used to perform this setup programatically are still in beta and are subject to change. As a result, it is possible you may see issues during setup. Please report any issues with as much detail as possible by opening an issue on our [GitHub repo](https://github.com/Azure/azure-saas/issues).
-> As a fallback, you can also create the Identity Framework manually by following the instructions [below](#option-3-setup-identity-framework---manual-advanced).
+## Provisioning the Identity Framework
 
-### Option 1: Setup Identity Framework - Docker (Recommended)
+This project uses [Azure Active Directory B2C](https://docs.microsoft.com/azure/active-directory-b2c/overview) for an IdP (Identity Provider). The first step in setting up this project is to configure a new Azure AD B2C instance to house your local user accounts.
 
-Requirements:
+To provision the Identity Framework please follow this [readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.IdentityProvider).
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+## Provisioning the SaaS Permissions API
 
-Running our pre-built docker image is the recommended way to set up the identity framework, as the image comes pre-installed with all the dependencies necessary for execution. To start, run the following commands:
+After provisioning the Identity Framework, you should provision the Azure services and configuration needed for running the [Permissions API](../components/identity/permissions-service) locally or deploying it to Azure.
 
-```bash
-docker pull ghcr.io/azure/azure-saas/asdk-identity-setup:v1.1
-docker run -it -v "$(pwd):/data" --name asdk-b2c-deployment ghcr.io/azure/azure-saas/asdk-identity-setup:v1.1
-```
+The Azure AD B2C configuration that was provisioned as part of the Identity Foundation Services relies on the Saas Permissions API to provide permission claims. When a user logs into your SaaS solution, these permissions claims are added to the users JWT access token.
 
-This will automatically pull and run the container image and its entrypoint is the [B2C-Create](https://github.com/Azure/azure-saas/blob/main/src/Saas.Identity/Saas.IdentityProvider/scripts/B2C-Create.ps1) powershell script.
+To provision the SaaS Permissions API please follow the [readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.Identity/Saas.Permissions).
 
-> Note: The `-v` flag on this command will mount your present working directory to the `/data` directory inside this container. This is the directory that the `main.parameters.json` file (necessary for step 2.b) will be output to upon the script completion. If you choose to exclude this flag, the container will still execute but you will need to copy this file out of the container afterwards using the [docker cp](https://docs.docker.com/engine/reference/commandline/cp/) command.
+## Provisioning the Saas Admin API
 
-After finishing the identity framework setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
+The SaaS Admin API is allowed to write data to the Permissions API. This means that while Azure AD B2C relies on the Permissions API for existing permissions, the SaaS Admin API can also add new permissions to the permissions database. When new permissions are added, they will be included in future claims.
 
-### Option 2: Setup Identity Framework - Powershell (Advanced)
+In addition, the SaaS Admin API provides secure endpoints that only allow access to users with the specific permissions defined of each of the endpoints. These permissions match the permissions in the claims that are returned by the Permissions API.
 
-**Requirements**: 
-- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/)
-- [Open SSL](https://www.openssl.org/)
-- [Powershell Core (v7.0+)](https://github.com/PowerShell/PowerShell)
-- Powershell Modules:
-  - [Microsoft.Graph](https://www.powershellgallery.com/packages/Microsoft.Graph/1.5.0)
-  - [Microsoft.Graph.Applications](https://www.powershellgallery.com/packages/Microsoft.Graph.Applications/1.9.6)
-  - [Az.Resources](https://www.powershellgallery.com/packages/Az.Resources/6.0.0)
-  - [Az.Accounts](https://www.powershellgallery.com/packages/Az.Accounts/2.8.0)
+To provision the SaaS Admin API please follow the [readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.Admin).
 
-**Instructions**:
-1. Install all dependencies listed above
-2. Clone the Azure SaaS Dev Kit repository to your local machine
-3. Open a PowerShell window (`pwsh` command on Mac OS or Linux) and change your working directory to `src/Saas.Identity`. The script must be run from this directory to execute properly.
-4. Run the script from the PowerShell window with the following command:
-    ```powershell
-    ./Saas.IdentityProvider/scripts/B2C-Create.ps1
-    ```
-5. Follow the prompts in the script to sign into Azure and deploy the identity framework.
+## Provisioning the Sign-Up Administration Web Application
 
-After finishing the identity framework setup, you may choose to either run the project locally first or immediately deploy the solution to Azure.
+The Sign-up Administration Web Application provides a UI for adding new SaaS tenant(*) and for managing permissions and users. The Sign-up Administration Web Application relies on the SaaS Admin API to provide read and write access to the permissions database.
 
-### Option 3: Setup Identity Framework - Manual (Advanced)
+To provision the SaaS Sign-up Administration Web Application please follow the [readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration).
 
-See the [Manual Setup Instructions](../components/identity/identity-framework-setup-manual) page for a complete guide on creating the identity framework resources yourself.
+> (*) Note that the term *tenant* is overloaded. A SaaS Tenant is not that same as an Azure AD tenant. The SaaS tenant references each instance of your multi-tenanted application.
 
-## 2.a. Running the Dev Kit in your local dev environment
+## Provisoning the Saas Application
 
-- Install the latest version of [Visual Studio 2022](https://visualstudio.microsoft.com/vs/). You may also use Visual Studio Code, but the solution and projects are targeted at VS2022.
-- Clone the repository `https://github.com/Azure/azure-saas.git` on to your dev machine.
-- Open the `.sln` in the root of the repository. This solution includes all of the modules.
-- Depending on the project you wish to run, you'll need to set some secrets to properly setup authentication with Azure AD B2C. See the [App Settings](#app-settings) section below.
+The SaaS Application is a sample application that serves as an example of where your SaaS Solution would fit in. It relies on all the other components mentioned here.
 
-### App Settings
+To provision the SaaS Application please follow the [readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.Application).
 
-- Running locally you will need to set some App Settings & User Secrets manually using the [.NET Secret Manager](https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#secret-storage-in-the-development-environment).
-- Deployed to Azure, these secrets are automatically configured for you and stored in the Azure Key Vault.
-
-Make sure you check out the [readme files](#more-info) in each project's directory for a description of the app settings & secrets you'll need to set in order to run the respective project.
-
-## 2.b. Deploying to Azure - Entire Solution
-
-Deploying to Azure is easy thanks to our pre-configured ARM (Azure Resource Manager) templates.
-
-This button will take you to the Azure portal and will pass it the ARM template. You will need the parameters file output from step 1.
-
-1. Click here: [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-saas%2Fv1.1%2Fsrc%2FSaas.IaC%2Fmain.json).
-2. Select "Edit Parameters".
-3. Select "Load File" and upload the `parameters.json` file output from the Identity Framework Deployment (step 1 above). Click "Save". 
-4. From the dropdown, select the subscription and resource group you'd like to deploy the resources to.
-5. Click "Review and Create".
-6. Review the provided values and click "Create".
-7. Wait for the deployment to finish.
-
-
-After everything finishes deploying, you can navigate to the frontend applications found in your resource group (`appsignup{providername}` and `appapplication{providername}`). They may take a couple minutes to start up after the deployment is complete.
-
-### How does this work?
-
-This solution uses a Bicep template which is checked into source control. Whenever changes are detected, a GitHub pipeline compiles the template into an ARM template.
-
-> What is Bicep?
-> Bicep is a domain-specific language (DSL) that uses declarative syntax to deploy Azure resources. In a Bicep file, you define the infrastructure you want to deploy to Azure, and then use that file throughout the development lifecycle to repeatedly deploy your infrastructure. Your resources are deployed in a consistent manner.
-
-## 2.c. (Advanced) Deploying to Azure - Single Module
-
-If you'd like to use just one (or more) module from the project, we've provided [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/bicep/) templates to do that as well. In each project directory, you'll find a folder named `{ModuleName}.Deployment` that contains all the Bicep code you'll need to deploy just that Module. Please be advised that there are certain dependencies that each module requires in order for it to deploy properly. You may find that you need to edit the Bicep templates to match your use case. You will find instructions and a list of dependencies for each module within the [module's readme](#more-info).
-
-## 3. (Optional) Configure Email Provider
+## (Optional) Configure Email Provider
 
 The SaaS.Notifications module **need page and link** is an Azure Logic App responsible for generating email notifications. By default, there is no email provider configured. If you'd like to enable email notifications, you will need to manually configure your email provider connector of choice inside the Logic App. See the instructions [here](../components/saas-notifications) to get started.
 
-## 4. Integrating your application
+## Integrating your application
 
 Now that you've seen how to run the code locally as well as deploy your code to Azure (in a repeatable and code-first way), you can integrate your own code into the solution.
 
-We've included a basic application within the `Saas.Application.Web` project that demonstrates a SaaS solution called "BadgeMeUp". BadgeMeUp is simply a badge sharing site that *Contoso* (representing your company) can sell to end customers.
+We've included a basic application within the `Saas.Application.Web` project that demonstrates a SaaS solution called "BadgeMeUp". BadgeMeUp is a simple badge sharing site that *Contoso* (representing your company) can sell to end customers.
 
-> SaaS solutions come in many shapes as sizes. We picked "BadgeMeUp", because it's a fairly simple scenario to understand. [You can read more about this particular SaaS scenario here](../resources/contoso-badgemeup/).
+> SaaS solutions come in many shapes and sizes. We picked "BadgeMeUp", because it's a fairly simple scenario to understand. [You can read more about this particular SaaS scenario here](../resources/contoso-badgemeup/).
 
 ## More Info
 

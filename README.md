@@ -1,23 +1,24 @@
-﻿# Azure SaaS Development Kit (ASDK)
+# Azure SaaS Development Kit (ASDK)
 
 ![The architecture diagram for the Azure SaaS Dev Kit (ASDK)](docs/azure-saas-docs/static/diagrams/overview.drawio.png)
 
-## Project Overview
+## Overview
 
-The Azure SaaS Development Kit (ASDK) provides a starting point into cloud-based Software as a Service (SaaS) for developers, startups, ISVs and enterprises. A platform for platform creators. The ASDK provides a reference architecture that is extensible to meet your application's needs, microservice-oriented, and fully-documented to empower all levels of experience in their entry into Azure Cloud Services.
+The Azure SaaS Development Kit (ASDK) is an solid starting point for building [cloud-native](https://learn.microsoft.com/en-us/dotnet/architecture/cloud-native/definition) Software as a Service (SaaS) solutions. Created for developers and architects building platforms and solutions for startups, ISVs, and enterprises, the ASDK offers a reference architecture based on best practices and design patterns.
 
-For more information please review the [ASDK Documentation](https://azure.github.io/azure-saas/), including a Quick Start guide for environment setup.
+For more information, including a Quick Start guide for deploying a running version of the ASDK, please refer to the [ASDK Documentation](https://azure.github.io/azure-saas/).
 
 ## Contents
 
 ### Modules
 
-Several individual module readmes have been provided to cover key development concepts, necessary app setting secrets and how to run them locally.
-
+- [Identity Foundation Services](./src/Saas.Identity/Saas.IdentityProvider) - The core deployment and configuration of the infrastructure and services for the ASDK.
 - [Admin Service](src/Saas.Admin) - Primary services administrating Tenant info and providing relevant information to frontend applications
-- [Permissions Service](src/Saas.Identity/Saas.Permissions) - Services utilized by the Admin services to determine action authorization
+- [Permissions Service](src/Saas.Identity/Saas.Permissions) - Service utilized by the Admin services to determine authorization by providing permissions claims to the identity provider.
 - [Signup Application Web](src/Saas.SignupAdministration) - MVC web application for new Tenant signup
 - [SaaS Application Web](src/Saas.Application) - Razor application providing the SaaS service to registered tenants
+
+For each of the modules, documentation and deployment details are provided. 
 
 ### GitHub Workflows
 

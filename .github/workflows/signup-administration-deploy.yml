@@ -1,0 +1,67 @@
+---
+name: ASDK Sign-up Administration Web App - Deploy to Azure Web Services
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_WEBAPP_NAME: 'signupadmin-app-asdk-test-aiuq' # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: 7.x.x
+  PROJECT_DIR: ./src/Saas.SignupAdministration/Saas.SignupAdministration.Web
+  PROJECT_PATH: ./src/Saas.SignupAdministration/Saas.SignupAdministration.Web/Saas.SignupAdministration.Web.csproj
+  OUTPUT_PATH: ./publish/signupadmin
+  BUILD_CONFIGURATION: Release # setting the configuration manager build configuration value for our workflow.
+
+  APP_NAME: signupadmin-app
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      #azure login
+      - uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # checkout the repo specifying the branch name in 'ref:'
+      - uses: actions/checkout@v3
+        with:
+          ref: main #IMPORTANT we're checking out and deploying the 'main' branch here
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Setup .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # Run dotnet build and publish
+      - name: dotnet build and publish
+        run: |
+          dotnet restore ${{ env.PROJECT_PATH }}
+
+          dotnet build ${{ env.PROJECT_PATH }} \
+            --configuration ${{ env.BUILD_CONFIGURATION }}
+
+          dotnet publish ${{ env.PROJECT_PATH }} \
+            --configuration ${{ env.BUILD_CONFIGURATION }} \
+            --output '${{ env.OUTPUT_PATH }}/{{ env.AZURE_WEBAPP_NAME }}'
+
+      # Deploy to Azure Web apps
+      - name: Run Azure webapp deploy action using publish profile credentials
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
+          package: ${{ env.OUTPUT_PATH }}/{{ env.AZURE_WEBAPP_NAME }}
+          # slot-name: 'PermissionsApi-Staging'
+
+      # Azure logout
+      - name: logout
+        run: |
+          az logout
