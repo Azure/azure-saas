@@ -1,5 +1,5 @@
 ---
-name: ASDK Administration Service API - Deploy to Azure Web Services
+name: ASDK Saas Sample App - Deploy to Azure Web Services
 
 on:
   workflow_dispatch:

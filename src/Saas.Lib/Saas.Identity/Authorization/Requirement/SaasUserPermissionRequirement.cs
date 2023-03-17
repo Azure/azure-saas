@@ -8,7 +8,6 @@ namespace Saas.Identity.Authorization.Requirement;
 [SaasRequirement(UserPermission.EntityName)]
 public sealed record SaasUserPermissionRequirement : SaasRequirementBase, ISaasRequirement
 {
-
     public static string PermissionEntityName => UserPermission.EntityName;
 
     public SaasUserPermissionRequirement(SaasPolicy policy) : base(policy) { }

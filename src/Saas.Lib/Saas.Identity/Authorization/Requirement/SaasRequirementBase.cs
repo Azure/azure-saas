@@ -5,8 +5,6 @@ namespace Saas.Identity.Authorization.Requirement;
 
 public abstract record SaasRequirementBase
 {
-    // public string PermissionClaimsIdentifier { get; } = "permissions";
-
     public SaasPolicy Policy { get; init; }
 
     protected SaasRequirementBase(SaasPolicy policy)
