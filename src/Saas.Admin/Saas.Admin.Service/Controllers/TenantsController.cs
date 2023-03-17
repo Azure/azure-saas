@@ -78,7 +78,7 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Read, "tenantId")]
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Read, routingRestrictionKeyName: "tenantId")]
     public async Task<ActionResult<TenantDTO>> GetTenant(Guid tenantId)
     {
         _logger.LogDebug("{User} requested tenant with ID {TenantID}", User?.Identity?.Name, tenantId);

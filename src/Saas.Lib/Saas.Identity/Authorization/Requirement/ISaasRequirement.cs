@@ -6,7 +6,6 @@ public interface ISaasRequirement : IAuthorizationRequirement
 {
     static abstract string PermissionEntityName { get; }
 
-    //static string PermissionClaimsIdentifier { get; } = "permissions";
     SaasPolicy Policy { get; }
     int PermissionValue();
 }

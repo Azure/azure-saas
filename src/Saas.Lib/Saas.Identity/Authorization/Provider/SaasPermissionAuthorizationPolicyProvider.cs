@@ -8,7 +8,6 @@ using System.Reflection;
 namespace Saas.Identity.Authorization.Provider;
 public class SaasPermissionAuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
 {
-
     public SaasPermissionAuthorizationPolicyProvider(
         IOptions<AuthorizationOptions> options) : base(options)
     {
@@ -37,11 +36,13 @@ public class SaasPermissionAuthorizationPolicyProvider : DefaultAuthorizationPol
         // Create instances of the classes that implement ISaasRequirement and have a SaasRequirementAttribute with the same name as the policy name.
         var requirements = requirementsType.Select(type => (IAuthorizationRequirement?)Activator.CreateInstance(type, saasPolicy));
 
+        // Create new policy builder.
         AuthorizationPolicyBuilder authorizationPolicyBuilder = new();
 
+        // Add the default authentication requirement that the user must be authorized.
         authorizationPolicyBuilder.RequireAuthenticatedUser();
 
-        // Add the requirements to the polic builder.
+        // Add the requirements matching the policy to the policy builder.
         foreach (var requirement in requirements) 
         {
             if (requirement is not null)
@@ -50,6 +51,7 @@ public class SaasPermissionAuthorizationPolicyProvider : DefaultAuthorizationPol
             }            
         }
 
+        // Build the policy.
         return authorizationPolicyBuilder.Build();
     }
 }

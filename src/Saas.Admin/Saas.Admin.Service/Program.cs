@@ -59,37 +59,21 @@ builder.Services.Configure<SqlOptions>(
 builder.Services.Configure<SaasAuthorizationOptions>(
     builder.Configuration.GetRequiredSection(SaasAuthorizationOptions.SectionName));
 
-// Using Entity Framework for accessing permission data stored in the Permissions Db.
-builder.Services.AddDbContext<TenantsContext>(options =>
-{  
-    var sqlConnectionString = builder.Configuration.GetRequiredSection(SqlOptions.SectionName)
-        .Get<SqlOptions>()?.TenantSQLConnectionString
-            ?? throw new NullReferenceException("SQL Connection string cannot be null.");
-
-    options.UseSqlServer(sqlConnectionString);
-});
+builder.Services.AddHttpContextAccessor();
 
 // Add authentication for incoming requests
 builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, AzureB2CAdminApiOptions.SectionName);
 
-builder.Services.AddHttpContextAccessor();
-
-// TODO (SaaS): Add necessary roles to scopes for SaaS App operations
-
+// Register authorization handlers for authorization
 builder.Services.AddSingleton<IAuthorizationHandler, SaasTenantPermissionAuthorizationHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, SaasUserPermissionAuthorizationHandler>();
 
+// Register the policy provider
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, SaasPermissionAuthorizationPolicyProvider>();
-
-//builder.Services.Configure<ClaimToRoleTransformerOptions>(
-//        builder.Configuration.GetRequiredSection(ClaimToRoleTransformerOptions.SectionName));
-
-// builder.Services.AddTransient<IClaimsTransformation, ClaimPermissionToRoleTransformer>();
 
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
-// builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClient>()
     .ConfigureHttpClient((serviceProvider, client) =>
@@ -106,6 +90,16 @@ builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClie
 
         client.DefaultRequestHeaders.Add("x-api-key", apiKey);
     });
+
+// Using Entity Framework for accessing permission data stored in the Permissions Db.
+builder.Services.AddDbContext<TenantsContext>(options =>
+{
+    var sqlConnectionString = builder.Configuration.GetRequiredSection(SqlOptions.SectionName)
+        .Get<SqlOptions>()?.TenantSQLConnectionString
+            ?? throw new NullReferenceException("SQL Connection string cannot be null.");
+
+    options.UseSqlServer(sqlConnectionString);
+});
 
 var app = builder.Build();
 

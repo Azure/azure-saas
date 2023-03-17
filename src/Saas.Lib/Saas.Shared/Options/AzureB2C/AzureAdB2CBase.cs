@@ -1,5 +1,4 @@
-﻿
-using Saas.Interface;
+﻿using Saas.Interface;
 
 namespace Saas.Shared.Options;
 
@@ -18,21 +17,6 @@ public record AzureAdB2CBase
     public string? ClientSecret { get; init; }
 
     public KeyVaultCertificate[]? KeyVaultCertificateReferences { get; init; }
-
-    //public IEnumerable<CertificateDescription>? ClientCertificates => new CertificateDescription[] 
-    //{
-    //    CertificateDescription.FromKeyVault(KeyVaultCertificateReferences.First().KeyVaultUrl,
-    //                                 KeyVaultCertificateReferences.First().KeyVaultCertificateName)
-    //};
-
-    //public IEnumerable<CertificateDescription>? ClientCertificates => KeyVaultCertificateReferences?.Select(cert => new CertificateDescription
-    //{
-    //    //SourceType = CertificateSource.Base64Encoded,
-    //    //Base64EncodedValue = Certificate
-    //    SourceType = CertificateSource.KeyVault,
-    //    KeyVaultUrl = cert.KeyVaultUrl,
-    //    KeyVaultCertificateName = cert.KeyVaultCertificateName
-    //});
 }
     
 
