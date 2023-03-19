@@ -2,6 +2,9 @@
 
 export ASDK_CACHE_AZ_CLI_SESSIONS=true
 
+# work-around for issue w/ az cli bicep v. 2.46: https://github.com/Azure/azure-cli/issues/25710
+az config set bicep.use_binary_from_path=false
+
 # if not running in a container
 if ! [ -f /.dockerenv ]; then
     echo "Running outside of a container us not supported. Please run the deployment script using './run.sh'."
@@ -181,7 +184,7 @@ put-value ".deployment.storage.provisionState" "provisioning"
         subscription_id="$(get-value ".initConfig.subscriptionId")"
         user_principal_id="$(get-value ".initConfig.userPrincipalId")"
 
-        storage-create \
+        storage-create-bicep \
             "${resource_group}" \
             "${storage_account_name}" \
             "${location}" \

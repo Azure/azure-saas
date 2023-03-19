@@ -38,6 +38,57 @@ function storage-account-exist() {
     fi
 }
 
+function storage-create-bicep() {
+    local resource_group_name="$1"
+    local storage_account_name="$2"
+    local location="$3"
+    local storage_container_name="$4"
+    local subscription_id="$5"
+    local user_principal_id="$6"
+
+    echo "Provisioning storage account ${storage_account_name}..." |
+        log-output \
+            --level info \
+            --header "Creating storage account"
+
+    az deployment group create \
+        --resource-group "${resource_group_name}" \
+        --name "StorageDeployment" \
+        --template-file "${BICEP_DIR}/deployStorage.bicep" \
+        --parameters \
+        storageAccountName="${storage_account_name}" \
+        location="${location}" \
+        storageContainerName="${storage_container_name}" \
+        userPrincipalId="${user_principal_id}" |
+        log-output \
+            --level info ||
+        echo "Failed to create storage account ${storage_account_name}" |
+        log-output \
+            --level error \
+            --header "Critical error" ||
+        exit 1
+
+    echo "Creating 'log' directory in ${storage_container_name}..." |
+        log-output \
+            --level info
+
+    az storage fs directory create \
+        --file-system "${storage_container_name}" \
+        --account-name "${storage_account_name}" \
+        --name "log" \
+        --auth-mode login |
+        log-output \
+            --level info ||
+        echo "Failed to create directory in Azure Blob Storage." |
+        log-output \
+            --level error \
+            --header "Critical error"
+
+    echo "Storage account ${storage_account_name} created successfully." |
+        log-output \
+            --level success
+}
+
 function storage-create() {
     local resource_group_name="$1"
     local storage_account_name="$2"
