@@ -53,6 +53,7 @@ resource KeyVaultEntry 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = if (isSe
   name: replace(keyName, ':', '-')
   properties: {
     value: value
+    contentType: contentType
   }
 }
 

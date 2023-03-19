@@ -56,12 +56,23 @@ var azureB2CKeyName = 'AzureB2C'
 var adminApiKeyName = 'AdminApi'
 var claimToRoleTransformerKeyName = 'ClaimToRoleTransformer'
 
+@description('Time, Now')
+param now string = utcNow()
+
+var randomGuid = guid(uniqueString(resourceGroup().id, deployment().name, now))
+
 var appConfigStore = {
   appConfigurationName: appConfigurationName
   keyVaultName: keyVaultName
   userAssignedIdentityName: userAssignedIdentity.name
   label: version
   entries: [
+    {
+      key: 'SaasAuthorization:Global'
+      value: randomGuid
+      isSecret: true
+      contentType: 'text/plain'
+    }
     {
       key: '${adminApiKeyName}:${azureB2CKeyName}:BaseUrl'
       value: baseUrl
