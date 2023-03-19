@@ -16,8 +16,6 @@ public abstract class SaasPermissionAuthorizationHandlerBase<TSaasRequirement, T
     protected readonly IHttpContextAccessor _httpContextAccessor;
     protected readonly Guid _globalEntity;
 
-    
-
     public SaasPermissionAuthorizationHandlerBase(
         IHttpContextAccessor httpContextAccessor,
         IOptions<SaasAuthorizationOptions> saasAuthorizationOptions)
