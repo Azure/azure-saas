@@ -1,16 +1,39 @@
 # Azure SaaS Development Kit (ASDK)
 
-![The architecture diagram for the Azure SaaS Dev Kit (ASDK)](docs/azure-saas-docs/static/diagrams/overview.drawio.png)
+![image-20230323125434790](.assets/README/image-20230323125434790.png)
+
+## TL;DR
+
+The Azure SaaS Development Kit (ASDK) provide a cloud native starting point build with security, resilience and reliability in mind. Accelerate your SaaS journey with the Azure SaaS Development Kit.
+
+### Get started 1-2-3
+
+1. Git fork this repo, making it your own.
+2. Follow the [Quick Start](https://azure.github.io/azure-saas/quick-start/) to see ASDK in motion.
+3. Start building and learning, guided by the code and documentation provided.
 
 ## Overview
 
-The Azure SaaS Development Kit (ASDK) is an solid starting point for building [cloud-native](https://learn.microsoft.com/en-us/dotnet/architecture/cloud-native/definition) Software as a Service (SaaS) solutions. Created for developers and architects building platforms and solutions for startups, ISVs, and enterprises, the ASDK offers a reference architecture based on best practices and design patterns.
+The [Azure SaaS Development Kit (ASDK)](https://azure.microsoft.com/en-us/resources/development-kit/saas/) is a solid starting point for building [cloud-native](https://learn.microsoft.com/en-us/dotnet/architecture/cloud-native/definition) Software as a Service (SaaS) solutions, offering a reference architecture based on best practices and design patterns as outlined in the Azure Architecture Center: [Architecting multitenant solutions on Azure - Azure Architecture Center | Microsoft Learn](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/overview)
 
-For more information, including a Quick Start guide for deploying a running version of the ASDK, please refer to the [ASDK Documentation](https://azure.github.io/azure-saas/).
+The ASDK have been created specifically for developers and architects building platforms and solutions for startups, ISVs, and enterprises. It can be used as a starting point if you are a Start-Up, as well as a reference architecture if you are migrating or refactoring an existing solution.
 
-## Contents
+The main focus of the ASDK is on the creation of a solid [Control Plane](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/control-planes) for your SaaS solution. A Control Plane is crucial for a SaaS architecture because it manages and orchestrates the infrastructure, services, and resources, enabling seamless scaling, monitoring, and automation of the underlying components, which ultimately helps to ensure optimal performance and reliability of the SaaS application. The ASDK provides essential capabilities in the areas of:
 
-### Modules
+- Identity
+- Permissions
+- Tenant management
+- User Management
+- Onboarding
+- Observability
+- Configuration management
+- Scalability
+- CI/CD
+- ...and more
+
+For more information, including the [Quick Start](https://azure.github.io/azure-saas/quick-start/) guide for deploying a running version of the ASDK, please refer to the [ASDK Documentation](https://azure.github.io/azure-saas/).
+
+## Modules
 
 - [Identity Foundation Services](./src/Saas.Identity/Saas.IdentityProvider) - The core deployment and configuration of the infrastructure and services for the ASDK.
 - [Admin Service](src/Saas.Admin) - Primary services administrating Tenant info and providing relevant information to frontend applications
@@ -20,11 +43,9 @@ For more information, including a Quick Start guide for deploying a running vers
 
 For each of the modules, documentation and deployment details are provided. 
 
-### GitHub Workflows
+![The architecture diagram for the Azure SaaS Dev Kit (ASDK)](.assets/README/overview.drawio.png)
 
-Yaml files [have been included](.github\workflows) that define [GitHub workflow actions](https://docs.github.com/en/actions/using-workflows/about-workflows), including scripts which publish container images of your modules to the [GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry). Read the corresponding [documentation](https://azure.github.io/azure-saas/resources/container-publishing/) for more information.
-
-## Contributing
+# Want to contribute?
 
 This project welcomes contributions and suggestions. Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit
 https://cla.microsoft.com.
@@ -33,5 +54,5 @@ When you submit a pull request, a CLA-bot will automatically determine whether y
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-## License
+# License
 The Azure SaaS Development Kit is licensed under the MIT license. See the LICENSE file for more details.

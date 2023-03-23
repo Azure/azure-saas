@@ -61,7 +61,8 @@ resource automationAccount 'Microsoft.Automation/automationAccounts@2022-08-08' 
 var automationAccountLinkedWorkspaceName = 'Automation'
 
 resource automationAccountLinkedWorkspace 'Microsoft.OperationalInsights/workspaces/linkedServices@2020-08-01' = {
-  name: '${logAnalyticsWorkspace.name}/${automationAccountLinkedWorkspaceName}'
+  name: automationAccountLinkedWorkspaceName
+  parent: logAnalyticsWorkspace
   properties: {
     resourceId: automationAccount.id
   }
