@@ -20,7 +20,7 @@ The ASDK have been created specifically for developers and architects building p
 
 The main focus of the ASDK is on the creation of a solid [Control Plane](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/control-planes) for your SaaS solution. A Control Plane is crucial for a SaaS architecture because it manages and orchestrates the infrastructure, services, and resources, enabling seamless scaling, monitoring, and automation of the underlying components, which ultimately helps to ensure optimal performance and reliability of the SaaS application. The ASDK provides essential capabilities in the areas of:
 
-- Identity
+- Identity - [including sign-in with an existing identity such as a social account](https://learn.microsoft.com/en-us/azure/active-directory-b2c/add-sign-up-and-sign-in-policy?pivots=b2c-custom-policy).
 - Permissions
 - Tenant management
 - User Management
@@ -30,6 +30,8 @@ The main focus of the ASDK is on the creation of a solid [Control Plane](https:/
 - Scalability
 - CI/CD
 - ...and more
+
+![add-sign-up-and-sign-in-flow](.assets/README/add-sign-up-and-sign-in-flow.png)
 
 For more information, including the [Quick Start](https://azure.github.io/azure-saas/quick-start/) guide for deploying a running version of the ASDK, please refer to the [ASDK Documentation](https://azure.github.io/azure-saas/).
 
