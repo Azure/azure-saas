@@ -12,7 +12,7 @@ The Azure SaaS Development Kit (ASDK) provide a cloud native starting point buil
 2. Follow the [Quick Start](https://azure.github.io/azure-saas/quick-start/) to see ASDK in motion.
 3. Start building and learning, guided by the code and documentation provided.
 
-If you run into any challenges or have questions, please open an issue on this repo.
+If you run into any challenges or have questions, please use Discussions and/or open an issue on this repo.
 
 ## Overview
 
