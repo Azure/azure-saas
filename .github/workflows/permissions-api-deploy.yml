@@ -33,7 +33,7 @@ jobs:
       # checkout the repo specifying the branch name in 'ref:'
       - uses: actions/checkout@v3
         with:
-          ref: main #IMPORTANT we're checking out and deploying the 'main' branch here
+          ref: student #IMPORTANT we're checking out and deploying the 'student' branch here
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # Setup .NET Core SDK
