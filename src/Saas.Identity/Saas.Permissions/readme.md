@@ -174,7 +174,7 @@ Here are the steps to set things up for deploying the SaaS Permissions Service A
 2. From the directory, run these commands and bash shell scripts:
 
 ```bash
-sudo chmod +c ./setup.sh
+sudo chmod +x ./setup.sh
 ./setup.sh
 ./run.sh
 ```
