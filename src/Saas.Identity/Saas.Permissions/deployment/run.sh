@@ -16,7 +16,7 @@ docker run \
     --rm \
     --volume "${host_deployment_dir}":"${container_deployment_dir}":ro \
     --volume "${host_deployment_dir}/log":"${container_deployment_dir}/log" \
-    --volume "${host_deployment_dir}/Bicep/Parameters":"${container_deployment_dir}"/Bicep/Parameters \
+    --volume "${host_deployment_dir}/bicep/Parameters":"${container_deployment_dir}"/bicep/Parameters \
     --volume "${repo_base}/src/Saas.Identity/Saas.IdentityProvider/deployment/config/":/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/config:ro \
     --volume "${repo_base}/src/Saas.Lib/Deployment.Script.Modules/":/asdk/src/Saas.Lib/Deployment.Script.Modules:ro \
     --volume "${repo_base}/src/Saas.Lib/Saas.Bicep.Module":/asdk/src/Saas.Lib/Saas.Bicep.Module:ro \

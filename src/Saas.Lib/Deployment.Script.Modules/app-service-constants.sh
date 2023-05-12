@@ -8,8 +8,8 @@ CONFIG_DIR="${REPO_BASE}/src/Saas.Identity/Saas.IdentityProvider/deployment/conf
 CONFIG_FILE="${CONFIG_DIR}/config.json"
 
 # local bicep script directory
-BICEP_DIR="${BASE_DIR}/Bicep"
-BICEP_PARAMETERS_DIR="${BASE_DIR}/Bicep/Parameters"
+BICEP_DIR="${BASE_DIR}/bicep"
+BICEP_PARAMETERS_DIR="${BICEP_DIR}/Parameters"
 BICEP_APP_SERVICE_DEPLOY_PARAMETERS_FILE="${BICEP_PARAMETERS_DIR}/app-service-parameters.json"
 BICEP_CONFIG_ENTRIES_DEPLOY_PARAMETERS_FILE="${BICEP_PARAMETERS_DIR}/config-entries-parameters.json"
 BICEP_PARAMETERS_TEMPLATE_FILE="${BICEP_PARAMETERS_DIR}/parameters-template.json"
