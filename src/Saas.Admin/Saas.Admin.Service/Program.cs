@@ -1,12 +1,19 @@
 using Azure.Identity;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Options;
+using Polly;
 using Saas.Admin.Service.Data;
 using Saas.Identity.Authorization.Handler;
 using Saas.Identity.Authorization.Option;
 using Saas.Identity.Authorization.Provider;
 using Saas.Permissions.Client;
+using Saas.Permissions.Service.Interfaces;
+using Saas.Permissions.Service.Services;
+using Saas.Shared.Interface;
 using Saas.Shared.Options;
+using Saas.Identity.Extensions;
+using Saas.Identity.Helper;
+using Saas.Identity.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -37,6 +44,13 @@ logger.LogInformation("001");
 
 if (builder.Environment.IsDevelopment())
 {
+    
+
+    ///
+    /// 
+    builder.Services.AddScoped<IKeyVaultCredentialService, DevelopmentKeyVaultCredentials>();
+    ///
+
     InitializeDevEnvironment();
 }
 else
@@ -59,6 +73,11 @@ builder.Services.Configure<SqlOptions>(
 builder.Services.Configure<SaasAuthorizationOptions>(
     builder.Configuration.GetRequiredSection(SaasAuthorizationOptions.SectionName));
 
+////
+builder.Services.Configure<MSGraphOptions>(
+            builder.Configuration.GetRequiredSection(MSGraphOptions.SectionName));
+///
+
 builder.Services.AddHttpContextAccessor();
 
 // Add authentication for incoming requests
@@ -74,6 +93,31 @@ builder.Services.AddSingleton<IAuthorizationPolicyProvider, SaasPermissionAuthor
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
+
+builder.Services.AddScoped<ISadUserService>( sp =>
+{
+    SqlOptions? sqlOptions = builder.Configuration.GetRequiredSection(SqlOptions.SectionName).Get<SqlOptions>();
+        
+    return new SadUserService(sqlOptions);
+    
+});
+
+///
+/// 
+builder.Services
+    .AddSaasApiCertificateClientCredentials<ISaasMicrosoftGraphApi, AzureB2CPermissionsApiOptions>()
+    .AddMicrosoftGraphAuthenticationProvider()
+    .AddHttpClient<IGraphApiClientFactory, GraphApiClientFactory>()
+    .AddTransientHttpErrorPolicy(builder =>
+        builder.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))));
+
+// Adding the service used when accessing MS Graph.
+builder.Services.AddScoped<IAdminGraphServices, AdminGraphServices>();
+
+///
+
+builder.Services.AddScoped<ITest, TestImplementation>();
+
 
 builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClient>()
     .ConfigureHttpClient((serviceProvider, client) =>
@@ -102,6 +146,22 @@ builder.Services.AddDbContext<TenantsContext>(options =>
 });
 
 var app = builder.Build();
+
+app.UseCors(ops =>
+{
+    string[] origins = {
+                        "http://localhost:3000",
+                        "http://localhost:3000/",
+                        "https://192.168.1.5:3000",
+                        "https://192.168.1.5:3000/",
+                        "https://localhost:3000",
+                        "https://localhost:3000/",
+                        "https://192.168.1.13:3000",
+                        "https://192.168.1.13:3000/"
+                    };
+
+    ops.WithOrigins(origins).AllowCredentials().WithMethods("POST", "GET", "PUT", "DELETE").AllowAnyHeader();
+});
 
 //Call this as early as possible to make sure DB is ready
 //In a larger project it's better update the database during deployment process
