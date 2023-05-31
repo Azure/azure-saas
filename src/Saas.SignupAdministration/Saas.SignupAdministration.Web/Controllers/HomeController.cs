@@ -18,12 +18,12 @@ public class HomeController : Controller
         return View();
     }
 
-    [HttpGet]
-    [HttpPost]
-    public IActionResult Index()
-    {
-        return View();
-    }
+    //[HttpGet]
+    //[HttpPost]
+    //public IActionResult Index()
+    //{
+    //    return View();
+    //}
 
     [HttpGet]
     public IActionResult Pricing()
