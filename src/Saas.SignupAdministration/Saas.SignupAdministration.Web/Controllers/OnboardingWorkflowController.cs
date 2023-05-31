@@ -1,4 +1,5 @@
-﻿using Saas.SignupAdministration.Web.Services.StateMachine;
+﻿using Microsoft.CodeAnalysis;
+using Saas.SignupAdministration.Web.Services.StateMachine;
 
 namespace Saas.SignupAdministration.Web.Controllers;
 
@@ -15,6 +16,75 @@ public class OnboardingWorkflowController : Controller
         _onboardingWorkflow = onboardingWorkflow;
     }
 
+    /// <summary>
+    /// This methods handles all onboarding process on the go
+    /// The other models are listed after the methods
+    /// </summary>
+    /// <param name="organization">Organization model</param>
+    /// <returns> An appropriate result based on given data</returns>
+    [HttpPost("/onboarding")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> HandleBatchRegistration([FromBody] Organization organization)
+    {
+        if (!ModelState.IsValid) //Return a bad request
+            return BadRequest("Cannot process your request");
+
+        //step 1
+        _onboardingWorkflow.OnboardingWorkflowItem.OrganizationName = organization.OrganizationName;
+        UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnOrganizationNamePosted);
+
+        //step 2
+        _onboardingWorkflow.OnboardingWorkflowItem.CategoryId = organization.CategoryId;
+        UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnOrganizationCategoryPosted);
+
+        //step 3
+        // Need to check whether the route name exists
+        if (await _onboardingWorkflow.GetRouteExistsAsync(organization.TenantRouteName))
+        {
+            ViewBag.TenantRouteExists = true;
+            ViewBag.TenantNameEntered = organization.TenantRouteName;
+            return BadRequest("Error occured while processing you request");
+        }
+        _onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName = organization.TenantRouteName;
+        UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnTenantRouteNamePosted);
+
+        //step 4
+        _onboardingWorkflow.OnboardingWorkflowItem.ProductId = organization.ProductId;
+        UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnServicePlanPosted);
+
+        //step 5
+        await DeployTenantAsync();
+
+        return LastAction(_onboardingWorkflow.OnboardingWorkflowItem.CategoryId);
+
+
+        //return new JsonResult(new {message = "success"});
+    }
+
+    [HttpGet("/onboarding")]
+    public IActionResult Tenantinfo()
+    {
+        return Ok(_onboardingWorkflow.OnboardingWorkflowItem);
+    }
+
+
+    /// <summary>
+    /// Used by SPA application to check if suggested tenant name is available for use
+    /// </summary>
+    /// <param name="tn">Suggested tenant name</param>
+    /// <returns>true or false depending on the availability</returns>
+    [HttpGet("/Onboarding/tenants/name-avail")]
+    public async Task<IActionResult> CheckTenantName(string tn)
+    {
+        bool isTenantNameAvailable = await _onboardingWorkflow.GetRouteExistsAsync(tn);
+
+        return Ok(isTenantNameAvailable);
+    }
+
+
+
+
+   
     // Step 1 - Submit the organization name
     [HttpGet]
     public IActionResult OrganizationName()
@@ -161,4 +231,23 @@ public class OnboardingWorkflowController : Controller
 
         return action;
     }
+
+}
+
+
+/// <summary>
+/// A model for organization registration
+/// Derived from the previous onboarding flow
+/// </summary>
+public class Organization
+{
+    public string OrganizationName { get; set; } = string.Empty;
+
+    public int CategoryId { get; set; }
+
+    public string TenantRouteName { get; set; } = string.Empty;
+
+    public int ProductId { get; set; }
+
+
 }
