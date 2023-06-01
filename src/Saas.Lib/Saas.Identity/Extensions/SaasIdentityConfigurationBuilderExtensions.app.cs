@@ -38,15 +38,7 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
 
 
         var authenticationBuilder = services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApp(configureMicrosoftIdentityOptions,
-            //start  enable insecure cookie transmission
-            opts =>
-            {
-                opts.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
-                opts.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.None;
-            }
-            //end
-            );
+            .AddMicrosoftIdentityWebApp(configureMicrosoftIdentityOptions);
 
         return new SaasWebAppClientCredentialBuilder(services, authenticationBuilder, scopes);
     }
