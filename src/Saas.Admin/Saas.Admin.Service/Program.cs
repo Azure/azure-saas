@@ -44,17 +44,20 @@ logger.LogInformation("001");
 
 if (builder.Environment.IsDevelopment())
 {
-    
 
-    ///
-    /// 
+
+    //Add to enable access to key Vault credentials access, neccessary for accessing services such as 
+    //Graph API and other Microsoft related services
     builder.Services.AddScoped<IKeyVaultCredentialService, DevelopmentKeyVaultCredentials>();
-    ///
 
     InitializeDevEnvironment();
 }
 else
 {
+    //Add to enable access to key Vault credentials access, neccessary for accessing services such as 
+    //Graph API and other Microsoft related services
+    builder.Services.AddScoped<IKeyVaultCredentialService, ProductionKeyVaultCredentials>();
+
     InitializeProdEnvironment();
 }
 
@@ -73,10 +76,10 @@ builder.Services.Configure<SqlOptions>(
 builder.Services.Configure<SaasAuthorizationOptions>(
     builder.Configuration.GetRequiredSection(SaasAuthorizationOptions.SectionName));
 
-////
+//Contains important configuratins that is used to access graph services.
+//Such as users profile information
 builder.Services.Configure<MSGraphOptions>(
             builder.Configuration.GetRequiredSection(MSGraphOptions.SectionName));
-///
 
 builder.Services.AddHttpContextAccessor();
 
@@ -94,16 +97,22 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
 
+//Provides functionality to register and onboard a system admin user into the systems
 builder.Services.AddScoped<ISadUserService>( sp =>
 {
-    SqlOptions? sqlOptions = builder.Configuration.GetRequiredSection(SqlOptions.SectionName).Get<SqlOptions>();
-        
-    return new SadUserService(sqlOptions);
+    SqlOptions sqlOptions = builder.Configuration.GetRequiredSection(SqlOptions.SectionName).Get<SqlOptions>()??new SqlOptions();
+
+    //Should obtain this salt 
+    string hashSalt = "This is my salt/sugar";
+
+
+    return string.IsNullOrEmpty(hashSalt) ?
+        throw new ArgumentNullException("password hash salt cannot be null")
+        : new SadUserService(sqlOptions, hashSalt);
     
 });
 
-///
-/// 
+//Configure graph settings and access rights
 builder.Services
     .AddSaasApiCertificateClientCredentials<ISaasMicrosoftGraphApi, AzureB2CPermissionsApiOptions>()
     .AddMicrosoftGraphAuthenticationProvider()
@@ -113,10 +122,6 @@ builder.Services
 
 // Adding the service used when accessing MS Graph.
 builder.Services.AddScoped<IAdminGraphServices, AdminGraphServices>();
-
-///
-
-builder.Services.AddScoped<ITest, TestImplementation>();
 
 
 builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClient>()
@@ -147,6 +152,8 @@ builder.Services.AddDbContext<TenantsContext>(options =>
 
 var app = builder.Build();
 
+////
+//Enable CORS for specified endpoints/servers
 app.UseCors(ops =>
 {
     string[] origins = {

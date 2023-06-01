@@ -4,6 +4,7 @@ using Saas.Permissions.Service.Exceptions;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Services;
 using Saas.Shared.Options;
+using Saas.SignupAdministration.Web.Models;
 
 namespace Saas.Admin.Service.Services;
 
@@ -23,48 +24,38 @@ public class AdminGraphServices :  IAdminGraphServices
     }
 
 
-    public async Task<CUser> GetUser(string userEmail)
+    public async Task<SadUser> GetUser(string userEmail)
     {
         try
         {
             var response = await _graphServiceClient.Users.Request()
               .Filter($"identities/any(id: id/issuer eq '{_permissionOptions.Domain}' and id/issuerAssignedId eq '{userEmail}')")
-                .Select("id, identitied, displayName, givenName, surname, mail")
+                .Select("id, identitied, displayName, givenName, surname, mail, createdDate, birthday, country")
                 .GetAsync();
 
-            CUser user = ToUserObjects(response).First();
+            SadUser user = ToUserObjects(response).First();
 
             return user;
         
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-           
-            throw ex;
+
+            throw;
         }
     }
 
-    private static IEnumerable<CUser> ToUserObjects(IGraphServiceUsersCollectionPage graphUsers) =>
-       graphUsers.Select(graphUser => new CUser()
+    private static IEnumerable<SadUser> ToUserObjects(IGraphServiceUsersCollectionPage graphUsers) =>
+       graphUsers.Select(graphUser => new SadUser()
        {
-           UserId = graphUser.Id,
-           DisplayName = graphUser.DisplayName,
-           GivenName = graphUser.GivenName,
-           Surname = graphUser.Surname,
-           Mail = graphUser.Mail
-           
+           FullNames = graphUser.DisplayName + graphUser.GivenName + graphUser.Surname,
+           Email = graphUser.Mail,
+           Telephone = graphUser.MobilePhone,
+           RegSource = "AZB2C",
+           DOB = new DateTime((DateTime.Now - (graphUser.Birthday??DateTimeOffset.UnixEpoch)).Ticks),
+           Country = graphUser.Country,
+           PrincipalUser = true,
+           CreatedUser = "No",
+           CreatedDate = new DateOnly(graphUser.CreatedDateTime.Value.Year, graphUser.CreatedDateTime.Value.Month, graphUser.CreatedDateTime.Value.Day)
        });
-}
-
-public class CUser
-{
-    public string UserId { get; set; }
-
-    public string DisplayName { get; set; }
-
-    public string GivenName { get; set; }
-
-
-    public string Surname { get; set; }
-    public string Mail { get; set; }
 }

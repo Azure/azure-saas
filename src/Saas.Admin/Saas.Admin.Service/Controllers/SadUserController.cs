@@ -13,11 +13,13 @@ namespace Saas.Admin.Service.Controllers;
 [Authorize]
 public class SadUserController : ControllerBase
 {
-    public readonly ISadUserService _sadUserService;
+    private readonly ISadUserService _sadUserService;
+    private readonly IAdminGraphServices _graphservices;
 
-    public SadUserController(ISadUserService sadUserService)
+    public SadUserController(ISadUserService sadUserService, IAdminGraphServices graphservices)
     {
         _sadUserService = sadUserService;
+        _graphservices = graphservices;
     }
 
     [HttpPost]
@@ -30,14 +32,15 @@ public class SadUserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> OnboardTen(SadUser admin)
     {
-
         try
         {
             if (!ModelState.IsValid)
                 throw new Exception("Error processing you request");
 
-            updateUserinfo(admin);
-            //SadUser createdUser = await _sadUserService.AddSadUser(admin, 0);
+            SadUser user = await getUserinfo();
+
+            user = await _sadUserService.AddSadUser(user, 0);
+
             return Ok(/*new { userId = createdUser.Id, createdUser, message = "success" }*/);
             //return CreatedAtAction("dashboard", new { userId = createdUser.Id }, createdUser);
 
@@ -55,18 +58,21 @@ public class SadUserController : ControllerBase
     /// <summary>
     /// Update user information from graph
     /// </summary>
-    private async Task updateUserinfo(SadUser admin)
+    private async Task<SadUser> getUserinfo()
     {
-        
-        foreach (var item in User.Claims)
+        string email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
+
+        if (string.IsNullOrEmpty(email))
         {
-            Console.WriteLine($"{item.Type} => {item.Value}");
-            
+            throw new ArgumentNullException("User principal name does not exists");
         }
-        Console.WriteLine(User.Identity.Name);
-        admin.Email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
-        admin.FullNames = User.FindFirst(ClaimTypes.GivenName)?.Value ?? string.Empty;
-        admin.UserName = User.FindFirst(ClaimTypes.Upn)?.Value ?? admin.Email;
+
+        SadUser user =await  _graphservices.GetUser(email);
+
+        //Add user terminal before exiting
+        user.Terminus = HttpContext.Connection.RemoteIpAddress?.ToString()??"Not captured";
+
+        return user;
 
     }
 }

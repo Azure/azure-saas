@@ -1,4 +1,8 @@
-﻿namespace Saas.SignupAdministration.Web.Models;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace Saas.SignupAdministration.Web.Models;
 
 public class SadUser
 {
@@ -35,7 +39,7 @@ public class SadUser
 
     public DateOnly  ExpiryDate { get;set;} 
 
-    public int ExpiresAfter { get;}
+    public int ExpiresAfter { get; set; }
 
     public int LockAfter { get; set; }
 
@@ -55,7 +59,7 @@ public class SadUser
     public string CCCode { get; set; } = string.Empty;
 
     public string RegSource { get; set; } = string.Empty;
-    public DateOnly DOB { get; set; }
+    public DateTime DOB { get; set; }
     public string IDType { get; set; } = string.Empty;
     public string Profession { get; set; } = string.Empty;
     public string Company { get; set; } = string.Empty;
@@ -82,4 +86,32 @@ public class SadUser
 
     public string DBIdentity { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Used to generate a hashed password for this user
+    /// Mostly used when saving this user's password to database
+    /// or when comparing user's password against one stored in the database during sign in
+    /// </summary>
+    /// <param name="plain">password in plain text</param>
+    /// <param name="saltString">string text used as salt for this hashing algorithm</param>
+    /// <returns>A hashed version of the plain text provided</returns>
+    public static string passwordHash(string plain, string saltString)
+    {
+
+        // generate a 128-bit salt using a cryptographically strong random sequence of nonzero values
+        byte[] salt = Encoding.UTF8.GetBytes(saltString);
+        using (RandomNumberGenerator rngCsp = RandomNumberGenerator.Create())
+        {
+            rngCsp.GetNonZeroBytes(salt);
+        }
+
+        // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
+        string hashed = BitConverter.ToString(KeyDerivation.Pbkdf2(
+            password: plain,
+            salt: salt,
+            prf: KeyDerivationPrf.HMACSHA512,
+            iterationCount: 350000,
+            numBytesRequested: 64)).Replace("-", "");
+
+        return hashed;
+    }
 }
