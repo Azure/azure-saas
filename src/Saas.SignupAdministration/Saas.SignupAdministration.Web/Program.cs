@@ -169,11 +169,14 @@ app.MapControllerRoute(
     name: "Admin",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
+app.MapFallbackToFile("index.html");
+
 app.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
 
 app.MapRazorPages();
 
 AppHttpContext.Services = ((IApplicationBuilder)app).ApplicationServices;
+
 
 app.Run();
 
