@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Saas.Admin.Service.Interfaces;
+using Saas.Admin.Service.Model;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Saas.Admin.Service.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class TestController : ControllerBase
 {
     private readonly ITest testman;
 
-    private readonly IAdminGraphServices _graphservices;
+    private readonly IUserGraphService _graphservices;
 
-    public TestController(ITest test, IAdminGraphServices graphservices)
+    public TestController(ITest test, IUserGraphService graphservices)
     {
         testman = test;
         _graphservices = graphservices;
@@ -29,7 +31,7 @@ public class TestController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id)
     {
-        CUser res = await _graphservices.GetUser(id);
+        AppUser res = await _graphservices.GetUserInfoByEmail(id);
         return new JsonResult(res);
     }
 

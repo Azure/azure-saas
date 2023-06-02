@@ -27,7 +27,7 @@
       },
       "Microsoft.AspNetCore.SpaProxy": null,
       "dotnetRunMessages": "true",
-      "applicationUrl": "https://192.168.1.13:443;http://192.168.1.13:80"
+      "applicationUrl": "https://192.168.100.14:443;https://192.168.100.14:80"
     }
   }
 }
