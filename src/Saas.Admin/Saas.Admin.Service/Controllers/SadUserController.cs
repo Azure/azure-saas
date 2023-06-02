@@ -37,7 +37,11 @@ public class SadUserController : ControllerBase
             if (!ModelState.IsValid)
                 throw new Exception("Error processing you request");
 
+<<<<<<< Updated upstream
             SadUser user = await getUserinfo();
+=======
+            SadUser user = await getUserinfo(admin);
+>>>>>>> Stashed changes
 
             user = await _sadUserService.AddSadUser(user, 0);
 
@@ -58,7 +62,11 @@ public class SadUserController : ControllerBase
     /// <summary>
     /// Update user information from graph
     /// </summary>
+<<<<<<< Updated upstream
     private async Task<SadUser> getUserinfo()
+=======
+    private async Task<SadUser> getUserinfo(SadUser admin)
+>>>>>>> Stashed changes
     {
         string email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
 
@@ -69,10 +77,21 @@ public class SadUserController : ControllerBase
 
         SadUser user =await  _graphservices.GetUser(email);
 
+<<<<<<< Updated upstream
         //Add user terminal before exiting
         user.Terminus = HttpContext.Connection.RemoteIpAddress?.ToString()??"Not captured";
 
         return user;
+=======
+        admin.FullNames = user.FullNames;
+        admin.Email = user.Email;
+        admin.Telephone = user.Telephone;
+
+        //Add user terminal before exiting
+        admin.Terminus = HttpContext.Connection.RemoteIpAddress?.ToString()??"Not captured";
+
+        return admin;
+>>>>>>> Stashed changes
 
     }
 }

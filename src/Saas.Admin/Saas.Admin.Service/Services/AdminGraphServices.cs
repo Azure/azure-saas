@@ -30,7 +30,11 @@ public class AdminGraphServices :  IAdminGraphServices
         {
             var response = await _graphServiceClient.Users.Request()
               .Filter($"identities/any(id: id/issuer eq '{_permissionOptions.Domain}' and id/issuerAssignedId eq '{userEmail}')")
+<<<<<<< Updated upstream
                 .Select("id, identitied, displayName, givenName, surname, mail, createdDate, birthday, country")
+=======
+                .Select("id, identitied, displayName, givenName, surname, mail") //, createdDate, birthday, country
+>>>>>>> Stashed changes
                 .GetAsync();
 
             SadUser user = ToUserObjects(response).First();
@@ -48,6 +52,7 @@ public class AdminGraphServices :  IAdminGraphServices
     private static IEnumerable<SadUser> ToUserObjects(IGraphServiceUsersCollectionPage graphUsers) =>
        graphUsers.Select(graphUser => new SadUser()
        {
+<<<<<<< Updated upstream
            FullNames = graphUser.DisplayName + graphUser.GivenName + graphUser.Surname,
            Email = graphUser.Mail,
            Telephone = graphUser.MobilePhone,
@@ -57,5 +62,16 @@ public class AdminGraphServices :  IAdminGraphServices
            PrincipalUser = true,
            CreatedUser = "No",
            CreatedDate = new DateOnly(graphUser.CreatedDateTime.Value.Year, graphUser.CreatedDateTime.Value.Month, graphUser.CreatedDateTime.Value.Day)
+=======
+           FullNames = graphUser.DisplayName,
+           Email = graphUser.Mail,
+           Telephone = graphUser.MobilePhone,
+           RegSource = "AZB2C",
+           //DOB = new DateTime((DateTime.Now - (graphUser.Birthday??DateTimeOffset.UnixEpoch)).Ticks),
+           Country = graphUser.Country,
+           PrincipalUser = true,
+           CreatedUser = "No",
+          // CreatedDate = new DateOnly(graphUser.CreatedDateTime.Value.Year, graphUser.CreatedDateTime.Value.Month, graphUser.CreatedDateTime.Value.Day)
+>>>>>>> Stashed changes
        });
 }

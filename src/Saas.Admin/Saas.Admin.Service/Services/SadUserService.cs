@@ -16,7 +16,11 @@ public class SadUserService : ISadUserService
         _hashSalt = hashSalt;
     }
 
+<<<<<<< Updated upstream
    
+=======
+
+>>>>>>> Stashed changes
     public async Task<SadUser> AddSadUser(SadUser sadUser, long userID)
     {
         try 

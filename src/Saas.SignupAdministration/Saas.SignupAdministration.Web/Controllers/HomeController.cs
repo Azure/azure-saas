@@ -43,11 +43,22 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Index()
     {
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
         //if (user.identity.isauthenticated)
         //{
         //    return redirect("https://localhost:3000/onboarding");
         //}
+<<<<<<< Updated upstream
         return Redirect("https://192.168.1.13:3000");
+=======
+        //return Redirect("https://192.168.1.13:3000");
+>>>>>>> Stashed changes
+        return View();
+>>>>>>> Stashed changes
     }
 
     [HttpGet]

@@ -97,14 +97,25 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 //Provides functionality to register and onboard a system admin user into the systems
 builder.Services.AddScoped<ISadUserService>( sp =>
 {
     SqlOptions sqlOptions = builder.Configuration.GetRequiredSection(SqlOptions.SectionName).Get<SqlOptions>()??new SqlOptions();
 
+<<<<<<< Updated upstream
     //Should obtain this salt 
     string hashSalt = "This is my salt/sugar";
 
+=======
+    HashOptions hashes = builder.Configuration.GetRequiredSection(HashOptions.SectionName).Get<HashOptions>() ?? new HashOptions();
+    //Should obtain this salt 
+    string hashSalt = hashes.PasswordHash ?? string.Empty;
+>>>>>>> Stashed changes
 
     return string.IsNullOrEmpty(hashSalt) ?
         throw new ArgumentNullException("password hash salt cannot be null")
@@ -124,6 +135,10 @@ builder.Services
 builder.Services.AddScoped<IAdminGraphServices, AdminGraphServices>();
 
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClient>()
     .ConfigureHttpClient((serviceProvider, client) =>
     {

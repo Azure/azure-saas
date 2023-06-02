@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Saas.Admin.Client": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:63276;http://localhost:63277"
+    }
+  }
+}
