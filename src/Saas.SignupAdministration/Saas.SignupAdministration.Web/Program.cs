@@ -112,7 +112,9 @@ builder.Services.AddSaasWebAppAuthentication(
     fullyQualifiedScopes,
     options =>
     {
+       
         builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, options);
+
     })
     .SaaSAppCallDownstreamApi()
     .AddInMemoryTokenCaches();

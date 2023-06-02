@@ -30,7 +30,7 @@ public class AdminGraphServices :  IAdminGraphServices
         {
             var response = await _graphServiceClient.Users.Request()
               .Filter($"identities/any(id: id/issuer eq '{_permissionOptions.Domain}' and id/issuerAssignedId eq '{userEmail}')")
-   .Select("id, identitied, displayName, givenName, surname, mail") //, createdDate, birthday, country
+   .Select("id, identitied, displayName, givenName, surname, mail, country, jobTitle, mobilePhone, userPrincipalName") //, createdDate, birthday, country
 
                 .GetAsync();
 
@@ -58,6 +58,7 @@ public class AdminGraphServices :  IAdminGraphServices
            Country = graphUser.Country,
            PrincipalUser = true,
            CreatedUser = "No",
+           Profession = graphUser.JobTitle
           // CreatedDate = new DateOnly(graphUser.CreatedDateTime.Value.Year, graphUser.CreatedDateTime.Value.Month, graphUser.CreatedDateTime.Value.Day)
        });
 }

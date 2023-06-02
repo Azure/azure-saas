@@ -39,8 +39,19 @@ public class HomeController : Controller
         return View();
     }
 
+    
+
+     [HttpGet("signout")]
+    public IActionResult HandlesSignout()
+    {
+       HttpContext.SignOutAsync().Wait();
+
+        return Redirect("https://192.168.1.13:3000");
+
+    }
+
     [HttpGet]
-    [HttpPost]
+    //[HttpPost]
     public IActionResult Index()
     {
 
@@ -50,9 +61,9 @@ public class HomeController : Controller
         //    return redirect("https://localhost:3000/onboarding");
         //}
 
-        //return Redirect("https://192.168.1.13:3000");
+        return Redirect("https://192.168.1.13:3000");
 
-        return View();
+        //return View();
 
     }
 
@@ -80,8 +91,8 @@ public class HomeController : Controller
     /// It must be accessed by a logged in user
     /// </summary>
     /// <returns>A json body containing user information including token</returns>
-    [HttpGet("user-info")]
-    public async Task<IActionResult> Test()
+    [HttpGet("api/user-info")]
+    public async Task<IActionResult> GetUserInfo()
     {
         if (User.Identity?.IsAuthenticated ?? false)
         {

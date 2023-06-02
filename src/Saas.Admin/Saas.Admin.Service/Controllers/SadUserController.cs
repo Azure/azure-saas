@@ -25,11 +25,12 @@ public class SadUserController : ControllerBase
     [HttpPost]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
-    //[ProducesResponseType(typeof(SadUser), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(SadUser), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> OnboardTen(SadUser admin)
     {
         try
@@ -42,8 +43,14 @@ public class SadUserController : ControllerBase
 
             user = await _sadUserService.AddSadUser(user, 0);
 
-            return Ok(/*new { userId = createdUser.Id, createdUser, message = "success" }*/);
-            //return CreatedAtAction("dashboard", new { userId = createdUser.Id }, createdUser);
+            if(user.Id == 0)//User exists
+            {
+                return Conflict(new {message = "User already exists"});
+            }
+                
+
+            //return Ok(/*new { userId = createdUser.Id, createdUser, message = "success" }*/);
+            return CreatedAtAction(nameof(OnboardTen), new { userId = user.Id }, user);
 
         }
         catch (DbUpdateException ex)
@@ -63,16 +70,23 @@ public class SadUserController : ControllerBase
     {
         string email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
 
+        
+
         if (string.IsNullOrEmpty(email))
         {
             throw new ArgumentNullException("User principal name does not exists");
         }
+
+        //Add this user email as username
+        admin.UserName = email;
 
         SadUser user =await  _graphservices.GetUser(email);
 
         admin.FullNames = user.FullNames;
         admin.Email = user.Email;
         admin.Telephone = user.Telephone;
+        admin.RegSource = user.RegSource;
+        //admin.Country = user.Country;
 
         //Add user terminal before exiting
         admin.Terminus = HttpContext.Connection.RemoteIpAddress?.ToString()??"Not captured";
