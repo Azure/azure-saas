@@ -1,6 +1,8 @@
-﻿namespace Saas.Admin.Service.Services;
+﻿using Saas.SignupAdministration.Web.Models;
+
+namespace Saas.Admin.Service.Services;
 
 public interface IAdminGraphServices
 {
-    public Task<CUser> GetUser(string userEmail);
+    public Task<SadUser> GetUser(string userEmail);
 }

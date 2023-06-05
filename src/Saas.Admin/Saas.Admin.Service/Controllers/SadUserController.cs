@@ -13,33 +13,46 @@ namespace Saas.Admin.Service.Controllers;
 [Authorize]
 public class SadUserController : ControllerBase
 {
-    public readonly ISadUserService _sadUserService;
+    private readonly ISadUserService _sadUserService;
+    private readonly IAdminGraphServices _graphservices;
 
-    public SadUserController(ISadUserService sadUserService)
+    public SadUserController(ISadUserService sadUserService, IAdminGraphServices graphservices)
     {
         _sadUserService = sadUserService;
+        _graphservices = graphservices;
     }
 
     [HttpPost]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
-    //[ProducesResponseType(typeof(SadUser), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(SadUser), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> OnboardTen(SadUser admin)
     {
-
         try
         {
             if (!ModelState.IsValid)
                 throw new Exception("Error processing you request");
 
-            updateUserinfo(admin);
-            //SadUser createdUser = await _sadUserService.AddSadUser(admin, 0);
-            return Ok(/*new { userId = createdUser.Id, createdUser, message = "success" }*/);
-            //return CreatedAtAction("dashboard", new { userId = createdUser.Id }, createdUser);
+
+            //SadUser user = await getUserinfo(admin);
+            //Normalize user email
+            admin.Email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
+
+            admin = await _sadUserService.AddSadUser(admin, 0);
+
+            if(admin.Id == 0)//User exists
+            {
+                return Conflict(new {message = "User already exists"});
+            }
+                
+
+            //return Ok(/*new { userId = createdUser.Id, createdUser, message = "success" }*/);
+            return CreatedAtAction(nameof(OnboardTen), new { userId = admin.Id }, admin);
 
         }
         catch (DbUpdateException ex)
@@ -52,21 +65,58 @@ public class SadUserController : ControllerBase
         }
     }
 
+    [HttpGet("/api/user")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public IActionResult PreOnboard()
+    {
+        //Get userinfo from claims, then return
+        var userInfo = new
+        {
+            Email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty,
+            Telephone = User.FindFirst("telephone")?.Value ?? string.Empty,
+            Country = User.FindFirst("country")?.Value ?? string.Empty,
+            Industry = User.FindFirst("industry")?.Value ?? string.Empty,
+            OrganizationName = User.FindFirst("organizationName")?.Value ?? string.Empty,
+            NoOfEmployees = int.Parse(User.FindFirst("noOfEmployees")?.Value ?? "0"),
+            Name = User.FindFirst("name")?.Value ?? string.Empty,
+        };
+
+
+        return Ok(userInfo);
+
+    }
+
     /// <summary>
     /// Update user information from graph
     /// </summary>
-    private async Task updateUserinfo(SadUser admin)
+    private async Task<SadUser> getUserinfo(SadUser admin)
     {
+        string email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
+
         
-        foreach (var item in User.Claims)
+
+        if (string.IsNullOrEmpty(email))
         {
-            Console.WriteLine($"{item.Type} => {item.Value}");
-            
+            throw new ArgumentNullException("User principal name does not exists");
         }
-        Console.WriteLine(User.Identity.Name);
-        admin.Email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
-        admin.FullNames = User.FindFirst(ClaimTypes.GivenName)?.Value ?? string.Empty;
-        admin.UserName = User.FindFirst(ClaimTypes.Upn)?.Value ?? admin.Email;
+
+        //Add this user email as username
+        admin.UserName = email;
+
+        SadUser user =await  _graphservices.GetUser(email);
+
+        admin.FullNames = user.FullNames;
+        admin.Email = user.Email;
+        admin.Telephone = user.Telephone;
+        admin.RegSource = user.RegSource;
+        //admin.Country = user.Country;
+
+        //Add user terminal before exiting
+        admin.Terminus = HttpContext.Connection.RemoteIpAddress?.ToString()??"Not captured";
+
+        return admin;
 
     }
 }
