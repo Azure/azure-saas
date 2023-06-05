@@ -40,7 +40,7 @@ public class HomeController : Controller
     {
         return View();
     }
-r
+
 
 
     [HttpGet]

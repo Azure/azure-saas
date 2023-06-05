@@ -14,12 +14,12 @@ namespace Saas.Admin.Service.Controllers;
 public class SadUserController : ControllerBase
 {
     private readonly ISadUserService _sadUserService;
-    private readonly IAdminGraphServices _graphservices;
+    
 
-    public SadUserController(ISadUserService sadUserService, IAdminGraphServices graphservices)
+    public SadUserController(ISadUserService sadUserService)
     {
         _sadUserService = sadUserService;
-        _graphservices = graphservices;
+       
     }
 
     [HttpPost]
@@ -91,32 +91,32 @@ public class SadUserController : ControllerBase
     /// <summary>
     /// Update user information from graph
     /// </summary>
-    private async Task<SadUser> getUserinfo(SadUser admin)
-    {
-        string email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
+    //private async Task<SadUser> getUserinfo(SadUser admin)
+    //{
+    //    string email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
 
         
 
-        if (string.IsNullOrEmpty(email))
-        {
-            throw new ArgumentNullException("User principal name does not exists");
-        }
+    //    if (string.IsNullOrEmpty(email))
+    //    {
+    //        throw new ArgumentNullException("User principal name does not exists");
+    //    }
 
-        //Add this user email as username
-        admin.UserName = email;
+    //    //Add this user email as username
+    //    admin.UserName = email;
 
-        SadUser user =await  _graphservices.GetUser(email);
+    //    SadUser user =await  _graphservices.GetUser(email);
 
-        admin.FullNames = user.FullNames;
-        admin.Email = user.Email;
-        admin.Telephone = user.Telephone;
-        admin.RegSource = user.RegSource;
-        //admin.Country = user.Country;
+    //    admin.FullNames = user.FullNames;
+    //    admin.Email = user.Email;
+    //    admin.Telephone = user.Telephone;
+    //    admin.RegSource = user.RegSource;
+    //    //admin.Country = user.Country;
 
-        //Add user terminal before exiting
-        admin.Terminus = HttpContext.Connection.RemoteIpAddress?.ToString()??"Not captured";
+    //    //Add user terminal before exiting
+    //    admin.Terminus = HttpContext.Connection.RemoteIpAddress?.ToString()??"Not captured";
 
-        return admin;
+    //    return admin;
 
-    }
+    //}
 }
