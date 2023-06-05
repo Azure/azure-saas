@@ -61,7 +61,7 @@ public class HomeController : Controller
 
         }
 
-        return Redirect("https://192.168.1.13:3000");
+        return Redirect("https://localhost:3000");
 
         //return View();
 

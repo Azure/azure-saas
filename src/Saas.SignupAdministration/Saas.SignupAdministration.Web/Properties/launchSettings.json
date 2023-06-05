@@ -22,13 +22,13 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_ENVIRONMENT": "Development"
         //"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
         //removed instead server SPA proxy
         //"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
       },
       "dotnetRunMessages": "true",
-      "applicationUrl": "https://192.168.1.13:443;http://192.168.1.13:80"
+      "applicationUrl": "https://localhost:5001;http://localhost:7001"
     }
   }
 }

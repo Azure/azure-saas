@@ -39,18 +39,20 @@ public class SadUserController : ControllerBase
                 throw new Exception("Error processing you request");
 
 
-            SadUser user = await getUserinfo(admin);
+            //SadUser user = await getUserinfo(admin);
+            //Normalize user email
+            admin.Email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
 
-            user = await _sadUserService.AddSadUser(user, 0);
+            admin = await _sadUserService.AddSadUser(admin, 0);
 
-            if(user.Id == 0)//User exists
+            if(admin.Id == 0)//User exists
             {
                 return Conflict(new {message = "User already exists"});
             }
                 
 
             //return Ok(/*new { userId = createdUser.Id, createdUser, message = "success" }*/);
-            return CreatedAtAction(nameof(OnboardTen), new { userId = user.Id }, user);
+            return CreatedAtAction(nameof(OnboardTen), new { userId = admin.Id }, admin);
 
         }
         catch (DbUpdateException ex)
@@ -61,6 +63,29 @@ public class SadUserController : ControllerBase
         {
             throw;
         }
+    }
+
+    [HttpGet("/api/user")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public IActionResult PreOnboard()
+    {
+        //Get userinfo from claims, then return
+        var userInfo = new
+        {
+            Email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty,
+            Telephone = User.FindFirst("telephone")?.Value ?? string.Empty,
+            Country = User.FindFirst("country")?.Value ?? string.Empty,
+            Industry = User.FindFirst("industry")?.Value ?? string.Empty,
+            OrganizationName = User.FindFirst("organizationName")?.Value ?? string.Empty,
+            NoOfEmployees = int.Parse(User.FindFirst("noOfEmployees")?.Value ?? "0"),
+            Name = User.FindFirst("name")?.Value ?? string.Empty,
+        };
+
+
+        return Ok(userInfo);
+
     }
 
     /// <summary>
