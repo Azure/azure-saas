@@ -1,12 +1,12 @@
-﻿using System.Data;
+﻿
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.Data.SqlClient;
+
 
 //Saas claims handling
-using Saas.Identity.Authorization.Model.Claim;
 using Saas.Shared.Options;
+using Saas.SignupAdministration.Web.Interfaces;
 
 namespace Saas.SignupAdministration.Web.Controllers;
 
@@ -19,18 +19,20 @@ public class HomeController : Controller
     private readonly IApplicationUser _applicationUser;
     private readonly ITokenAcquisition _tokenAcquisition;
     private readonly IAntiforgery _antiforgery;
+    private readonly IDBServices _dbServices;
 
     //Configured access scopes
     private readonly IEnumerable<string> _scopes;
 
 
-    public HomeController(ILogger<HomeController> logger, IApplicationUser applicationUser, ITokenAcquisition tokenAcquisition, IOptions<SaasAppScopeOptions> scopes, IAntiforgery antiforgery)
+    public HomeController(ILogger<HomeController> logger, IApplicationUser applicationUser, ITokenAcquisition tokenAcquisition, IOptions<SaasAppScopeOptions> scopes, IAntiforgery antiforgery, IDBServices dbServices)
     {
         _logger = logger;
         _applicationUser = applicationUser;
         _tokenAcquisition = tokenAcquisition;
         _scopes = scopes.Value.Scopes ?? throw new ArgumentNullException($"Scopes must be defined.");
         _antiforgery = antiforgery;
+        _dbServices = dbServices;
     }
 
     [HttpGet]
@@ -41,25 +43,23 @@ public class HomeController : Controller
 
     
 
-     [HttpGet("signout")]
-    public IActionResult HandlesSignout()
-    {
-       HttpContext.SignOutAsync().Wait();
-
-        return Redirect("https://192.168.1.13:3000");
-
-    }
-
     [HttpGet]
     //[HttpPost]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
 
 
-        //if (user.identity.isauthenticated)
-        //{
-        //    return redirect("https://localhost:3000/onboarding");
-        //}
+        if (User?.Identity?.IsAuthenticated ?? false)
+        {
+            bool isRegistered = await isUserRegistered();
+            if (isRegistered)
+            {
+                return Redirect("https://localhost:3000/dashboard");
+            }
+
+            return Redirect("https://localhost:3000/onboarding");
+
+        }
 
         return Redirect("https://192.168.1.13:3000");
 
@@ -115,36 +115,11 @@ public class HomeController : Controller
     private async Task<bool> isUserRegistered()
     {
 
-        string constr = "Server=tcp:sqldb-asdk-dev-lsg5.database.windows.net,1433;Initial Catalog=iBusinessSaasTests;Persist Security Info=False;User ID=sqlAdmin;Password=UnK307r8DUW0zvlOjli4d1SW+wB138HNA4xgA/oPLe/uA2zmrXzh1NspSEBWM8W6;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-        //Connect to database. then add user
-        using (SqlConnection con = new SqlConnection(constr))
-        {
-            await con.OpenAsync();
+        string email = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
 
-            int flag = 0;
+        bool isRegistered = await _dbServices.isUserRegistered(email);
 
-            using (SqlCommand command = new SqlCommand("spCheckIfUserExists", con))
-            {
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("UserName", SqlDbType.NVarChar).Value = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
-
-                
-
-                using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                {
-
-                    while (reader.Read())
-                    {
-                        flag = reader.GetInt32(0);
-                    }
-
-                }
-
-            }
-            bool isRegistered = flag == 1 ? true : false;
-            return isRegistered;
-
-        }
+        return isRegistered;
 
     }
 

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Admin.Client;
+using Saas.SignupAdministration.Web.Interfaces;
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
@@ -64,6 +65,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddMvc();
 
+
 // Add the workflow object
 builder.Services.AddScoped<OnboardingWorkflowService, OnboardingWorkflowService>();
 
@@ -72,6 +74,15 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Add the email object
 builder.Services.AddScoped<IEmail, Email>();
+
+//Provides database services to this program
+builder.Services.AddScoped<IDBServices>(sp =>
+{
+    SqlOptions sqlOptions = builder.Configuration.GetRequiredSection(SqlOptions.SectionName).Get<SqlOptions>() ?? new SqlOptions();
+
+    return new DBServices(sqlOptions);
+
+});
 
 // Required for the JsonPersistenceProvider
 // Should be replaced based on the persistence scheme

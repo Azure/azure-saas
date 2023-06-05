@@ -2,6 +2,7 @@
 using Saas.Shared.Options;
 using Saas.SignupAdministration.Web.Models;
 using System.Data;
+using System.Security.Claims;
 
 namespace Saas.Admin.Service.Services;
 
