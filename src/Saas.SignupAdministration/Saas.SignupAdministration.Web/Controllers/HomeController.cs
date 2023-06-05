@@ -40,10 +40,10 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    [HttpPost]
+    //[HttpPost]
     public IActionResult Index()
     {
-        return View();
+        return Redirect("https://localhost:3000/");
     }
 
     [HttpGet]

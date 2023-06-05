@@ -7,7 +7,7 @@ using Saas.Admin.Service.Model;
 namespace Saas.Admin.Service.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-//[Authorize]
+[Authorize]
 public class TestController : ControllerBase
 {
     private readonly ITest testman;
