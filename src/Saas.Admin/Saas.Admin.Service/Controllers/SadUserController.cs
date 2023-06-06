@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Saas.Admin.Service.Data;
+using Saas.Admin.Service.Interfaces;
 using Saas.SignupAdministration.Web.Models;
+using Saas.SignupAdministration.Web.Services;
+using System.Diagnostics.Metrics;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Security.Claims;
@@ -41,7 +44,13 @@ public class SadUserController : ControllerBase
 
             //SadUser user = await getUserinfo(admin);
             //Normalize user email
+            admin.UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
             admin.Email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
+            admin.FullNames = User.FindFirst("name")?.Value ?? string.Empty;
+            admin.Telephone = User.FindFirst("telephone")?.Value ?? string.Empty;
+            admin.Country = User.FindFirst("country")?.Value ?? string.Empty;
+            admin.Industry = User.FindFirst("industry")?.Value ?? string.Empty;
+            admin.Employees = int.Parse(User.FindFirst("noOfEmployees")?.Value ?? "0");
 
             admin = await _sadUserService.AddSadUser(admin, 0);
 
@@ -88,9 +97,10 @@ public class SadUserController : ControllerBase
 
     }
 
-    /// <summary>
-    /// Update user information from graph
-    /// </summary>
+
+     // <summary>
+    // Update user information from graph
+    // </summary>
     //private async Task<SadUser> getUserinfo(SadUser admin)
     //{
     //    string email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;

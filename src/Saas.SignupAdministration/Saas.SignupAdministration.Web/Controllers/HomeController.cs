@@ -91,7 +91,7 @@ public class HomeController : Controller
     /// It must be accessed by a logged in user
     /// </summary>
     /// <returns>A json body containing user information including token</returns>
-    [HttpGet("api/user-info")]
+    [HttpGet("api/GetAuthUser")]
     public async Task<IActionResult> GetUserInfo()
     {
         if (User.Identity?.IsAuthenticated ?? false)

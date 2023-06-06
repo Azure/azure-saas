@@ -1,6 +1,6 @@
 ﻿using Saas.SignupAdministration.Web.Models;
 
-namespace Saas.Admin.Service.Services;
+namespace Saas.Admin.Service.Interfaces;
 
 public interface ISadUserService
 {
