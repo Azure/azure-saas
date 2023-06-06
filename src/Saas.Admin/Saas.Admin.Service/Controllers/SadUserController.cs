@@ -51,6 +51,7 @@ public class SadUserController : ControllerBase
             admin.Country = User.FindFirst("country")?.Value ?? string.Empty;
             admin.Industry = User.FindFirst("industry")?.Value ?? string.Empty;
             admin.Employees = int.Parse(User.FindFirst("noOfEmployees")?.Value ?? "0");
+            admin.Terminus = "001";
 
             admin = await _sadUserService.AddSadUser(admin, 0);
 
