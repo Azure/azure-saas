@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Saas.Admin.Service.Interfaces;
 using Saas.Shared.Options;
 using Saas.SignupAdministration.Web.Models;
 using System.Data;
@@ -99,8 +100,10 @@ public class SadUserService : ISadUserService
         
         if(!string.IsNullOrEmpty(sadUser.Company))
             command.Parameters.AddWithValue("Company", SqlDbType.NVarChar).Value = sadUser.Company;
-        
-        if(!string.IsNullOrEmpty(sadUser.Country))
+
+        command.Parameters.AddWithValue("Industry", SqlDbType.NVarChar).Value = sadUser.Industry;
+
+        if (!string.IsNullOrEmpty(sadUser.Country))
             command.Parameters.AddWithValue("Country", SqlDbType.NVarChar).Value = sadUser.Country;
 
         //command.Parameters.AddWithValue("DBIdentity", SqlDbType.NVarChar).Value = sadUser.DBIdentity;

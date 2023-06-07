@@ -33,7 +33,7 @@ param sqlAdministratorLogin string
 @description('The location for all resources.')
 param location string = resourceGroup().location
 
-var appServicePlanOS = 'windows'
+var appServicePlanOS = 'linux'
 var appServicePlanName = 'plan-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var appConfigurationName = 'appconfig-${solutionPrefix}-${solutionName}-${solutionPostfix}'
 var sqlServerName = 'sqldb-${solutionPrefix}-${solutionName}-${solutionPostfix}'

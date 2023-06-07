@@ -14,6 +14,7 @@ using Saas.Shared.Options;
 using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Identity.Interface;
+using Saas.Admin.Service.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -123,7 +124,7 @@ builder.Services
         builder.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))));
 
 // Adding the service used when accessing MS Graph.
-builder.Services.AddScoped<IAdminGraphServices, AdminGraphServices>();
+builder.Services.AddScoped<IUserGraphService, UserGraphService>();
 
 
 builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClient>()

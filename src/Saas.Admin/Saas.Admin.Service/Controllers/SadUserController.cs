@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Saas.Admin.Service.Data;
+using Saas.Admin.Service.Interfaces;
 using Saas.SignupAdministration.Web.Models;
+using Saas.SignupAdministration.Web.Services;
+using System.Diagnostics.Metrics;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Security.Claims;
@@ -14,12 +17,12 @@ namespace Saas.Admin.Service.Controllers;
 public class SadUserController : ControllerBase
 {
     private readonly ISadUserService _sadUserService;
-    private readonly IAdminGraphServices _graphservices;
+    
 
-    public SadUserController(ISadUserService sadUserService, IAdminGraphServices graphservices)
+    public SadUserController(ISadUserService sadUserService)
     {
         _sadUserService = sadUserService;
-        _graphservices = graphservices;
+       
     }
 
     [HttpPost]
@@ -41,7 +44,14 @@ public class SadUserController : ControllerBase
 
             //SadUser user = await getUserinfo(admin);
             //Normalize user email
+            admin.UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
             admin.Email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
+            admin.FullNames = User.FindFirst("name")?.Value ?? string.Empty;
+            admin.Telephone = User.FindFirst("telephone")?.Value ?? string.Empty;
+            admin.Country = User.FindFirst("country")?.Value ?? string.Empty;
+            admin.Industry = User.FindFirst("industry")?.Value ?? string.Empty;
+            admin.Employees = int.Parse(User.FindFirst("noOfEmployees")?.Value ?? "0");
+            admin.Terminus = "001";
 
             admin = await _sadUserService.AddSadUser(admin, 0);
 
@@ -88,35 +98,36 @@ public class SadUserController : ControllerBase
 
     }
 
-    /// <summary>
-    /// Update user information from graph
-    /// </summary>
-    private async Task<SadUser> getUserinfo(SadUser admin)
-    {
-        string email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
+
+     // <summary>
+    // Update user information from graph
+    // </summary>
+    //private async Task<SadUser> getUserinfo(SadUser admin)
+    //{
+    //    string email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
 
         
 
-        if (string.IsNullOrEmpty(email))
-        {
-            throw new ArgumentNullException("User principal name does not exists");
-        }
+    //    if (string.IsNullOrEmpty(email))
+    //    {
+    //        throw new ArgumentNullException("User principal name does not exists");
+    //    }
 
-        //Add this user email as username
-        admin.UserName = email;
+    //    //Add this user email as username
+    //    admin.UserName = email;
 
-        SadUser user =await  _graphservices.GetUser(email);
+    //    SadUser user =await  _graphservices.GetUser(email);
 
-        admin.FullNames = user.FullNames;
-        admin.Email = user.Email;
-        admin.Telephone = user.Telephone;
-        admin.RegSource = user.RegSource;
-        //admin.Country = user.Country;
+    //    admin.FullNames = user.FullNames;
+    //    admin.Email = user.Email;
+    //    admin.Telephone = user.Telephone;
+    //    admin.RegSource = user.RegSource;
+    //    //admin.Country = user.Country;
 
-        //Add user terminal before exiting
-        admin.Terminus = HttpContext.Connection.RemoteIpAddress?.ToString()??"Not captured";
+    //    //Add user terminal before exiting
+    //    admin.Terminus = HttpContext.Connection.RemoteIpAddress?.ToString()??"Not captured";
 
-        return admin;
+    //    return admin;
 
-    }
+    //}
 }

@@ -75,6 +75,7 @@ public class SadUser
     public string IDType { get; set; } = string.Empty;
     public string? Profession { get; set; }
     public string Company { get; set; } = string.Empty;
+    public string Industry { get; set; } = string.Empty;
     public int Employees { get; set; }
     public string Country { get; set; } = string.Empty;
     public bool AcceptTerms { get; set; } 

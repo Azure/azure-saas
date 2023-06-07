@@ -5,17 +5,13 @@
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
     <UserSecretsId>7b599cf5-3102-4740-ab34-69dd240f9ea3</UserSecretsId>
     <ApplicationInsightsResourceId>/subscriptions/357c83c2-bed7-4fe7-af6a-95835c6e2d91/resourceGroups/rg-saas-dev-001/providers/microsoft.insights/components/app-provider-dev-001</ApplicationInsightsResourceId>
-    <Nullable>enable</Nullable>
-	<!--Start of React Configuration-->
-	<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-	<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-	<IsPackable>false</IsPackable>
-	<SpaRoot>ClientApp\iBusiness\</SpaRoot>
-	<DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
-	<SpaProxyServerUrl>https://192.168.1.6:3000</SpaProxyServerUrl>
-	<SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
-	<ImplicitUsings>enable</ImplicitUsings>
-	<!--End of React Configuration-->
+	  <Nullable>enable</Nullable>
+	  <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+	  <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+	  <IsPackable>false</IsPackable>
+
+	  
+   
     <Configurations>Debug;Release;Multi Debug</Configurations>
   </PropertyGroup>
 
@@ -24,10 +20,7 @@
     <Content Remove="Data\**" />
     <EmbeddedResource Remove="Data\**" />
     <None Remove="Data\**" />
-	<!-- Don't publish the SPA source files, but do show them in the project files list -->
-	<Content Remove="$(SpaRoot)**" />
-	<None Remove="$(SpaRoot)**" />
-	<None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+	
   </ItemGroup>
 
   <ItemGroup>
@@ -45,9 +38,7 @@
     <PackageReference Include="Microsoft.Identity.Web.UI" Version="2.5.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.4" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-	  
-	  <!--For react-->
-	  <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.15" />
+
   </ItemGroup>
 
   <ItemGroup>
@@ -59,31 +50,8 @@
     <ProjectReference Include="..\..\Saas.Lib\Saas.Identity\Saas.Identity.csproj" />
     <ProjectReference Include="..\..\Saas.Lib\Saas.Shared\Saas.Shared.csproj" />
   </ItemGroup>
+
 	
-  <!--Other React.js App configurations-->
-	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
-		<!-- Ensure Node.js is installed -->
-		<Exec Command="node --version" ContinueOnError="true">
-			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-		</Exec>
-		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
-		<Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-		<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-	</Target>
 
-	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-		<!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-		<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-		<Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
 
-		<!-- Include the newly-built files in the publish output -->
-		<ItemGroup>
-			<DistFiles Include="$(SpaRoot)build\**" />
-			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-				<RelativePath>wwwroot\%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
-				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-				<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			</ResolvedFileToPublish>
-		</ItemGroup>
-	</Target>
 </Project>

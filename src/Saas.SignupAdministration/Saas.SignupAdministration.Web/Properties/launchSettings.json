@@ -27,6 +27,7 @@
         //removed instead server SPA proxy
         //"ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
       },
+      "Microsoft.AspNetCore.SpaProxy": null,
       "dotnetRunMessages": "true",
       "applicationUrl": "https://localhost:5001;http://localhost:7001"
     }
