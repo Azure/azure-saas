@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Antiforgery;
 using Saas.Shared.Options;
 using Saas.SignupAdministration.Web.Interfaces;
 
+//Saas permission
+using Saas.Identity.Authorization.Model.Claim;
+
 namespace Saas.SignupAdministration.Web.Controllers;
 
 [AllowAnonymous]
@@ -44,26 +47,26 @@ public class HomeController : Controller
 
 
     [HttpGet]
-    //[HttpPost]
+    [HttpPost]
     public async Task<IActionResult> Index()
     {
 
 
-        if (User?.Identity?.IsAuthenticated ?? false)
-        {
-            bool isRegistered = await isUserRegistered();
-            if (isRegistered)
-            {
-                return Redirect("https://localhost:3000/dashboard");
-            }
+        //if (User?.Identity?.IsAuthenticated ?? false)
+        //{
+        //    bool isRegistered = await isUserRegistered();
+        //    if (isRegistered)
+        //    {
+        //        return Redirect("https://localhost:3000/dashboard");
+        //    }
 
-            return Redirect("https://localhost:3000/onboarding");
+        //    return Redirect("https://localhost:3000/onboarding");
 
-        }
+        //}
 
-        return Redirect("https://localhost:3000");
+        //return Redirect("https://localhost:3000");
 
-        //return View();
+        return View();
 
     }
 
@@ -97,7 +100,7 @@ public class HomeController : Controller
         if (User.Identity?.IsAuthenticated ?? false)
         {
             string? xsrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
-            //bool isAdmin = (User?.Claims?.HasSaasUserPermissionSelf() ?? false) && (User?.Claims?.HasSaasTenantPermissionAdmin() ?? false);
+            bool isAdmin = (User?.Claims?.HasSaasUserPermissionSelf() ?? false) && (User?.Claims?.HasSaasTenantPermissionAdmin() ?? false);
             bool isRegistered = await isUserRegistered();
             string accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
 
