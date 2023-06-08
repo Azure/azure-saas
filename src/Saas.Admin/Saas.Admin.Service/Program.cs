@@ -98,6 +98,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
 
+builder.Services.AddScoped<IUserAccessor, UserAccessor>();
+
 
 //Provides functionality to register and onboard a system admin user into the systems
 builder.Services.AddScoped<ISadUserService>( sp =>

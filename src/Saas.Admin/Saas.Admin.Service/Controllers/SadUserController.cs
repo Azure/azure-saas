@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Graph;
 using Saas.Admin.Service.Data;
 using Saas.Admin.Service.Interfaces;
 using Saas.SignupAdministration.Web.Models;
@@ -17,12 +18,12 @@ namespace Saas.Admin.Service.Controllers;
 public class SadUserController : ControllerBase
 {
     private readonly ISadUserService _sadUserService;
-    
+    private readonly IUserAccessor _userAccessor;
 
-    public SadUserController(ISadUserService sadUserService)
+    public SadUserController(ISadUserService sadUserService, IUserAccessor userAccessor)
     {
         _sadUserService = sadUserService;
-       
+        _userAccessor = userAccessor;
     }
 
     [HttpPost]
@@ -41,28 +42,18 @@ public class SadUserController : ControllerBase
             if (!ModelState.IsValid)
                 throw new Exception("Error processing you request");
 
+            SadUser user = _userAccessor.GetUser(admin);
 
-            //SadUser user = await getUserinfo(admin);
-            //Normalize user email
-            admin.UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
-            admin.Email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
-            admin.FullNames = User.FindFirst("name")?.Value ?? string.Empty;
-            admin.Telephone = User.FindFirst("telephone")?.Value ?? string.Empty;
-            admin.Country = User.FindFirst("country")?.Value ?? string.Empty;
-            admin.Industry = User.FindFirst("industry")?.Value ?? string.Empty;
-            admin.Employees = int.Parse(User.FindFirst("noOfEmployees")?.Value ?? "0");
-            admin.Terminus = "001";
+            user = await _sadUserService.AddSadUser(user, 0);
 
-            admin = await _sadUserService.AddSadUser(admin, 0);
-
-            if(admin.Id == 0)//User exists
+            if(user.Id == 0)//User exists
             {
                 return Conflict(new {message = "User already exists"});
             }
                 
 
             //return Ok(/*new { userId = createdUser.Id, createdUser, message = "success" }*/);
-            return CreatedAtAction(nameof(OnboardTen), new { userId = admin.Id }, admin);
+            return CreatedAtAction(nameof(OnboardTen), new { userId = user.Id }, user);
 
         }
         catch (DbUpdateException ex)
@@ -82,19 +73,9 @@ public class SadUserController : ControllerBase
     public IActionResult PreOnboard()
     {
         //Get userinfo from claims, then return
-        var userInfo = new
-        {
-            Email = User.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty,
-            Telephone = User.FindFirst("telephone")?.Value ?? string.Empty,
-            Country = User.FindFirst("country")?.Value ?? string.Empty,
-            Industry = User.FindFirst("industry")?.Value ?? string.Empty,
-            OrganizationName = User.FindFirst("organizationName")?.Value ?? string.Empty,
-            NoOfEmployees = int.Parse(User.FindFirst("noOfEmployees")?.Value ?? "0"),
-            Name = User.FindFirst("name")?.Value ?? string.Empty,
-        };
+        ISadUserDto user = _userAccessor.GetUser();
 
-
-        return Ok(userInfo);
+        return Ok(user);
 
     }
 
