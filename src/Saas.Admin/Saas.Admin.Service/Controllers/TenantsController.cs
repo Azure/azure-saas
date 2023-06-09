@@ -8,6 +8,7 @@ using Saas.Permissions.Client;
 using Saas.Shared.Options;
 using Saas.SignupAdministration.Web;
 using System.Net.Mime;
+using System.Security.Claims;
 
 namespace Saas.Admin.Service.Controllers;
 
@@ -23,15 +24,13 @@ public class TenantsController : ControllerBase
 
     private readonly IConfiguration _configuration;
 
-    private readonly IApplicationUser _applicationUser;
 
     public TenantsController(
         ITenantService tenantService, 
         IPermissionsServiceClient permissionService,
         IHttpContextAccessor httpContextAccessor,
          ILogger<TenantsController> logger,
-        IConfiguration configuration,
-        IApplicationUser applicationUser)
+        IConfiguration configuration)
     {
 
         _configuration = configuration;
@@ -39,7 +38,6 @@ public class TenantsController : ControllerBase
         _httpContextAccessor = httpContextAccessor;
         _tenantService = tenantService;
         _permissionsServiceClient = permissionService;
-        _applicationUser = applicationUser;
     }
 
     /// <summary>
@@ -142,7 +140,7 @@ public class TenantsController : ControllerBase
                 throw new InvalidOperationException("The the User Name Identifier must be a Guid.");
             }
             //Update tenant information before proceeding
-            CompleteOnboardInfo(tenantRequest);
+            CompleteOnboardInfo(tenantRequest, userId);
             TenantDTO tenant = await _tenantService.AddUserTenantAsync(tenantRequest, userId);
 
             _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.Route, tenant.Id);
@@ -455,7 +453,7 @@ public class TenantsController : ControllerBase
     /// Specifically this application user information
     /// </summary>
     /// <param name="tenantRequest"></param>
-    private void CompleteOnboardInfo(NewTenantRequest tenantRequest)
+    private void CompleteOnboardInfo(NewTenantRequest tenantRequest, Guid userId)
     {
         //Used for hashing passwords and other secrets
         HashOptions hashes = _configuration.GetRequiredSection(HashOptions.SectionName).Get<HashOptions>() ?? new HashOptions();
@@ -468,11 +466,11 @@ public class TenantsController : ControllerBase
         UserInfo.salt = hashSalt;
         UserInfo tenantUser = new UserInfo
         {
-            Guid = _applicationUser.NameIdentifier,
-            Email = _applicationUser.EmailAddress,
-            FullNames = _applicationUser.GivenName,
+            Guid = userId,
+            Email = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
+            FullNames = User.FindFirstValue("name") ?? string.Empty,
             LockAfter = 3,
-            Telephone  = _applicationUser.Telephone,
+            Telephone  = User.FindFirstValue("telephone") ?? string.Empty,
         };
 
         tenantRequest.UserInfo = tenantUser;

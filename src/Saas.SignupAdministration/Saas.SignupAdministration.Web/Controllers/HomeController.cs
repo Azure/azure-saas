@@ -16,7 +16,6 @@ namespace Saas.SignupAdministration.Web.Controllers;
 [AllowAnonymous]
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
 
     //User information and token acquistation added to facilitate REST API 
     private readonly IApplicationUser _applicationUser;
@@ -28,9 +27,8 @@ public class HomeController : Controller
     private readonly IEnumerable<string> _scopes;
 
 
-    public HomeController(ILogger<HomeController> logger, IApplicationUser applicationUser, ITokenAcquisition tokenAcquisition, IOptions<SaasAppScopeOptions> scopes, IAntiforgery antiforgery, IDBServices dbServices)
+    public HomeController( IApplicationUser applicationUser, ITokenAcquisition tokenAcquisition, IOptions<SaasAppScopeOptions> scopes, IAntiforgery antiforgery, IDBServices dbServices)
     {
-        _logger = logger;
         _applicationUser = applicationUser;
         _tokenAcquisition = tokenAcquisition;
         _scopes = scopes.Value.Scopes ?? throw new ArgumentNullException($"Scopes must be defined.");
@@ -99,7 +97,6 @@ public class HomeController : Controller
     {
         if (User.Identity?.IsAuthenticated ?? false)
         {
-            var claims = User.Claims.ToList();
             string? xsrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
             bool hassaas = User?.Claims?.HasSaasUserPermissionSelf() ?? false;
             bool isAdmin = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
