@@ -44,14 +44,14 @@ public class TenantService : ITenantService
 
     public async Task<TenantDTO> AddUserTenantAsync(NewTenantRequest newTenantRequest, Guid adminId)
     {
-
+        Tenant tenant = newTenantRequest.ToTenant();
         UserTenant userTenant = newTenantRequest.UserTenant;
         _context.UserTenants.Add(userTenant);
 
         try
         {
             await _context.SaveChangesAsync();
-            await _permissionService.AddNewTenantAsync(userTenant.Tenant.Guid, adminId);
+            await _permissionService.AddNewTenantAsync(tenant.Guid, adminId);
         }
         catch (Exception ex)
         {
@@ -61,14 +61,23 @@ public class TenantService : ITenantService
             throw;
         }
 
-        TenantDTO? returnValue = new(userTenant.Tenant);
+        TenantDTO? returnValue = new(tenant);
         return returnValue;
     }
 
     public async Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, Guid adminId)
     {
         Tenant tenant = newTenantRequest.ToTenant();
-        _context.Tenants.Add(tenant);
+        UserInfo? principalUser = _context.UserInfo.FirstOrDefault(t => t.Guid == adminId);
+        if (principalUser == null)
+        {
+           // _context.UserInfo.Add(newTenantRequest.UserInfo);
+        }
+       // _context.Tenants.Add(tenant);
+
+        UserTenant userTenant = newTenantRequest.UserTenant;
+        _context.UserTenants.Add(userTenant);
+
         await _context.SaveChangesAsync();
 
         try
@@ -79,6 +88,8 @@ public class TenantService : ITenantService
         {
             _logger.LogError(ex, "Error setting permission for tenant {tenantName}", newTenantRequest.Name);
             _context.Tenants.Remove(tenant);
+            _context.UserInfo.Remove(newTenantRequest.UserInfo);
+            _context.UserTenants.Remove(userTenant);
             await _context.SaveChangesAsync();
             throw;
         }

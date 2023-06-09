@@ -60,6 +60,7 @@ public class Tenant
     [Timestamp]
     public byte[]? ConcurrencyToken { get; set; }
 
+
     public ICollection<UserTenant> UserTenants { get; set; }
 
 }

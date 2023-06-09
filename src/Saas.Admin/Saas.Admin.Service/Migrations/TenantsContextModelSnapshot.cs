@@ -38,11 +38,15 @@ namespace Saas.Admin.Service.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("CreatedDate")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 8, 12, 55, 30, 213, DateTimeKind.Utc).AddTicks(2763));
+                        .HasDefaultValue(new DateTime(2023, 6, 9, 14, 0, 37, 566, DateTimeKind.Utc).AddTicks(8480));
 
                     b.Property<string>("CreatedUser")
                         .IsRequired()
@@ -64,7 +68,9 @@ namespace Saas.Admin.Service.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("InitReady")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("ProductTierId")
                         .HasColumnType("int");
@@ -175,10 +181,14 @@ namespace Saas.Admin.Service.Migrations
 
                     b.Property<string>("CCCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("OO1");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2023, 6, 9, 14, 0, 37, 567, DateTimeKind.Utc).AddTicks(300));
 
                     b.Property<string>("CreatedUser")
                         .IsRequired()
@@ -186,13 +196,19 @@ namespace Saas.Admin.Service.Migrations
 
                     b.Property<string>("EmpNo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("001");
 
                     b.Property<int>("ExpiresAfter")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(90);
 
                     b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2023, 9, 7, 14, 0, 37, 566, DateTimeKind.Utc).AddTicks(9471));
 
                     b.Property<bool>("PrincipalUser")
                         .HasColumnType("bit");

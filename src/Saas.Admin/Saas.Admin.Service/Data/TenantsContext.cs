@@ -27,11 +27,13 @@ public class TenantsContext : DbContext
 
         modelBuilder.Entity<UserTenant>()
             .HasOne(ut => ut.UserInfo)
-            .WithMany(ui => ui.UserTenants);
+            .WithMany(ui => ui.UserTenants)
+            .HasForeignKey(ut => ut.UserId);
 
         modelBuilder.Entity<UserTenant>()
             .HasOne(ut => ut.Tenant)
-            .WithMany(t => t.UserTenants);
+            .WithMany(t => t.UserTenants)
+         .HasForeignKey(ut => ut.TenantId);
     }
 
 }

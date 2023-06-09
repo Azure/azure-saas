@@ -6,16 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Saas.Admin.Service.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdatedMigration : Migration
+    public partial class Modified : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-           
-
-            migrationBuilder.AlterDatabase(
-                collation: "SQL_Latin1_General_CP1_CI_AS");
-
             migrationBuilder.CreateTable(
                 name: "Organization",
                 columns: table => new
@@ -27,12 +22,13 @@ namespace Saas.Admin.Service.Migrations
                     Company = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Industry = table.Column<int>(type: "int", nullable: false),
                     ProductTierId = table.Column<int>(type: "int", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Employees = table.Column<int>(type: "int", nullable: false),
-                    InitReady = table.Column<bool>(type: "bit", nullable: false),
+                    InitReady = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     ExternalDB = table.Column<bool>(type: "bit", nullable: false),
                     TimeZone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedUser = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 8, 12, 55, 30, 213, DateTimeKind.Utc).AddTicks(2763)),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 9, 14, 0, 37, 566, DateTimeKind.Utc).AddTicks(8480)),
                     UpdatedUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ConcurrencyToken = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
@@ -77,16 +73,16 @@ namespace Saas.Admin.Service.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EmpNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpiresAfter = table.Column<int>(type: "int", nullable: false),
+                    EmpNo = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "001"),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 9, 7, 14, 0, 37, 566, DateTimeKind.Utc).AddTicks(9471)),
+                    ExpiresAfter = table.Column<int>(type: "int", nullable: false, defaultValue: 90),
                     SuperUser = table.Column<bool>(type: "bit", nullable: false),
-                    CCCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CCCode = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "OO1"),
                     RegSource = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Profession = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PrincipalUser = table.Column<bool>(type: "bit", nullable: false),
                     CreatedUser = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 9, 14, 0, 37, 567, DateTimeKind.Utc).AddTicks(300)),
                     TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -135,33 +131,6 @@ namespace Saas.Admin.Service.Migrations
 
             migrationBuilder.DropTable(
                 name: "User");
-
-            migrationBuilder.AlterDatabase(
-                oldCollation: "SQL_Latin1_General_CP1_CI_AS");
-
-            migrationBuilder.CreateTable(
-                name: "Tenants",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    ConcurrencyToken = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 4, 5, 1, 23, 45, 159, DateTimeKind.Utc).AddTicks(9974)),
-                    CreatorEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProductTierId = table.Column<int>(type: "int", nullable: false),
-                    Route = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tenants", x => x.Id);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tenants_Route",
-                table: "Tenants",
-                column: "Route",
-                unique: true);
         }
     }
 }
