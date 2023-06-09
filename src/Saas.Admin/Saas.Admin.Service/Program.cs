@@ -149,7 +149,7 @@ builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClie
 builder.Services.AddDbContext<TenantsContext>(options =>
 {
     var sqlConnectionString = builder.Configuration.GetRequiredSection(SqlOptions.SectionName)
-        .Get<SqlOptions>()?.TenantSQLConnectionString
+        .Get<SqlOptions>()?.PermissionsSQLConnectionString
             ?? throw new NullReferenceException("SQL Connection string cannot be null.");
 
     options.UseSqlServer(sqlConnectionString);

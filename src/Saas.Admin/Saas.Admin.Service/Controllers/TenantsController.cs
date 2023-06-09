@@ -141,7 +141,7 @@ public class TenantsController : ControllerBase
             }
             //Update tenant information before proceeding
             CompleteOnboardInfo(tenantRequest, userId);
-            TenantDTO tenant = await _tenantService.AddUserTenantAsync(tenantRequest, userId);
+            TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest, userId);
 
             _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.Route, tenant.Id);
             
@@ -474,6 +474,7 @@ public class TenantsController : ControllerBase
         };
 
         tenantRequest.UserInfo = tenantUser;
+        tenantRequest.UserTenant = new UserTenant();
 
     }
 }

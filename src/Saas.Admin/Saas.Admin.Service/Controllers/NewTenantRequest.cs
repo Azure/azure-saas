@@ -60,14 +60,14 @@ public class NewTenantRequest
     internal UserTenant UserTenant 
     { 
         
-        get { return UserTenant; } 
+        get { return userTenant; } 
         set 
         {
             value.RegSource = "AB2C";
             value.PrincipalUser = true;
             value.CreatedDate = DateTime.UtcNow;
-            value.UserInfo = UserInfo;
             value.Tenant = ToTenant();
+            value.UserInfo = UserInfo;
 
             userTenant = value;
         } 

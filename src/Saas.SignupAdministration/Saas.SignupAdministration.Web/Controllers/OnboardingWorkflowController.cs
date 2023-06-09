@@ -20,8 +20,8 @@ public class OnboardingWorkflowController : Controller
     /// </summary>
     /// <param name="organization">Organization model</param>
     /// <returns> An appropriate result based on given data</returns>
-    [HttpPost("/onboarding")]
-    [ValidateAntiForgeryToken]
+    [HttpPost("/api/onboarding")]
+   // [ValidateAntiForgeryToken]
     public async Task<IActionResult> HandleBatchRegistration([FromBody] NewOnboardingItem organization)
     {
         if (!ModelState.IsValid) //Return a bad request

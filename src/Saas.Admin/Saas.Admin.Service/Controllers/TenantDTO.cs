@@ -19,7 +19,7 @@ public class TenantDTO
     {
         Id = tenant.Guid;
 
-        CreatedTime = Guard.Argument(tenant.CreatedDate, nameof(tenant.CreatedDate)).NotNull();
+        CreatedTime = DateTime.Now;//Guard.Argument(tenant.CreatedDate, nameof(tenant.CreatedDate)).NotNull();
 
         Name = Guard.Argument(tenant.Company, nameof(tenant.Company)).NotEmpty();
         Route = Guard.Argument(tenant.Route, nameof(tenant.Route)).NotEmpty();

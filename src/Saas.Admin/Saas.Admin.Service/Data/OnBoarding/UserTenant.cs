@@ -38,11 +38,15 @@ public class UserTenant
 
     public DateTime CreatedDate { get; set; }
 
+    public Guid TenantId { get; set; }
 
-    [ForeignKey("TenantId")]
+
+    public Guid UserId { get; set; }
+
+    [NotMapped]
     public Tenant Tenant { get; set; }
 
-    [ForeignKey("UserId")]
+    [NotMapped]
     public UserInfo UserInfo { get; set; }
 }
 
