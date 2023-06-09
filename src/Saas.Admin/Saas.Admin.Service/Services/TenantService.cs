@@ -1,5 +1,6 @@
 ﻿using Saas.Admin.Service.Controllers;
 using Saas.Admin.Service.Data;
+using Saas.Admin.Service.Data.Models.OnBoarding;
 using Saas.Permissions.Client;
 
 namespace Saas.Admin.Service.Services;
@@ -35,9 +36,32 @@ public class TenantService : ITenantService
 
     public async Task<IEnumerable<TenantDTO>> GetTenantsByIdAsync(IEnumerable<Guid> ids)
     {
-        IQueryable<Tenant>? tenants = _context.Tenants.Where(t => ids.Contains(t.Id));
+        IQueryable<Tenant>? tenants = _context.Tenants.Where(t => ids.Contains(t.Guid));
 
         List<TenantDTO>? returnValue = await tenants.Select(t => new TenantDTO(t)).ToListAsync();
+        return returnValue;
+    }
+
+    public async Task<TenantDTO> AddUserTenantAsync(NewTenantRequest newTenantRequest, Guid adminId)
+    {
+
+        UserTenant userTenant = newTenantRequest.UserTenant;
+        _context.UserTenants.Add(userTenant);
+
+        try
+        {
+            await _context.SaveChangesAsync();
+            await _permissionService.AddNewTenantAsync(userTenant.Tenant.Guid, adminId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error setting permission for tenant {tenantName}", newTenantRequest.Name);
+            _context.UserTenants.Remove(userTenant);
+            await _context.SaveChangesAsync();
+            throw;
+        }
+
+        TenantDTO? returnValue = new(userTenant.Tenant);
         return returnValue;
     }
 
@@ -49,7 +73,7 @@ public class TenantService : ITenantService
 
         try
         {
-            await _permissionService.AddNewTenantAsync(tenant.Id, adminId);
+            await _permissionService.AddNewTenantAsync(tenant.Guid, adminId);
         }
         catch (Exception ex)
         {
@@ -77,7 +101,7 @@ public class TenantService : ITenantService
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            _logger.LogInformation(ex, "Concurrency exception saving changes to {TenatnID}, {TenantName}", fromDB.Id, fromDB.Name);
+            _logger.LogInformation(ex, "Concurrency exception saving changes to {TenatnID}, {TenantName}", fromDB.Id, fromDB.Company);
             throw;
         }
 
@@ -96,7 +120,7 @@ public class TenantService : ITenantService
 
     public async Task<bool> TenantExistsAsync(Guid tenantId)
     {
-        return await _context.Tenants.AnyAsync(e => e.Id == tenantId);
+        return await _context.Tenants.AnyAsync(e => e.Guid == tenantId);
     }
 
     public async Task<TenantInfoDTO> GetTenantInfoByRouteAsync(string route)

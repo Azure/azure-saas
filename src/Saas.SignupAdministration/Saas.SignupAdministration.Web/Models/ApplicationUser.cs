@@ -19,6 +19,17 @@ public class ApplicationUser : ClaimsIdentity, IApplicationUser
         }
     }
 
+    public string Telephone
+    {
+        get
+        {
+            var claim = Identity?.FindFirst(SR.TelephoneClaimType);
+            string telephone = claim?.Value ?? string.Empty;
+
+            return (!string.IsNullOrWhiteSpace(telephone) ) ? telephone : (telephone == null) ? throw new ArgumentNullException("telephone") : throw new ArgumentException("The telephone number must be in a valid format", "EmailAddress");
+        }
+    }
+
     public Guid NameIdentifier
     {
         get

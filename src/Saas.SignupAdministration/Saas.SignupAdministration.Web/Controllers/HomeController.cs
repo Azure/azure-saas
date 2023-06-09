@@ -99,12 +99,14 @@ public class HomeController : Controller
     {
         if (User.Identity?.IsAuthenticated ?? false)
         {
+            var claims = User.Claims.ToList();
             string? xsrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
-            bool isAdmin = (User?.Claims?.HasSaasUserPermissionSelf() ?? false) && (User?.Claims?.HasSaasTenantPermissionAdmin() ?? false);
+            bool hassaas = User?.Claims?.HasSaasUserPermissionSelf() ?? false;
+            bool isAdmin = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
             bool isRegistered = await isUserRegistered();
             string accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
 
-            return new JsonResult(new { _applicationUser.GivenName, isRegistered, accessToken, xsrf_token });
+            return new JsonResult(new { _applicationUser.GivenName, isRegistered, accessToken, xsrf_token, hassaas, isAdmin });
 
         }
         else
