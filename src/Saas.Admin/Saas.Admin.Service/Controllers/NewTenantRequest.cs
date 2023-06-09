@@ -4,6 +4,9 @@ namespace Saas.Admin.Service.Controllers;
 
 public class NewTenantRequest
 {
+    private UserInfo userInfo;
+    private UserTenant userTenant;
+
     public string Name { get; set; } = string.Empty;
     public string Route { get; set; } = string.Empty;
     public string CreatorEmail { get; set; } = string.Empty;
@@ -44,13 +47,13 @@ public class NewTenantRequest
 
     internal UserInfo UserInfo
     {
-        get { return UserInfo; }
+        get { return userInfo; }
         set { 
 
             //Update the remaining user info
             value.Question = Question;
             value.Answer = Answer;
-
+            userInfo = value;
         } 
     }
 
@@ -65,6 +68,8 @@ public class NewTenantRequest
             value.CreatedDate = DateTime.UtcNow;
             value.UserInfo = UserInfo;
             value.Tenant = ToTenant();
+
+            userTenant = value;
         } 
     }
 }
