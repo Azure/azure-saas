@@ -1,39 +1,86 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Newtonsoft.Json;
+﻿
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Saas.SignupAdministration.Web.Models;
+namespace Saas.Admin.Service.Data.Models.OnBoarding;
 
-public class SadUser
+[Table("User")]
+/// <summary>
+/// Used to collect and hold information about any user registered with the system
+/// </summary>
+public class UserInfo
 {
+    private string password = string.Empty;
+    private string confirmPassword = string.Empty;
+    private string answer = string.Empty;
+
+
+    [NotMapped]
+    public static string salt;
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long Id { get; set; }
+
+    [Key]
+    public Guid Guid { get; set; }
+
     /// <summary>
     /// user principal id, as provided by choosen identity provider,which is mostly an email
     /// </summary>
+    [Required] 
     public string UserName { get; set; } = string.Empty;
 
+    [Required] 
     public string FullNames { get; set; } = string.Empty;
 
-    public string EmpNo { get; set; } = string.Empty;
+    public string Password
+    {
+        get { return password; }
+        set
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                value = "0"; 
+            }
+            password = passwordHash(value, salt);
+        }
+    }
 
-    [JsonIgnore]
-    public string Password { get; set; } = "0";
-
-    [JsonIgnore]
-    public string ConfirmPassword { get; set; } = string.Empty;
+    public string ConfirmPassword {
+        get { return confirmPassword; }
+        set
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                value = "0";
+            }
+            confirmPassword = passwordHash(value, salt);
+        }
+    }
 
     /// <summary>
     /// Security Question
     /// </summary>
-    [JsonIgnore]
+    [Required] 
     public string Question { get; set; } = string.Empty;
 
     /// <summary>
     /// Answer to the security question above
     /// </summary>
-    [JsonIgnore]
-    public string Answer { get; set; } = string.Empty;
+    [Required] 
+    public string Answer {
+        get { return answer; }
+        set
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                value = "0";
+            }
+            answer = passwordHash(value, salt);
+        }
+    }
 
     /// <summary>
     /// user's other email specified
@@ -42,70 +89,18 @@ public class SadUser
 
     public string Telephone { get; set; } = string.Empty;
 
-    [JsonIgnore]
-    public DateOnly  ExpiryDate { get;set;}
-
-    [JsonIgnore]
-    public int ExpiresAfter { get; set; }
-
-    [JsonIgnore]
     public int LockAfter { get; set; }
 
-    [JsonIgnore]
-    public bool ImmediateChange { get; set; }
-
-    public bool IsActive { get; set; }
-
-
-    /// <summary>
-    /// Identifies whether the user is admin
-    /// </summary>
-    public bool SuperUser { get; set; }
-
-    [JsonIgnore]
     public string BioUserID { get; set; } = string.Empty;
 
-    [JsonIgnore]
-    public string CCCode { get; set; } = string.Empty;
-
-    [JsonIgnore]
-    public string RegSource { get; set; } = string.Empty;
-    [JsonIgnore]
     public DateTime DOB { get; set; }
     public string IDType { get; set; } = string.Empty;
     public string? Profession { get; set; }
-    public string Company { get; set; } = string.Empty;
-    public string Industry { get; set; } = string.Empty;
-    public int Employees { get; set; }
-    public string Country { get; set; } = string.Empty;
-    public bool AcceptTerms { get; set; } 
+    public bool AcceptTerms { get; set; }
     public bool Notifications { get; set; }
-    [JsonIgnore]
-    public bool InitReady { get; set; }
-    [JsonIgnore]
-    public bool ExternalDB { get; set; }
-    [JsonIgnore]
-    public bool PrincipalUser { get; set; }
-    public string TimeZone { get; set; } = string.Empty;
+    public DateTime CreatedDate { get; set; }
 
-    [JsonIgnore]
-    public string CreatedUser { get; set; } = string.Empty;
-
-    [JsonIgnore]
-    public DateOnly CreatedDate { get; set; }
-
-    [JsonIgnore]
-    public string? UpdatedUser { get; set; }
-    public DateOnly UpdatedDate { get; set; }
-
-    [JsonIgnore]
-    public string Terminus { get; set; } = string.Empty;
-
-   
-    public string? Narration { get; set; }
-
-    [JsonIgnore]
-    public string DBIdentity { get; set; } = string.Empty;
+    public ICollection<UserTenant> UserTenants { get; set; }
 
     /// <summary>
     /// Used to generate a hashed password for this user

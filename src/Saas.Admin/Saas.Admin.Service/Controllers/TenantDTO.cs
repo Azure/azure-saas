@@ -1,4 +1,5 @@
 ﻿using Saas.Admin.Service.Data;
+using Saas.Admin.Service.Data.Models.OnBoarding;
 
 namespace Saas.Admin.Service.Controllers;
 
@@ -16,24 +17,24 @@ public class TenantDTO
 
     public TenantDTO(Tenant tenant)
     {
-        Id = tenant.Id;
+        Id = tenant.Guid;
 
-        CreatedTime = Guard.Argument(tenant.CreatedTime, nameof(tenant.CreatedTime)).NotNull();
+        CreatedTime = Guard.Argument(tenant.CreatedDate, nameof(tenant.CreatedDate)).NotNull();
 
-        Name = Guard.Argument(tenant.Name, nameof(tenant.Name)).NotEmpty();
+        Name = Guard.Argument(tenant.Company, nameof(tenant.Company)).NotEmpty();
         Route = Guard.Argument(tenant.Route, nameof(tenant.Route)).NotEmpty();
-        CreatorEmail = Guard.Argument(tenant.CreatorEmail, nameof(tenant.CreatorEmail)).NotEmpty();
+        CreatorEmail = Guard.Argument(tenant.CreatedUser, nameof(tenant.CreatedUser)).NotEmpty();
         ProductTierId = tenant.ProductTierId;
-        CategoryId = tenant.CategoryId;
+        CategoryId = tenant.Industry;
 
         Version = tenant.ConcurrencyToken is not null 
             ? Convert.ToBase64String(tenant.ConcurrencyToken) 
             : null;
     }
 
-    public Tenant ToTenant()
+    public Tenantb ToTenant()
     {
-        Tenant tenant = new Tenant()
+        Tenantb tenant = new Tenantb()
         {
             Id = Id,
             Name = Name,
@@ -50,10 +51,10 @@ public class TenantDTO
 
     public void CopyTo(Tenant target)
     {
-        target.Name = Name;
+        target.Company = Name;
         target.Route = Route;
-        target.CreatorEmail = CreatorEmail;
-        target.CategoryId = CategoryId;
+        target.CreatedUser = CreatorEmail;
+        target.Industry = CategoryId;
         target.ProductTierId = ProductTierId;
         target.ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null;
     }

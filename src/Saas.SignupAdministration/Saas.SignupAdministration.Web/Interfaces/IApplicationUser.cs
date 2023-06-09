@@ -3,6 +3,8 @@
 public interface IApplicationUser
 {
     public string EmailAddress { get; }
+
+    public string Telephone { get; }
     public Guid NameIdentifier { get; }
     public string AuthenticationClassReference { get; }
     public DateTime AuthenticationTime { get; }

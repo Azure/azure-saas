@@ -127,4 +127,5 @@ public static class SR
     public const string GivenNamClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname";
     public const string SurnameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname";
     public const string TenantIdClaimType = "http://schemas.microsoft.com/identity/claims/tenantid";
+    public const string TelephoneClaimType = "telephone";
 }

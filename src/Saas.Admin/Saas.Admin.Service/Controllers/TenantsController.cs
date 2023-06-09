@@ -1,9 +1,12 @@
-﻿using Saas.Identity.Authorization.Attribute;
+﻿using Saas.Admin.Service.Data.Models.OnBoarding;
+using Saas.Identity.Authorization.Attribute;
 using Saas.Identity.Authorization.Model.Claim;
 using Saas.Identity.Authorization.Model.Data;
 using Saas.Identity.Authorization.Model.Kind;
 using Saas.Identity.Authorization.Requirement;
 using Saas.Permissions.Client;
+using Saas.Shared.Options;
+using Saas.SignupAdministration.Web;
 using System.Net.Mime;
 
 namespace Saas.Admin.Service.Controllers;
@@ -18,16 +21,25 @@ public class TenantsController : ControllerBase
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger _logger;
 
+    private readonly IConfiguration _configuration;
+
+    private readonly IApplicationUser _applicationUser;
+
     public TenantsController(
         ITenantService tenantService, 
         IPermissionsServiceClient permissionService,
         IHttpContextAccessor httpContextAccessor,
-        ILogger<TenantsController> logger)
+         ILogger<TenantsController> logger,
+        IConfiguration configuration,
+        IApplicationUser applicationUser)
     {
+
+        _configuration = configuration;
         _logger = logger;
         _httpContextAccessor = httpContextAccessor;
         _tenantService = tenantService;
         _permissionsServiceClient = permissionService;
+        _applicationUser = applicationUser;
     }
 
     /// <summary>
@@ -124,14 +136,14 @@ public class TenantsController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Creating a new tenant: {NewTenantName} for {OwnerID}, requested by {User}", tenantRequest.Name, tenantRequest.CreatorEmail, User?.Identity?.Name);
             
             if (! Guid.TryParse(User?.GetNameIdentifierId(), out var userId)) 
             {
                 throw new InvalidOperationException("The the User Name Identifier must be a Guid.");
             }
-            
-            TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest, userId);
+            //Update tenant information before proceeding
+            CompleteOnboardInfo(tenantRequest);
+            TenantDTO tenant = await _tenantService.AddUserTenantAsync(tenantRequest, userId);
 
             _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.Route, tenant.Id);
             
@@ -436,5 +448,34 @@ public class TenantsController : ControllerBase
 
         bool pathExists = await _tenantService.CheckPathExists(path);
         return !pathExists;
+    }
+
+    /// <summary>
+    /// Used to update tenant onboarding information with the current and in time information 
+    /// Specifically this application user information
+    /// </summary>
+    /// <param name="tenantRequest"></param>
+    private void CompleteOnboardInfo(NewTenantRequest tenantRequest)
+    {
+        //Used for hashing passwords and other secrets
+        HashOptions hashes = _configuration.GetRequiredSection(HashOptions.SectionName).Get<HashOptions>() ?? new HashOptions();
+        //Should obtain this salt 
+        string hashSalt = hashes.PasswordHash ?? string.Empty;
+
+        if (string.IsNullOrEmpty(hashSalt))
+            throw new ArgumentNullException("password hash salt cannot be null");
+
+        UserInfo.salt = hashSalt;
+        UserInfo tenantUser = new UserInfo
+        {
+            Guid = _applicationUser.NameIdentifier,
+            Email = _applicationUser.EmailAddress,
+            FullNames = _applicationUser.GivenName,
+            LockAfter = 3,
+            Telephone  = _applicationUser.Telephone,
+        };
+
+        tenantRequest.UserInfo = tenantUser;
+
     }
 }
