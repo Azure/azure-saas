@@ -83,6 +83,8 @@ public class TenantService : ITenantService
 
         UserTenant userTenant = newTenantRequest.UserTenant;
         //use the database generated Guid for tenant
+        userTenant.CreatedUser = newTenantRequest.UserInfo.UserName;
+        userTenant.PrincipalUser = true;
         userTenant.TenantId = tenant.Guid;
         _context.UserTenants.Add(userTenant);
 

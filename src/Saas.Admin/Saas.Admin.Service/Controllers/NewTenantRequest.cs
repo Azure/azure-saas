@@ -65,7 +65,6 @@ public class NewTenantRequest
         set 
         {
             value.RegSource = "AB2C";
-            value.PrincipalUser = true;
             value.CreatedDate = DateTime.UtcNow;
             value.TenantId = ToTenant().Guid;
             value.Profession = Profession;

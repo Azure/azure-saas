@@ -478,10 +478,7 @@ public class TenantsController : ControllerBase
         };
 
         tenantRequest.UserInfo = tenantUser;
-        tenantRequest.UserTenant = new UserTenant
-        {
-            CreatedUser = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty
-        };
+        tenantRequest.UserTenant = new UserTenant();
 
     }
 }
