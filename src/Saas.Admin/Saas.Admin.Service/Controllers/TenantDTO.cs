@@ -32,18 +32,18 @@ public class TenantDTO
             : null;
     }
 
-    public Tenantb ToTenant()
+    public Tenant ToTenant()
     {
-        Tenantb tenant = new Tenantb()
+        Tenant tenant = new Tenant()
         {
-            Id = Id,
-            Name = Name,
+            Guid = Id,
+            Company = Name,
             Route = Route,
-            CreatorEmail = CreatorEmail,
+            CreatedUser = CreatorEmail,
             ProductTierId = ProductTierId,
-            CategoryId = CategoryId,
+            Industry = CategoryId,
             ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null,
-            CreatedTime = null,
+            CreatedDate = null,
         };
         return tenant;
     }

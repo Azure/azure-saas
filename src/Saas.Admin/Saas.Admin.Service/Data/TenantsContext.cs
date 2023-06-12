@@ -25,15 +25,17 @@ public class TenantsContext : DbContext
         configuration.Configure(modelBuilder.Entity<UserTenant>());
 
 
-        modelBuilder.Entity<UserTenant>()
-            .HasOne(ut => ut.UserInfo)
-            .WithMany(ui => ui.UserTenants)
-            .HasForeignKey(ut => ut.UserId);
+        modelBuilder.Entity<Tenant>()
+            .HasMany(t => t.UserTenants)
+            .WithOne()
+            .HasForeignKey(t_fk => t_fk.TenantId)
+            .IsRequired();
 
-        modelBuilder.Entity<UserTenant>()
-            .HasOne(ut => ut.Tenant)
-            .WithMany(t => t.UserTenants)
-         .HasForeignKey(ut => ut.TenantId);
+        modelBuilder.Entity<UserInfo>()
+            .HasMany(u => u.UserTenants)
+            .WithOne()
+            .HasForeignKey(ut_fk => ut_fk.UserId)
+            .IsRequired();
     }
 
 }

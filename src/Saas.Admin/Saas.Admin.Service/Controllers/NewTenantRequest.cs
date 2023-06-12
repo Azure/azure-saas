@@ -4,8 +4,8 @@ namespace Saas.Admin.Service.Controllers;
 
 public class NewTenantRequest
 {
-    private UserInfo userInfo;
-    private UserTenant userTenant;
+    private UserInfo? userInfo;
+    private UserTenant? userTenant;
 
     public string Name { get; set; } = string.Empty;
     public string Route { get; set; } = string.Empty;
@@ -47,7 +47,7 @@ public class NewTenantRequest
 
     internal UserInfo UserInfo
     {
-        get { return userInfo; }
+        get { return userInfo??throw new ArgumentNullException("User info cannot be null"); }
         set { 
 
             //Update the remaining user info
@@ -60,14 +60,14 @@ public class NewTenantRequest
     internal UserTenant UserTenant 
     { 
         
-        get { return userTenant; } 
+        get { return userTenant?? throw new ArgumentNullException("User to tenant info cannot be null"); } 
         set 
         {
             value.RegSource = "AB2C";
             value.PrincipalUser = true;
             value.CreatedDate = DateTime.UtcNow;
-            value.Tenant = ToTenant();
-            value.UserInfo = UserInfo;
+            value.TenantId = ToTenant().Guid;
+            value.UserId = UserInfo.Guid;
 
             userTenant = value;
         } 

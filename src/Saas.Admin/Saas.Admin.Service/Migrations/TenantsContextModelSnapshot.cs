@@ -46,7 +46,7 @@ namespace Saas.Admin.Service.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 9, 14, 0, 37, 566, DateTimeKind.Utc).AddTicks(8480));
+                        .HasDefaultValue(new DateTime(2023, 6, 12, 9, 47, 33, 986, DateTimeKind.Utc).AddTicks(2384));
 
                     b.Property<string>("CreatedUser")
                         .IsRequired()
@@ -168,7 +168,7 @@ namespace Saas.Admin.Service.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("User");
+                    b.ToTable("UserInfo");
                 });
 
             modelBuilder.Entity("Saas.Admin.Service.Data.Models.OnBoarding.UserTenant", b =>
@@ -188,7 +188,7 @@ namespace Saas.Admin.Service.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 9, 14, 0, 37, 567, DateTimeKind.Utc).AddTicks(300));
+                        .HasDefaultValue(new DateTime(2023, 6, 12, 9, 47, 33, 986, DateTimeKind.Utc).AddTicks(5613));
 
                     b.Property<string>("CreatedUser")
                         .IsRequired()
@@ -208,7 +208,7 @@ namespace Saas.Admin.Service.Migrations
                     b.Property<DateTime>("ExpiryDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 9, 7, 14, 0, 37, 566, DateTimeKind.Utc).AddTicks(9471));
+                        .HasDefaultValue(new DateTime(2023, 9, 10, 9, 47, 33, 986, DateTimeKind.Utc).AddTicks(4116));
 
                     b.Property<bool>("PrincipalUser")
                         .HasColumnType("bit");
@@ -240,21 +240,17 @@ namespace Saas.Admin.Service.Migrations
 
             modelBuilder.Entity("Saas.Admin.Service.Data.Models.OnBoarding.UserTenant", b =>
                 {
-                    b.HasOne("Saas.Admin.Service.Data.Models.OnBoarding.Tenant", "Tenant")
+                    b.HasOne("Saas.Admin.Service.Data.Models.OnBoarding.Tenant", null)
                         .WithMany("UserTenants")
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Saas.Admin.Service.Data.Models.OnBoarding.UserInfo", "UserInfo")
+                    b.HasOne("Saas.Admin.Service.Data.Models.OnBoarding.UserInfo", null)
                         .WithMany("UserTenants")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Tenant");
-
-                    b.Navigation("UserInfo");
                 });
 
             modelBuilder.Entity("Saas.Admin.Service.Data.Models.OnBoarding.Tenant", b =>

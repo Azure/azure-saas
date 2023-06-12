@@ -23,23 +23,23 @@ public class TenantInfoDTO
         Version = tenant?.ConcurrencyToken != null ? Convert.ToBase64String(tenant.ConcurrencyToken) : null;
     }
 
-    public Tenantb ToTenant()
+    public Tenant ToTenant()
     {
-        Tenantb tenant = new Tenantb()
+        Tenant tenant = new Tenant()
         {
-            Id = Id,
-            Name = Name,
+            Guid = Id,
+            Company = Name,
             Route = Route,
             ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null,
-            CreatedTime = null,
+            CreatedDate = null,
         };
         return tenant;
     }
 
 
-    public void CopyTo(Tenantb target)
+    public void CopyTo(Tenant target)
     {
-        target.Name = Name;
+        target.Company = Name;
         target.Route = Route;
         target.ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null;
     }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Saas.Admin.Service.Migrations
 {
     /// <inheritdoc />
-    public partial class Modified : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,7 +28,7 @@ namespace Saas.Admin.Service.Migrations
                     ExternalDB = table.Column<bool>(type: "bit", nullable: false),
                     TimeZone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedUser = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 9, 14, 0, 37, 566, DateTimeKind.Utc).AddTicks(8480)),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 12, 9, 47, 33, 986, DateTimeKind.Utc).AddTicks(2384)),
                     UpdatedUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ConcurrencyToken = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
@@ -39,7 +39,7 @@ namespace Saas.Admin.Service.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "UserInfo",
                 columns: table => new
                 {
                     Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -64,7 +64,7 @@ namespace Saas.Admin.Service.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Guid);
+                    table.PrimaryKey("PK_UserInfo", x => x.Guid);
                 });
 
             migrationBuilder.CreateTable(
@@ -74,7 +74,7 @@ namespace Saas.Admin.Service.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmpNo = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "001"),
-                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 9, 7, 14, 0, 37, 566, DateTimeKind.Utc).AddTicks(9471)),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 9, 10, 9, 47, 33, 986, DateTimeKind.Utc).AddTicks(4116)),
                     ExpiresAfter = table.Column<int>(type: "int", nullable: false, defaultValue: 90),
                     SuperUser = table.Column<bool>(type: "bit", nullable: false),
                     CCCode = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "OO1"),
@@ -82,7 +82,7 @@ namespace Saas.Admin.Service.Migrations
                     Profession = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PrincipalUser = table.Column<bool>(type: "bit", nullable: false),
                     CreatedUser = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 9, 14, 0, 37, 567, DateTimeKind.Utc).AddTicks(300)),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 12, 9, 47, 33, 986, DateTimeKind.Utc).AddTicks(5613)),
                     TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -96,9 +96,9 @@ namespace Saas.Admin.Service.Migrations
                         principalColumn: "Guid",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Employee_User_UserId",
+                        name: "FK_Employee_UserInfo_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "UserInfo",
                         principalColumn: "Guid",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -130,7 +130,7 @@ namespace Saas.Admin.Service.Migrations
                 name: "Organization");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "UserInfo");
         }
     }
 }

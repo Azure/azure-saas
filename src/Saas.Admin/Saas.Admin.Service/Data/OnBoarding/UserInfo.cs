@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Saas.Admin.Service.Data.Models.OnBoarding;
 
-[Table("User")]
+[Table("UserInfo")]
 /// <summary>
 /// Used to collect and hold information about any user registered with the system
 /// </summary>
@@ -74,10 +74,6 @@ public class UserInfo
         get { return answer; }
         set
         {
-            if (string.IsNullOrEmpty(value))
-            {
-                value = "0";
-            }
             answer = passwordHash(value, salt);
         }
     }
@@ -100,7 +96,7 @@ public class UserInfo
     public bool Notifications { get; set; }
     public DateTime CreatedDate { get; set; }
 
-    public ICollection<UserTenant> UserTenants { get; set; }
+    public ICollection<UserTenant> UserTenants { get; set; } = new List<UserTenant>();
 
     /// <summary>
     /// Used to generate a hashed password for this user

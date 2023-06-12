@@ -1,6 +1,5 @@
 ﻿
 using System.Diagnostics;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Antiforgery;
 
 
@@ -10,6 +9,7 @@ using Saas.SignupAdministration.Web.Interfaces;
 
 //Saas permission
 using Saas.Identity.Authorization.Model.Claim;
+using Microsoft.Graph;
 
 namespace Saas.SignupAdministration.Web.Controllers;
 
@@ -45,26 +45,22 @@ public class HomeController : Controller
 
 
     [HttpGet]
-    [HttpPost]
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
 
+        if (User?.Identity?.IsAuthenticated ?? false)
+        {
+            bool isRegistered = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
+            if (isRegistered)
+            {
+                return Redirect("https://localhost:3000/dashboard");
+            }
 
-        //if (User?.Identity?.IsAuthenticated ?? false)
-        //{
-        //    bool isRegistered = await isUserRegistered();
-        //    if (isRegistered)
-        //    {
-        //        return Redirect("https://localhost:3000/dashboard");
-        //    }
+            return Redirect("https://localhost:3000/onboarding");
 
-        //    return Redirect("https://localhost:3000/onboarding");
+        }
 
-        //}
-
-        //return Redirect("https://localhost:3000");
-
-        return View();
+        return Redirect("https://localhost:3000");
 
     }
 
@@ -100,28 +96,15 @@ public class HomeController : Controller
             string? xsrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
             bool hassaas = User?.Claims?.HasSaasUserPermissionSelf() ?? false;
             bool isAdmin = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
-            bool isRegistered = await isUserRegistered();
             string accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
 
-            return new JsonResult(new { _applicationUser.GivenName, isRegistered, accessToken, xsrf_token, hassaas, isAdmin });
+            return new JsonResult(new { _applicationUser.GivenName, accessToken, xsrf_token, hassaas, isAdmin });
 
         }
         else
         {
             return Unauthorized();
         }
-
-    }
-
-
-    private async Task<bool> isUserRegistered()
-    {
-
-        string email = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
-
-        bool isRegistered = await _dbServices.isUserRegistered(email);
-
-        return isRegistered;
 
     }
 

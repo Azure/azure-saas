@@ -42,4 +42,7 @@
 	  <ProjectReference Include="..\..\Saas.Lib\Saas.Shared\Saas.Shared.csproj" />
 	  <ProjectReference Include="..\..\Saas.SignupAdministration\Saas.SignupAdministration.Web\Saas.SignupAdministration.Web.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
 </Project>
