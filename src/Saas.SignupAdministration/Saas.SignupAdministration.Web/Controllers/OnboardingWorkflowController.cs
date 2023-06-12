@@ -4,8 +4,9 @@ using Saas.SignupAdministration.Web.Services.StateMachine;
 namespace Saas.SignupAdministration.Web.Controllers;
 
 [Authorize()]
+[ApiController]
 // [AuthorizeForScopes(Scopes = new string[] { "tenant.read", "tenant.global.read", "tenant.write", "tenant.global.write", "tenant.delete", "tenant.global.delete" })]
-public class OnboardingWorkflowController : Controller
+public class OnboardingWorkflowController : ControllerBase
 {
     private readonly OnboardingWorkflowService _onboardingWorkflow;
 
@@ -26,28 +27,36 @@ public class OnboardingWorkflowController : Controller
     {
         if (!ModelState.IsValid) //Return a bad request
             return BadRequest("Cannot process your request");
-
-        // Need to check whether the route name exists
-        if (await _onboardingWorkflow.GetRouteExistsAsync(organization.TenantRouteName))
+        try
         {
-            return BadRequest("Organization route name used is already taken");
+            if (await _onboardingWorkflow.GetRouteExistsAsync(organization.TenantRouteName))
+            {
+                return BadRequest("Organization route name used is already taken");
+            }
+
+            _onboardingWorkflow.OnboardingWorkflowItem.OrganizationName = organization.OrganizationName;
+            _onboardingWorkflow.OnboardingWorkflowItem.CategoryId = organization.CategoryId;
+            _onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName = organization.TenantRouteName;
+            _onboardingWorkflow.OnboardingWorkflowItem.ProductId = organization.ProductTierId;
+            _onboardingWorkflow.OnboardingWorkflowItem.Answer = organization.Answer;
+            _onboardingWorkflow.OnboardingWorkflowItem.Question = organization.Question;
+            _onboardingWorkflow.OnboardingWorkflowItem.Profession = organization.Profession;
+            _onboardingWorkflow.OnboardingWorkflowItem.TimeZone = organization.TimeZone;
+            _onboardingWorkflow.OnboardingWorkflowItem.NoofEmployees = organization.NoofEmployees;
+            _onboardingWorkflow.OnboardingWorkflowItem.Country = organization.Country;
+
+            await DeployTenantAsync();
+
+            ///Change to created at action 
+            return Created("/onboarding", _onboardingWorkflow.OnboardingWorkflowItem);
+
         }
-
-        _onboardingWorkflow.OnboardingWorkflowItem.OrganizationName = organization.OrganizationName;
-        _onboardingWorkflow.OnboardingWorkflowItem.CategoryId = organization.CategoryId;
-        _onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName = organization.TenantRouteName;
-        _onboardingWorkflow.OnboardingWorkflowItem.ProductId = organization.ProductTierId;
-        _onboardingWorkflow.OnboardingWorkflowItem.Answer = organization.Answer;
-        _onboardingWorkflow.OnboardingWorkflowItem.Question = organization.Question;
-        _onboardingWorkflow.OnboardingWorkflowItem.Profession = organization.Profession;
-        _onboardingWorkflow.OnboardingWorkflowItem.TimeZone = organization.TimeZone;
-        _onboardingWorkflow.OnboardingWorkflowItem.NoofEmployees = organization.NoofEmployees;
-        _onboardingWorkflow.OnboardingWorkflowItem.Country = organization.Country;
-
-        await DeployTenantAsync();
-
-        ///Change to created at action 
-        return Ok(_onboardingWorkflow.OnboardingWorkflowItem.CategoryId);
+        catch 
+        {
+            return BadRequest("An error occured while trying to process your request. Try again later");
+        }
+        // Need to check whether the route name exists
+       
 
 
         //return new JsonResult(new {message = "success"});

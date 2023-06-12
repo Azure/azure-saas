@@ -40,14 +40,7 @@ public class UserTenant
 
     public Guid TenantId { get; set; }
 
-
     public Guid UserId { get; set; }
-
-    [NotMapped]
-    public Tenant Tenant { get; set; }
-
-    [NotMapped]
-    public UserInfo UserInfo { get; set; }
 }
 
 

@@ -42,16 +42,21 @@ public class TenantService : ITenantService
         return returnValue;
     }
 
-    public async Task<TenantDTO> AddUserTenantAsync(NewTenantRequest newTenantRequest, Guid adminId)
+    public async Task<TenantDTO> AddUserToTenantAsync(NewTenantRequest newTenantRequest, Guid userId)
     {
-        Tenant tenant = newTenantRequest.ToTenant();
+        UserInfo? user = await _context.UserInfo.FindAsync(userId);
+        if (user == null)
+        {
+            _context.UserInfo.Add(newTenantRequest.UserInfo);
+        }
+
         UserTenant userTenant = newTenantRequest.UserTenant;
         _context.UserTenants.Add(userTenant);
 
         try
         {
             await _context.SaveChangesAsync();
-            await _permissionService.AddNewTenantAsync(tenant.Guid, adminId);
+            await _permissionService.AddNewTenantAsync(userTenant.TenantId, userId);
         }
         catch (Exception ex)
         {
@@ -61,21 +66,24 @@ public class TenantService : ITenantService
             throw;
         }
 
-        TenantDTO? returnValue = new(tenant);
+        TenantDTO? returnValue = new(newTenantRequest.ToTenant());
         return returnValue;
     }
 
     public async Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, Guid adminId)
     {
         Tenant tenant = newTenantRequest.ToTenant();
-        UserInfo? principalUser = _context.UserInfo.FirstOrDefault(t => t.Guid == adminId);
+        
+        UserInfo? principalUser = await _context.UserInfo.FindAsync(adminId);
         if (principalUser == null)
         {
-           // _context.UserInfo.Add(newTenantRequest.UserInfo);
+           _context.UserInfo.Add(newTenantRequest.UserInfo);
         }
-       // _context.Tenants.Add(tenant);
+        _context.Tenants.Add(tenant);
 
         UserTenant userTenant = newTenantRequest.UserTenant;
+        //use the database generated Guid for tenant
+        userTenant.TenantId = tenant.Guid;
         _context.UserTenants.Add(userTenant);
 
         await _context.SaveChangesAsync();

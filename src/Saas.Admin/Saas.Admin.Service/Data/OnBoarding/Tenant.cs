@@ -61,6 +61,6 @@ public class Tenant
     public byte[]? ConcurrencyToken { get; set; }
 
 
-    public ICollection<UserTenant> UserTenants { get; set; }
+    public ICollection<UserTenant> UserTenants { get; set; } = new List<UserTenant>();
 
 }

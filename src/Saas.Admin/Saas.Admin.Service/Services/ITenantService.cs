@@ -11,7 +11,7 @@ public interface ITenantService
 
     Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, Guid adminId);
 
-    Task<TenantDTO> AddUserTenantAsync(NewTenantRequest newTenantRequest, Guid adminId);
+    Task<TenantDTO> AddUserToTenantAsync(NewTenantRequest newTenantRequest, Guid adminId);
     
 
     Task<TenantDTO> UpdateTenantAsync(TenantDTO tenant);

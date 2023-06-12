@@ -453,6 +453,7 @@ public class TenantsController : ControllerBase
     /// Specifically this application user information
     /// </summary>
     /// <param name="tenantRequest"></param>
+    ///  /// <param name="userId"></param>
     private void CompleteOnboardInfo(NewTenantRequest tenantRequest, Guid userId)
     {
         //Used for hashing passwords and other secrets
@@ -471,6 +472,9 @@ public class TenantsController : ControllerBase
             FullNames = User.FindFirstValue("name") ?? string.Empty,
             LockAfter = 3,
             Telephone  = User.FindFirstValue("telephone") ?? string.Empty,
+            //Defaults password
+            Password = "0",
+            ConfirmPassword = "0"
         };
 
         tenantRequest.UserInfo = tenantUser;
