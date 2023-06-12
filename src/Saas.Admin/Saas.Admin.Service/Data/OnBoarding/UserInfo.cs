@@ -87,14 +87,14 @@ public class UserInfo
 
     public int LockAfter { get; set; }
 
-    public string BioUserID { get; set; } = string.Empty;
+    public string? BioUserID { get; set; }
 
     public DateTime DOB { get; set; }
-    public string IDType { get; set; } = string.Empty;
+    public string? IDType { get; set; }
 
     public bool AcceptTerms { get; set; }
     public bool Notifications { get; set; }
-    public DateTime CreatedDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
     public ICollection<UserTenant> UserTenants { get; set; } = new List<UserTenant>();
 

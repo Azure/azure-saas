@@ -33,6 +33,7 @@ public class NewTenantRequest
             Company = Name,
             Route = Route,
             CreatedUser = CreatorEmail,
+            UpdatedUser = CreatorEmail,
             ConcurrencyToken = null,
             CreatedDate = null,
             Industry = CategoryId,

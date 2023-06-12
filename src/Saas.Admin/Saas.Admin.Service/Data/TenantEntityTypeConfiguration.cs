@@ -52,4 +52,20 @@ public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
           .HasDefaultValue("001") 
           .ValueGeneratedOnAdd();
     }
+
+    public void Configure(EntityTypeBuilder<UserInfo> builder)
+    {
+
+        builder.Property(t => t.BioUserID)
+            .HasDefaultValue("0") //0
+            .ValueGeneratedOnAdd();
+
+        builder.Property(t => t.IDType)
+            .HasDefaultValue("National ID") //National ID
+            .ValueGeneratedOnAdd();
+
+        builder.Property(t => t.CreatedDate)
+           .HasDefaultValue(DateTime.UtcNow) //National ID
+           .ValueGeneratedOnAdd();
+    }
 }
