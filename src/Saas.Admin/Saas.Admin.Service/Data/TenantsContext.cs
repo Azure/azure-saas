@@ -24,6 +24,8 @@ public class TenantsContext : DbContext
         configuration.Configure(modelBuilder.Entity<Tenant>());
         configuration.Configure(modelBuilder.Entity<UserTenant>());
 
+        modelBuilder.Entity<UserTenant>(x => x.HasKey(ut =>
+          new { ut.UserId, ut.TenantId }));
 
         modelBuilder.Entity<Tenant>()
             .HasMany(t => t.UserTenants)

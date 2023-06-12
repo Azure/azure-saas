@@ -67,6 +67,7 @@ public class NewTenantRequest
             value.PrincipalUser = true;
             value.CreatedDate = DateTime.UtcNow;
             value.TenantId = ToTenant().Guid;
+            value.Profession = Profession;
             value.UserId = UserInfo.Guid;
 
             userTenant = value;
