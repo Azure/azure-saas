@@ -28,7 +28,7 @@ namespace Saas.Admin.Service.Migrations
                     ExternalDB = table.Column<bool>(type: "bit", nullable: false),
                     TimeZone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedUser = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 12, 9, 47, 33, 986, DateTimeKind.Utc).AddTicks(2384)),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 12, 12, 48, 39, 490, DateTimeKind.Utc).AddTicks(6714)),
                     UpdatedUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ConcurrencyToken = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
@@ -54,13 +54,12 @@ namespace Saas.Admin.Service.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Telephone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LockAfter = table.Column<int>(type: "int", nullable: false),
-                    BioUserID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BioUserID = table.Column<string>(type: "nvarchar(max)", nullable: true, defaultValue: "0"),
                     DOB = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IDType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Profession = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IDType = table.Column<string>(type: "nvarchar(max)", nullable: true, defaultValue: "National ID"),
                     AcceptTerms = table.Column<bool>(type: "bit", nullable: false),
                     Notifications = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValue: new DateTime(2023, 6, 12, 12, 48, 39, 491, DateTimeKind.Utc).AddTicks(3983))
                 },
                 constraints: table =>
                 {
@@ -71,10 +70,12 @@ namespace Saas.Admin.Service.Migrations
                 name: "Employee",
                 columns: table => new
                 {
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmpNo = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "001"),
-                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 9, 10, 9, 47, 33, 986, DateTimeKind.Utc).AddTicks(4116)),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 9, 10, 12, 48, 39, 490, DateTimeKind.Utc).AddTicks(8842)),
                     ExpiresAfter = table.Column<int>(type: "int", nullable: false, defaultValue: 90),
                     SuperUser = table.Column<bool>(type: "bit", nullable: false),
                     CCCode = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "OO1"),
@@ -82,13 +83,11 @@ namespace Saas.Admin.Service.Migrations
                     Profession = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PrincipalUser = table.Column<bool>(type: "bit", nullable: false),
                     CreatedUser = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 12, 9, 47, 33, 986, DateTimeKind.Utc).AddTicks(5613)),
-                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 6, 12, 12, 48, 39, 491, DateTimeKind.Utc).AddTicks(458))
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employee", x => x.Id);
+                    table.PrimaryKey("PK_Employee", x => new { x.UserId, x.TenantId });
                     table.ForeignKey(
                         name: "FK_Employee_Organization_TenantId",
                         column: x => x.TenantId,
@@ -107,11 +106,6 @@ namespace Saas.Admin.Service.Migrations
                 name: "IX_Employee_TenantId",
                 table: "Employee",
                 column: "TenantId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employee_UserId",
-                table: "Employee",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Organization_Route",

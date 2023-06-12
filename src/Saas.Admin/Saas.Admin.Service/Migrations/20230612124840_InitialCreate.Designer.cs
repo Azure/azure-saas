@@ -12,8 +12,8 @@ using Saas.Admin.Service.Data;
 namespace Saas.Admin.Service.Migrations
 {
     [DbContext(typeof(TenantsContext))]
-    [Migration("20230612115903_Updates")]
-    partial class Updates
+    [Migration("20230612124840_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,7 +49,7 @@ namespace Saas.Admin.Service.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 12, 11, 59, 3, 455, DateTimeKind.Utc).AddTicks(1545));
+                        .HasDefaultValue(new DateTime(2023, 6, 12, 12, 48, 39, 490, DateTimeKind.Utc).AddTicks(6714));
 
                     b.Property<string>("CreatedUser")
                         .IsRequired()
@@ -114,15 +114,18 @@ namespace Saas.Admin.Service.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BioUserID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("0");
 
                     b.Property<string>("ConfirmPassword")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2023, 6, 12, 12, 48, 39, 491, DateTimeKind.Utc).AddTicks(3983));
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
@@ -135,8 +138,9 @@ namespace Saas.Admin.Service.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IDType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("National ID");
 
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -185,10 +189,11 @@ namespace Saas.Admin.Service.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("OO1");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 12, 11, 59, 3, 455, DateTimeKind.Utc).AddTicks(4866));
+                        .HasDefaultValue(new DateTime(2023, 6, 12, 12, 48, 39, 491, DateTimeKind.Utc).AddTicks(458));
 
                     b.Property<string>("CreatedUser")
                         .IsRequired()
@@ -208,7 +213,7 @@ namespace Saas.Admin.Service.Migrations
                     b.Property<DateTime>("ExpiryDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 9, 10, 11, 59, 3, 455, DateTimeKind.Utc).AddTicks(3371));
+                        .HasDefaultValue(new DateTime(2023, 9, 10, 12, 48, 39, 490, DateTimeKind.Utc).AddTicks(8842));
 
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

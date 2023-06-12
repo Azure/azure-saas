@@ -46,7 +46,7 @@ namespace Saas.Admin.Service.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 12, 12, 25, 8, 18, DateTimeKind.Utc).AddTicks(6304));
+                        .HasDefaultValue(new DateTime(2023, 6, 12, 12, 48, 39, 490, DateTimeKind.Utc).AddTicks(6714));
 
                     b.Property<string>("CreatedUser")
                         .IsRequired()
@@ -122,7 +122,7 @@ namespace Saas.Admin.Service.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 12, 12, 25, 8, 19, DateTimeKind.Utc).AddTicks(1500));
+                        .HasDefaultValue(new DateTime(2023, 6, 12, 12, 48, 39, 491, DateTimeKind.Utc).AddTicks(3983));
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
@@ -190,7 +190,7 @@ namespace Saas.Admin.Service.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 12, 12, 25, 8, 18, DateTimeKind.Utc).AddTicks(9067));
+                        .HasDefaultValue(new DateTime(2023, 6, 12, 12, 48, 39, 491, DateTimeKind.Utc).AddTicks(458));
 
                     b.Property<string>("CreatedUser")
                         .IsRequired()
@@ -210,7 +210,7 @@ namespace Saas.Admin.Service.Migrations
                     b.Property<DateTime>("ExpiryDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 9, 10, 12, 25, 8, 18, DateTimeKind.Utc).AddTicks(7842));
+                        .HasDefaultValue(new DateTime(2023, 9, 10, 12, 48, 39, 490, DateTimeKind.Utc).AddTicks(8842));
 
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
