@@ -18,7 +18,7 @@ public class UserInfo
 
 
     [NotMapped]
-    public static string salt;
+    public static string  salt;
 
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long Id { get; set; }
@@ -91,7 +91,7 @@ public class UserInfo
 
     public DateTime DOB { get; set; }
     public string IDType { get; set; } = string.Empty;
-    public string? Profession { get; set; }
+
     public bool AcceptTerms { get; set; }
     public bool Notifications { get; set; }
     public DateTime CreatedDate { get; set; }

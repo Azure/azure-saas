@@ -5,11 +5,9 @@ using Microsoft.AspNetCore.Antiforgery;
 
 //Saas claims handling
 using Saas.Shared.Options;
-using Saas.SignupAdministration.Web.Interfaces;
 
 //Saas permission
 using Saas.Identity.Authorization.Model.Claim;
-using Microsoft.Graph;
 
 namespace Saas.SignupAdministration.Web.Controllers;
 
@@ -21,19 +19,17 @@ public class HomeController : Controller
     private readonly IApplicationUser _applicationUser;
     private readonly ITokenAcquisition _tokenAcquisition;
     private readonly IAntiforgery _antiforgery;
-    private readonly IDBServices _dbServices;
 
     //Configured access scopes
     private readonly IEnumerable<string> _scopes;
 
 
-    public HomeController( IApplicationUser applicationUser, ITokenAcquisition tokenAcquisition, IOptions<SaasAppScopeOptions> scopes, IAntiforgery antiforgery, IDBServices dbServices)
+    public HomeController( IApplicationUser applicationUser, ITokenAcquisition tokenAcquisition, IOptions<SaasAppScopeOptions> scopes, IAntiforgery antiforgery)
     {
         _applicationUser = applicationUser;
         _tokenAcquisition = tokenAcquisition;
         _scopes = scopes.Value.Scopes ?? throw new ArgumentNullException($"Scopes must be defined.");
         _antiforgery = antiforgery;
-        _dbServices = dbServices;
     }
 
     [HttpGet]
@@ -83,9 +79,7 @@ public class HomeController : Controller
     }
 
     /// <summary>
-    /// Replaced Index page to return basic user information used by index page to display
-    /// information about logged in user
-    /// It must be accessed by a logged in user
+    /// Temporary
     /// </summary>
     /// <returns>A json body containing user information including token</returns>
     [HttpGet("api/GetAuthUser")]
