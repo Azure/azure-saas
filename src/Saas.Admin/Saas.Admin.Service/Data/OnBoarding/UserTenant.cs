@@ -15,7 +15,7 @@ public class UserTenant
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long Id { get; set; }
 
-    public string EmpNo { get; set; } = string.Empty;
+    public string? EmpNo { get; set; }
 
     public DateTime ExpiryDate { get; set; }
 
@@ -26,7 +26,7 @@ public class UserTenant
     /// </summary>
     public bool SuperUser { get; set; }
    
-    public string CCCode { get; set; } = string.Empty;
+    public string? CCCode { get; set; }
 
     public string RegSource { get; set; } = string.Empty;
 
@@ -36,7 +36,7 @@ public class UserTenant
 
     public string CreatedUser { get; set; } = string.Empty;
 
-    public DateTime CreatedDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
     public Guid TenantId { get; set; }
 

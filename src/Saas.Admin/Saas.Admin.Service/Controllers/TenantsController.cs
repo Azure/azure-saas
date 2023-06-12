@@ -134,13 +134,13 @@ public class TenantsController : ControllerBase
         try
         {
             
-            if (! Guid.TryParse(User?.GetNameIdentifierId(), out var userId)) 
-            {
-                throw new InvalidOperationException("The the User Name Identifier must be a Guid.");
-            }
+            //if (! Guid.TryParse(User?.GetNameIdentifierId(), out var userId)) 
+            //{
+            //    throw new InvalidOperationException("The the User Name Identifier must be a Guid.");
+            //}
             //Update tenant information before proceeding
-            CompleteOnboardInfo(tenantRequest, userId);
-            TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest, userId);
+            CompleteOnboardInfo(tenantRequest, Guid.Empty);
+            TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest, Guid.Empty);
 
             _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.Route, tenant.Id);
             
@@ -468,6 +468,7 @@ public class TenantsController : ControllerBase
         {
             Guid = userId,
             Email = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
+            UserName =  User.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
             FullNames = User.FindFirstValue("name") ?? string.Empty,
             LockAfter = 3,
             Telephone  = User.FindFirstValue("telephone") ?? string.Empty,
@@ -477,7 +478,10 @@ public class TenantsController : ControllerBase
         };
 
         tenantRequest.UserInfo = tenantUser;
-        tenantRequest.UserTenant = new UserTenant();
+        tenantRequest.UserTenant = new UserTenant
+        {
+            CreatedUser = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty
+        };
 
     }
 }

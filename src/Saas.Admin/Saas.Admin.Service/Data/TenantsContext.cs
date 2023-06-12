@@ -23,6 +23,7 @@ public class TenantsContext : DbContext
         TenantEntityTypeConfiguration configuration = new TenantEntityTypeConfiguration();
         configuration.Configure(modelBuilder.Entity<Tenant>());
         configuration.Configure(modelBuilder.Entity<UserTenant>());
+        configuration.Configure(modelBuilder.Entity<UserInfo>());
 
         modelBuilder.Entity<UserTenant>(x => x.HasKey(ut =>
           new { ut.UserId, ut.TenantId }));
