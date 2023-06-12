@@ -133,14 +133,14 @@ public class TenantsController : ControllerBase
     {
         try
         {
-            
-            //if (! Guid.TryParse(User?.GetNameIdentifierId(), out var userId)) 
-            //{
-            //    throw new InvalidOperationException("The the User Name Identifier must be a Guid.");
-            //}
+
+            if (!Guid.TryParse(User?.GetNameIdentifierId(), out var userId))
+            {
+                throw new InvalidOperationException("The the User Name Identifier must be a Guid.");
+            }
             //Update tenant information before proceeding
-            CompleteOnboardInfo(tenantRequest, Guid.Empty);
-            TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest, Guid.Empty);
+            CompleteOnboardInfo(tenantRequest, userId);
+            TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest, userId);
 
             _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.Route, tenant.Id);
             
