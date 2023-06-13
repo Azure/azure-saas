@@ -2,6 +2,7 @@
 
 //Saas permission
 using Saas.Identity.Authorization.Model.Claim;
+using System.Net.Mime;
 
 namespace Saas.SignupAdministration.Web.Controllers;
 
@@ -31,14 +32,14 @@ public class HomeController : Controller
             bool isRegistered = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
             if (isRegistered)
             {
-                return Redirect("/dashboard");
+                return Redirect("https://localhost:3000/dashboard");
             }
 
-            return Redirect("/onboarding");
+            return Redirect("https://localhost:3000/onboarding");
 
         }
 
-        return Redirect("/");
+        return Redirect("https://localhost:3000/");
 
     }
 
@@ -53,15 +54,29 @@ public class HomeController : Controller
     /// Temporary
     /// </summary>
     /// <returns>A json body containing user information including token</returns>
-    [HttpGet("api/GetAuthUser")]
+    [HttpGet("/api/user")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public IActionResult GetUserInfo()
     {
         if (User.Identity?.IsAuthenticated ?? false)
         {
             string? xsrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
-            bool isAdmin = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
+            bool hasTenants = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
 
-            return new JsonResult(new { _applicationUser.GivenName, xsrf_token, isAdmin});
+            ApplicationUserDTO user = new ApplicationUserDTO
+            { 
+                Email = _applicationUser.EmailAddress,
+                Telephone = _applicationUser.Telephone,
+                Country = _applicationUser.Country,
+                FullName = _applicationUser.FullName,
+                Industry = _applicationUser.Industry,
+                UserName = _applicationUser.EmailAddress
+
+            };
+
+            return new JsonResult(new { user, xsrf_token, hasTenants});
 
         }
         else

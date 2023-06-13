@@ -30,6 +30,28 @@ public class ApplicationUser : ClaimsIdentity, IApplicationUser
         }
     }
 
+    public string Country
+    {
+        get
+        {
+            var claim = Identity?.FindFirst("country");
+            string country = claim?.Value ?? string.Empty;
+
+            return country;
+        }
+    }
+
+    public string Industry
+    {
+        get
+        {
+            var claim = Identity?.FindFirst("industry");
+            string industry = claim?.Value ?? string.Empty;
+
+            return industry;
+        }
+    }
+
     public Guid NameIdentifier
     {
         get
@@ -74,13 +96,14 @@ public class ApplicationUser : ClaimsIdentity, IApplicationUser
         }
     }
 
-    public string GivenName
+    public string FullName
     {
         get
         {
             var claim = Identity?.FindFirst(SR.GivenNamClaimType);
 
-            return claim?.Value ?? string.Empty;
+            string name = claim?.Value ?? Name ?? EmailAddress.Split('@').First();
+            return  name;
         }
     }
 
