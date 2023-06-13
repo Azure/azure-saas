@@ -86,4 +86,15 @@ public class HomeController : Controller
 
     }
 
+    [HttpGet("/get-csrf-token")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult GetCsrfToken()
+    {
+        string? csrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
+
+        return new JsonResult(new {token = csrf_token});
+
+    }
+
 }

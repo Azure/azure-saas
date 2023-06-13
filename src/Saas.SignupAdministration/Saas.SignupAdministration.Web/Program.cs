@@ -60,10 +60,6 @@ builder.Services.Configure<AzureB2CSignupAdminOptions>(
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(SR.EmailOptionsProperty));
 
-builder.Services.AddRazorPages();
-
-builder.Services.AddMvc();
-
 
 // Add the workflow object
 builder.Services.AddScoped<OnboardingWorkflowService, OnboardingWorkflowService>();
@@ -197,8 +193,6 @@ app.MapFallbackToFile("index.html");
 app.MapControllerRoute(
     name: "Admin",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-app.MapFallbackToFile("index.html");
 
 app.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
 

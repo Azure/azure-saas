@@ -26,7 +26,8 @@ public class ApplicationUser : ClaimsIdentity, IApplicationUser
             var claim = Identity?.FindFirst(SR.TelephoneClaimType);
             string telephone = claim?.Value ?? string.Empty;
 
-            return (!string.IsNullOrWhiteSpace(telephone) ) ? telephone : (telephone == null) ? throw new ArgumentNullException("telephone") : throw new ArgumentException("The telephone number must be in a valid format", "EmailAddress");
+            return telephone;
+
         }
     }
 
@@ -100,9 +101,9 @@ public class ApplicationUser : ClaimsIdentity, IApplicationUser
     {
         get
         {
-            var claim = Identity?.FindFirst(SR.GivenNamClaimType);
+            var claim = Identity?.FindFirst("name");
 
-            string name = claim?.Value ?? Name ?? EmailAddress.Split('@').First();
+            string name = claim?.Value ?? EmailAddress.Split('@').First();
             return  name;
         }
     }
