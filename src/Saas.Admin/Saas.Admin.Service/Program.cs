@@ -14,7 +14,6 @@ using Saas.Shared.Options;
 using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Identity.Interface;
-using Saas.Admin.Service.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -101,22 +100,6 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<IUserAccessor, UserAccessor>();
 
 
-//Provides functionality to register and onboard a system admin user into the systems
-builder.Services.AddScoped<ISadUserService>( sp =>
-{
-    SqlOptions sqlOptions = builder.Configuration.GetRequiredSection(SqlOptions.SectionName).Get<SqlOptions>()??new SqlOptions();
-
-
-    HashOptions hashes = builder.Configuration.GetRequiredSection(HashOptions.SectionName).Get<HashOptions>() ?? new HashOptions();
-    //Should obtain this salt 
-    string hashSalt = hashes.PasswordHash ?? string.Empty;
-
-    return string.IsNullOrEmpty(hashSalt) ?
-        throw new ArgumentNullException("password hash salt cannot be null")
-        : new SadUserService(sqlOptions, hashSalt);
-    
-});
-
 //Configure graph settings and access rights
 builder.Services
     .AddSaasApiCertificateClientCredentials<ISaasMicrosoftGraphApi, AzureB2CPermissionsApiOptions>()
@@ -124,9 +107,6 @@ builder.Services
     .AddHttpClient<IGraphApiClientFactory, GraphApiClientFactory>()
     .AddTransientHttpErrorPolicy(builder =>
         builder.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))));
-
-// Adding the service used when accessing MS Graph.
-builder.Services.AddScoped<IUserGraphService, UserGraphService>();
 
 
 builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClient>()
@@ -156,24 +136,6 @@ builder.Services.AddDbContext<TenantsContext>(options =>
 });
 
 var app = builder.Build();
-
-////
-//Enable CORS for specified endpoints/servers
-app.UseCors(ops =>
-{
-    string[] origins = {
-                        "http://localhost:3000",
-                        "http://localhost:3000/",
-                        "https://192.168.1.5:3000",
-                        "https://192.168.1.5:3000/",
-                        "https://localhost:3000",
-                        "https://localhost:3000/",
-                        "https://192.168.1.13:3000",
-                        "https://192.168.1.13:3000/"
-                    };
-
-    ops.WithOrigins(origins).AllowCredentials().WithMethods("POST", "GET", "PUT", "DELETE").AllowAnyHeader();
-});
 
 //Call this as early as possible to make sure DB is ready
 //In a larger project it's better update the database during deployment process

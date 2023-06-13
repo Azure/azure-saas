@@ -26,7 +26,30 @@ public class ApplicationUser : ClaimsIdentity, IApplicationUser
             var claim = Identity?.FindFirst(SR.TelephoneClaimType);
             string telephone = claim?.Value ?? string.Empty;
 
-            return (!string.IsNullOrWhiteSpace(telephone) ) ? telephone : (telephone == null) ? throw new ArgumentNullException("telephone") : throw new ArgumentException("The telephone number must be in a valid format", "EmailAddress");
+            return telephone;
+
+        }
+    }
+
+    public string Country
+    {
+        get
+        {
+            var claim = Identity?.FindFirst("country");
+            string country = claim?.Value ?? string.Empty;
+
+            return country;
+        }
+    }
+
+    public string Industry
+    {
+        get
+        {
+            var claim = Identity?.FindFirst("industry");
+            string industry = claim?.Value ?? string.Empty;
+
+            return industry;
         }
     }
 
@@ -74,13 +97,14 @@ public class ApplicationUser : ClaimsIdentity, IApplicationUser
         }
     }
 
-    public string GivenName
+    public string FullName
     {
         get
         {
-            var claim = Identity?.FindFirst(SR.GivenNamClaimType);
+            var claim = Identity?.FindFirst("name");
 
-            return claim?.Value ?? string.Empty;
+            string name = claim?.Value ?? EmailAddress.Split('@').First();
+            return  name;
         }
     }
 

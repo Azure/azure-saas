@@ -8,6 +8,7 @@ public class OnboardingWorkflowItem
     [JsonProperty(PropertyName = SR.OnboardingWorkflowIdProperty)]
     public Guid Id { get; set; }
 
+    [JsonIgnore]
     [JsonProperty(PropertyName = SR.OnboardingWorkflowNameProperty)]
     public string OnboardingWorkflowName { get; set; } = string.Empty;
 
@@ -41,6 +42,7 @@ public class OnboardingWorkflowItem
     /// </summary>
     public string Question { get; set; } = string.Empty;
 
+    [JsonIgnore]
     public string Answer { get; set; } = string.Empty;
 
     public string TimeZone { get; set; } = string.Empty;
