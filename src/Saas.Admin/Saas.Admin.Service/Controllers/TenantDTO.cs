@@ -1,5 +1,4 @@
-﻿using Saas.Admin.Service.Data;
-using Saas.Admin.Service.Data.Models.OnBoarding;
+﻿using Saas.Admin.Service.Data.Models.OnBoarding;
 
 namespace Saas.Admin.Service.Controllers;
 

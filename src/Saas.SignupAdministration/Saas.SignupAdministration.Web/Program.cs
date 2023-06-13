@@ -155,36 +155,20 @@ builder.Services.AddControllersWithViews()
 
 var app = builder.Build();
 
-///remove
-app.UseCors(ops =>
-{
-
-
-
-    string[] origins = {
-                        "https://ibusiness-git-main-moryno.vercel.app", //Dashboard frontend link
-                        "https://i-business-ui-git-main-moryno.vercel.app", //login frontend link
-                        "https://i-business-ui-git-main-moryno.vercel.app/",//login frontend link
-                        "https://ibusiness-git-main-moryno.vercel.app/", //Dashboard frontend link
-                        "http://localhost:3000",
-                        "http://localhost:3000/",
-                        "https://192.168.1.5:3000/",
-                        "https://192.168.1.5:3000/",
-                        "https://localhost:3000",
-                        "https://localhost:3000/",
-                        "https://192.168.1.13:3000",
-                        "https://192.168.1.13:3000/"
-                    };
-
-
-
-
-    ops.WithOrigins(origins).AllowCredentials().WithMethods("POST", "GET", "PUT", "DELETE").AllowAnyHeader();
-});
-///here
-
 if (app.Environment.IsDevelopment())
 {
+    //use cors for development
+    app.UseCors(ops =>
+    {
+        string[] origins = {
+                        "http://localhost:3000",
+                        "http://localhost:3000/",
+                        "https://localhost:3000",
+                        "https://localhost:3000/"
+                    };
+        ops.WithOrigins(origins).AllowCredentials().WithMethods("POST", "GET", "PUT", "DELETE").AllowAnyHeader();
+    });
+
     app.UseExceptionHandler("/Error");
 }
 else

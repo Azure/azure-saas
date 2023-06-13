@@ -11,6 +11,9 @@
     "mssql2": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:TenantsContext"
+    },
+    "apis1": {
+      "type": "apis"
     }
   }
 }
