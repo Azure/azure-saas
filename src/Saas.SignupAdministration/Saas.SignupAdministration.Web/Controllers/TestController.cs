@@ -1,11 +1,6 @@
-﻿using Dawn;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.Identity.Web;
+﻿using Microsoft.Data.SqlClient;
 using Saas.Admin.Client;
 using Saas.Shared.Options;
-using Saas.SignupAdministration.Web.Services.StateMachine;
-using static Saas.SignupAdministration.Web.Controllers.TestController;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -52,7 +47,9 @@ public class TestController : ControllerBase
                 return BadRequest();
             }
             tenant = tenants.ElementAt(0);
-            _persistenceProvider.Persist(_applicationUser.EmailAddress, tenant);
+
+            if(tenant.IsDbReady)//Persist only when db is ready
+                _persistenceProvider.Persist(_applicationUser.EmailAddress, tenant);
         }
 
         if (tenant.IsDbReady)
@@ -129,7 +126,9 @@ public class TestController : ControllerBase
                 return;
             }
             tenant = tenants.ElementAt(0);
-            _persistenceProvider.Persist(_applicationUser.EmailAddress, tenant);
+
+            if(tenant.IsDbReady)
+                _persistenceProvider.Persist(_applicationUser.EmailAddress, tenant);
         }
 
         if (tenant.IsDbReady)
