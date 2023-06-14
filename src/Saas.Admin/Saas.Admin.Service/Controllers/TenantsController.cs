@@ -425,7 +425,7 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    [SaasAuthorize<SaasUserPermissionRequirement, UserPermissionKind>(UserPermissionKind.Self, "userId")]
+    //[SaasAuthorize<SaasUserPermissionRequirement, UserPermissionKind>(UserPermissionKind.Self, "userId")]
     public async Task<ActionResult<IEnumerable<TenantDTO>>> UserTenants(Guid userId)
     {
         _logger.LogDebug("Getting all tenants for user {userID}", userId);

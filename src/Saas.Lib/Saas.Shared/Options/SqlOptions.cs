@@ -11,4 +11,7 @@ public record SqlOptions
     //test sql connection string
     public string? IbizzSaasConnectionString { get; init; }
 
+    //test sql connection string
+    public string? ClientContection { get; init; }
+
 }

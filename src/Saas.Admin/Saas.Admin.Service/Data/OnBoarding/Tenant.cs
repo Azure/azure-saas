@@ -43,7 +43,7 @@ public class Tenant
     [Required]
     public bool InitReady { get; set; } = false;
 
-
+    public string? DatabaseName { get; set; } 
     public bool ExternalDB { get; set; }
 
     public string TimeZone { get; set; } = "E. Africa Standard Time";
