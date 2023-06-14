@@ -25,6 +25,8 @@ public class TenantDTO
         CreatorEmail = Guard.Argument(tenant.CreatedUser, nameof(tenant.CreatedUser)).NotEmpty();
         ProductTierId = tenant.ProductTierId;
         CategoryId = tenant.Industry;
+        IsDbReady = tenant.InitReady;
+        DatabaseName = tenant.DatabaseName??string.Empty;
 
         Version = tenant.ConcurrencyToken is not null 
             ? Convert.ToBase64String(tenant.ConcurrencyToken) 
@@ -66,6 +68,10 @@ public class TenantDTO
     public string CreatorEmail { get; set; } = string.Empty;
     public DateTime CreatedTime { get; set; }
     public string? Version { get; set; }
+
+    //Custom fields
+    public string DatabaseName { get; set; } = string.Empty;
+    public bool IsDbReady { get; set; }
 }
 
 public class TenantDTOPage

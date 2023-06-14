@@ -20,6 +20,10 @@ public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
             .HasDefaultValue(false)
             .ValueGeneratedOnAdd();
 
+        builder.Property(t => t.DatabaseName)
+            .HasDefaultValue(string.Empty)
+            .ValueGeneratedOnAdd();
+
         builder.Property(t => t.ConcurrencyToken)
             .IsConcurrencyToken();
     }

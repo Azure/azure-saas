@@ -1,7 +1,9 @@
-﻿using Saas.Admin.Service.Controllers;
+﻿using Microsoft.Data.SqlClient;
+using Saas.Admin.Service.Controllers;
 using Saas.Admin.Service.Data;
 using Saas.Admin.Service.Data.Models.OnBoarding;
 using Saas.Permissions.Client;
+using System.Data;
 
 namespace Saas.Admin.Service.Services;
 
@@ -27,9 +29,9 @@ public class TenantService : ITenantService
 
     public async Task<TenantDTO> GetTenantAsync(Guid tenantId)
     {
-        Tenant? tenant = await _context.Tenants.FindAsync(tenantId) 
+        Tenant? tenant = await _context.Tenants.FindAsync(tenantId)
             ?? throw new ItemNotFoundExcepton("Tenant");
-        
+
         TenantDTO returnValue = new(tenant);
         return returnValue;
     }
@@ -73,11 +75,11 @@ public class TenantService : ITenantService
     public async Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, Guid adminId)
     {
         Tenant tenant = newTenantRequest.ToTenant();
-        
+
         UserInfo? principalUser = await _context.UserInfo.FindAsync(adminId);
         if (principalUser == null)
         {
-           _context.UserInfo.Add(newTenantRequest.UserInfo);
+            _context.UserInfo.Add(newTenantRequest.UserInfo);
         }
         _context.Tenants.Add(tenant);
 
@@ -93,6 +95,9 @@ public class TenantService : ITenantService
         try
         {
             await _permissionService.AddNewTenantAsync(tenant.Guid, adminId);
+
+            //Complete with db provision. Using a task.
+            Task task = ProvisionTenantDBAsync(tenant.Route, tenant);
         }
         catch (Exception ex)
         {
@@ -110,9 +115,9 @@ public class TenantService : ITenantService
 
     public async Task<TenantDTO> UpdateTenantAsync(TenantDTO tenantDto)
     {
-        Tenant? fromDB = await _context.Tenants.FindAsync(tenantDto.Id) 
+        Tenant? fromDB = await _context.Tenants.FindAsync(tenantDto.Id)
             ?? throw new ItemNotFoundExcepton("Tenant");
-        
+
         tenantDto.CopyTo(fromDB);
         _context.Entry(fromDB).State = EntityState.Modified;
 
@@ -132,9 +137,9 @@ public class TenantService : ITenantService
 
     public async Task DeleteTenantAsync(Guid tenantId)
     {
-        Tenant? tenant = await _context.Tenants.FindAsync(tenantId) 
+        Tenant? tenant = await _context.Tenants.FindAsync(tenantId)
             ?? throw new ItemNotFoundExcepton("Tenant");
-        
+
         _context.Tenants.Remove(tenant);
         await _context.SaveChangesAsync();
     }
@@ -146,9 +151,9 @@ public class TenantService : ITenantService
 
     public async Task<TenantInfoDTO> GetTenantInfoByRouteAsync(string route)
     {
-        var tenant = await _context.Tenants.FirstOrDefaultAsync(x => 
+        var tenant = await _context.Tenants.FirstOrDefaultAsync(x =>
             route != null
-            && x.Route.Length == route.Length 
+            && x.Route.Length == route.Length
             && EF.Functions.Like(x.Route, $"%{route}%"));
         TenantInfoDTO returnValue = new(tenant);
         return returnValue;
@@ -166,5 +171,70 @@ public class TenantService : ITenantService
             _logger.LogError(ex, "Error while checking for valid path");
             throw;
         }
+    }
+
+    private async Task ProvisionTenantDBAsync(string dbname, Tenant tenant)
+    {
+        int responseId = 0;
+
+        using (SqlConnection con = new SqlConnection(_context.Database.GetConnectionString()))
+        {
+            if (con.State != ConnectionState.Open)
+            {
+                await con.OpenAsync();
+            }
+            using (SqlCommand commad = new SqlCommand("spCreateTenantDatabase", con))
+            {
+                commad.CommandType = CommandType.StoredProcedure;
+
+                commad.Parameters.AddWithValue("databaseName", SqlDbType.NVarChar).Value = dbname;
+                commad.Parameters.AddWithValue("tenantId", SqlDbType.UniqueIdentifier).Value = tenant.Guid;
+
+                commad.CommandTimeout = 120;
+
+                using (SqlDataReader reader = await commad.ExecuteReaderAsync())
+                {
+                    reader.Read();
+
+                    //Get return value
+                    responseId = reader.GetInt32(0);
+
+                    if (responseId == 1)
+                    {
+                        dbname = reader.GetString(1);
+                        _logger.LogInformation("Done DB initialization");
+                    }
+                }
+
+                if(responseId == 1)//Update tenant id
+                {
+                    commad.CommandText = "spUpateTenantDatabase";
+                    commad.Parameters.Clear();
+                    commad.Parameters.AddWithValue("databaseName", SqlDbType.NVarChar).Value = dbname;
+                    commad.Parameters.AddWithValue("tenantId", SqlDbType.UniqueIdentifier).Value = tenant.Guid;
+                    using (SqlDataReader reader = await commad.ExecuteReaderAsync())
+                    {
+                        reader.Read();
+
+                        //Get return value
+                        int res = reader.GetInt32(0);
+
+                        if (res == 1)
+                        {
+                            _logger.LogInformation("Set up complete");
+                        }
+                    }
+                }
+                else
+                {
+                    throw new Exception($"You {tenant.Company} of route {tenant.Route} database could not be provision");
+                }
+                
+            }
+
+           await con.CloseAsync();
+
+        }
+       
     }
 }
