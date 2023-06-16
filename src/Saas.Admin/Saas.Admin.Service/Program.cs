@@ -97,7 +97,6 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
 
-
 //Configure graph settings and access rights
 builder.Services
     .AddSaasApiCertificateClientCredentials<ISaasMicrosoftGraphApi, AzureB2CPermissionsApiOptions>()

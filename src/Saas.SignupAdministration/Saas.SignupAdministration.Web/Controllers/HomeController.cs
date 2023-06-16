@@ -7,46 +7,34 @@ using System.Net.Mime;
 namespace Saas.SignupAdministration.Web.Controllers;
 
 [AllowAnonymous]
+[ApiController]
+[Route("api/[Action]")]
 public class HomeController : Controller
 {
 
     //User information and token acquistation added to facilitate REST API 
     private readonly IApplicationUser _applicationUser;
     private readonly IAntiforgery _antiforgery;
+    private readonly IConfiguration _configuration;
+    private readonly string baseUrl;
 
-
-
-    public HomeController( IApplicationUser applicationUser,  IAntiforgery antiforgery)
+    public HomeController( IApplicationUser applicationUser,  IAntiforgery antiforgery, IConfiguration configuration)
     {
         _applicationUser = applicationUser;
         _antiforgery = antiforgery;
+        _configuration = configuration;
+        baseUrl = _configuration.GetSection("AppSettings:developmentUrl").Value;
     }
-
-    
 
     [HttpGet]
     [HttpPost]
     [Route("/account/logout")]
     public IActionResult Logout()
     {
-
-        //if (User?.Identity?.IsAuthenticated ?? false)
-        //{
-        //    bool isRegistered = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
-        //    if (isRegistered)
-        //    {
-        //        return Redirect("https://localhost:3000/dashboard");
-        //    }
-
-        //    return Redirect("https://localhost:3000/onboarding");
-
-        //}
-
-        return Redirect("/dashboard");
-
+        return Redirect(baseUrl);
     }
 
-    [HttpGet]
+    [HttpGet("/")]
     public IActionResult Index()
     {
 
@@ -55,14 +43,14 @@ public class HomeController : Controller
             bool isRegistered = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
             if (isRegistered)
             {
-                return Redirect("/dashboard");
+                return Redirect($"{baseUrl}/dashboard");
             }
 
-            return Redirect("/onboarding");
+            return Redirect($"{baseUrl}/onboarding");
 
         }
 
-        return Redirect("/dashboard");
+        return Redirect($"{baseUrl}/dashboard");
 
     }
 
@@ -77,14 +65,15 @@ public class HomeController : Controller
     /// Temporary
     /// </summary>
     /// <returns>A json body containing user information including token</returns>
-    [HttpGet("/api/user")]
+    [HttpGet]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public IActionResult GetUserInfo()
+    public IActionResult GetUser()
     {
         if (User.Identity?.IsAuthenticated ?? false)
         {
+            string? xsrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
             bool isRegistered = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
 
             ApplicationUserDTO user = new ApplicationUserDTO
@@ -98,7 +87,7 @@ public class HomeController : Controller
 
             };
 
-            return new JsonResult(new { user, isRegistered});
+            return new JsonResult(new { user,isRegistered });
 
         }
         else
@@ -108,7 +97,7 @@ public class HomeController : Controller
 
     }
 
-    [HttpGet("/getxsrftoken")]
+    [HttpGet]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult GetCsrfToken()

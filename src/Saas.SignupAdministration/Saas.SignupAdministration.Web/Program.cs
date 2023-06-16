@@ -62,7 +62,17 @@ builder.Services.Configure<AzureB2CSignupAdminOptions>(
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(SR.EmailOptionsProperty));
 
+builder.Services.Configure<CosmosEndpointURI>(
+    builder.Configuration.GetRequiredSection(CosmosEndpointURI.SectionName));
 
+builder.Services.Configure<CosmosPrimaryKey>(
+    builder.Configuration.GetRequiredSection(CosmosPrimaryKey.SectionName));
+
+builder.Services.Configure<IBusinessDatabaseId>(
+    builder.Configuration.GetRequiredSection(IBusinessDatabaseId.SectionName));
+
+builder.Services.Configure<IBusinessContainerId>(
+    builder.Configuration.GetRequiredSection(IBusinessContainerId.SectionName));
 // Add the workflow object
 builder.Services.AddScoped<OnboardingWorkflowService, OnboardingWorkflowService>();
 
@@ -71,6 +81,8 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Add the email object
 builder.Services.AddScoped<IEmail, Email>();
+
+builder.Services.AddScoped<IUserBookingService, UserBookingService>();
 
 // Required for the JsonPersistenceProvider
 // Should be replaced based on the persistence scheme
@@ -82,6 +94,8 @@ builder.Services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>
 
 // Add the user details that come back from B2C
 builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
+
+
 
 //Since most if not all requests will be using react via AJAX
 //The following CSRF custom header will be used to prevent
@@ -125,6 +139,16 @@ builder.Services.AddSaasWebAppAuthentication(
         };
 
         builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, options);
+        options.Events = new OpenIdConnectEvents
+        {
+            OnRedirectToIdentityProviderForSignOut = async context =>
+            {
+                string? baseurl = builder.Environment.IsDevelopment() ? "https://localhost:5001" : builder.Configuration.GetRequiredSection("AppSettings:developmentUrl").Value;
+                // Set the desired post-logout redirect URI
+                context.ProtocolMessage.PostLogoutRedirectUri = baseurl +  "/account/logout";
+                await Task.FromResult(0);
+            }
+        };
 
     })
     .SaaSAppCallDownstreamApi()

@@ -43,6 +43,7 @@
 	  <ProjectReference Include="..\..\Saas.SignupAdministration\Saas.SignupAdministration.Web\Saas.SignupAdministration.Web.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Folder Include="Interfaces\" />
 	  <Folder Include="Migrations\" />
 	  <Folder Include="Properties\ServiceDependencies\" />
 	</ItemGroup>
