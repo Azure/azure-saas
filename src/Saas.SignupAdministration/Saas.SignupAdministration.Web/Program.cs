@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Admin.Client;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
@@ -95,12 +96,15 @@ builder.Services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>
 builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
 
 
+
 //Since most if not all requests will be using react via AJAX
 //The following CSRF custom header will be used to prevent
 //CSRF/XSRF
 builder.Services.AddAntiforgery(options =>
 {
-    // Set Cookie properties using CookieBuilder properties†.
+    //Explicity specify 
+    options.Cookie.Name = "cr_cookie";
+
     options.FormFieldName = "csrf-token";
     options.HeaderName = "X-Csrf-Token";
     options.SuppressXFrameOptionsHeader = false;
@@ -125,6 +129,16 @@ builder.Services.AddSaasWebAppAuthentication(
     {
        
         builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, options);
+        options.Events = new OpenIdConnectEvents
+        {
+            OnRedirectToIdentityProviderForSignOut = async context =>
+            {
+                string? baseurl = builder.Environment.IsDevelopment() ? "https://localhost:5001" : builder.Configuration.GetRequiredSection("AppSettings:developmentUrl").Value;
+                // Set the desired post-logout redirect URI
+                context.ProtocolMessage.PostLogoutRedirectUri = baseurl +  "/account/logout";
+                await Task.FromResult(0);
+            }
+        };
 
     })
     .SaaSAppCallDownstreamApi()
