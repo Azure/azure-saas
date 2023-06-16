@@ -22,6 +22,29 @@ public class HomeController : Controller
         _antiforgery = antiforgery;
     }
 
+    
+
+    [HttpGet]
+    [HttpPost]
+    [Route("/account/logout")]
+    public IActionResult Logout()
+    {
+
+        //if (User?.Identity?.IsAuthenticated ?? false)
+        //{
+        //    bool isRegistered = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
+        //    if (isRegistered)
+        //    {
+        //        return Redirect("https://localhost:3000/dashboard");
+        //    }
+
+        //    return Redirect("https://localhost:3000/onboarding");
+
+        //}
+
+        return Redirect("https://localhost:3000/");
+
+    }
 
     [HttpGet]
     public IActionResult Index()
@@ -62,8 +85,7 @@ public class HomeController : Controller
     {
         if (User.Identity?.IsAuthenticated ?? false)
         {
-            string? xsrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
-            bool hasTenants = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
+            bool isRegistered = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
 
             ApplicationUserDTO user = new ApplicationUserDTO
             { 
@@ -76,7 +98,7 @@ public class HomeController : Controller
 
             };
 
-            return new JsonResult(new { user, xsrf_token, hasTenants});
+            return new JsonResult(new { user, isRegistered});
 
         }
         else
@@ -92,6 +114,19 @@ public class HomeController : Controller
     public IActionResult GetCsrfToken()
     {
         string? csrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
+        string cookie = _antiforgery.GetTokens(HttpContext).CookieToken
+            ?? throw new BadHttpRequestException("Anti-forgery cookie cannot be null");
+
+        HttpContext.Response.Cookies.Append(
+            SR.CookieName, cookie,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                Path = "/", // Set the desired cookie path
+                SameSite = SameSiteMode.Lax
+            }
+            );
 
         return new JsonResult(new {token = csrf_token});
 

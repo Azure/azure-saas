@@ -54,8 +54,6 @@ public class TestController : ControllerBase
 
         if (tenant.IsDbReady)
         {
-            //Add product
-            GetProduct(tenant.DatabaseName);
 
             return new JsonResult(GetProduct(tenant.DatabaseName));
         }
@@ -107,10 +105,12 @@ public class TestController : ControllerBase
 
     // POST api/<TestController>
     [HttpPost]
-    public async Task Post([FromBody] Product product)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Post([FromBody] Product product)
     {
 
         TenantDTO? tenant = _persistenceProvider.Retrieve<TenantDTO>(_applicationUser.EmailAddress);
+        List<Product> products = new List<Product>();
 
         if(tenant == null)
         {
@@ -123,7 +123,7 @@ public class TestController : ControllerBase
 
             if(tenants.Count < 1)  //Zero tenants
             {
-                return;
+                return new JsonResult(products);
             }
             tenant = tenants.ElementAt(0);
 
@@ -135,8 +135,10 @@ public class TestController : ControllerBase
         {
             //Add product
             addProduct(product, tenant.DatabaseName);
+            products = GetProduct(tenant.DatabaseName);
         }
 
+        return new JsonResult(products);
     }
 
     private void addProduct(Product product, string databaseName)
@@ -168,6 +170,15 @@ public class TestController : ControllerBase
         string accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
         string? id = User.GetNameIdentifierId();
         return new JsonResult(new {accessToken, id});
+    }
+
+    [HttpPost]
+    [Route("/posttest")]
+    [ValidateAntiForgeryToken]
+    public string PostTest([FromForm]string abc)
+    {
+        
+        return "Your response " + abc;
     }
 
     // DELETE api/<TestController>/5

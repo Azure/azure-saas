@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Admin.Client;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
@@ -86,9 +87,11 @@ builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
 //CSRF/XSRF
 builder.Services.AddAntiforgery(options =>
 {
-    // Set Cookie properties using CookieBuilder properties†.
-    options.FormFieldName = "csrf-token";
-    options.HeaderName = "X-CSRF-TOKEN";
+     //Explicity specify 
+    options.Cookie.Name = SR.CookieName;
+
+    options.FormFieldName = SR.FormFieldName;
+    options.HeaderName = SR.HeaderName;
     options.SuppressXFrameOptionsHeader = false;
 });
 
@@ -109,7 +112,17 @@ builder.Services.AddSaasWebAppAuthentication(
     fullyQualifiedScopes,
     options =>
     {
-       
+        options.Events = new OpenIdConnectEvents
+        {
+            OnRedirectToIdentityProviderForSignOut = async context =>
+            {
+                // Set the desired post-logout redirect URI
+                context.ProtocolMessage.PostLogoutRedirectUri = "https://localhost:5001/account/logout";
+
+                await Task.FromResult(0);
+            }
+        };
+
         builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, options);
 
     })
