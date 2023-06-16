@@ -48,7 +48,7 @@ public class OnboardingWorkflowController : ControllerBase
             await DeployTenantAsync();
 
             ///Change to created at action 
-            return Created("/onboarding", _onboardingWorkflow.OnboardingWorkflowItem);
+            return Created("api/onboarding", _onboardingWorkflow.OnboardingWorkflowItem);
 
         }
         catch 
@@ -62,7 +62,7 @@ public class OnboardingWorkflowController : ControllerBase
         //return new JsonResult(new {message = "success"});
     }
 
-    [HttpGet("/onboarding")]
+    [HttpGet("api/onboarding")]
     public IActionResult Tenantinfo()
     {
         return Ok(_onboardingWorkflow.OnboardingWorkflowItem);
@@ -74,7 +74,7 @@ public class OnboardingWorkflowController : ControllerBase
     /// </summary>
     /// <param name="tn">Suggested tenant name</param>
     /// <returns>true or false depending on the availability</returns>
-    [HttpGet("/Onboarding/tenants/name-avail")]
+    [HttpGet("api/Onboarding/tenants/name-avail")]
     public async Task<IActionResult> CheckTenantName(string tn)
     {
         bool isTenantNameAvailable = await _onboardingWorkflow.GetRouteExistsAsync(tn);

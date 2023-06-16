@@ -42,7 +42,7 @@ public class HomeController : Controller
 
         //}
 
-        return Redirect("https://localhost:3000/");
+        return Redirect("/dashboard");
 
     }
 
@@ -55,14 +55,14 @@ public class HomeController : Controller
             bool isRegistered = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
             if (isRegistered)
             {
-                return Redirect("https://localhost:3000/dashboard");
+                return Redirect("/dashboard");
             }
 
-            return Redirect("https://localhost:3000/onboarding");
+            return Redirect("/onboarding");
 
         }
 
-        return Redirect("https://localhost:3000/");
+        return Redirect("/dashboard");
 
     }
 
@@ -108,7 +108,7 @@ public class HomeController : Controller
 
     }
 
-    [HttpGet("/get-csrf-token")]
+    [HttpGet("/getxsrftoken")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult GetCsrfToken()
