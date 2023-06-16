@@ -10,6 +10,7 @@ using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Admin.Client;
 
+
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
 
@@ -60,7 +61,17 @@ builder.Services.Configure<AzureB2CSignupAdminOptions>(
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(SR.EmailOptionsProperty));
 
+builder.Services.Configure<CosmosEndpointURI>(
+    builder.Configuration.GetRequiredSection(CosmosEndpointURI.SectionName));
 
+builder.Services.Configure<CosmosPrimaryKey>(
+    builder.Configuration.GetRequiredSection(CosmosPrimaryKey.SectionName));
+
+builder.Services.Configure<IBusinessDatabaseId>(
+    builder.Configuration.GetRequiredSection(IBusinessDatabaseId.SectionName));
+
+builder.Services.Configure<IBusinessContainerId>(
+    builder.Configuration.GetRequiredSection(IBusinessContainerId.SectionName));
 // Add the workflow object
 builder.Services.AddScoped<OnboardingWorkflowService, OnboardingWorkflowService>();
 
@@ -69,6 +80,8 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Add the email object
 builder.Services.AddScoped<IEmail, Email>();
+
+builder.Services.AddScoped<IUserBookingService, UserBookingService>();
 
 // Required for the JsonPersistenceProvider
 // Should be replaced based on the persistence scheme
@@ -81,6 +94,7 @@ builder.Services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>
 // Add the user details that come back from B2C
 builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
 
+
 //Since most if not all requests will be using react via AJAX
 //The following CSRF custom header will be used to prevent
 //CSRF/XSRF
@@ -88,7 +102,7 @@ builder.Services.AddAntiforgery(options =>
 {
     // Set Cookie properties using CookieBuilder properties†.
     options.FormFieldName = "csrf-token";
-    options.HeaderName = "X-CSRF-TOKEN";
+    options.HeaderName = "X-Csrf-Token";
     options.SuppressXFrameOptionsHeader = false;
 });
 

@@ -63,7 +63,7 @@ public class HomeController : Controller
         if (User.Identity?.IsAuthenticated ?? false)
         {
             string? xsrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
-            bool hasTenants = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
+            bool isRegistered = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
 
             ApplicationUserDTO user = new ApplicationUserDTO
             { 
@@ -76,7 +76,7 @@ public class HomeController : Controller
 
             };
 
-            return new JsonResult(new { user, xsrf_token, hasTenants});
+            return new JsonResult(new { user, xsrf_token, isRegistered });
 
         }
         else
@@ -92,6 +92,8 @@ public class HomeController : Controller
     public IActionResult GetCsrfToken()
     {
         string? csrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
+      
+
 
         return new JsonResult(new {token = csrf_token});
 
