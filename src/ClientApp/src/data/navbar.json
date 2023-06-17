@@ -1,0 +1,23 @@
+{
+    "navmobilecontent" : {
+        "links" : [ 
+            { "key" : "1", "to" : "/company", "value" : "About Us" },
+            { "key" : "2", "to" : "/pricing", "value" : "Pricing" },
+            { "key" : "3", "to" : "/company", "value" : "Our story" },
+            { "key" : "4", "to" : "https://saas-app-asdk-ecdf-a6tx.azurewebsites.net/MicrosoftIdentity/Account/SignIn", "value" : "Sign in" },
+            { "key" : "5", "to" : "/support", "value" : "Help" }
+        ]
+    },
+    "navlinks" : [ 
+                    { "key" : "1", "to": "/company", "value" : "About Us"},
+                    { "key" : "2", "to" : "/pricing", "value" : "Pricing"},
+                    { "key" : "3", "to" : "/support", "value" : "Help" },
+                    { "key" : "4", "to" : "https://ibusiness.azurewebsites.net/PrivacyPolicy/index.htm", "value" : "Privacy" } 
+                 ],
+    "actionbutton" : { "to" : "/get-started", "value" : "Get started" },
+    "signuptext" : { "to": "https://saas-app-asdk-ecdf-a6tx.azurewebsites.net/MicrosoftIdentity/Account/SignIn", "value" : "Sign Up/In" },
+    "brand" : "iBusiness"
+}
+
+
+

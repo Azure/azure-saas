@@ -1,0 +1,102 @@
+.company {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 4rem;
+    height: max-content;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.company-info {
+    width: 30vw;
+    text-align: start;
+}
+
+.c-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+
+}
+
+.c-illustration {
+    width: 45vw;
+}
+
+.c-description {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.c-header {
+    font-size: 1.7rem;
+    font-weight: bolder;
+    color: var(--maroon);
+}
+
+.c-description-text {
+    font-size: 1.3rem;
+    color: var(--grey);
+    width: 35vw;
+    text-align: left;
+    word-spacing: 1px;
+}
+
+.info-header {
+    color: var(--blue);
+    font-size: 3.5rem;
+    font-weight: bold;
+}
+
+.info-description {
+    color: var(--grey);
+    font-size: 1.4rem;
+}
+
+
+@media screen and (max-width: 767px) {
+    .company-illustration {
+        display: none;
+    }
+
+    .company-info {
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .c-illustration {
+        display: none;
+    }
+
+    .c-description {
+        width: 90%;
+    }
+
+
+
+    .c-description-text {
+        width: 100%;
+        text-align: start;
+        font-size: 1.1rem;
+    }
+
+    .info-description {
+        font-size: 1.1rem;
+    }
+
+    .c-header {
+        text-align: center;
+        font-size: 1.5rem;
+        width: 70%;
+    }
+
+    .info-header {
+        text-align: center;
+        font-size: 2rem;
+    }
+}

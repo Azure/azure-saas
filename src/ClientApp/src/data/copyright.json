@@ -1,0 +1,18 @@
+[
+    {   
+        "to" : "https://ibusiness.azurewebsites.net/PrivacyPolicy/index.htm",
+        "value" : "Privacy Policy"
+    },
+    {   
+        "to" : "https://ibusiness.azurewebsites.net/TermsOfService/index.htm",
+        "value" : "Terms of Use"
+    },
+    {   
+        "to" : "mailto:info@pmsgenius.com?subject=iBusiness%20Enquiry",
+        "value" : "Email Us"
+    },
+    {   
+        "to" : "tel:+254711340201",
+        "value" : "Call Us"
+    }
+]

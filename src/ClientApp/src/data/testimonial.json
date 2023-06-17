@@ -1,0 +1,41 @@
+{
+    "testimony": {
+        "title" : "Testimonial",
+        "subtitle" : "Join more than 10,000 happy customers who love our product.",
+        "description" : "We are passionate about customer success and are driven by need to help you stay ahead of competition in an everchanging business landscape."
+        },
+    "items" : 
+                [{ 
+                    "description":"The reporting and analytics capabilities of iBusiness have allowed us to gain valuable insights into our business operations and make data-driven decisions. It has truly transformed the way we manage our business.",
+                    "author" : "James Walker",
+                    "occupation" : "Businessman",
+                    "imgurl" : "data:image/jpeg;base64,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"
+
+                }, { 
+                    "description":"Impressed with the features and ease-of-use of iBusiness for business management. Managing my business affairs have been made as smooth as butter.",
+                    "author" : "Brian Armstrong",
+                    "occupation" : "Salesman",
+                    "imgurl" : "https://media.istockphoto.com/id/1007763808/photo/portrait-of-handsome-latino-african-man.jpg?s=612x612&w=0&k=20&c=XPL1ukeC99OY8HBfNa_njDujOPf9Xz4yCEOo7O3evU0="
+                },
+                { 
+                    "description":"I highly recommend iBusiness for any business looking to streamline their operations. Very easy to use, highly intelligent and accurate.",
+                    "author" : "Susan Kimberly",
+                    "occupation" : "Entrepreneur",
+                    "imgurl" : "https://img.freepik.com/free-photo/dreamy-young-woman-sunglasses-looking-front_197531-16739.jpg?size=626&ext=jpg"
+                },
+                { 
+                    "description":"Since using iBusiness, our team has been able to collaborate more efficiently and effectively. It has become an indispensable tool for our business.",
+                    "author" : "Maurice Brown",
+                    "occupation" : "Businessman",
+                    "imgurl" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc-nZle5TU8k51df2V-NPakoHK6g-5dcpepw&usqp=CAU"
+                },
+                { 
+                    "description":"Using iBusiness has helped me easily manage my small business, saving me time and money.",
+                    "author" : "Antony Peters",
+                    "occupation" : "Shopkeeper",
+                    "imgurl" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBKqF5LHPHN6iSgylRRJNtlNEw9q0pH8LXaw&usqp=CAU"
+                    }
+        ]
+    
+
+}

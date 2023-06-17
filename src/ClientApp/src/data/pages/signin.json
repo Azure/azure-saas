@@ -1,0 +1,29 @@
+{
+    "header" : "Sign In",
+    "subheader" : "Keep your business connected with a cloud powered technology that helps you stay ahead of competition for higher profits anytime and anywhere.",
+    "functions" : [
+        "Company definition and cost centers",
+        "Create users and employees",
+        "Define your accounts and ledgers",
+        "Manage inventory transactions",
+        "Manage procure to pay processes",
+        "Manage order to cash processes",
+        "Generate reports and analytics"
+    ],
+    "s_subheader" : "Account Login",
+    "btn_text" : "Submit",
+    "newcust_text" : "New to iBusiness?",
+    "newcust_btn" : "Get Started",
+    "fields" : [
+        {
+            "type":"text",
+            "name":"userName",
+            "placeholder":"Username"
+        },
+        {
+            "type":"password",
+            "name":"password",
+            "placeholder":"Password"
+        }
+    ]
+}

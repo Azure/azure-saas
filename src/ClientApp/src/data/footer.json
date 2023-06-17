@@ -1,0 +1,29 @@
+{
+    "about" : {
+        "title" : "What we do",
+        "description" : "We are a trail-blazing software company whose main aim is to develop exceptional and intelligent cloud-based software products that help you stay ahead of competition. We develop high quality software through intensive research and collaboration with various domain experts. Our products are designed to unleash the untapped potential of individuals and businesses around the world."
+    },
+
+    "socials" : {
+        "title" : "Connect With Us"
+    },
+    
+    "copyright" : {
+        "title" : "Copyright",
+        "subtitle" : "2023 BusinessCloud Ltd."
+    },
+
+    "navlinks" : {
+         "links" : [ { "key" : "1", "to": "/", "value" : "Home"}, 
+                     { "key" : "2", "to" : "/sign-in", "value" : "Sign in" },
+                     { "key" : "4", "to" : "/products", "value" : "Product guide" }, 
+                     { "key" : "6", "to" : "/company", "value" : "Our story" },
+                     { "key" : "7", "to" : "/support", "value" : "Support" }, 
+                     { "key" : "9", "to" : "/company", "value" : "About Us" }
+
+                    ],
+         "title" : "Links",
+         "copy" : "2023 BusinessCloud Ltd. and/or its affiliates | All Rights Reserved."
+    }
+
+}
