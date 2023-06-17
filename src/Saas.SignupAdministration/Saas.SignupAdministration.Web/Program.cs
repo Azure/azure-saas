@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Admin.Client;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Net.Http.Headers;
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
@@ -60,10 +62,17 @@ builder.Services.Configure<AzureB2CSignupAdminOptions>(
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(SR.EmailOptionsProperty));
 
-builder.Services.AddRazorPages();
+builder.Services.Configure<CosmosEndpointURI>(
+    builder.Configuration.GetRequiredSection(CosmosEndpointURI.SectionName));
 
-builder.Services.AddMvc();
+builder.Services.Configure<CosmosPrimaryKey>(
+    builder.Configuration.GetRequiredSection(CosmosPrimaryKey.SectionName));
 
+builder.Services.Configure<IBusinessDatabaseId>(
+    builder.Configuration.GetRequiredSection(IBusinessDatabaseId.SectionName));
+
+builder.Services.Configure<IBusinessContainerId>(
+    builder.Configuration.GetRequiredSection(IBusinessContainerId.SectionName));
 // Add the workflow object
 builder.Services.AddScoped<OnboardingWorkflowService, OnboardingWorkflowService>();
 
@@ -72,6 +81,8 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // Add the email object
 builder.Services.AddScoped<IEmail, Email>();
+
+builder.Services.AddScoped<IUserBookingService, UserBookingService>();
 
 // Required for the JsonPersistenceProvider
 // Should be replaced based on the persistence scheme
@@ -83,6 +94,21 @@ builder.Services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>
 
 // Add the user details that come back from B2C
 builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
+
+
+
+//Since most if not all requests will be using react via AJAX
+//The following CSRF custom header will be used to prevent
+//CSRF/XSRF
+builder.Services.AddAntiforgery(options =>
+{
+     //Explicity specify 
+    options.Cookie.Name = SR.CookieName;
+
+    options.FormFieldName = SR.FormFieldName;
+    options.HeaderName = SR.HeaderName;
+    options.SuppressXFrameOptionsHeader = false;
+});
 
 var applicationUri = builder.Configuration.GetRequiredSection(AdminApiOptions.SectionName)
     .Get<AdminApiOptions>()?.ApplicationIdUri
@@ -101,7 +127,29 @@ builder.Services.AddSaasWebAppAuthentication(
     fullyQualifiedScopes,
     options =>
     {
+        options.Events = new OpenIdConnectEvents
+        {
+            OnRedirectToIdentityProviderForSignOut = async context =>
+            {
+                // Set the desired post-logout redirect URI
+                context.ProtocolMessage.PostLogoutRedirectUri = "https://signupadmin-app-asdk-dev-lsg5.azurewebsites.net/account/logout";
+
+                await Task.FromResult(0);
+            }
+        };
+
         builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, options);
+        options.Events = new OpenIdConnectEvents
+        {
+            OnRedirectToIdentityProviderForSignOut = async context =>
+            {
+                string? baseurl = builder.Environment.IsDevelopment() ? "https://localhost:5001" : builder.Configuration.GetRequiredSection("AppSettings:developmentUrl").Value;
+                // Set the desired post-logout redirect URI
+                context.ProtocolMessage.PostLogoutRedirectUri = baseurl +  "/account/logout";
+                await Task.FromResult(0);
+            }
+        };
+
     })
     .SaaSAppCallDownstreamApi()
     .AddInMemoryTokenCaches();
@@ -143,6 +191,18 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    //use cors for development
+    app.UseCors(ops =>
+    {
+        string[] origins = {
+                        "http://localhost:3000",
+                        "http://localhost:3000/",
+                        "https://localhost:3000",
+                        "https://localhost:3000/"
+                    };
+        ops.WithOrigins(origins).AllowCredentials().WithMethods("POST", "GET", "PUT", "DELETE").AllowAnyHeader();
+    });
+
     app.UseExceptionHandler("/Error");
 }
 else
@@ -153,8 +213,17 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseRouting();
+app.UseStaticFiles();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        // Set cache control header to no-cache
+        ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=25920");
+    }
+});
 app.UseSession();
 // app.UseForwardedHeaders();
 app.UseCookiePolicy(new CookiePolicyOptions
@@ -165,15 +234,21 @@ app.UseCookiePolicy(new CookiePolicyOptions
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
+
+//Only loaded once all other controller endpoints have been exhausted
+app.MapFallbackToFile("indexv1.html");
+
 app.MapControllerRoute(
     name: "Admin",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-app.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
 
-app.MapRazorPages();
+//To be replaced for react
+//app.MapRazorPages();
 
 AppHttpContext.Services = ((IApplicationBuilder)app).ApplicationServices;
+
 
 app.Run();
 

@@ -1,4 +1,5 @@
 ﻿using Saas.Admin.Service.Data;
+using Saas.Admin.Service.Data.Models.OnBoarding;
 
 namespace Saas.Admin.Service.Controllers;
 
@@ -16,8 +17,8 @@ public class TenantInfoDTO
 
     public TenantInfoDTO(Tenant? tenant)
     {
-        Id = tenant?.Id ?? Guid.Empty;
-        Name = Guard.Argument(tenant?.Name, nameof(tenant.Name)).NotEmpty();
+        Id = tenant?.Guid ?? Guid.Empty;
+        Name = Guard.Argument(tenant?.Company, nameof(tenant.Company)).NotEmpty();
         Route = Guard.Argument(tenant?.Route, nameof(tenant.Route)).NotEmpty();
         Version = tenant?.ConcurrencyToken != null ? Convert.ToBase64String(tenant.ConcurrencyToken) : null;
     }
@@ -26,11 +27,11 @@ public class TenantInfoDTO
     {
         Tenant tenant = new Tenant()
         {
-            Id = Id,
-            Name = Name,
+            Guid = Id,
+            Company = Name,
             Route = Route,
             ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null,
-            CreatedTime = null,
+            CreatedDate = null,
         };
         return tenant;
     }
@@ -38,7 +39,7 @@ public class TenantInfoDTO
 
     public void CopyTo(Tenant target)
     {
-        target.Name = Name;
+        target.Company = Name;
         target.Route = Route;
         target.ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null;
     }

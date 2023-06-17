@@ -7,6 +7,12 @@
       "commands": [
         "dotnet-msidentity"
       ]
+    },
+    "dotnet-ef": {
+      "version": "7.0.7",
+      "commands": [
+        "dotnet-ef"
+      ]
     }
   }
 }

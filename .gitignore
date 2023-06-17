@@ -16,6 +16,9 @@
 
 # Mono auto generated files
 mono_crash.*
+#Ignore this file and React file
+.gitignore
+.json
 
 # Certs
 *.crt

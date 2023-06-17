@@ -1,147 +1,93 @@
-﻿using Saas.SignupAdministration.Web.Services.StateMachine;
+﻿
+using Saas.SignupAdministration.Web.Services.StateMachine;
 
 namespace Saas.SignupAdministration.Web.Controllers;
 
 [Authorize()]
+[ApiController]
 // [AuthorizeForScopes(Scopes = new string[] { "tenant.read", "tenant.global.read", "tenant.write", "tenant.global.write", "tenant.delete", "tenant.global.delete" })]
-public class OnboardingWorkflowController : Controller
+public class OnboardingWorkflowController : ControllerBase
 {
-    private readonly ILogger<OnboardingWorkflowController> _logger;
     private readonly OnboardingWorkflowService _onboardingWorkflow;
 
-    public OnboardingWorkflowController(ILogger<OnboardingWorkflowController> logger, OnboardingWorkflowService onboardingWorkflow)
+    public OnboardingWorkflowController(OnboardingWorkflowService onboardingWorkflow)
     {
-        _logger = logger;
         _onboardingWorkflow = onboardingWorkflow;
     }
 
-    // Step 1 - Submit the organization name
-    [HttpGet]
-    public IActionResult OrganizationName()
+    /// <summary>
+    /// This methods handles all onboarding process on the go
+    /// The other models are listed after the methods
+    /// </summary>
+    /// <param name="organization">Organization model</param>
+    /// <returns> An appropriate result based on given data</returns>
+    [HttpPost("/api/onboarding")]
+    //[ValidateAntiForgeryToken]
+    public async Task<IActionResult> HandleBatchRegistration([FromBody] NewOnboardingItem organization)
     {
-            ViewBag.OrganizationName = _onboardingWorkflow.OnboardingWorkflowItem.OrganizationName;
-            return View();
-    }
-
-    // Step 1 - Submit the organization name
-    [ValidateAntiForgeryToken]
-    [HttpPost]
-    public IActionResult OrganizationName(string organizationName)
-    {
-        _onboardingWorkflow.OnboardingWorkflowItem.OrganizationName = organizationName;
-        UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnOrganizationNamePosted);
-        
-        return RedirectToAction(SR.OrganizationCategoryAction, SR.OnboardingWorkflowController);
-    }
-
-    // Step 2 - Organization Category
-    [Route(SR.OnboardingWorkflowOrganizationCategoryRoute)]
-    [HttpGet]
-    public IActionResult OrganizationCategory()
-    {
-        ViewBag.CategoryId = _onboardingWorkflow.OnboardingWorkflowItem.CategoryId; 
-        return View(ReferenceData.TenantCategories);
-    }
-
-    // Step 2 Submitted - Organization Category
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult OrganizationCategoryAsync(int categoryId)
-    {
-        _onboardingWorkflow.OnboardingWorkflowItem.CategoryId = categoryId;
-        UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnOrganizationCategoryPosted);
-
-        return RedirectToAction(SR.TenantRouteNameAction, SR.OnboardingWorkflowController);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult OrganizationCategoryBack(int categoryId)
-    {
-        return RedirectToAction(SR.OrganizationNameAction, SR.OnboardingWorkflowController);
-    }
-
-    // Step 3 - Tenant Route Name
-    [HttpGet]
-    public IActionResult TenantRouteName()
-    {
-        ViewBag.TenantRouteName = _onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName; 
-        return View();
-    }
-
-    // Step 3 Submitted - Tenant Route Name
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> TenantRouteName(string tenantRouteName)
-    {
-        // Need to check whether the route name exists
-        if (await _onboardingWorkflow.GetRouteExistsAsync(tenantRouteName))
+        if (!ModelState.IsValid) //Return a bad request
+            return BadRequest("Cannot process your request");
+        try
         {
-            ViewBag.TenantRouteExists = true;
-            ViewBag.TenantNameEntered = tenantRouteName;
-            return View();
+            if (await _onboardingWorkflow.GetRouteExistsAsync(organization.TenantRouteName))
+            {
+                return BadRequest("Organization route name used is already taken");
+            }
+
+            _onboardingWorkflow.OnboardingWorkflowItem.OrganizationName = organization.OrganizationName;
+            _onboardingWorkflow.OnboardingWorkflowItem.CategoryId = organization.CategoryId;
+            _onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName = organization.TenantRouteName;
+            _onboardingWorkflow.OnboardingWorkflowItem.ProductId = organization.ProductTierId;
+            _onboardingWorkflow.OnboardingWorkflowItem.Answer = organization.Answer;
+            _onboardingWorkflow.OnboardingWorkflowItem.Question = organization.Question;
+            _onboardingWorkflow.OnboardingWorkflowItem.Profession = organization.Profession;
+            _onboardingWorkflow.OnboardingWorkflowItem.TimeZone = organization.TimeZone;
+            _onboardingWorkflow.OnboardingWorkflowItem.NoofEmployees = organization.NoofEmployees;
+            _onboardingWorkflow.OnboardingWorkflowItem.Country = organization.Country;
+
+            await DeployTenantAsync();
+
+            ///Change to created at action 
+            return Created("api/onboarding", _onboardingWorkflow.OnboardingWorkflowItem);
+
         }
+        catch 
+        {
+            return BadRequest("An error occured while trying to process your request. Try again later");
+        }
+        // Need to check whether the route name exists
+       
 
-        _onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName = tenantRouteName;
-        UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnTenantRouteNamePosted);
 
-        return RedirectToAction(SR.ServicePlansAction, SR.OnboardingWorkflowController);
+        //return new JsonResult(new {message = "success"});
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult TenantRouteNameBack(string tenantRouteName)
+    [HttpGet("api/onboarding")]
+    public IActionResult Tenantinfo()
     {
-        return RedirectToAction(SR.OrganizationCategoryAction, SR.OnboardingWorkflowController);
+        return Ok(_onboardingWorkflow.OnboardingWorkflowItem);
     }
 
-    // Step 4 - Service Plan
-    [HttpGet]
-    public IActionResult ServicePlans()
+
+    /// <summary>
+    /// Used by SPA application to check if suggested tenant name is available for use
+    /// </summary>
+    /// <param name="tn">Suggested tenant name</param>
+    /// <returns>true or false depending on the availability</returns>
+    [HttpGet("api/Onboarding/tenants/name-avail")]
+    public async Task<IActionResult> CheckTenantName(string tn)
     {
-        return View();
+        bool isTenantNameAvailable = await _onboardingWorkflow.GetRouteExistsAsync(tn);
+
+        return Ok(isTenantNameAvailable);
     }
 
-    // Step 4 Submitted - Service Plan
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult ServicePlans(int productId)
-    {
-        _onboardingWorkflow.OnboardingWorkflowItem.ProductId = productId;
-        UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnServicePlanPosted);
-
-        return RedirectToAction(SR.ConfirmationAction, SR.OnboardingWorkflowController);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult ServicePlansBack()
-    {
-        return RedirectToAction(SR.TenantRouteNameAction, SR.OnboardingWorkflowController);
-    }
-
-    // Step 5 - Tenant Created Confirmation
-    [HttpGet]
-    public async Task<IActionResult> Confirmation()
-    {
-        // Deploy the Tenant
-        await DeployTenantAsync();
-        return View();
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult LastAction(int categoryId)
-    {
-        var action = GetAction();
-        return RedirectToAction(action, SR.OnboardingWorkflowController);
-    }
 
     private async Task DeployTenantAsync()
     {
         await _onboardingWorkflow.OnboardTenant();
 
-        UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnTenantDeploymentSuccessful);
+       // UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnTenantDeploymentSuccessful);
     }
 
     private void UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers trigger)
@@ -161,4 +107,34 @@ public class OnboardingWorkflowController : Controller
 
         return action;
     }
+
+}
+
+
+/// <summary>
+/// A model for organization registration
+/// Derived from the previous onboarding flow
+/// </summary>
+public class NewOnboardingItem
+{
+    public string OrganizationName { get; set; } = string.Empty;
+
+    //Industry
+    public int CategoryId { get; set; }
+
+    public string TenantRouteName { get; set; } = string.Empty;
+
+    public int ProductTierId { get; set; }
+
+    public string Question { get; set; } = string.Empty;
+
+    public string Answer { get; set; } = string.Empty;
+
+    public string TimeZone { get; set; } = string.Empty;
+
+    public string Profession { get; set; } = string.Empty;
+
+    public string Country { get; set; } = string.Empty;
+
+    public int NoofEmployees { get; set; } 
 }

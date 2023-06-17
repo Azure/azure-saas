@@ -1569,6 +1569,38 @@ namespace Saas.Admin.Client
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
         public int CategoryId { get; set; }
 
+        //Additional added fields to match specific company onboarding data collection
+        [System.Text.Json.Serialization.JsonPropertyName("question")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+        public string Question { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("answer")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+        public string Answer { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("country")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+        public string Country { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("timeZone")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+        public string TimeZone { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("profession")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+        public string Profession { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("noofEmployees")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+        public int NoofEmployees { get; set; }
+
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -1654,6 +1686,17 @@ namespace Saas.Admin.Client
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
         public string Version { get; set; }
+
+        //Custom fields
+        [System.Text.Json.Serialization.JsonPropertyName("databaseName")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+        public string DatabaseName { get; set; } = string.Empty;
+
+        [System.Text.Json.Serialization.JsonPropertyName("isDbReady")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+        public bool IsDbReady { get; set; }
 
     }
 

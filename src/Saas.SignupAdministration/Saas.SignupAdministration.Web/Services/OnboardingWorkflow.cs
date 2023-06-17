@@ -50,7 +50,13 @@ public class OnboardingWorkflowService
             Route = OnboardingWorkflowItem.TenantRouteName,
             CreatorEmail = _applicationUser.EmailAddress,
             ProductTierId = OnboardingWorkflowItem.ProductId,
-            CategoryId = OnboardingWorkflowItem.CategoryId
+            CategoryId = OnboardingWorkflowItem.CategoryId,
+            Profession = OnboardingWorkflowItem.Profession,
+            Country = OnboardingWorkflowItem.Country,
+            NoofEmployees = OnboardingWorkflowItem.NoofEmployees,
+            Question = OnboardingWorkflowItem.Question,
+            Answer = OnboardingWorkflowItem.Answer,
+            TimeZone = OnboardingWorkflowItem.TimeZone
         };
 
         // Call new Admin API

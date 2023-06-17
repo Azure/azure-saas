@@ -1,12 +1,19 @@
 using Azure.Identity;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Options;
+using Polly;
 using Saas.Admin.Service.Data;
 using Saas.Identity.Authorization.Handler;
 using Saas.Identity.Authorization.Option;
 using Saas.Identity.Authorization.Provider;
 using Saas.Permissions.Client;
+using Saas.Permissions.Service.Interfaces;
+using Saas.Permissions.Service.Services;
+using Saas.Shared.Interface;
 using Saas.Shared.Options;
+using Saas.Identity.Extensions;
+using Saas.Identity.Helper;
+using Saas.Identity.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -37,10 +44,20 @@ logger.LogInformation("001");
 
 if (builder.Environment.IsDevelopment())
 {
+
+
+    //Add to enable access to key Vault credentials access, neccessary for accessing services such as 
+    //Graph API and other Microsoft related services
+    builder.Services.AddScoped<IKeyVaultCredentialService, DevelopmentKeyVaultCredentials>();
+
     InitializeDevEnvironment();
 }
 else
 {
+    //Add to enable access to key Vault credentials access, neccessary for accessing services such as 
+    //Graph API and other Microsoft related services
+    builder.Services.AddScoped<IKeyVaultCredentialService, ProductionKeyVaultCredentials>();
+
     InitializeProdEnvironment();
 }
 
@@ -59,6 +76,11 @@ builder.Services.Configure<SqlOptions>(
 builder.Services.Configure<SaasAuthorizationOptions>(
     builder.Configuration.GetRequiredSection(SaasAuthorizationOptions.SectionName));
 
+//Contains important configuratins that is used to access graph services.
+//Such as users profile information
+builder.Services.Configure<MSGraphOptions>(
+            builder.Configuration.GetRequiredSection(MSGraphOptions.SectionName));
+
 builder.Services.AddHttpContextAccessor();
 
 // Add authentication for incoming requests
@@ -74,6 +96,15 @@ builder.Services.AddSingleton<IAuthorizationPolicyProvider, SaasPermissionAuthor
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
+
+//Configure graph settings and access rights
+builder.Services
+    .AddSaasApiCertificateClientCredentials<ISaasMicrosoftGraphApi, AzureB2CPermissionsApiOptions>()
+    .AddMicrosoftGraphAuthenticationProvider()
+    .AddHttpClient<IGraphApiClientFactory, GraphApiClientFactory>()
+    .AddTransientHttpErrorPolicy(builder =>
+        builder.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))));
+
 
 builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClient>()
     .ConfigureHttpClient((serviceProvider, client) =>
@@ -95,7 +126,7 @@ builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClie
 builder.Services.AddDbContext<TenantsContext>(options =>
 {
     var sqlConnectionString = builder.Configuration.GetRequiredSection(SqlOptions.SectionName)
-        .Get<SqlOptions>()?.TenantSQLConnectionString
+        .Get<SqlOptions>()?.IbizzSaasConnectionString
             ?? throw new NullReferenceException("SQL Connection string cannot be null.");
 
     options.UseSqlServer(sqlConnectionString);

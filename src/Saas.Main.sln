@@ -27,6 +27,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Saas.Permissions.Client", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{74B177A0-26D8-43CB-9C1E-B65928E1E95D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredProcedures", "{AD7C3EB3-5B1C-468A-A434-04A1F65C54A0}"
+	ProjectSection(SolutionItems) = preProject
+		StoredProcedures\spSaveVerifiedUsers.sql = StoredProcedures\spSaveVerifiedUsers.sql
+		StoredProcedures\spUpdateVerifiedUsers.sql = StoredProcedures\spUpdateVerifiedUsers.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

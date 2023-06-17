@@ -19,10 +19,10 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
 
 
         var authenticationBuilder = services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApp(options =>
-            {
-                configuration.Bind(configSectionName, options);
-            });     
+             .AddMicrosoftIdentityWebApp(options =>
+             {
+                 configuration.Bind(configSectionName, options);
+             });
 
         return new SaasWebAppClientCredentialBuilder(services, authenticationBuilder, scopes);
     }

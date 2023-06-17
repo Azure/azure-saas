@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Saas.Permissions.Client": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:63272;http://localhost:63275"
+    }
+  }
+}

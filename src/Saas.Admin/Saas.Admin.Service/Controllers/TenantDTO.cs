@@ -1,4 +1,4 @@
-﻿using Saas.Admin.Service.Data;
+﻿using Saas.Admin.Service.Data.Models.OnBoarding;
 
 namespace Saas.Admin.Service.Controllers;
 
@@ -16,15 +16,17 @@ public class TenantDTO
 
     public TenantDTO(Tenant tenant)
     {
-        Id = tenant.Id;
+        Id = tenant.Guid;
 
-        CreatedTime = Guard.Argument(tenant.CreatedTime, nameof(tenant.CreatedTime)).NotNull();
+        CreatedTime = DateTime.Now;//Guard.Argument(tenant.CreatedDate, nameof(tenant.CreatedDate)).NotNull();
 
-        Name = Guard.Argument(tenant.Name, nameof(tenant.Name)).NotEmpty();
+        Name = Guard.Argument(tenant.Company, nameof(tenant.Company)).NotEmpty();
         Route = Guard.Argument(tenant.Route, nameof(tenant.Route)).NotEmpty();
-        CreatorEmail = Guard.Argument(tenant.CreatorEmail, nameof(tenant.CreatorEmail)).NotEmpty();
+        CreatorEmail = Guard.Argument(tenant.CreatedUser, nameof(tenant.CreatedUser)).NotEmpty();
         ProductTierId = tenant.ProductTierId;
-        CategoryId = tenant.CategoryId;
+        CategoryId = tenant.Industry;
+        IsDbReady = tenant.InitReady;
+        DatabaseName = tenant.DatabaseName??string.Empty;
 
         Version = tenant.ConcurrencyToken is not null 
             ? Convert.ToBase64String(tenant.ConcurrencyToken) 
@@ -35,14 +37,14 @@ public class TenantDTO
     {
         Tenant tenant = new Tenant()
         {
-            Id = Id,
-            Name = Name,
+            Guid = Id,
+            Company = Name,
             Route = Route,
-            CreatorEmail = CreatorEmail,
+            CreatedUser = CreatorEmail,
             ProductTierId = ProductTierId,
-            CategoryId = CategoryId,
+            Industry = CategoryId,
             ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null,
-            CreatedTime = null,
+            CreatedDate = null,
         };
         return tenant;
     }
@@ -50,10 +52,10 @@ public class TenantDTO
 
     public void CopyTo(Tenant target)
     {
-        target.Name = Name;
+        target.Company = Name;
         target.Route = Route;
-        target.CreatorEmail = CreatorEmail;
-        target.CategoryId = CategoryId;
+        target.CreatedUser = CreatorEmail;
+        target.Industry = CategoryId;
         target.ProductTierId = ProductTierId;
         target.ConcurrencyToken = Version != null ? Convert.FromBase64String(Version) : null;
     }
@@ -66,6 +68,10 @@ public class TenantDTO
     public string CreatorEmail { get; set; } = string.Empty;
     public DateTime CreatedTime { get; set; }
     public string? Version { get; set; }
+
+    //Custom fields
+    public string DatabaseName { get; set; } = string.Empty;
+    public bool IsDbReady { get; set; }
 }
 
 public class TenantDTOPage

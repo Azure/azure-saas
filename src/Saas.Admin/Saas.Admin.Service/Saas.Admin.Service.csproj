@@ -37,7 +37,14 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Saas.Identity\Saas.Permissions\Saas.Permissions.Client\Saas.Permissions.Client.csproj" />
+	  <ProjectReference Include="..\..\Saas.Identity\Saas.Permissions\Saas.Permissions.Service_v1.1\Saas.Permissions.Service.csproj" />
 	  <ProjectReference Include="..\..\Saas.Lib\Saas.Identity\Saas.Identity.csproj" />
 	  <ProjectReference Include="..\..\Saas.Lib\Saas.Shared\Saas.Shared.csproj" />
+	  <ProjectReference Include="..\..\Saas.SignupAdministration\Saas.SignupAdministration.Web\Saas.SignupAdministration.Web.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Interfaces\" />
+	  <Folder Include="Migrations\" />
+	  <Folder Include="Properties\ServiceDependencies\" />
 	</ItemGroup>
 </Project>
