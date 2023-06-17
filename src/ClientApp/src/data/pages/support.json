@@ -1,0 +1,30 @@
+{
+    "header" : "How can we help?",
+    "subheader" : "Fill out your contact information & we’ll get in touch ASAP.",
+    "btn_name"  : "Submit",
+    "inputs" : {
+        "names" : [ {"value" : "First Name", "type" : "text"}, { "value" : "Middle Name", "type" : "text" } ],
+        "fields" : [
+            {
+                "value"  : "Email Address",
+                "type"  : "text"
+            },
+            {
+                "value"  : "Telephone/Mobile No.",
+                "type"  : "text"
+            },
+            {
+                "value"  : "Organization Name",
+                "type"  : "text"
+            },
+            {
+                "value"  : "Number of employees",
+                "type"  : "text"
+            },
+            {
+                "value"  : "Country",
+                "type"  : "text"
+            }
+        ]
+    } 
+}

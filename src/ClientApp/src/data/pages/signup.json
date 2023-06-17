@@ -1,0 +1,15 @@
+{
+    "header" : "Start using iBusiness today",
+    "subheader" : "Join us today and benefit by using our platform and enjoy services such as:",
+    "functions" : [
+        "Company definition and cost centers",
+        "Create users and employees",
+        "Define your accounts and ledgers",
+        "Manage inventory transactions",
+        "Manage procure to pay processes",
+        "Manage order to cash processes",
+        "Generate reports and analytics"
+    ],
+    "s_subheader" : "Enter your information here",
+    "btn_text" : "Submit"
+}

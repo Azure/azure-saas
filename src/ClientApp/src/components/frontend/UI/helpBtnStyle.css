@@ -1,0 +1,22 @@
+.help-btn {
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+    width: 10vh;
+    height: 10vh;
+    border-radius: 100%;
+    color: var(--maroon);
+    background-color: var(--blue);
+}
+
+.help-icon {
+    position: absolute;
+    z-index: 1;
+    bottom: 25%;
+    right: 25%;
+    width: 5vh;
+    height: 5vh;
+    border-radius: 100%;
+    color: var(--cream);
+    background-color: var(--blue);
+}

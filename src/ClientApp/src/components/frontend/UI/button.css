@@ -1,0 +1,34 @@
+
+
+
+
+
+.styled-button {
+    background-color: var(--blue);
+    color: var(--cream);
+    border-style: none;
+    border-radius: 25rem;
+    height: 7vh;
+    width: 8vw;
+    transition: all 0.5s;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: .02rem;
+    cursor: pointer;
+    flex-grow: 1;
+  
+  }
+  
+  .styled-button:hover {
+  background-color: #3683d058;
+  color: var(--blue);
+  }
+
+  
+@media screen and (max-width:767px) {
+    .styled-button {
+      flex-grow: 1;
+      width: 100%;
+    }
+
+  }

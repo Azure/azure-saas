@@ -1,0 +1,17 @@
+{
+    "items" : [
+        { "name" : "Blue Band", "amount" : 600 },
+        { "name" : "Indomie", "amount" : 50 },
+        { "name" : "Biscuits", "amount" : 40 },
+        { "name" : "Rice 1KG", "amount" : 260 },
+        { "name" : "Mumias Sugar 1KG", "amount" : 250 },
+        { "name" : "Cake", "amount" : 600 },
+        { "name" : "Drinking Chocolate", "amount" : 250 },
+        { "name" : "Minute Maid", "amount" : 200 }
+    ],
+    "tableFields" : [
+        "New" , "Item", "Quantity", "OUM", "Unit Cost", "Extended Cost", "Tax Code", "Tax Rate",
+        "Tax Amount", "Discount Type", "Supplier Cost", "Discount Rate", "Discount Amount", "Line Total"
+    ]
+
+}
