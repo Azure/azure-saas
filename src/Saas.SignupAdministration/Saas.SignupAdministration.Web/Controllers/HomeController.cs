@@ -23,7 +23,8 @@ public class HomeController : Controller
         _applicationUser = applicationUser;
         _antiforgery = antiforgery;
         _configuration = configuration;
-        baseUrl = _configuration.GetSection("AppSettings:developmentUrl").Value;
+        baseUrl = _configuration.GetSection("AppSettings:developmentUrl").Value ??
+            throw new ApplicationException("Base url cannot be null");
     }
 
     [HttpGet]

@@ -33,9 +33,6 @@ public class OnboardingWorkflowItem
     [JsonProperty(PropertyName = SR.OnboardingWorkflowStateProperty)]
     public OnboardingWorkflowState.States CurrentWorkflowState { get; set; }
 
-    [JsonProperty(PropertyName = SR.OnboardingWorkflowTenantRouteNameProperty)]
-    public string TenantRouteName { get; set; } = string.Empty;
-
 
     /// <summary>
     /// Start of custom defined fields

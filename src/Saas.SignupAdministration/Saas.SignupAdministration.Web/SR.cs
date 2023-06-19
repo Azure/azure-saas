@@ -77,7 +77,6 @@ public static class SR
     public const string OnboardingWorkflowStateProperty = "state";
     public const string OnboardingWorkflowEmailAddressProperty = "emailAddress";
     public const string OnboardingWorkflowOrganizationNameProperty = "organizationName";
-    public const string OnboardingWorkflowTenantRouteNameProperty = "tenantRouteName";
     public const string OnboardingWorkflowStateCurrentStateProperty = "currentState";
     public const string OnboardingWorkflowIsActiveProperty = "isActive";
     public const string OnboardingWorkflowIsCancelledProperty = "isCancelled";
