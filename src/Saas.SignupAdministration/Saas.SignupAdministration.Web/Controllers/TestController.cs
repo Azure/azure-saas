@@ -109,11 +109,99 @@ public class TestController : ControllerBase
         return bookings;
     }
 
+    private Booking GetBookingById(string databaseName, int id)
+    {
+        Booking booking = null;
+        var sqlConnectionString = _config.GetRequiredSection(SqlOptions.SectionName)
+      .Get<SqlOptions>()?.IbizzSaasConnectionString
+          ?? throw new NullReferenceException("SQL Connection string cannot be null.");
+
+        string mask = "iBusinessSaasTests";
+        sqlConnectionString = sqlConnectionString.Replace(mask, databaseName);
+
+        using (SqlConnection con = new SqlConnection(sqlConnectionString))
+        {
+            con.Open();
+
+            using (SqlCommand command = new SqlCommand("getBookingByID", con))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("bookingId", SqlDbType.Int).Value = id;
+
+                    while (reader.Read())
+                    {
+                        booking = (new Booking
+                        {
+                            BookingId = reader.GetInt64(0),
+                            ExternalSchemeAdmin = reader.GetString(1),
+                            CourseDate = reader.GetString(2),
+                            BookingType = reader.GetString(3),
+                            RetirementSchemeName = reader.GetString(4),
+                            SchemePosition = reader.GetString(5),
+                            TrainingVenue = reader.GetString(6),
+                            PaymentMode = reader.GetString(7),
+                            AdditionalRequirements = reader.GetString(8),
+                            UserId = reader.GetInt64(9),
+                            DisabilityStatus = reader.GetString(18),
+                            Email = reader.GetString(11),
+                            EmployerName = reader.GetString(15),
+                            Experience = reader.GetInt32(16),
+                            FullName = reader.GetString(10),
+                            IdNumber = reader.GetString(19),
+                            PhysicalAddress = reader.GetString(12),
+                            Position = reader.GetString(17),
+                            Telephone = reader.GetString(13),
+                            OriginCountry = reader.GetString(14)
+
+                        });
+                    }
+
+                    reader.Close();
+                }
+            }
+        }
+
+        return booking;
+    }
+
+
     // GET api/<TestController>/5
     [HttpGet("{id}")]
-    public string Get(int id)
+    public async Task<ActionResult<Booking>> Get(int id)
     {
-        return "value";
+        TenantDTO? tenant = _persistenceProvider.Retrieve<TenantDTO>(_applicationUser.EmailAddress);
+
+        if (tenant == null)
+        {
+            //Retreieve from database
+            if (!Guid.TryParse(User?.GetNameIdentifierId(), out var userId))
+            {
+                throw new InvalidOperationException("The the User Name Identifier must be a Guid.");
+            }
+            var tenants = await _adminServiceClient.TenantsAsync(userId);
+            Console.WriteLine("Count of tenants is " + userId);
+            if (tenants.Count < 1)  //Zero tenants
+            {
+                return BadRequest();
+            }
+            tenant = tenants.ElementAt(0);
+
+            if (tenant.IsDbReady)//Persist only when db is ready
+                _persistenceProvider.Persist(_applicationUser.EmailAddress, tenant);
+        }
+
+        if (tenant.IsDbReady)
+        {
+            //Add booking
+            GetBooking(tenant.DatabaseName);
+
+            return new JsonResult(GetBookingById(tenant.DatabaseName, id));
+        }
+
+
+        return BadRequest();
     }
 
     // POST api/<TestController>
