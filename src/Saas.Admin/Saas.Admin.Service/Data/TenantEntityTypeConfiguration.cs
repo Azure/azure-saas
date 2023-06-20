@@ -8,8 +8,6 @@ public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
     public void Configure(EntityTypeBuilder<Tenant> builder)
     {
 
-        builder.HasIndex(t => t.Route).IsUnique(true);
-
         builder.Property(t => t.CreatedDate)
             .IsRequired()
             .HasDefaultValue(DateTime.UtcNow)
@@ -26,6 +24,11 @@ public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
 
         builder.Property(t => t.ConcurrencyToken)
             .IsConcurrencyToken();
+
+        builder.Property(t => t.SqlServerRegion)
+           .IsRequired()
+           .HasDefaultValue("default")
+           .ValueGeneratedOnAdd();
     }
 
     public void Configure(EntityTypeBuilder<UserTenant> builder)

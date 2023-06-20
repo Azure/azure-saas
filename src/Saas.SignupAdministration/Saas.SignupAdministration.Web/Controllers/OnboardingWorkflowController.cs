@@ -29,14 +29,13 @@ public class OnboardingWorkflowController : ControllerBase
             return BadRequest("Cannot process your request");
         try
         {
-            if (await _onboardingWorkflow.GetRouteExistsAsync(organization.TenantRouteName))
-            {
-                return BadRequest("Organization route name used is already taken");
-            }
+            //if (await _onboardingWorkflow.GetRouteExistsAsync(organization.TenantRouteName))
+            //{
+            //    return BadRequest("Organization route name used is already taken");
+            //}
 
             _onboardingWorkflow.OnboardingWorkflowItem.OrganizationName = organization.OrganizationName;
             _onboardingWorkflow.OnboardingWorkflowItem.CategoryId = organization.CategoryId;
-            _onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName = organization.TenantRouteName;
             _onboardingWorkflow.OnboardingWorkflowItem.ProductId = organization.ProductTierId;
             _onboardingWorkflow.OnboardingWorkflowItem.Answer = organization.Answer;
             _onboardingWorkflow.OnboardingWorkflowItem.Question = organization.Question;
@@ -48,7 +47,7 @@ public class OnboardingWorkflowController : ControllerBase
             await DeployTenantAsync();
 
             ///Change to created at action 
-            return Created("/onboarding", _onboardingWorkflow.OnboardingWorkflowItem);
+            return Created("api/onboarding", _onboardingWorkflow.OnboardingWorkflowItem);
 
         }
         catch 
@@ -62,7 +61,7 @@ public class OnboardingWorkflowController : ControllerBase
         //return new JsonResult(new {message = "success"});
     }
 
-    [HttpGet("/onboarding")]
+    [HttpGet("api/onboarding")]
     public IActionResult Tenantinfo()
     {
         return Ok(_onboardingWorkflow.OnboardingWorkflowItem);
@@ -74,7 +73,7 @@ public class OnboardingWorkflowController : ControllerBase
     /// </summary>
     /// <param name="tn">Suggested tenant name</param>
     /// <returns>true or false depending on the availability</returns>
-    [HttpGet("/Onboarding/tenants/name-avail")]
+    [HttpGet("api/Onboarding/tenants/name-avail")]
     public async Task<IActionResult> CheckTenantName(string tn)
     {
         bool isTenantNameAvailable = await _onboardingWorkflow.GetRouteExistsAsync(tn);
@@ -100,9 +99,9 @@ public class OnboardingWorkflowController : ControllerBase
     {
         var action = SR.OrganizationNameAction;
 
-        if (!String.IsNullOrEmpty(_onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName))
-            action = SR.ServicePlansAction;
-        else if (_onboardingWorkflow.OnboardingWorkflowItem.CategoryId > 0)
+        //if (!String.IsNullOrEmpty(_onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName))
+        //    action = SR.ServicePlansAction;
+         if (_onboardingWorkflow.OnboardingWorkflowItem.CategoryId > 0)
             action = SR.TenantRouteNameAction;
 
         return action;
@@ -121,8 +120,6 @@ public class NewOnboardingItem
 
     //Industry
     public int CategoryId { get; set; }
-
-    public string TenantRouteName { get; set; } = string.Empty;
 
     public int ProductTierId { get; set; }
 

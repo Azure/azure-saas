@@ -31,7 +31,6 @@ public class NewTenantRequest
         Tenant tenant = new Tenant()
         {
             Company = Name,
-            Route = Route,
             CreatedUser = CreatorEmail,
             UpdatedUser = CreatorEmail,
             ConcurrencyToken = null,

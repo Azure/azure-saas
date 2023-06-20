@@ -1,0 +1,57 @@
+{
+    "header" : "Get started with iBusiness today",
+    "subheader" : "iBusiness is built to visualize your entire organization with a click. Get started today to enjoy features such as:",
+    "functions" : [
+        "Company definition and cost centers",
+        "Create users and employees",
+        "Define your accounts and ledgers",
+        "Manage inventory transactions",
+        "Manage procure to pay processes",
+        "Manage order to cash processes",
+        "Generate reports and analytics"
+    ],
+    "s_subheader" : "Enter your information here",
+    "btn_text" : "Submit",
+    "fields" : [
+        {
+            "type":"text",
+            "name":"fullName",
+            "placeholder":"Full Name"
+        },
+        {
+            "type":"text",
+            "name":"userName",
+            "placeholder":"Username"
+        },
+        {
+            "type":"email",
+            "name":"email",
+            "placeholder":"Email"
+        },
+        {
+            "type":"text",
+            "name":"telephone",
+            "placeholder":"Telephone"
+        },
+        {
+            "type":"text",
+            "name":"physicalAddress",
+            "placeholder":"Physical Address"
+        },
+        {
+            "type":"text",
+            "name":"originCountry",
+            "placeholder":"Origin Country"
+        },
+        {
+            "type":"password",
+            "name":"password",
+            "placeholder":"Password"
+        },
+        {
+            "type":"password",
+            "name":"confirmPassword",
+            "placeholder":"Confirm Password"
+        }
+    ] 
+}

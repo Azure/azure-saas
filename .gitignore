@@ -18,7 +18,6 @@
 mono_crash.*
 #Ignore this file and React file
 .gitignore
-ClientApp/
 .json
 
 # Certs

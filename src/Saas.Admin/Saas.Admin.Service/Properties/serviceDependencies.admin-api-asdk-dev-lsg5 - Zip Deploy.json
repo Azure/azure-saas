@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "apis1": {
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/rg-asdk-dev-lsg5/apis/rg-asdk-dev-lsg5",
-      "type": "apis.azure"
-    }
-  }
-}

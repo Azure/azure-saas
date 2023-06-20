@@ -23,7 +23,8 @@ public class HomeController : Controller
         _applicationUser = applicationUser;
         _antiforgery = antiforgery;
         _configuration = configuration;
-        baseUrl = _configuration.GetSection("AppSettings:developmentUrl").Value;
+        baseUrl = _configuration.GetSection("AppSettings:developmentUrl").Value ??
+            throw new ApplicationException("Base url cannot be null");
     }
 
     [HttpGet]
@@ -103,8 +104,19 @@ public class HomeController : Controller
     public IActionResult GetCsrfToken()
     {
         string? csrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
-      
+        string cookie = _antiforgery.GetTokens(HttpContext).CookieToken
+            ?? throw new BadHttpRequestException("Anti-forgery cookie cannot be null");
 
+        HttpContext.Response.Cookies.Append(
+            SR.CookieName, cookie,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                Path = "/", // Set the desired cookie path
+                SameSite = SameSiteMode.Lax
+            }
+            );
 
         return new JsonResult(new {token = csrf_token});
 

@@ -12,12 +12,14 @@ public class TenantService : ITenantService
     private readonly TenantsContext _context;
     private readonly IPermissionsServiceClient _permissionService;
     private readonly ILogger _logger;
+    private readonly IConfiguration _config;
 
-    public TenantService(TenantsContext tenantContext, IPermissionsServiceClient permissionService, ILogger<TenantService> logger)
+    public TenantService(TenantsContext tenantContext, IPermissionsServiceClient permissionService, ILogger<TenantService> logger, IConfiguration config)
     {
         _context = tenantContext;
         _permissionService = permissionService;
         _logger = logger;
+        _config = config;
     }
 
     public async Task<IEnumerable<TenantDTO>> GetAllTenantsAsync()
@@ -97,7 +99,7 @@ public class TenantService : ITenantService
             await _permissionService.AddNewTenantAsync(tenant.Guid, adminId);
 
             //Complete with db provision. Using a task.
-            Task task = ProvisionTenantDBAsync(tenant.Route, tenant);
+            Task task = SetUpTenantDBAsync(tenant);
         }
         catch (Exception ex)
         {
@@ -151,33 +153,136 @@ public class TenantService : ITenantService
 
     public async Task<TenantInfoDTO> GetTenantInfoByRouteAsync(string route)
     {
-        var tenant = await _context.Tenants.FirstOrDefaultAsync(x =>
-            route != null
-            && x.Route.Length == route.Length
-            && EF.Functions.Like(x.Route, $"%{route}%"));
-        TenantInfoDTO returnValue = new(tenant);
-        return returnValue;
+        throw new NotImplementedException();
+        //var tenant = await _context.Tenants.FirstOrDefaultAsync(x =>
+        //    route != null
+        //    && x.Route.Length == route.Length
+        //    && EF.Functions.Like(x.Route, $"%{route}%"));
+        //TenantInfoDTO returnValue = new(tenant);
+        //return returnValue;
     }
 
     public async Task<bool> CheckPathExists(string path)
     {
-        try
-        {
-            bool exists = await _context.Tenants.AnyAsync(t => string.Equals(t.Route, path));
-            return exists;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error while checking for valid path");
-            throw;
-        }
+        throw new NotImplementedException();
+        //try
+        //{
+        //    bool exists = await _context.Tenants.AnyAsync(t => string.Equals(t.Route, path));
+        //    return exists;
+        //}
+        //catch (Exception ex)
+        //{
+        //    _logger.LogError(ex, "Error while checking for valid path");
+        //    throw;
+        //}
     }
 
-    private async Task ProvisionTenantDBAsync(string dbname, Tenant tenant)
+
+    /// <summary>
+    /// Used to map a user tenant to an SQL server in specific region
+    /// Called after a tenant is onboarded. that is, their information is captured to catalog
+    /// Once done, it calls provision user database for
+    /// Given it's intesity it should not be waited
+    /// </summary>
+    /// <param name="tenant"></param>
+    /// <returns></returns>
+    private async Task SetUpTenantDBAsync(Tenant tenant)
+    {
+        string connectionString = _context.Database.GetConnectionString();
+        try
+        {
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                if (con.State != ConnectionState.Open)
+                {
+                    await con.OpenAsync();
+                }
+
+                using (SqlCommand commad = new SqlCommand("spSetUpTenanatDb", con))
+                {
+                    commad.CommandType = CommandType.StoredProcedure;
+
+                    commad.Parameters.AddWithValue("country", SqlDbType.NVarChar).Value = tenant.Country;
+
+                    using (SqlDataReader reader = await commad.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            tenant.SqlServerRegion = reader.GetString(0);
+                            tenant.DatabaseName = reader.GetString(1);
+                        }
+                    }
+                }
+            }
+
+
+            //Ensure that dbname and regions are set before exiting
+            if (string.IsNullOrEmpty(tenant.DatabaseName) || string.IsNullOrEmpty(tenant.SqlServerRegion))
+            {
+                throw new Exception("Cannot provision a database when database name is empty or null");
+            }
+
+            //provision db then tenant initialization complete
+            //if success provision user database
+            bool result = await ProvisionTenantDBAsync(tenant);
+
+            if (result)//Update tenant db initilization complete
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    if (con.State != ConnectionState.Open)
+                    {
+                        await con.OpenAsync();
+                    }
+                    using (SqlCommand commad = new SqlCommand("spUpateTenantDatabase", con))
+                    {
+                        commad.CommandType = CommandType.StoredProcedure;
+
+                        commad.Parameters.AddWithValue("databaseName", SqlDbType.NVarChar).Value = tenant.DatabaseName;
+                        commad.Parameters.AddWithValue("sqlregion", SqlDbType.NVarChar).Value = tenant.SqlServerRegion;
+                        commad.Parameters.AddWithValue("tenantId", SqlDbType.UniqueIdentifier).Value = tenant.Guid;
+
+                        using (SqlDataReader reader = await commad.ExecuteReaderAsync())
+                        {
+                            reader.Read();
+
+                            //Get return value
+                            int responseId = reader.GetInt32(0);
+
+                            if (responseId == 1)
+                            {
+                                _logger.LogInformation("Done DB initialization");
+                            }
+                        }
+                    }
+
+                }
+               
+            }
+        }
+        catch(SqlException ex)
+        {
+            _logger.LogError("Error provision user database with error " + ex.Message);
+
+        }catch(Exception ex)
+        {
+            _logger.LogError("Error provision user database with error " + ex.Message);
+        }
+
+    }
+
+    private async Task<bool> ProvisionTenantDBAsync(Tenant tenant)
     {
         int responseId = 0;
 
-        using (SqlConnection con = new SqlConnection(_context.Database.GetConnectionString()))
+        //Get Region connection string
+        string regionConString = _config.GetSection("RegionsConStrings")?.Get<Dictionary<string, string>>()?[tenant.SqlServerRegion??""]??string.Empty;
+        if (string.IsNullOrEmpty(regionConString))
+        {
+            throw new ArgumentNullException("Region cannot be null");
+        }
+
+        using (SqlConnection con = new SqlConnection(regionConString))
         {
             if (con.State != ConnectionState.Open)
             {
@@ -187,8 +292,7 @@ public class TenantService : ITenantService
             {
                 commad.CommandType = CommandType.StoredProcedure;
 
-                commad.Parameters.AddWithValue("databaseName", SqlDbType.NVarChar).Value = dbname;
-                commad.Parameters.AddWithValue("tenantId", SqlDbType.UniqueIdentifier).Value = tenant.Guid;
+                commad.Parameters.AddWithValue("databaseName", SqlDbType.NVarChar).Value = tenant.DatabaseName;
 
                 commad.CommandTimeout = 120;
 
@@ -199,40 +303,19 @@ public class TenantService : ITenantService
                     //Get return value
                     responseId = reader.GetInt32(0);
 
-                    if (responseId == 1)
-                    {
-                        dbname = reader.GetString(1);
-                        _logger.LogInformation("Done DB initialization");
-                    }
                 }
 
                 if(responseId == 1)//Update tenant id
                 {
-                    commad.CommandText = "spUpateTenantDatabase";
-                    commad.Parameters.Clear();
-                    commad.Parameters.AddWithValue("databaseName", SqlDbType.NVarChar).Value = dbname;
-                    commad.Parameters.AddWithValue("tenantId", SqlDbType.UniqueIdentifier).Value = tenant.Guid;
-                    using (SqlDataReader reader = await commad.ExecuteReaderAsync())
-                    {
-                        reader.Read();
-
-                        //Get return value
-                        int res = reader.GetInt32(0);
-
-                        if (res == 1)
-                        {
-                            _logger.LogInformation("Set up complete");
-                        }
-                    }
+                    _logger.LogInformation("Done DB initialization");
+                    return true;
                 }
                 else
                 {
-                    throw new Exception($"You {tenant.Company} of route {tenant.Route} database could not be provision");
+                    throw new Exception($"You {tenant.Company} of database {tenant.DatabaseName} in the region{tenant.SqlServerRegion} could not be provision");
                 }
                 
             }
-
-           await con.CloseAsync();
 
         }
        

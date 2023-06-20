@@ -211,6 +211,7 @@ public class TestController : ControllerBase
         List<Booking> bookings = new();
 
         TenantDTO? tenant = _persistenceProvider.Retrieve<TenantDTO>(_applicationUser.EmailAddress);
+        List<Product> products = new List<Product>();
 
         if(tenant == null)
         {
@@ -258,6 +259,7 @@ public class TestController : ControllerBase
 
         return new JsonResult(bookings);
 
+        return new JsonResult(products);
     }
 
     private void CreateBooking(Booking booking, string databaseName)
@@ -312,6 +314,15 @@ public class TestController : ControllerBase
         string accessToken = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
         string? id = User.GetNameIdentifierId();
         return new JsonResult(new {accessToken, id});
+    }
+
+    [HttpPost]
+    [Route("/posttest")]
+    [ValidateAntiForgeryToken]
+    public string PostTest([FromForm]string abc)
+    {
+        
+        return "Your response " + abc;
     }
 
     // DELETE api/<TestController>/5

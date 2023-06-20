@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --blue: #0088ff;
+  --bluehover : #0267c1;
+  --buttonblue: #0088ff;
+  --darkblue: #1063b3;
+  --grey: #575757;
+  --maroon: #0267c1;
+  --black: rgb(0, 0, 0);
+  --cream: #f9fcfe;
+  --bgColor: #006FC9;
+
+}
+
+.notfound-header {
+  font-size: 5rem;
+  margin: 0;
+}
+
+#summary {
+  padding-left: 10px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+#submitButton {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  border-radius: 0%;
+  height: 28px;
+  cursor: pointer;
+  font-size: 12px;
+  gap: 4px;
+  border: none;
+  padding: 0px 16px;
+  width: fit-content;
+  background-color: white;
+  color: #0176d3;
+}
+
+#onBoardingButton {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  border-radius: 2px;
+  border: none;
+  height: 28px;
+  cursor: pointer;
+  font-size: 12px;
+  gap: 4px;
+  border: none;
+  padding: 8px 16px;
+  width: fit-content;
+  color: white;
+  background-color: #0176d3;
+}
+
+#submitButton:hover{
+  background-color: #e5e7eb;
+}
+
+.notfound-text {
+  font-size: 2rem;
+}
+
+.notfound-header {
+  color: var(--maroon);
+}
+
+.notfound-text {
+  color: var(--blue);
+}
+
+
+.scrollbar-hide::-webkit-scrollbar {
+    width: 0;
+    background-color: #fff;
+    display: hidden;
+
+}
+
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    background-color: #f3f3f3;
+    transition: all 0.5ms;
+    display: hidden;
+
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* DataGrid Styling */
+#bookingGrid{
+  height: 75vh;
+  font-size: 0.7rem !important;
+}
+
+#orderGrid{
+  height: 50vh;
+  border-style: solid;
+  margin-top: 1rem;
+  font-size: 0.7rem !important;
+}
+
+.dx-datagrid-headers {
+    background-color: #489AEE !important;
+    color:#fff !important;
+    font-weight: 500 !important;
+}
+
+.dx-overlay-content .dx-popup-normal {
+  height: 20vh !important;
+  width: 20vw !important;
+}
+
+/* Context Menu */
+
+.dx-context-menu {
+  background-color: #f2f2f2;
+}
+
+.dx-menu-item-text {
+  font-size: 12px;
+  color: #0176d3;
+  font-weight: 500;
+}
+
+.dx-context-menu-item-content {
+  padding: 8px;
+}
+.dx-menu-item-content > .dx-icon{
+  color: #0176d3;
+  font-weight: 500;
+}
+
+.dx-menu-item-content:hover .dx-menu-item-text {
+  background-color: #f3f3f3;
+}
+
+
+/* DX FOr Styling */
+.dx-form{
+  
+    padding: 10px!important;
+}
+
+.form-heading{
+  background: rgb(0,111,201);
+background: linear-gradient(90deg, rgba(0,111,201,1) 0%, rgba(59,150,221,1) 84%, rgba(72,154,238,1) 100%);
+}
+
+ /* .dx-texteditor-input-container .dx-texteditor-input {
+  display: flex;
+  align-items: center;
+  background-color: red;
+  padding: 0;
+  margin: 0;
+} 
+
+
+
+ .dx-texteditor-input-container {
+  display: flex;
+  align-items: center;
+    border: none;
+    border: 1px solid #489AEE;
+  }
+   */
+ 
+  @media screen and (min-width:1500px){
+    #orderGrid{
+      height: 45vh;
+    }
+  }
+
+
+  @media screen and (max-width:767px){
+    .dx-field-item{
+      display: flex;
+      flex-direction: column;
+    }
+    #bookingGrid{
+      height: 60vh;
+    
+    }
+
+    #orderGrid{
+      height: 40vh;
+    }
+   
+}
+  @media screen and (max-width:480px){
+   
+    #bookingGrid{
+      height: 70vh;
+    
+    }
+   
+}

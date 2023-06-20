@@ -10,7 +10,7 @@ using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Admin.Client;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-
+using Microsoft.Net.Http.Headers;
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
@@ -102,11 +102,11 @@ builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
 //CSRF/XSRF
 builder.Services.AddAntiforgery(options =>
 {
-    //Explicity specify 
-    options.Cookie.Name = "cr_cookie";
+     //Explicity specify 
+    options.Cookie.Name = SR.CookieName;
 
-    options.FormFieldName = "csrf-token";
-    options.HeaderName = "X-Csrf-Token";
+    options.FormFieldName = SR.FormFieldName;
+    options.HeaderName = SR.HeaderName;
     options.SuppressXFrameOptionsHeader = false;
 });
 
@@ -127,7 +127,17 @@ builder.Services.AddSaasWebAppAuthentication(
     fullyQualifiedScopes,
     options =>
     {
-       
+        options.Events = new OpenIdConnectEvents
+        {
+            OnRedirectToIdentityProviderForSignOut = async context =>
+            {
+                // Set the desired post-logout redirect URI
+                context.ProtocolMessage.PostLogoutRedirectUri = "https://signupadmin-app-asdk-dev-lsg5.azurewebsites.net/account/logout";
+
+                await Task.FromResult(0);
+            }
+        };
+
         builder.Configuration.Bind(AzureB2CSignupAdminOptions.SectionName, options);
         options.Events = new OpenIdConnectEvents
         {
@@ -203,8 +213,17 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseRouting();
+app.UseStaticFiles();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        // Set cache control header to no-cache
+        ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=25920");
+    }
+});
 app.UseSession();
 // app.UseForwardedHeaders();
 app.UseCookiePolicy(new CookiePolicyOptions
@@ -215,14 +234,15 @@ app.UseCookiePolicy(new CookiePolicyOptions
 app.UseAuthentication();
 app.UseAuthorization();
 
-//Maps first react pages before loading other web endpoints
-app.MapFallbackToFile("index.html");
+app.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
+
+//Only loaded once all other controller endpoints have been exhausted
+app.MapFallbackToFile("indexv1.html");
 
 app.MapControllerRoute(
     name: "Admin",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-app.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
 
 //To be replaced for react
 //app.MapRazorPages();

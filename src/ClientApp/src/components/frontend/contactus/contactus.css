@@ -1,0 +1,47 @@
+.address-body {
+    padding: 0 2rem 0 2rem;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    text-align: center;
+    
+}
+
+.adr-head {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: .7rem;
+    color: var(--blue);
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+
+.adr-subtext {
+    color: rgb(66, 66, 66);
+    font-size: 1rem;
+    font-weight: 450;
+}
+
+
+.support-information {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.support-info-header .support-info-header-title {
+    font-size: 2rem;
+    color: var(--blue);
+    font-weight: 600;
+}
+
+.support-info-header .support-info-header-subtitle {
+    font-size: 1.5rem;
+    color: var(--bluehover);
+}
