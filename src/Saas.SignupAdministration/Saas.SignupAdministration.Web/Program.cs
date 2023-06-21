@@ -10,7 +10,6 @@ using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Admin.Client;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Net.Http.Headers;
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
@@ -62,17 +61,16 @@ builder.Services.Configure<AzureB2CSignupAdminOptions>(
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(SR.EmailOptionsProperty));
 
-builder.Services.Configure<CosmosEndpointURI>(
-    builder.Configuration.GetRequiredSection(CosmosEndpointURI.SectionName));
+//Cosmos DB options
+builder.Services.Configure<CosmosDbOptions>(configureOptions =>
+{
+    
+    configureOptions.PrimaryKey = builder.Configuration[CosmosDbOptions.PrimaryKeySN];
+    configureOptions.IBusinessContainerId = builder.Configuration[CosmosDbOptions.IBusinessContainerIdSN];
+    configureOptions.EndpointURI = builder.Configuration[CosmosDbOptions.EndpointURISN];
+    configureOptions.IBusinessDatabaseId = builder.Configuration[CosmosDbOptions.IBusinessDatabaseIdSN];
+});
 
-builder.Services.Configure<CosmosPrimaryKey>(
-    builder.Configuration.GetRequiredSection(CosmosPrimaryKey.SectionName));
-
-builder.Services.Configure<IBusinessDatabaseId>(
-    builder.Configuration.GetRequiredSection(IBusinessDatabaseId.SectionName));
-
-builder.Services.Configure<IBusinessContainerId>(
-    builder.Configuration.GetRequiredSection(IBusinessContainerId.SectionName));
 // Add the workflow object
 builder.Services.AddScoped<OnboardingWorkflowService, OnboardingWorkflowService>();
 
@@ -176,6 +174,8 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(10);
 });
 
+builder.Services.AddControllers();
+
 builder.Services.AddControllersWithViews()
     .AddMicrosoftIdentityUI();
 
@@ -213,17 +213,29 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseRouting();
-app.UseStaticFiles();
 
+app.UseRouting();
 app.UseStaticFiles(new StaticFileOptions
 {
     OnPrepareResponse = ctx =>
     {
-        // Set cache control header to no-cache
-        ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=25920");
+        //Prevent caching root index file
+        // Prevent caching for specific file extensions
+        if (ctx.File.Name == "index.html")
+        {
+            ctx.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+            ctx.Context.Response.Headers.Add("Pragma", "no-cache");
+            ctx.Context.Response.Headers.Add("Expires", "0");
+        }
+        else//Cache the rest for a max of one day
+        {
+            // Set cache control header to no-cache
+            ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=86400");
+        }
+
     }
 });
+
 app.UseSession();
 // app.UseForwardedHeaders();
 app.UseCookiePolicy(new CookiePolicyOptions
@@ -234,18 +246,14 @@ app.UseCookiePolicy(new CookiePolicyOptions
 app.UseAuthentication();
 app.UseAuthorization();
 
+
 app.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
+app.MapControllers();
+
 
 //Only loaded once all other controller endpoints have been exhausted
-app.MapFallbackToFile("indexv1.html");
+app.MapFallbackToFile("index.html");
 
-app.MapControllerRoute(
-    name: "Admin",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-
-//To be replaced for react
-//app.MapRazorPages();
 
 AppHttpContext.Services = ((IApplicationBuilder)app).ApplicationServices;
 

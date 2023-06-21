@@ -14,4 +14,7 @@ public record SqlOptions
     //test sql connection string
     public string? ClientContection { get; init; }
 
+    //Azure regions
+    public string? NorthCentalUS { get; init; }
+
 }

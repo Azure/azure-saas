@@ -20,9 +20,13 @@
 
   <ItemGroup>
     <Compile Remove="Data\**" />
+    <Compile Remove="wwwroot\assets\**" />
     <Content Remove="Data\**" />
+    <Content Remove="wwwroot\assets\**" />
     <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="wwwroot\assets\**" />
     <None Remove="Data\**" />
+    <None Remove="wwwroot\assets\**" />
 	
   </ItemGroup>
 
@@ -42,10 +46,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.4" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
 
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\assets\images\favicon\" />
   </ItemGroup>
 
   <ItemGroup>

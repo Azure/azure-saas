@@ -6,8 +6,8 @@ using System.Data;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Saas.SignupAdministration.Web.Controllers;
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 [Authorize]
 public class TestController : ControllerBase
 {
@@ -29,6 +29,24 @@ public class TestController : ControllerBase
         _tokenAcquisition = tokenAcquisition;
         _userBookingService = userBookingService;
         _scopes = scopes.Value.Scopes ?? throw new ArgumentNullException($"Scopes must be defined.");
+    }
+
+    [HttpGet]
+    [Route("claims")]
+    public JsonResult ClaimsCheck()
+    {
+        int count = User.Claims.Count();
+
+        IDictionary<string, string> claims = new Dictionary<string, string>();
+
+        int se = 0;
+
+        foreach (var item in User.Claims)
+        {
+            claims.Add(item.Type + se++, item.Value);
+        }
+
+        return new JsonResult(new { count, claims});
     }
     // GET: api/<TestController>
     [HttpGet]

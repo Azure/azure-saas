@@ -188,7 +188,7 @@ public class TenantService : ITenantService
     /// <returns></returns>
     private async Task SetUpTenantDBAsync(Tenant tenant)
     {
-        string connectionString = _context.Database.GetConnectionString();
+        string connectionString = _context.Database.GetConnectionString()??string.Empty;
         try
         {
             using (SqlConnection con = new SqlConnection(connectionString))
@@ -202,7 +202,7 @@ public class TenantService : ITenantService
                 {
                     commad.CommandType = CommandType.StoredProcedure;
 
-                    commad.Parameters.AddWithValue("country", SqlDbType.NVarChar).Value = tenant.Country;
+                    commad.Parameters.AddWithValue("timezone", SqlDbType.NVarChar).Value = tenant.TimeZone;
 
                     using (SqlDataReader reader = await commad.ExecuteReaderAsync())
                     {

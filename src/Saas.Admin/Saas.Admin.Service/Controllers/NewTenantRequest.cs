@@ -52,7 +52,6 @@ public class NewTenantRequest
 
             //Update the remaining user info
             value.Question = Question;
-            value.Answer = Answer;
             userInfo = value;
         } 
     }
