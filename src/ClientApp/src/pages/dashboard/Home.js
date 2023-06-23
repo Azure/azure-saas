@@ -4,7 +4,6 @@ import Statusbar from "../../components/dashboard/Statusbar";
 import MenuButtonsGroup from "../../components/dashboard/MenuButtonsGroup";
 import { homeMenuSource } from "../../data/menu";
 import MobileMenus from "../../components/dashboard/MobileMenus";
-import { Link } from "react-router-dom";
 
 // Get todays day to use in the filter date fields of the datagrid
 const today = new Date().toISOString().slice(0, 10);
@@ -93,8 +92,7 @@ const Home = () => {
         <section className="mt-5">
           <h1 className="font-bold text-2xl md:text-3xl  text-headingBlue">
             Home page
-            </h1>
-            <Link to="/dashboard/products">View Products</Link>
+          </h1>
         </section>
       </section>
 

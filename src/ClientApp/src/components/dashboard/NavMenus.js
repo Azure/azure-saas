@@ -13,7 +13,6 @@ const NavMenus = () => {
 
   const handleLogOut = () => {
     dispatch(logout());
-    window.location = "/MicrosoftIdentity/Account/SignOut"
   };
 
   const handleClick = (link) => {

@@ -12,17 +12,17 @@ const DropDownMenu = () => {
             </h1>
             {link.submenu && (
               <section>
-                <section className="absolute top-9  z-50 hidden  group-hover:block hover:block">
-                  <article className="bg-bgDropDown rounded-md px-5  shadow-xl">
+                <section className="absolute top-9 z-50 hidden group-hover:block hover:block">
+                  <article className="bg-bgDropDown rounded-md w-[180px] shadow-xl">
                     {link.sublinks.map((mysublinks) => (
                       <div
                         key={mysublinks.Head}
-                        className="flex flex-col mt-2 justify-between"
+                        className="flex w-full flex-col mt-2 justify-between"
                       >
                         {mysublinks.sublink.map((slink) => (
                           <li
                             key={slink.name}
-                            className="text-xs flex gap-1 items-center text-dropDown py-2.5 hover:bg-bgxxLight"
+                            className="text-xs w-full flex justify-center gap-1 items-center text-dropDown py-2.5 hover:bg-bgxxLight"
                             onClick={() => handleExporting(slink.name)}
                           >
                             {slink.icon} {slink.name}

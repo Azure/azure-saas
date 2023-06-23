@@ -1,5 +1,6 @@
 import React from 'react'
 import { Copyright } from "../../components/frontend/copyright/Copyright";
+import notfound from "../../data/notfound"
 
 export const NotFound = () => {
   return (
@@ -12,8 +13,8 @@ export const NotFound = () => {
           alignItems: 'center'
 
       }}>
-          <p className='notfound-header'>404</p>
-          <p className='notfound-text'>Page not found</p>
+          <p className='notfound-header'>{notfound.code}</p>
+          <p className='notfound-text'>{notfound.text}</p>
       
       </div>
       <Copyright />

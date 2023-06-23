@@ -25,11 +25,12 @@ import { getCurrentUser } from "../../services/userService";
 import { getCRSFToken } from "../../helpers/auth";
 import OnboardingService from "../../axios/onboardingRequest";
 import Constant from "../../utils/constant";
+import ianasqltimezones from "../../data/ianasqltimezones";
+import onboardingText from "../../data/onboarding"
 
 const Onboarding = () => {
   const [isOpen, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [industry, setIndustry] = useState(
     "Accounting, finance, banking, insuarance"
   );
@@ -38,13 +39,12 @@ const Onboarding = () => {
   );
   // eslint-disable-next-line
   const [categoryId, setCategoryId] = useState(null);
-
   const [employees, setEmployees] = useState(0);
 
   const [selectedTimezone, setSelectedTimezone] = useState(
     "E. Africa Standard Time"
   );
-  const [tenantRouteName, setTenantRouteName] = useState("");
+
   const [timeZone, setTimezone] = useState("E. Africa Standard Time");
   const [onboardingQuestions, setOnboardingQuestions] = useState("");
   const [country, setCountry] = useState("Kenya");
@@ -53,20 +53,31 @@ const Onboarding = () => {
     "Standard (Ksh10,000, Free 14 Days Trial)"
   );
   // eslint-disable-next-line
-  const [servicePlanNumber, setServicePlanNumber] = useState(null);
+  const [servicePlanNumber, setServicePlanNumber] = useState(7);
 
   const [organizationName, setOrganizationName] = useState("");
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     getCRSFToken();
+    getCurrentTimezone();
   }, []);
 
   useEffect(() => {
     getCurrentUser(dispatch);
   }, [dispatch]);
+
+  const getCurrentTimezone = () => {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const currentZone = ianasqltimezones.filter((a) => {
+      return a.ianaTimezone === timeZone;
+    });
+    const sqlZone = timezonesComplete.filter(
+      (tz) => tz.value === currentZone[0].sqlTimeZone
+    );
+    return setSelectedTimezone(sqlZone[0].text);
+  };
 
   // Set the industry for the organisation according to what the user selects
   const handleIndustrySelection = (category) => {
@@ -84,7 +95,6 @@ const Onboarding = () => {
   const handleTimeZone = (selectedTimeZone) => {
     const allTimezones = timezoneService.getAllTimezones();
     allTimezones.filter((timezone) => {
-      // Check the changes below
       if (timezone.text === selectedTimeZone) {
         setSelectedTimezone(timezone.text);
         setTimezone(timezone.value);
@@ -94,12 +104,10 @@ const Onboarding = () => {
     });
   };
 
-  // Submit the tenant info to be processed and added to the database
   const onboardingFormData = {
     organizationName,
     categoryId,
     noofEmployees: employees,
-    tenantRouteName,
     country,
     profession,
     timeZone,
@@ -136,10 +144,10 @@ const Onboarding = () => {
         <section className="w-full md:w-[50%] mx-auto">
           <article className="mb-5">
             <h1 className="font-bold text-2xl md:text-3xl mb-1 text-headingBlue">
-              Welcome to the onboarding process
+              {onboardingText.header.title}
             </h1>
             <p className="font-semibold text-gray-700">
-              Just a few steps to set you up
+              {onboardingText.header.subtitle}
             </p>
           </article>
           <article>
@@ -153,11 +161,10 @@ const Onboarding = () => {
                     className="text-lg text-gray-800 font-medium"
                     htmlFor="organizationName"
                   >
-                    What is your organization's name?
+                    {onboardingText.fields.organizationName.title}
                   </label>
                   <span className="text-xs">
-                    The name should be the name of your business, brand or
-                    organization. You can change this later.
+                    {onboardingText.fields.organizationName.subtitle}
                   </span>
                   <TextBox
                     placeholder="Type here.."
@@ -177,12 +184,10 @@ const Onboarding = () => {
                     className="text-lg text-gray-800 font-medium"
                     htmlFor="organizationCategory"
                   >
-                    In what industry is your organization?
+                    {onboardingText.fields.industry.title}
                   </label>
                   <span className="text-xs">
-                    Identifying your industry will help people find you in
-                    search results. Choose the closest one - you can update it
-                    later.
+                    {onboardingText.fields.industry.subtitle}
                   </span>
                   <SelectBox
                     dataSource={industryOptions}
@@ -200,11 +205,10 @@ const Onboarding = () => {
                     className="text-lg text-gray-800 font-medium"
                     htmlFor="employees"
                   >
-                    How many employees are in your organization?
+                    {onboardingText.fields.employeeNumber.title}
                   </label>
                   <span className="text-xs">
-                    The number of employees in your business, would determine
-                    the tier to choose. You can change this later.
+                    {onboardingText.fields.employeeNumber.subtitle}
                   </span>
                   <NumberBox
                     id="employees"
@@ -226,12 +230,10 @@ const Onboarding = () => {
                     className="text-lg text-gray-800 font-medium"
                     htmlFor="organizationCategory"
                   >
-                    What is your profession?
+                    {onboardingText.fields.jobTitle.title}
                   </label>
                   <span className="text-xs">
-                    Identifying your industry will help people find you in
-                    search results. Choose the closest one - you can update it
-                    later.
+                    {onboardingText.fields.jobTitle.subtitle}
                   </span>
                   <SelectBox
                     dataSource={professionalOptions}
@@ -244,40 +246,16 @@ const Onboarding = () => {
                     className="border pl-1 text-center w-full md:w-[70%] lg:w-[80%] outline-none"
                   />
                 </div>
-                <div className="flex justify-between box-border flex-col gap-1  w-full mb-2">
-                  <label
-                    className="text-lg text-gray-800 font-medium"
-                    htmlFor="tenantRouteName"
-                  >
-                    Please choose a name for your custom Tenant Route
-                  </label>
-                  <span className="text-xs">
-                    Choose a unique route to use when accessing your tenant. You
-                    can change this later.
-                  </span>
-                  <TextBox
-                    placeholder="Type here.."
-                    onValueChanged={(e) => setTenantRouteName(e.value)}
-                    value={tenantRouteName}
-                    height={30}
-                    style={{ fontSize: "12px" }}
-                    className=" border pl-1 text-center w-full md:w-[70%] lg:w-[80%] outline-none"
-                  >
-                    <Validator>
-                      <RequiredRule message="Organisation name is required" />
-                    </Validator>
-                  </TextBox>
-                </div>
+
                 <div className="flex justify-between box-border flex-col gap-1  w-full mb-2">
                   <label
                     className="text-lg text-gray-800 font-medium"
                     htmlFor="question"
                   >
-                    Please choose a country where your organisation is based.
+                    {onboardingText.fields.countryBased.title}
                   </label>
                   <span className="text-xs">
-                    Choose a country where your organisation is situated. You
-                    can change this later.
+                    {onboardingText.fields.countryBased.subtitle}
                   </span>
                   <SelectBox
                     dataSource={countriesOptions}
@@ -295,11 +273,10 @@ const Onboarding = () => {
                     className="text-lg text-gray-800 font-medium"
                     htmlFor="question"
                   >
-                    Please choose question category
+                    {onboardingText.fields.verificationQn.title}
                   </label>
                   <span className="text-xs">
-                    Choose any security question that is suitable for you. You
-                    can change this later.
+                    {onboardingText.fields.verificationQn.subtitle}
                   </span>
                   <SelectBox
                     dataSource={onboardingQuestionsOptions}
@@ -317,11 +294,10 @@ const Onboarding = () => {
                     className="text-lg text-gray-800 font-medium"
                     htmlFor="organizationName"
                   >
-                    What is your answer to the question you have selected?
+                    {onboardingText.fields.verificationAns.title}
                   </label>
                   <span className="text-xs">
-                    The answer should be familiar to you and would not be hard
-                    to remember.
+                    {onboardingText.fields.verificationAns.subtitle}
                   </span>
                   <TextBox
                     placeholder="Type here.."
@@ -341,10 +317,10 @@ const Onboarding = () => {
                     className="text-lg text-gray-800 font-medium"
                     htmlFor="organizationCategory"
                   >
-                    Choose your time zone
+                    {onboardingText.fields.timezoneSelector.title}
                   </label>
                   <span className="text-xs">
-                    You can set your preffered timezone here.
+                    {onboardingText.fields.timezoneSelector.subtitle}
                   </span>
                   <SelectBox
                     dataSource={timezonesOptions}
@@ -362,11 +338,10 @@ const Onboarding = () => {
                     className="text-lg   text-gray-800 font-medium"
                     htmlFor="originCountry"
                   >
-                    Select your subscription plan
+                    {onboardingText.fields.subscriptionSelector.title}
                   </label>
                   <span className="text-xs">
-                    Get to choose a preffered package here according to your
-                    needs.
+                    {onboardingText.fields.subscriptionSelector.subtitle}
                   </span>
                   <SelectBox
                     dataSource={servicePlanOptions}
@@ -384,7 +359,7 @@ const Onboarding = () => {
                 <Button id="onBoardingButton" useSubmitBehavior={true}>
                   {" "}
                   <FcAddDatabase className="text-white" fontSize={20} />
-                  Submit
+                  {onboardingText.fields.submitBtn.text}
                 </Button>
               </article>
             </form>
@@ -394,7 +369,7 @@ const Onboarding = () => {
       <Portal isOpen={isOpen} setOpen={setOpen}>
         <section className="bg-white w-full md:w-[600px]  mx-auto p-5 h-20 gap-2 rounded-sm flex flex-col items-center justify-center">
           <h2 className="text-lg">
-            Please wait as we process your information.
+            {onboardingText.fields.onSubmitting.text}
           </h2>
           {loading && <LoadingIndicator />}
         </section>
@@ -404,6 +379,7 @@ const Onboarding = () => {
 };
 
 const timezonesOptions = timezoneService.getTimezoneText();
+const timezonesComplete = timezoneService.getAllTimezones();
 const countriesOptions = services.getCountries();
 
 export default Onboarding;

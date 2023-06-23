@@ -40,5 +40,6 @@
                 "icon" : "https://ibusiness.azurewebsites.net/bst/images/flaticon/svg/005-brochure.svg"
             }
             
-            ]
+        ],
+        "mainBtn": "Get started"
 }

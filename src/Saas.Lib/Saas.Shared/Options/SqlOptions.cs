@@ -3,6 +3,7 @@
 public record SqlOptions
 {
     public const string SectionName = "Sql";
+    public const string DefaultDb = "IbizzSaasConnectionString";
 
     public string? SQLAdministratorLoginName { get; init; }
     public string? TenantSQLConnectionString { get; init; }
@@ -10,9 +11,6 @@ public record SqlOptions
 
     //test sql connection string
     public string? IbizzSaasConnectionString { get; init; }
-
-    //test sql connection string
-    public string? ClientContection { get; init; }
 
     //Azure regions
     public string? NorthCentalUS { get; init; }

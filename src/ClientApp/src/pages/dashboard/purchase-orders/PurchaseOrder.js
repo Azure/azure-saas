@@ -40,6 +40,7 @@ export const PurchaseOrder = ({ orderstate }) => {
     if (orderstate === 0) {
       async function getData() {
         try {
+          setMessage("Checking for pending orders...")
           const response = await request.get(
             `/PurchaseOrder/getorderitems?userid=${currentUser?.email}`
           );
@@ -54,12 +55,15 @@ export const PurchaseOrder = ({ orderstate }) => {
             setFormUpdateData(response.data.orderInformation[0]);
           }
           data.reload();
+          setMessage()
         } catch (e) {
           console.log(e);
+          setMessage("Unable to fetch pending orders.")
         }
       }
       getData();
     } else if (orderstate === 1) {
+      setMessage("Fetching order...")
       const getUpdateData = async () => {
         try {
           const response = await request.get(
@@ -72,8 +76,10 @@ export const PurchaseOrder = ({ orderstate }) => {
           setFormUpdateData(response.data.formInfo);
           setUpdateData({ ...updateData, formData: response.data.formInfo });
           setOrder(response.data.formInfo.orderNumber);
+          setMessage("Fetching order...")
         } catch (e) {
           console.log(e);
+          setMessage("An error occured. Please refresh the page.")
         }
       };
 
@@ -197,7 +203,6 @@ export const PurchaseOrder = ({ orderstate }) => {
       </section>
       <div id="confirm-modal" className="po-modal">
         <div className="po-modal-content">
-          <div className="po-modal-header"></div>
           <div className="po-modal-body">
             <p>{modalmessage}</p>
           </div>

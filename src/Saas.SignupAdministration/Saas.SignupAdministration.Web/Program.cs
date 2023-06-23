@@ -61,6 +61,10 @@ builder.Services.Configure<AzureB2CSignupAdminOptions>(
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(SR.EmailOptionsProperty));
 
+//Sql options
+builder.Services.Configure<SqlOptions>(
+            builder.Configuration.GetRequiredSection(SqlOptions.SectionName));
+
 //Cosmos DB options
 builder.Services.Configure<CosmosDbOptions>(configureOptions =>
 {

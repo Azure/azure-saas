@@ -301,6 +301,8 @@ const cities = [
 
 const bookingType = ["First Time", "Retake", "Resit"];
 
+const salesPaymentMode = ["Not Paid", "Paid"];
+
 const paymentMode = ["Cheque", "Cash", "Electronic Funds Transfer"];
 
 const disabilityStatus = ["Disabled", "Not Disabled"];
@@ -340,6 +342,9 @@ const services = {
   },
   getCallCenters() {
     return costCenterNames;
+  },
+  getSalesPaymentMode() {
+    return salesPaymentMode;
   },
 };
 

@@ -6,32 +6,30 @@ import DataGrid, {
   FilterRow,
   FilterPanel,
   FilterBuilderPopup,
-  SearchPanel,
   Editing,
   Toolbar,
   Item,
   Selection,
   Export,
+  Column,
 } from "devextreme-react/data-grid";
-import { ContextMenu } from "devextreme-react/context-menu";
 import {
   getDataGridRef,
   handleExporting,
 } from "../../helpers/datagridFunctions";
+import { Link } from "react-router-dom";
 
 const DataTable = ({
   data,
   startEdit,
-  setRowClickItem,
   columns,
+  route,
   keyExpr,
   loading,
   openConfirmationPopup,
   filterValues,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
-
-  const [contextMenuCoords, setContextMenuCoords] = useState({ x: 0, y: 0 });
 
   const dataGridRef = useRef(null);
 
@@ -48,11 +46,6 @@ const DataTable = ({
       });
     }
   }
-
-  const handleContextMenu = (e) => {
-    e.preventDefault();
-    setContextMenuCoords({ x: e.clientX, y: e.clientY });
-  };
 
   const handleContextMenuPreparing = (e) => {
     if (e.row && e.row.rowType === "data") {
@@ -96,6 +89,19 @@ const DataTable = ({
     }
   };
 
+  const handleHyperlinkClick = (e) => {
+    e.target.style.color = "white";
+  };
+
+  const handleFocusedRowChanging = (e) => {
+    const prevRow = e.component.getRowElement(e.prevRowIndex);
+    const newRow = e.component.getRowElement(e.newRowIndex);
+    prevRow[0].children[0].children[0].children[0].children[0].style.color =
+      "#489AEE";
+    newRow[0].children[0].children[0].children[0].children[0].style.color =
+      "white";
+  };
+
   const filterBuilder = {
     logic: "and",
     filters: filterValues.map(([field, operator, value]) => ({
@@ -108,20 +114,20 @@ const DataTable = ({
   return (
     <main>
       <DataGrid
-        id="bookingGrid"
-        className={"dx-card wide-card"}
+        id="dataTableGrid"
         dataSource={data}
-        columns={columns}
-        onContextMenu={handleContextMenu}
         onContextMenuPreparing={(e) => {
           handleContextMenuPreparing(e);
         }}
-        showBorders={false}
+        showBorders={true}
+        showColumnLines={true}
+        showRowLines={false}
         filterBuilder={filterBuilder}
         hoverStateEnabled={true}
         keyExpr={keyExpr}
         focusedRowEnabled={true}
-        onRowClick={(e) => setRowClickItem(e)}
+        onFocusedRowChanging={(e) => handleFocusedRowChanging(e)}
+        // onRowClick={(e) => setRowClickItem(e)}
         onRowDblClick={(e) => startEdit(e)}
         allowColumnReordering={true}
         allowColumnResizing={true}
@@ -137,6 +143,45 @@ const DataTable = ({
         }}
         onContentReady={onContentReady}
       >
+        {columns.map((column) => (
+          <Column
+            dataField={column.dataField}
+            key={column.dataField}
+            alignment="left"
+            cellRender={
+              column?.pk === true
+                ? (data) => {
+                    return (
+                      <div
+                        data-row-key={data.key}
+                        data-column-index={data.columnIndex}
+                      >
+                        <Link to={`/dashboard/${route}/${data.row.key}/view`}>
+                          <span
+                            onClick={(e) => handleHyperlinkClick(e, data)}
+                            className="pk-hyperlink"
+                          >
+                            {data.value}
+                          </span>
+                        </Link>
+                      </div>
+                    );
+                  }
+                : (data) => {
+                    return (
+                      <div
+                        data-row-key={data.key}
+                        data-column-index={data.columnIndex}
+                      >
+                        {data.value}
+                      </div>
+                    );
+                  }
+            }
+            width={column.width}
+            visible={true}
+          />
+        ))}
         <Export
           enabled={true}
           formats={exportFormats}
@@ -144,10 +189,9 @@ const DataTable = ({
         />
         <Editing mode="row" />
         <Selection mode="none" />
-        <Toolbar>
+        <Toolbar visible={false}>
           <Item name="groupPanel" />
           <Item name="columnChooserButton" />
-          <Item name="searchPanel" />
         </Toolbar>
         <FilterRow visible={true} />
         <FilterPanel visible={true} />
@@ -156,21 +200,13 @@ const DataTable = ({
           height={"50vh"}
           width={"50vw"}
         />
-
-        <SearchPanel visible={true} />
-        <Paging defaultPageSize={10} />
+        <Paging defaultPageSize={50} />
         <Pager
           showPageSizeSelector={true}
           showInfo={true}
           allowedPageSizes={pageSizes}
         />
       </DataGrid>
-      {contextMenuCoords && (
-        <ContextMenu
-          coords={contextMenuCoords}
-          onHiding={() => setContextMenuCoords(null)}
-        />
-      )}
     </main>
   );
 };
