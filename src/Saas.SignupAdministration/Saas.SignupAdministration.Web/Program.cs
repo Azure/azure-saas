@@ -62,17 +62,17 @@ builder.Services.Configure<AzureB2CSignupAdminOptions>(
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(SR.EmailOptionsProperty));
 
-builder.Services.Configure<CosmosEndpointURI>(
-    builder.Configuration.GetRequiredSection(CosmosEndpointURI.SectionName));
+//builder.Services.Configure<CosmosEndpointURI>(
+//    builder.Configuration.GetRequiredSection(CosmosEndpointURI.SectionName));
 
-builder.Services.Configure<CosmosPrimaryKey>(
-    builder.Configuration.GetRequiredSection(CosmosPrimaryKey.SectionName));
+//builder.Services.Configure<CosmosPrimaryKey>(
+//    builder.Configuration.GetRequiredSection(CosmosPrimaryKey.SectionName));
 
-builder.Services.Configure<IBusinessDatabaseId>(
-    builder.Configuration.GetRequiredSection(IBusinessDatabaseId.SectionName));
+//builder.Services.Configure<IBusinessDatabaseId>(
+//    builder.Configuration.GetRequiredSection(IBusinessDatabaseId.SectionName));
 
-builder.Services.Configure<IBusinessContainerId>(
-    builder.Configuration.GetRequiredSection(IBusinessContainerId.SectionName));
+//builder.Services.Configure<IBusinessContainerId>(
+//    builder.Configuration.GetRequiredSection(IBusinessContainerId.SectionName));
 // Add the workflow object
 builder.Services.AddScoped<OnboardingWorkflowService, OnboardingWorkflowService>();
 
@@ -237,7 +237,7 @@ app.UseAuthorization();
 app.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
 
 //Only loaded once all other controller endpoints have been exhausted
-app.MapFallbackToFile("indexv1.html");
+//app.MapFallbackToFile("indexv1.html");
 
 app.MapControllerRoute(
     name: "Admin",
