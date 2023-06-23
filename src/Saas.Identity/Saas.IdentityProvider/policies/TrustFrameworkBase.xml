@@ -163,14 +163,14 @@
       </ClaimType>
 
       <ClaimType Id="displayName">
-        <DisplayName>Display Name</DisplayName>
+        <DisplayName>Full name</DisplayName>
         <DataType>string</DataType>
         <DefaultPartnerClaimTypes>
           <Protocol Name="OAuth2" PartnerClaimType="unique_name" />
           <Protocol Name="OpenIdConnect" PartnerClaimType="name" />
           <Protocol Name="SAML2" PartnerClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name" />
         </DefaultPartnerClaimTypes>
-        <UserHelpText>Your display name.</UserHelpText>
+        <UserHelpText>Your full names.</UserHelpText>
         <UserInputType>TextBox</UserInputType>
       </ClaimType>
 
@@ -202,6 +202,7 @@
           <Protocol Name="SAML2" PartnerClaimType="http://schemas.microsoft.com/identity/claims/userprincipalname" />
         </DefaultPartnerClaimTypes>
         <UserHelpText>Your user name as stored in the Azure Active Directory.</UserHelpText>
+        <UserInputType>TextBox</UserInputType>
       </ClaimType>
 
       <ClaimType Id="upnUserName">
@@ -285,7 +286,6 @@
         <UserHelpText>Your surname (also known as family name or last name).</UserHelpText>
         <UserInputType>TextBox</UserInputType>
       </ClaimType>
-
     </ClaimsSchema>
 
     <ClaimsTransformations>
@@ -338,7 +338,7 @@
       </ContentDefinition>
 
       <ContentDefinition Id="api.idpselections.signup">
-        <LoadUri>~/tenant/templates/AzureBlue/idpSelector.cshtml</LoadUri>
+        <LoadUri>https://stasdkdevlsg5.blob.core.windows.net/ibizzauthpages/customize-ui.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:contract:providerselection:1.2.1</DataUri>
         <Metadata>
@@ -348,7 +348,7 @@
       </ContentDefinition>
 
       <ContentDefinition Id="api.signuporsignin">
-        <LoadUri>~/tenant/templates/AzureBlue/unified.cshtml</LoadUri>
+        <LoadUri>https://stasdkdevlsg5.blob.core.windows.net/ibizzauthpages/customize-ui.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:contract:unifiedssp:2.1.5</DataUri>
         <Metadata>
@@ -357,7 +357,7 @@
       </ContentDefinition>
 
       <ContentDefinition Id="api.selfasserted">
-        <LoadUri>~/tenant/templates/AzureBlue/selfAsserted.cshtml</LoadUri>
+        <LoadUri>https://stasdkdevlsg5.blob.core.windows.net/ibizzauthpages/customize-ui.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:contract:selfasserted:2.1.7</DataUri>
         <Metadata>
@@ -366,7 +366,7 @@
       </ContentDefinition>
 
       <ContentDefinition Id="api.selfasserted.profileupdate">
-        <LoadUri>~/tenant/templates/AzureBlue/selfAsserted.cshtml</LoadUri>
+        <LoadUri>https://stasdkdevlsg5.blob.core.windows.net/ibizzauthpages/customize-ui.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:contract:selfasserted:2.1.7</DataUri>
         <Metadata>
@@ -375,7 +375,7 @@
       </ContentDefinition>
 
       <ContentDefinition Id="api.localaccountsignup">
-        <LoadUri>~/tenant/templates/AzureBlue/selfAsserted.cshtml</LoadUri>
+        <LoadUri>https://stasdkdevlsg5.blob.core.windows.net/ibizzauthpages/customize-ui.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:contract:selfasserted:2.1.7</DataUri>
         <Metadata>
@@ -384,7 +384,7 @@
       </ContentDefinition>
 
       <ContentDefinition Id="api.localaccountpasswordreset">
-        <LoadUri>~/tenant/templates/AzureBlue/selfAsserted.cshtml</LoadUri>
+        <LoadUri>https://stasdkdevlsg5.blob.core.windows.net/ibizzauthpages/customize-ui.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:contract:selfasserted:2.1.7</DataUri>
         <Metadata>
@@ -393,7 +393,7 @@
       </ContentDefinition>
 
       <ContentDefinition Id="api.localaccountsignin">
-        <LoadUri>~/tenant/templates/AzureBlue/selfAsserted.cshtml</LoadUri>
+        <LoadUri>https://stasdkdevlsg5.blob.core.windows.net/ibizzauthpages/customize-ui.html</LoadUri>
         <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
         <DataUri>urn:com:microsoft:aad:b2c:elements:contract:selfasserted:2.1.7</DataUri>
         <Metadata>
@@ -438,8 +438,6 @@
           <OutputClaims>
             <OutputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="oid" />
             <OutputClaim ClaimTypeReferenceId="tenantId" PartnerClaimType="tid" />
-            <OutputClaim ClaimTypeReferenceId="givenName" PartnerClaimType="given_name" />
-            <OutputClaim ClaimTypeReferenceId="surName" PartnerClaimType="family_name" />
             <OutputClaim ClaimTypeReferenceId="displayName" PartnerClaimType="name" />
             <OutputClaim ClaimTypeReferenceId="userPrincipalName" PartnerClaimType="upn" />
             <OutputClaim ClaimTypeReferenceId="authenticationSource" DefaultValue="localAccountAuthentication" />
@@ -484,14 +482,11 @@
             <PersistedClaim ClaimTypeReferenceId="passwordPolicies" DefaultValue="DisablePasswordExpiration" />
 
             <!-- Optional claims. -->
-            <PersistedClaim ClaimTypeReferenceId="givenName" />
-            <PersistedClaim ClaimTypeReferenceId="surname" />
           </PersistedClaims>
           <OutputClaims>
             <OutputClaim ClaimTypeReferenceId="objectId" />
             <OutputClaim ClaimTypeReferenceId="newUser" PartnerClaimType="newClaimsPrincipalCreated" />
             <OutputClaim ClaimTypeReferenceId="authenticationSource" DefaultValue="localAccountAuthentication" />
-            <OutputClaim ClaimTypeReferenceId="userPrincipalName" />
             <OutputClaim ClaimTypeReferenceId="signInNames.emailAddress" />
           </OutputClaims>
           <IncludeTechnicalProfile ReferenceId="AAD-Common" />
@@ -559,8 +554,6 @@
             <PersistedClaim ClaimTypeReferenceId="objectId" />
 
             <!-- Optional claims -->
-            <PersistedClaim ClaimTypeReferenceId="givenName" />
-            <PersistedClaim ClaimTypeReferenceId="surname" />
           </PersistedClaims>
           <IncludeTechnicalProfile ReferenceId="AAD-Common" />
         </TechnicalProfile>
@@ -581,8 +574,6 @@
             <OutputClaim ClaimTypeReferenceId="signInNames.emailAddress" />
             <OutputClaim ClaimTypeReferenceId="displayName" />
             <OutputClaim ClaimTypeReferenceId="otherMails" />
-            <OutputClaim ClaimTypeReferenceId="givenName" />
-            <OutputClaim ClaimTypeReferenceId="surname" />
           </OutputClaims>
           <IncludeTechnicalProfile ReferenceId="AAD-Common" />
         </TechnicalProfile>
@@ -606,8 +597,6 @@
 
             <!-- Optional claims. These claims are collected from the user and can be modified. Any claim added here should be updated in the
                  ValidationTechnicalProfile referenced below so it can be written to directory after being updated by the user, i.e. AAD-UserWriteProfileUsingObjectId. -->
-            <InputClaim ClaimTypeReferenceId="givenName" />
-            <InputClaim ClaimTypeReferenceId="surname" />
           </InputClaims>
           <OutputClaims>
             <!-- Required claims -->
@@ -615,8 +604,6 @@
 
             <!-- Optional claims. These claims are collected from the user and can be modified. Any claim added here should be updated in the
                  ValidationTechnicalProfile referenced below so it can be written to directory after being updated by the user, i.e. AAD-UserWriteProfileUsingObjectId. -->
-            <OutputClaim ClaimTypeReferenceId="givenName" />
-            <OutputClaim ClaimTypeReferenceId="surname" />
           </OutputClaims>
           <ValidationTechnicalProfiles>
             <ValidationTechnicalProfile ReferenceId="AAD-UserWriteProfileUsingObjectId" />
@@ -643,23 +630,10 @@
             <InputClaim ClaimTypeReferenceId="email" />
           </InputClaims>
           <OutputClaims>
-            <OutputClaim ClaimTypeReferenceId="objectId" />
             <OutputClaim ClaimTypeReferenceId="email" PartnerClaimType="Verified.Email" Required="true" />
-            <OutputClaim ClaimTypeReferenceId="newPassword" Required="true" />
-            <OutputClaim ClaimTypeReferenceId="reenterPassword" Required="true" />
-            <OutputClaim ClaimTypeReferenceId="executed-SelfAsserted-Input" DefaultValue="true" />
-            <OutputClaim ClaimTypeReferenceId="authenticationSource" />
-            <OutputClaim ClaimTypeReferenceId="newUser" />
 
             <!-- Optional claims, to be collected from the user -->
-            <OutputClaim ClaimTypeReferenceId="displayName" />
-            <OutputClaim ClaimTypeReferenceId="givenName" />
-            <OutputClaim ClaimTypeReferenceId="surName" />
           </OutputClaims>
-          <ValidationTechnicalProfiles>
-            <ValidationTechnicalProfile ReferenceId="AAD-UserWriteUsingLogonEmail" />
-          </ValidationTechnicalProfiles>
-          <UseTechnicalProfileForSessionManagement ReferenceId="SM-AAD" />
         </TechnicalProfile>
 
         <!-- This technical profile uses a validation technical profile to authenticate the user. -->

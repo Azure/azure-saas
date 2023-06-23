@@ -1,49 +1,402 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<TrustFrameworkPolicy 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
-  PolicySchemaVersion="0.3.0.0" 
-  TenantId="{Settings:Tenant}" 
-  PolicyId="B2C_1A_TrustFrameworkExtensions" 
-  PublicPolicyUri="http://{Settings:Tenant}/B2C_1A_TrustFrameworkExtensions">
-  
+﻿<TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="{Settings:Tenant}" PolicyId="B2C_1A_TrustFrameworkExtensions" PublicPolicyUri="http://{Settings:Tenant}/B2C_1A_TrustFrameworkExtensions" TenantObjectId="78efba5c-2036-4f8d-a59d-e2531da9a187">
   <BasePolicy>
     <TenantId>{Settings:Tenant}</TenantId>
     <PolicyId>B2C_1A_TrustFrameworkLocalization</PolicyId>
   </BasePolicy>
   <BuildingBlocks>
     <ClaimsSchema>
-       <ClaimType Id="permissions">
+      <ClaimType Id="permissions">
         <DisplayName>permissions</DisplayName>
         <DataType>stringCollection</DataType>
         <UserInputType>Readonly</UserInputType>
       </ClaimType>
-       <ClaimType Id="roles">
+      <ClaimType Id="roles">
         <DisplayName>roles</DisplayName>
         <DataType>stringCollection</DataType>
         <UserInputType>Readonly</UserInputType>
       </ClaimType>
+      <!-- For Microsoft authentication -->
+      <ClaimType Id="issuerUserId">
+        <DisplayName>Username</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText/>
+        <UserInputType>TextBox</UserInputType>
+        <Restriction>
+          <Pattern RegularExpression="^[a-zA-Z0-9]+[a-zA-Z0-9_-]*$" HelpText="The username you provided is not valid. It must begin with an alphabet or number and can contain alphabets, numbers and the following symbols: _ -" />
+        </Restriction>
+      </ClaimType>
+      <ClaimType Id="alternativeSecurityId">
+        <DisplayName>AlternativeSecurityId</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText/>
+        <UserInputType>TextBox</UserInputType>
+      </ClaimType>
+      <!-- Microsoft mostly use email for preferred_username -->
+      <ClaimType Id="preferred_username">
+        <DisplayName>Email Address</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>Email address that can be used to contact you.</UserHelpText>
+        <UserInputType>TextBox</UserInputType>
+      </ClaimType>
+      <ClaimType Id="mobilePhone">
+        <DisplayName>Phone number</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>Owner's phone number.</UserHelpText>
+      </ClaimType>
+      <ClaimType Id="strongAuthenticationEmailAddress">
+        <DisplayName>Email address</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText>Your email address</UserHelpText>
+      </ClaimType>
+      <ClaimType Id="readOnlyEmail">
+        <DisplayName>Email Address</DisplayName>
+        <DataType>string</DataType>
+        <UserHelpText/>
+        <UserInputType>Readonly</UserInputType>
+      </ClaimType>
+
+
+      <!-- End -->
+
+      <ClaimType Id="mobile">
+        <DisplayName>Phone number</DisplayName>
+        <DataType>string</DataType>
+        <DefaultPartnerClaimTypes>
+          <Protocol Name="OAuth2" PartnerClaimType="telephone" />
+          <Protocol Name="OpenIdConnect" PartnerClaimType="telephone" />
+          <Protocol Name="SAML2" PartnerClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/telephone" />
+        </DefaultPartnerClaimTypes>
+        <UserHelpText>Your telephone number.</UserHelpText>
+        <UserInputType>TextBox</UserInputType>
+      </ClaimType>
+      <!--claims for refresh token revocation-->
+      <ClaimType Id="refreshTokenIssuedOnDateTime">
+        <DisplayName>refreshTokenIssuedOnDateTime</DisplayName>
+        <DataType>string</DataType>
+        <AdminHelpText>Used to determine if the user should be permitted to reauthenticate silently via their existing refresh token.</AdminHelpText>
+        <UserHelpText>Used to determine if the user should be permitted to reauthenticate silently via their existing refresh token.</UserHelpText>
+      </ClaimType>
+
+      <ClaimType Id="refreshTokensValidFromDateTime">
+        <DisplayName>refreshTokensValidFromDateTime</DisplayName>
+        <DataType>string</DataType>
+        <AdminHelpText>Used to determine if the user should be permitted to reauthenticate silently via their existing refresh token.</AdminHelpText>
+        <UserHelpText>Used to determine if the user should be permitted to reauthenticate silently via their existing refresh token.</UserHelpText>
+      </ClaimType>
     </ClaimsSchema>
+    
+    <ClaimsTransformations>
+      <ClaimsTransformation Id="CreateOtherMailsFromEmail" TransformationMethod="AddItemToStringCollection">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="email" TransformationClaimType="item" />
+          <InputClaim ClaimTypeReferenceId="otherMails" TransformationClaimType="collection" />
+        </InputClaims>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="otherMails" TransformationClaimType="collection" />
+        </OutputClaims>
+      </ClaimsTransformation>
 
+      <ClaimsTransformation Id="CreateRandomUPNUserName" TransformationMethod="CreateRandomString">
+        <InputParameters>
+          <InputParameter Id="randomGeneratorType" DataType="string" Value="GUID" />
+        </InputParameters>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="upnUserName" TransformationClaimType="outputClaim" />
+        </OutputClaims>
+      </ClaimsTransformation>
+
+      <ClaimsTransformation Id="CreateUserPrincipalName" TransformationMethod="CopyClaim">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="preferred_username" TransformationClaimType="inputClaim" />
+        </InputClaims>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="userPrincipalName" TransformationClaimType="outputClaim" />
+        </OutputClaims>
+      </ClaimsTransformation>
+
+      <ClaimsTransformation Id="CreateAlternativeSecurityId" TransformationMethod="CreateAlternativeSecurityId">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="issuerUserId" TransformationClaimType="key" />
+          <InputClaim ClaimTypeReferenceId="identityProvider" TransformationClaimType="identityProvider" />
+        </InputClaims>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="alternativeSecurityId" TransformationClaimType="alternativeSecurityId" />
+        </OutputClaims>
+      </ClaimsTransformation>
+
+      <ClaimsTransformation Id="CreateSubjectClaimFromAlternativeSecurityId" TransformationMethod="CreateStringClaim">
+        <InputParameters>
+          <InputParameter Id="value" DataType="string" Value="Not supported currently. Use oid claim." />
+        </InputParameters>
+        <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="sub" TransformationClaimType="createdClaim" />
+        </OutputClaims>
+      </ClaimsTransformation>
+
+      <ClaimsTransformation Id="AssertAccountEnabledIsTrue" TransformationMethod="AssertBooleanClaimIsEqualToValue">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="accountEnabled" TransformationClaimType="inputClaim" />
+        </InputClaims>
+        <InputParameters>
+          <InputParameter Id="valueToCompareTo" DataType="boolean" Value="true" />
+        </InputParameters>
+      </ClaimsTransformation>
+
+      <ClaimsTransformation Id="CreateReadonlyEmailClaim" TransformationMethod="CopyClaim">
+          <InputClaims>
+              <InputClaim ClaimTypeReferenceId="email" TransformationClaimType="inputClaim"/>
+          </InputClaims>
+          <OutputClaims>
+              <OutputClaim ClaimTypeReferenceId="ReadOnlyEmail" TransformationClaimType="outputClaim"/>
+          </OutputClaims>
+      </ClaimsTransformation>
+
+      <!--claims transformation for refresh token revocation -->
+      <ClaimsTransformation Id="AssertRefreshTokenIssuedLaterThanValidFromDate" TransformationMethod="AssertDateTimeIsGreaterThan">
+        <InputClaims>
+          <InputClaim ClaimTypeReferenceId="refreshTokenIssuedOnDateTime" TransformationClaimType="leftOperand" />
+          <InputClaim ClaimTypeReferenceId="refreshTokensValidFromDateTime" TransformationClaimType="rightOperand" />
+        </InputClaims>
+        <InputParameters>
+          <InputParameter Id="AssertIfEqualTo" DataType="boolean" Value="false" />
+          <InputParameter Id="AssertIfRightOperandIsNotPresent" DataType="boolean" Value="true" />
+          <InputParameter Id="TreatAsEqualIfWithinMillseconds" DataType="int" Value="300000" />
+        </InputParameters>
+      </ClaimsTransformation>
+
+    </ClaimsTransformations>
+    <ContentDefinitions>
+      <ContentDefinition Id="api.socialccountsignup">
+        <LoadUri>https://stasdkdevlsg5.blob.core.windows.net/ibizzauthpages/customize-ui.html</LoadUri>
+        <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
+        <DataUri>urn:com:microsoft:aad:b2c:elements:contract:selfasserted:2.1.7</DataUri>
+        <Metadata>
+          <Item Key="DisplayName">Collect information from user page</Item>
+        </Metadata>
+      </ContentDefinition>
+    </ContentDefinitions>
   </BuildingBlocks>
-
   <ClaimsProviders>
-
-
+    <ClaimsProvider>
+      <Domain>live.com</Domain>
+      <DisplayName>Microsoft Account</DisplayName>
+      <TechnicalProfiles>
+        <TechnicalProfile Id="MSA-MicrosoftAccount-OpenIdConnect">
+          <DisplayName>Microsoft Account</DisplayName>
+          <Protocol Name="OpenIdConnect" />
+          <Metadata>
+            <Item Key="ProviderName">https://login.live.com</Item>
+            <Item Key="METADATA">https://login.live.com/.well-known/openid-configuration</Item>
+            <Item Key="response_types">code</Item>
+            <Item Key="response_mode">form_post</Item>
+            <Item Key="scope">openid email profile</Item>
+            <Item Key="HttpBinding">POST</Item>
+            <Item Key="UsePolicyInRedirectUri">false</Item>
+            <Item Key="client_id">{MSAuth app client id}</Item>
+          </Metadata>
+          <CryptographicKeys>
+            <Key Id="client_secret" StorageReferenceId="B2C_1A_MSASecret" />
+          </CryptographicKeys>
+          <OutputClaims>
+            <OutputClaim ClaimTypeReferenceId="issuerUserId" PartnerClaimType="oid" />
+            <OutputClaim ClaimTypeReferenceId="displayName" />
+            <OutputClaim ClaimTypeReferenceId="authenticationSource" DefaultValue="socialIdpAuthentication" />
+            <OutputClaim ClaimTypeReferenceId="identityProvider" PartnerClaimType="iss" />
+            <OutputClaim ClaimTypeReferenceId="email" PartnerClaimType="preferred_username" />
+            <OutputClaim ClaimTypeReferenceId="mobile" DefaultValue="" />
+          </OutputClaims>
+          <OutputClaimsTransformations>
+            <!-- <OutputClaimsTransformation ReferenceId="CreateRandomUPNUserName" /> -->
+            <!-- <OutputClaimsTransformation ReferenceId="CreateUserPrincipalName" /> -->
+            <OutputClaimsTransformation ReferenceId="CreateAlternativeSecurityId" />
+            <OutputClaimsTransformation ReferenceId="CreateSubjectClaimFromAlternativeSecurityId" />
+          </OutputClaimsTransformations>
+          <UseTechnicalProfileForSessionManagement ReferenceId="SM-SocialLogin" />
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
     <ClaimsProvider>
       <DisplayName>Local Account SignIn</DisplayName>
       <TechnicalProfiles>
-         <TechnicalProfile Id="login-NonInteractive">
+        <TechnicalProfile Id="login-NonInteractive">
           <Metadata>
-            <Item Key="client_id">{Settings:ProxyIdentityExperienceFrameworkAppId}</Item>
-            <Item Key="IdTokenAudience">{Settings:IdentityExperienceFrameworkAppId}</Item>
+            <Item Key="client_id">{client_id}</Item>
+            <Item Key="IdTokenAudience">{id_token_audience}</Item>
           </Metadata>
           <InputClaims>
             <InputClaim ClaimTypeReferenceId="signInName" PartnerClaimType="username" Required="true" />
-            <InputClaim ClaimTypeReferenceId="client_id" DefaultValue="{Settings:ProxyIdentityExperienceFrameworkAppId}" />
-            <InputClaim ClaimTypeReferenceId="resource_id" PartnerClaimType="resource" DefaultValue="{Settings:IdentityExperienceFrameworkAppId}" />
+            <InputClaim ClaimTypeReferenceId="client_id" DefaultValue="{client_id}" />
+            <InputClaim ClaimTypeReferenceId="resource_id" PartnerClaimType="resource" DefaultValue="{id_token_audience}" />
           </InputClaims>
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+    <ClaimsProvider>
+      <DisplayName>Local Account</DisplayName>
+      <TechnicalProfiles>
+        <!--Local account sign-up page-->
+        <TechnicalProfile Id="LocalAccountSignUpWithLogonEmail">
+          <OutputClaims>
+          <OutputClaim ClaimTypeReferenceId="email" PartnerClaimType="Verified.Email" Required="true" />
+          <!-- <OutputClaim ClaimTypeReferenceId="newPassword" Required="true" />
+          <OutputClaim ClaimTypeReferenceId="reenterPassword" Required="true" />
+          <OutputClaim ClaimTypeReferenceId="displayName" />
+          <OutputClaim ClaimTypeReferenceId="mobile"/> -->
+        </OutputClaims>
+      </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+    <ClaimsProvider>
+      <DisplayName>Azure Active Directory</DisplayName>
+      <TechnicalProfiles>
+        <TechnicalProfile Id="AAD-Common">
+          <Metadata>
+            <!--Insert b2c-extensions-app application ID here, for example: 11111111-1111-1111-1111-111111111111-->  
+            <Item Key="ClientId">{extensions_app_client_id}</Item>
+            <!--Insert b2c-extensions-app application ObjectId here, for example: 22222222-2222-2222-2222-222222222222-->
+            <Item Key="ApplicationObjectId">{extensions_app_object_id}</Item>
+          </Metadata>
+        </TechnicalProfile>
+        <!-- Technical profiles for social logins -->
+        <TechnicalProfile Id="AAD-UserWriteUsingAlternativeSecurityId">
+          <Metadata>
+            <Item Key="Operation">Write</Item>
+            <Item Key="RaiseErrorIfClaimsPrincipalAlreadyExists">true</Item>
+          </Metadata>
+          <IncludeInSso>false</IncludeInSso>
+          <InputClaimsTransformations>
+            <InputClaimsTransformation ReferenceId="CreateOtherMailsFromEmail" />
+          </InputClaimsTransformations>
+          <InputClaims>
+            <InputClaim ClaimTypeReferenceId="alternativeSecurityId" PartnerClaimType="alternativeSecurityId" Required="true" />
+          </InputClaims>
+          <PersistedClaims>
+            <!-- Required claims -->
+            <PersistedClaim ClaimTypeReferenceId="alternativeSecurityId" />
+            <!-- <PersistedClaim ClaimTypeReferenceId="userPrincipalName" /> -->
+            <PersistedClaim ClaimTypeReferenceId="displayName" DefaultValue="unknown" />
+            <PersistedClaim ClaimTypeReferenceId="mobile" DefaultValue="unknown" />
+            <PersistedClaim ClaimTypeReferenceId="email" PartnerClaimType="signInNames.emailAddress" />
+
+            <!-- Optional claims -->
+          </PersistedClaims>
+          <OutputClaims>
+            <OutputClaim ClaimTypeReferenceId="objectId" />
+            <OutputClaim ClaimTypeReferenceId="newUser" PartnerClaimType="newClaimsPrincipalCreated" />
+            <!-- The following other mails claim is needed for the case when a user is created, we get otherMails from directory. Self-asserted provider also has an
+                 OutputClaims, and if this is absent, Self-Asserted provider will prompt the user for otherMails. -->
+            <OutputClaim ClaimTypeReferenceId="otherMails" />
+            <OutputClaim ClaimTypeReferenceId="signInNames.emailAddress" />
+          </OutputClaims>
+          <IncludeTechnicalProfile ReferenceId="AAD-Common" />
+          <UseTechnicalProfileForSessionManagement ReferenceId="SM-AAD" />
+        </TechnicalProfile>
+        <TechnicalProfile Id="AAD-UserReadUsingAlternativeSecurityId">
+          <Metadata>
+            <Item Key="Operation">Read</Item>
+            <Item Key="RaiseErrorIfClaimsPrincipalDoesNotExist">true</Item>
+          </Metadata>
+          <InputClaims>
+            <InputClaim ClaimTypeReferenceId="alternativeSecurityId" PartnerClaimType="alternativeSecurityId" Required="true" />
+          </InputClaims>
+          <OutputClaims>
+            <!-- Required claims -->
+            <OutputClaim ClaimTypeReferenceId="objectId" />
+
+            <!-- Optional claims -->
+            <OutputClaim ClaimTypeReferenceId="signInNames.emailAddress" />
+            <OutputClaim ClaimTypeReferenceId="mobile" />
+            <OutputClaim ClaimTypeReferenceId="displayName" />
+
+          </OutputClaims>
+          <IncludeTechnicalProfile ReferenceId="AAD-Common" />
+        </TechnicalProfile>
+
+        <TechnicalProfile Id="AAD-UserReadUsingAlternativeSecurityId-NoError">
+          <Metadata>
+            <Item Key="RaiseErrorIfClaimsPrincipalDoesNotExist">false</Item>
+          </Metadata>
+          <IncludeTechnicalProfile ReferenceId="AAD-UserReadUsingAlternativeSecurityId" />
+        </TechnicalProfile>
+        <!-- Write data during a local account sign-up flow. -->
+        <TechnicalProfile Id="AAD-UserWriteUsingLogonEmail">
+          <PersistedClaims>
+            <PersistedClaim ClaimTypeReferenceId="mobile"/>
+            <!-- <PersistedClaim ClaimTypeReferenceId="extension_orgName" />
+            <PersistedClaim ClaimTypeReferenceId="extension_noOfEmployees" /> -->
+            
+          </PersistedClaims>
+        </TechnicalProfile>
+        <!-- Write data during edit profile flow. -->
+        <TechnicalProfile Id="AAD-UserWriteProfileUsingObjectId">
+          <PersistedClaims>
+            <PersistedClaim ClaimTypeReferenceId="mobile"/>
+            <!-- <PersistedClaim ClaimTypeReferenceId="extension_orgName" />
+            <PersistedClaim ClaimTypeReferenceId="extension_noOfEmployees" /> -->
+          </PersistedClaims>
+        </TechnicalProfile>
+        <!-- Read data after user resets the password. -->
+        <TechnicalProfile Id="AAD-UserReadUsingEmailAddress">
+          <OutputClaims>  
+            <OutputClaim ClaimTypeReferenceId="mobile"/>
+            <!-- <OutputClaim ClaimTypeReferenceId="extension_orgName" />
+            <OutputClaim ClaimTypeReferenceId="extension_noOfEmployees" /> -->
+          </OutputClaims>
+        </TechnicalProfile>
+        <!-- Read data after user authenticates with a local account. -->
+        <TechnicalProfile Id="AAD-UserReadUsingObjectId">
+          <OutputClaims>  
+            <OutputClaim ClaimTypeReferenceId="mobile" />
+            <!-- <OutputClaim ClaimTypeReferenceId="extension_orgName" />
+            <OutputClaim ClaimTypeReferenceId="extension_noOfEmployees" /> -->
+          </OutputClaims>
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
+        <ClaimsProvider>
+      <DisplayName>Session Management</DisplayName>
+      <TechnicalProfiles>
+        <TechnicalProfile Id="SM-Noop">
+          <DisplayName>Noop Session Management Provider</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.SSO.NoopSSOSessionProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+        </TechnicalProfile>
+
+        <TechnicalProfile Id="SM-AAD">
+          <DisplayName>Session Mananagement Provider</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.SSO.DefaultSSOSessionProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <PersistedClaims>
+            <PersistedClaim ClaimTypeReferenceId="objectId" />
+            <PersistedClaim ClaimTypeReferenceId="signInName" />
+            <PersistedClaim ClaimTypeReferenceId="authenticationSource" />
+            <PersistedClaim ClaimTypeReferenceId="identityProvider" />
+            <PersistedClaim ClaimTypeReferenceId="newUser" />
+            <PersistedClaim ClaimTypeReferenceId="executed-SelfAsserted-Input" />
+          </PersistedClaims>
+          <OutputClaims>
+            <OutputClaim ClaimTypeReferenceId="objectIdFromSession" DefaultValue="true" />
+          </OutputClaims>
+        </TechnicalProfile>
+
+        <!-- Profile name is being used to disambiguate AAD session between sign up and sign in -->
+        <TechnicalProfile Id="SM-SocialSignup">
+          <IncludeTechnicalProfile ReferenceId="SM-AAD" />
+        </TechnicalProfile>
+
+        <TechnicalProfile Id="SM-SocialLogin">
+          <DisplayName>Session Mananagement Provider</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.SSO.ExternalLoginSSOSessionProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="AlwaysFetchClaimsFromProvider">true</Item>
+          </Metadata>
+          <PersistedClaims>
+            <PersistedClaim ClaimTypeReferenceId="alternativeSecurityId" />
+          </PersistedClaims>
+        </TechnicalProfile>
+
+        <!-- Session management technical profile for OIDC based tokens -->
+        <TechnicalProfile Id="SM-jwt-issuer">
+          <DisplayName>Session Management Provider</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.SSO.OAuthSSOSessionProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
         </TechnicalProfile>
       </TechnicalProfiles>
     </ClaimsProvider>
@@ -55,19 +408,19 @@
           <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
           <Metadata>
             <!-- Set the ServiceUrl with your own REST API endpoint -->
-            <Item Key="ServiceUrl">{Settings:PermissionsAPIUrl}</Item>
+            <Item Key="ServiceUrl">{permissions_api_url}</Item>
             <Item Key="SendClaimsIn">Body</Item>
             <Item Key="AuthenticationType">ApiKeyHeader</Item>
             <Item Key="AllowInsecureAuthInProduction">false</Item>
           </Metadata>
           <CryptographicKeys>
-            <Key Id="x-api-key" StorageReferenceId="{Settings:RESTAPIKey}" />
+            <Key Id="x-api-key" StorageReferenceId="B2C_1A_RestApiKey" />
           </CryptographicKeys>
           <InputClaims>
             <!-- Claims sent to your REST API -->
             <InputClaim ClaimTypeReferenceId="objectId" />
-            <InputClaim ClaimTypeReferenceId="signInNames.emailAddress"/>
-             <InputClaim ClaimTypeReferenceId="client_id" PartnerClaimType="clientId"  DefaultValue="{OIDC:ClientId}" />
+            <InputClaim ClaimTypeReferenceId="signInNames.emailAddress" />
+            <InputClaim ClaimTypeReferenceId="client_id" PartnerClaimType="clientId" DefaultValue="{OIDC:ClientId}" />
           </InputClaims>
           <OutputClaims>
             <!-- Claims parsed from your REST API -->
@@ -75,24 +428,24 @@
           </OutputClaims>
           <UseTechnicalProfileForSessionManagement ReferenceId="SM-Noop" />
         </TechnicalProfile>
-         <TechnicalProfile Id="REST-GetRoles">
+        <TechnicalProfile Id="REST-GetRoles">
           <DisplayName>Retrieves users app roles</DisplayName>
           <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
           <Metadata>
             <!-- Set the ServiceUrl with your own REST API endpoint -->
-            <Item Key="ServiceUrl">{Settings:RolesAPIUrl}</Item>
+            <Item Key="ServiceUrl">{roles_api_url}</Item>
             <Item Key="SendClaimsIn">Body</Item>
             <Item Key="AuthenticationType">ApiKeyHeader</Item>
             <Item Key="AllowInsecureAuthInProduction">false</Item>
           </Metadata>
           <CryptographicKeys>
-            <Key Id="x-api-key" StorageReferenceId="{Settings:RESTAPIKey}" />
+            <Key Id="x-api-key" StorageReferenceId="B2C_1A_RestApiKey" />
           </CryptographicKeys>
           <InputClaims>
             <!-- Claims sent to your REST API -->
             <InputClaim ClaimTypeReferenceId="objectId" />
-            <InputClaim ClaimTypeReferenceId="signInNames.emailAddress"/>
-            <InputClaim ClaimTypeReferenceId="client_id" PartnerClaimType="clientId"  DefaultValue="{OIDC:ClientId}" />
+            <InputClaim ClaimTypeReferenceId="signInNames.emailAddress" />
+            <InputClaim ClaimTypeReferenceId="client_id" PartnerClaimType="clientId" DefaultValue="{OIDC:ClientId}" />
           </InputClaims>
           <OutputClaims>
             <!-- Claims parsed from your REST API -->
@@ -102,23 +455,134 @@
         </TechnicalProfile>
       </TechnicalProfiles>
     </ClaimsProvider>
+      <ClaimsProvider>
+      <DisplayName>Self Asserted</DisplayName>
+      <TechnicalProfiles>
+
+        <TechnicalProfile Id="SelfAsserted-Social">
+          <DisplayName>User ID signup</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.SelfAssertedAttributeProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ContentDefinitionReferenceId">api.socialccountsignup</Item>
+          </Metadata>
+          <CryptographicKeys>
+            <Key Id="issuer_secret" StorageReferenceId="B2C_1A_TokenSigningKeyContainer" />
+          </CryptographicKeys>
+          <InputClaims>
+            <!-- These claims ensure that any values retrieved in the previous steps (e.g. from an external IDP) are prefilled. 
+                 Note that some of these claims may not have any value, for example, if the external IDP did not provide any of
+                 these values, or if the claim did not appear in the OutputClaims section of the IDP.
+                 In addition, if a claim is not in the InputClaims section, but it is in the OutputClaims section, then its
+                 value will not be prefilled, but the user will still be prompted for it (with an empty value). -->
+            <InputClaim ClaimTypeReferenceId="displayName" />
+          </InputClaims>
+          <OutputClaims>
+            <!-- These claims are not shown to the user because their value is obtained through the "ValidationTechnicalProfiles"
+                 referenced below, or a default value is assigned to the claim. A claim is only shown to the user to provide a 
+                 value if its value cannot be obtained through any other means. -->
+            <OutputClaim ClaimTypeReferenceId="objectId" />
+            <OutputClaim ClaimTypeReferenceId="newUser" />
+            <OutputClaim ClaimTypeReferenceId="signInNames.emailAddress" />
+            <OutputClaim ClaimTypeReferenceId="executed-SelfAsserted-Input" DefaultValue="true" />
+
+            <!-- Optional claims. These claims are collected from the user and can be modified. If a claim is to be persisted in the directory after having been 
+                 collected from the user, it needs to be added as a PersistedClaim in the ValidationTechnicalProfile referenced below, i.e. 
+                 in AAD-UserWriteUsingAlternativeSecurityId. -->
+            <OutputClaim ClaimTypeReferenceId="displayName" />
+            <OutputClaim ClaimTypeReferenceId="mobile" />
+
+          </OutputClaims>
+          <ValidationTechnicalProfiles>
+            <ValidationTechnicalProfile ReferenceId="AAD-UserWriteUsingAlternativeSecurityId" />
+          </ValidationTechnicalProfiles>
+          <UseTechnicalProfileForSessionManagement ReferenceId="SM-SocialSignup" />
+        </TechnicalProfile>
+        <TechnicalProfile Id="SelfAsserted-LocalAccountSignUpWithLogonEmail">
+          <DisplayName>Local user info collection</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.SelfAssertedAttributeProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ContentDefinitionReferenceId">api.localaccountsignup</Item>
+          </Metadata>
+          <CryptographicKeys>
+            <Key Id="issuer_secret" StorageReferenceId="B2C_1A_TokenSigningKeyContainer" />
+          </CryptographicKeys>
+         <InputClaimsTransformations>
+          <InputClaimsTransformation ReferenceId="CreateReadonlyEmailClaim" />
+         </InputClaimsTransformations> 
+          <InputClaims>
+            <InputClaim ClaimTypeReferenceId="readOnlyEmail" />
+          </InputClaims>
+          <OutputClaims>
+            <!-- These claims are not shown to the user because their value is obtained through the "ValidationTechnicalProfiles"
+                 referenced below, or a default value is assigned to the claim. A claim is only shown to the user to provide a 
+                 value if its value cannot be obtained through any other means. -->
+            <OutputClaim ClaimTypeReferenceId="objectId" />
+            <OutputClaim ClaimTypeReferenceId="newUser" />
+            <OutputClaim ClaimTypeReferenceId="readOnlyEmail" />
+            <OutputClaim ClaimTypeReferenceId="authenticationSource" />
+            <!-- <OutputClaim ClaimTypeReferenceId="signInNames.emailAddress" PartnerClaimType="readOnlyEmail" /> -->
+            <OutputClaim ClaimTypeReferenceId="executed-SelfAsserted-Input" DefaultValue="true" />
+
+            <!-- Optional claims. These claims are collected from the user and can be modified. If a claim is to be persisted in the directory after having been 
+                 collected from the user, it needs to be added as a PersistedClaim in the ValidationTechnicalProfile referenced below, i.e. 
+                 in AAD-UserWriteUsingAlternativeSecurityId. -->
+            <OutputClaim ClaimTypeReferenceId="newPassword" Required="true" />
+            <OutputClaim ClaimTypeReferenceId="reenterPassword" Required="true" />
+            <OutputClaim ClaimTypeReferenceId="displayName" />
+            <OutputClaim ClaimTypeReferenceId="mobile" />
+          
+
+          </OutputClaims>
+          <ValidationTechnicalProfiles>
+            <ValidationTechnicalProfile ReferenceId="AAD-UserWriteUsingLogonEmail" />
+          </ValidationTechnicalProfiles>
+          <UseTechnicalProfileForSessionManagement ReferenceId="SM-AAD" />
+        </TechnicalProfile>
+
+        <TechnicalProfile Id="SelfAsserted-ProfileUpdate">
+          <DisplayName>User ID signup</DisplayName>
+          <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.SelfAssertedAttributeProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+          <Metadata>
+            <Item Key="ContentDefinitionReferenceId">api.selfasserted.profileupdate</Item>
+          </Metadata>
+          <IncludeInSso>false</IncludeInSso>
+          <InputClaims>
+            <InputClaim ClaimTypeReferenceId="alternativeSecurityId" />
+            <InputClaim ClaimTypeReferenceId="userPrincipalName" />
+
+            <!-- Optional claims. These claims are collected from the user and can be modified. Any claim added here should be updated in the
+                 ValidationTechnicalProfile referenced below so it can be written to directory after being updated by the user, i.e. AAD-UserWriteProfileUsingObjectId. -->
+            <InputClaim ClaimTypeReferenceId="givenName" />
+            <InputClaim ClaimTypeReferenceId="surname" />
+          </InputClaims>
+          <OutputClaims>
+            <!-- Required claims -->
+            <OutputClaim ClaimTypeReferenceId="executed-SelfAsserted-Input" DefaultValue="true" />
+
+            <!-- Optional claims. These claims are collected from the user and can be modified. Any claim added here should be updated in the
+                 ValidationTechnicalProfile referenced below so it can be written to directory after being updated by the user, i.e. AAD-UserWriteProfileUsingObjectId. -->
+            <OutputClaim ClaimTypeReferenceId="givenName" />
+            <OutputClaim ClaimTypeReferenceId="surname" />
+          </OutputClaims>
+          <ValidationTechnicalProfiles>
+            <ValidationTechnicalProfile ReferenceId="AAD-UserWriteProfileUsingObjectId" />
+          </ValidationTechnicalProfiles>
+        </TechnicalProfile>
+      </TechnicalProfiles>
+    </ClaimsProvider>
   </ClaimsProviders>
-
- 
-   <UserJourneys>
-
+  <UserJourneys>
     <UserJourney Id="SignUpOrSignIn">
       <OrchestrationSteps>
-
         <OrchestrationStep Order="1" Type="CombinedSignInAndSignUp" ContentDefinitionReferenceId="api.signuporsignin">
           <ClaimsProviderSelections>
+            <ClaimsProviderSelection TargetClaimsExchangeId="MicrosoftAccountExchange" />
             <ClaimsProviderSelection ValidationClaimsExchangeId="LocalAccountSigninEmailExchange" />
           </ClaimsProviderSelections>
           <ClaimsExchanges>
             <ClaimsExchange Id="LocalAccountSigninEmailExchange" TechnicalProfileReferenceId="SelfAsserted-LocalAccountSignin-Email" />
           </ClaimsExchanges>
         </OrchestrationStep>
-
         <OrchestrationStep Order="2" Type="ClaimsExchange">
           <Preconditions>
             <Precondition Type="ClaimsExist" ExecuteActionsIf="true">
@@ -127,35 +591,94 @@
             </Precondition>
           </Preconditions>
           <ClaimsExchanges>
+            <ClaimsExchange Id="MicrosoftAccountExchange" TechnicalProfileReferenceId="MSA-MicrosoftAccount-OpenIdConnect" />
             <ClaimsExchange Id="SignUpWithLogonEmailExchange" TechnicalProfileReferenceId="LocalAccountSignUpWithLogonEmail" />
           </ClaimsExchanges>
         </OrchestrationStep>
 
-        <!-- This step reads any user attributes that we may not have received when in the token. -->
         <OrchestrationStep Order="3" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="true">
+              <Value>objectId</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>authenticationSource</Value>
+              <Value>socialIdpAuthentication</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SelfAssertedLocalAccountSignUpWithLogonEmail" TechnicalProfileReferenceId="SelfAsserted-LocalAccountSignUpWithLogonEmail" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <!-- For social IDP authentication, attempt to find the user account in the directory. -->
+        <OrchestrationStep Order="4" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>authenticationSource</Value>
+              <Value>localAccountAuthentication</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AADUserReadUsingAlternativeSecurityId" TechnicalProfileReferenceId="AAD-UserReadUsingAlternativeSecurityId-NoError" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+          <!-- Show self-asserted page only if the directory does not have the user account already (i.e. we do not have an objectId). 
+          This can only happen when authentication happened using a social IDP. If local account was created or authentication done
+          using ESTS in step 2, then an user account must exist in the directory by this time. -->
+        <OrchestrationStep Order="5" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="true">
+              <Value>objectId</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="SelfAsserted-Social" TechnicalProfileReferenceId="SelfAsserted-Social" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <!-- This step reads any user attributes that we may not have received when in the token. -->
+        <OrchestrationStep Order="6" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+              <Value>authenticationSource</Value>
+              <Value>socialIdpAuthentication</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
           <ClaimsExchanges>
             <ClaimsExchange Id="AADUserReadWithObjectId" TechnicalProfileReferenceId="AAD-UserReadUsingObjectId" />
           </ClaimsExchanges>
         </OrchestrationStep>
-        <OrchestrationStep Order="4" Type="ClaimsExchange">
+        <OrchestrationStep Order="7" Type="ClaimsExchange">
+          <Preconditions>
+            <Precondition Type="ClaimsExist" ExecuteActionsIf="true">
+              <Value>objectId</Value>
+              <Action>SkipThisOrchestrationStep</Action>
+            </Precondition>
+          </Preconditions>
+          <ClaimsExchanges>
+            <ClaimsExchange Id="AADUserWrite" TechnicalProfileReferenceId="AAD-UserWriteUsingAlternativeSecurityId" />
+          </ClaimsExchanges>
+        </OrchestrationStep>
+        <OrchestrationStep Order="8" Type="ClaimsExchange">
           <ClaimsExchanges>
             <ClaimsExchange Id="RESTGetPermissions" TechnicalProfileReferenceId="REST-GetPermissions" />
           </ClaimsExchanges>
         </OrchestrationStep>
-        <OrchestrationStep Order="5" Type="ClaimsExchange">
+        <OrchestrationStep Order="9" Type="ClaimsExchange">
           <ClaimsExchanges>
             <ClaimsExchange Id="RESTGetRoles" TechnicalProfileReferenceId="REST-GetRoles" />
           </ClaimsExchanges>
         </OrchestrationStep>
-        <OrchestrationStep Order="6" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
-
+        <OrchestrationStep Order="10" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
       </OrchestrationSteps>
       <ClientDefinition ReferenceId="DefaultWeb" />
     </UserJourney>
-
     <UserJourney Id="ProfileEdit">
       <OrchestrationSteps>
-
         <OrchestrationStep Order="1" Type="ClaimsProviderSelection" ContentDefinitionReferenceId="api.idpselections">
           <ClaimsProviderSelections>
             <ClaimsProviderSelection TargetClaimsExchangeId="LocalAccountSigninEmailExchange" />
@@ -171,29 +694,25 @@
             <ClaimsExchange Id="AADUserReadWithObjectId" TechnicalProfileReferenceId="AAD-UserReadUsingObjectId" />
           </ClaimsExchanges>
         </OrchestrationStep>
-
         <OrchestrationStep Order="4" Type="ClaimsExchange">
           <ClaimsExchanges>
             <ClaimsExchange Id="B2CUserProfileUpdateExchange" TechnicalProfileReferenceId="SelfAsserted-ProfileUpdate" />
           </ClaimsExchanges>
         </OrchestrationStep>
-         <OrchestrationStep Order="5" Type="ClaimsExchange">
+        <OrchestrationStep Order="5" Type="ClaimsExchange">
           <ClaimsExchanges>
-            <ClaimsExchange Id="RESTGetPermissions" TechnicalProfileReferenceId="REST-GetPermissions"  />
+            <ClaimsExchange Id="RESTGetPermissions" TechnicalProfileReferenceId="REST-GetPermissions" />
           </ClaimsExchanges>
         </OrchestrationStep>
-         <OrchestrationStep Order="6" Type="ClaimsExchange">
+        <OrchestrationStep Order="6" Type="ClaimsExchange">
           <ClaimsExchanges>
             <ClaimsExchange Id="RESTGetRoles" TechnicalProfileReferenceId="REST-GetRoles" />
           </ClaimsExchanges>
         </OrchestrationStep>
-     
         <OrchestrationStep Order="7" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
-
       </OrchestrationSteps>
       <ClientDefinition ReferenceId="DefaultWeb" />
     </UserJourney>
-
     <UserJourney Id="PasswordReset">
       <OrchestrationSteps>
         <OrchestrationStep Order="1" Type="ClaimsExchange">
@@ -208,10 +727,10 @@
         </OrchestrationStep>
         <OrchestrationStep Order="3" Type="ClaimsExchange">
           <ClaimsExchanges>
-            <ClaimsExchange Id="RESTGetPermissions" TechnicalProfileReferenceId="REST-GetPermissions"  />
+            <ClaimsExchange Id="RESTGetPermissions" TechnicalProfileReferenceId="REST-GetPermissions" />
           </ClaimsExchanges>
         </OrchestrationStep>
-         <OrchestrationStep Order="4" Type="ClaimsExchange">
+        <OrchestrationStep Order="4" Type="ClaimsExchange">
           <ClaimsExchanges>
             <ClaimsExchange Id="RESTGetRoles" TechnicalProfileReferenceId="REST-GetRoles" />
           </ClaimsExchanges>
@@ -220,6 +739,5 @@
       </OrchestrationSteps>
       <ClientDefinition ReferenceId="DefaultWeb" />
     </UserJourney>
-
   </UserJourneys>
 </TrustFrameworkPolicy>
