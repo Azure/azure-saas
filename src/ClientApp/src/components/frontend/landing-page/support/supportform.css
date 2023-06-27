@@ -9,12 +9,12 @@
     gap: 1.5rem;
     align-items: center;
     border-radius: 1rem;
-    border-style: solid;
+    /* border-style: solid;
     border-width: 1px;
-    border-color: var(--blue);
-    background-color: rgba(237, 237, 237, 0.364);
-    width: 70vw;
-    height: 600px;
+    border-color: var(--blue); */
+    box-shadow: 0px 5px 20px -10px rgba(0, 0, 0, 1);
+    width: 1340px;
+    height: 700px;
     align-self: center;
     padding: 0 1rem 1rem 1rem;
     margin-top: 2.5rem;
@@ -50,7 +50,7 @@
 }
 
 .name-control {
-    width: 16vw;
+    width: 307px;
     height: 30px;
     border-radius: .2rem;
     padding-left: 1rem;
@@ -71,11 +71,11 @@
     background-color: var(--blue);
     color: var(--cream);
     border-style: none;
-    border-radius: 25rem;
-    height: 7vh;
-    width: 95%;
+    border-radius: 10px;
+    height: 60px;
+    width: 75%;
     align-self: center;
-    transition: all 0.5s;
+    transition: all 0.3s;
     font-size: 1rem;
     font-weight: 500;
     letter-spacing: .02rem;
@@ -84,13 +84,18 @@
 }
 
 .s-button:hover {
-    background-color: #3683d058;
-    color: var(--blue);
+    background-color: var(--bluehover);
+
 }
+
+.s-button:active {
+    background-color: var(--blue);
+} 
   
 
 .s-form-control {
     height: 30px;
+    width: 640px;
     border-radius: .2rem;
     padding-left: 1rem;
     outline: none;
@@ -100,6 +105,7 @@
 
 .s-textbox {
     height: 100px;
+    width: 640px;
     border-radius: .2rem;
     padding-left: 1rem;
     padding-right: 1rem;

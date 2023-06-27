@@ -75,7 +75,7 @@ const NewUser = ({
         </article>
       </section>
       <section className="md:p-3">
-        <article className="text-formHeadingColor md:rounded-t-sm p-1 md:py-2 md:px-10 form-heading">
+        <article className="text-formHeadingColor md:rounded-t-sm p-1 md:py-2 md:px-10 linear-bg">
           <h2 className="text-xl flex justify-center md:justify-start font-medium opacity-90">
             {heading}
           </h2>

@@ -1,0 +1,50 @@
+{
+    "header": {
+        "title": "Welcome to the onboarding process",
+        "subtitle": "Just a few steps to set you up"
+    }, 
+    "fields": {
+        "organizationName": {
+            "title": "What is your organization's name?",
+            "subtitle": "The name should be the name of your business, brand or organization. You can change this later."
+        },
+        "industry": {
+            "title": "In what industry is your organization?",
+            "subtitle" : "Identifying your industry will help people find you in search results. Choose the closest one - you can update it later."
+        },
+        "employeeNumber": {
+            "title": "How many employees are in your organization?",
+            "subtitle": "The number of employees in your business, would determine the tier to choose. You can change this later."
+        },
+        "jobTitle": {
+            "title": "What is your job title?",
+            "subtitle": "Identifying your job title will help people find you in search results. Choose the closest one - you can update it later."
+        },
+        "countryBased": {
+            "title": "Please choose a country where your organisation is based.",
+            "subtitle": "Choose a country where your organisation is situated. You can change this later."
+        },
+        "verificationQn": {
+            "title": "Please choose question category",
+            "subtitle": "Choose any security question that is suitable for you. You can change this later."
+        },
+        "verificationAns": {
+            "title": "What is your answer to the question you have selected?",
+            "subtitle": "The answer should be familiar to you and shouldn't be hard to remember."
+        },
+        "timezoneSelector": {
+            "title": "Choose your time zone",
+            "subtitle": "You can set your preffered timezone here."
+        },
+        "subscriptionSelector": {
+            "title": "Select your subscription plan",
+            "subtitle": "Get to choose a preffered package here according to your needs."
+        },
+        "submitBtn": {
+            "text": "Submit"
+        },
+        "onSubmitting": {
+            "text": "Please wait as we process your information."
+        }
+    }
+}

@@ -51,8 +51,9 @@ const Constant = {
     WALLET_HISTORY: "/auth/wallet/user/history",
     WALLET: "/wallet",
   },
-  WALLET: {
-    CASHPLUS: "coins",
+  ROUTE: {
+    BOOKING: "bookings",
+    ORDER: "orders",
   },
 };
 

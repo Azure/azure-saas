@@ -1,4 +1,5 @@
-﻿using Saas.Admin.Service.Data.Models.OnBoarding;
+﻿using Microsoft.AspNetCore.Identity;
+using Saas.Admin.Service.Data.Models.OnBoarding;
 using Saas.Identity.Authorization.Attribute;
 using Saas.Identity.Authorization.Model.Claim;
 using Saas.Identity.Authorization.Model.Data;
@@ -455,15 +456,9 @@ public class TenantsController : ControllerBase
     ///  /// <param name="userId"></param>
     private void CompleteOnboardInfo(NewTenantRequest tenantRequest, Guid userId)
     {
-        //Used for hashing passwords and other secrets
-        HashOptions hashes = _configuration.GetRequiredSection(HashOptions.SectionName).Get<HashOptions>() ?? new HashOptions();
-        //Should obtain this salt 
-        string hashSalt = hashes.PasswordHash ?? string.Empty;
+        //Initialize a hashing algorithm to hash sensitive information such as password and answer
+        IPasswordHasher<UserInfo> hasher = new PasswordHasher<UserInfo>();
 
-        if (string.IsNullOrEmpty(hashSalt))
-            throw new ArgumentNullException("password hash salt cannot be null");
-
-        UserInfo.salt = hashSalt;
         UserInfo tenantUser = new UserInfo
         {
             Guid = userId,
@@ -471,11 +466,12 @@ public class TenantsController : ControllerBase
             UserName =  User.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
             FullNames = User.FindFirstValue("name") ?? string.Empty,
             LockAfter = 3,
-            Telephone  = User.FindFirstValue("telephone") ?? string.Empty,
-            //Defaults password
-            Password = "0",
-            ConfirmPassword = "0"
+            Telephone  = User.FindFirstValue("telephone") ?? string.Empty
         };
+
+        tenantUser.Password = hasher.HashPassword(tenantUser, "0");  //Defaulted to 0
+        tenantUser.ConfirmPassword = hasher.HashPassword(tenantUser, "0");  //Defaulted to 0
+        tenantUser.Answer = hasher.HashPassword(tenantUser, tenantRequest.Answer);
 
         tenantRequest.UserInfo = tenantUser;
         tenantRequest.UserTenant = new UserTenant();

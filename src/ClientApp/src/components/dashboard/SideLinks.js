@@ -70,7 +70,7 @@ const SideLinks = () => {
             <div key={link.id}>
               <div className="cursor-pointer px-1 overflow-y-auto w-full max-h-80 scrollbar-hide bg-blend-overlay">
                 <div
-                  className="font-semibold text-xs sticky pl-2 py-0.5 bg-sidebarHeading text-heading top-0 flex justify-between  items-center w-full"
+                  className="linear-bg font-semibold border-b border-gray-300 text-[13px] sticky pl-2 py-0.5 text-statusBar top-0 flex justify-between  items-center w-full"
                   onClick={() =>
                     heading !== link.title
                       ? setHeading(link.title)
@@ -78,7 +78,7 @@ const SideLinks = () => {
                   }
                 >
                   <div className="flex items-center gap-1">
-                    {icon}
+                    <span> {icon}</span>
                     {link.title}
                   </div>
                   <div className="flex items-center">
@@ -98,17 +98,14 @@ const SideLinks = () => {
                     <div>
                       <div className="px-2">
                         {link.subLinks.map((mysublinks) => (
-                          <div
-                            className="flex items-center gap-1 hover:bg-[#f5f5f5]"
-                            key={mysublinks.name}
-                          >
-                            <RxDot />
-                            <li className="text-xs font-normal text-sideMenu py-1.5">
-                              <Link to={mysublinks.link}>
+                          <Link to={mysublinks.link} key={mysublinks.name}>
+                            <div className="flex items-center gap-1 hover:bg-[#f5f5f5]">
+                              <RxDot />
+                              <li className="text-xs font-normal text-sideColor py-1.5">
                                 {mysublinks.name}
-                              </Link>
-                            </li>
-                          </div>
+                              </li>
+                            </div>
+                          </Link>
                         ))}
                       </div>
                     </div>

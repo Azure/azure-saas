@@ -1,0 +1,1838 @@
+[
+    {
+        "ianaTimezone": "Etc/GMT+12",
+        "sqlTimeZone": "Dateline Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT+11",
+        "sqlTimeZone": "UTC-11"
+    },
+    {
+        "ianaTimezone": "Pacific/Pago_Pago",
+        "sqlTimeZone": "UTC-11"
+    },
+    {
+        "ianaTimezone": "Pacific/Niue",
+        "sqlTimeZone": "UTC-11"
+    },
+    {
+        "ianaTimezone": "Pacific/Midway",
+        "sqlTimeZone": "UTC-11"
+    },
+    {
+        "ianaTimezone": "America/Adak",
+        "sqlTimeZone": "Aleutian Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Honolulu",
+        "sqlTimeZone": "Hawaiian Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Rarotonga",
+        "sqlTimeZone": "Hawaiian Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Tahiti",
+        "sqlTimeZone": "Hawaiian Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Johnston",
+        "sqlTimeZone": "Hawaiian Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT+10",
+        "sqlTimeZone": "Hawaiian Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Marquesas",
+        "sqlTimeZone": "Marquesas Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Anchorage",
+        "sqlTimeZone": "Alaskan Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Juneau",
+        "sqlTimeZone": "Alaskan Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Metlakatla",
+        "sqlTimeZone": "Alaskan Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Nome",
+        "sqlTimeZone": "Alaskan Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Sitka",
+        "sqlTimeZone": "Alaskan Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Yakutat",
+        "sqlTimeZone": "Alaskan Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT+9",
+        "sqlTimeZone": "UTC-09"
+    },
+    {
+        "ianaTimezone": "Pacific/Gambier",
+        "sqlTimeZone": "UTC-09"
+    },
+    {
+        "ianaTimezone": "America/Tijuana",
+        "sqlTimeZone": "Pacific Standard Time (Mexico)"
+    },
+    {
+        "ianaTimezone": "America/Santa_Isabel",
+        "sqlTimeZone": "Pacific Standard Time (Mexico)"
+    },
+    {
+        "ianaTimezone": "Etc/GMT+8",
+        "sqlTimeZone": "UTC-08"
+    },
+    {
+        "ianaTimezone": "Pacific/Pitcairn",
+        "sqlTimeZone": "UTC-08"
+    },
+    {
+        "ianaTimezone": "America/Los_Angeles",
+        "sqlTimeZone": "Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Vancouver",
+        "sqlTimeZone": "Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Dawson",
+        "sqlTimeZone": "Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Whitehorse",
+        "sqlTimeZone": "Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "PST8PDT",
+        "sqlTimeZone": "Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Phoenix",
+        "sqlTimeZone": "US Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Dawson_Creek",
+        "sqlTimeZone": "US Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Creston",
+        "sqlTimeZone": "US Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Fort_Nelson",
+        "sqlTimeZone": "US Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Hermosillo",
+        "sqlTimeZone": "US Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT+7",
+        "sqlTimeZone": "US Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Chihuahua",
+        "sqlTimeZone": "Mountain Standard Time (Mexico)"
+    },
+    {
+        "ianaTimezone": "America/Mazatlan",
+        "sqlTimeZone": "Mountain Standard Time (Mexico)"
+    },
+    {
+        "ianaTimezone": "America/Denver",
+        "sqlTimeZone": "Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Edmonton",
+        "sqlTimeZone": "Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Cambridge_Bay",
+        "sqlTimeZone": "Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Inuvik",
+        "sqlTimeZone": "Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Yellowknife",
+        "sqlTimeZone": "Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Ojinaga",
+        "sqlTimeZone": "Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Boise",
+        "sqlTimeZone": "Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "MST7MDT",
+        "sqlTimeZone": "Mountain Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Guatemala",
+        "sqlTimeZone": "Central America Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Belize",
+        "sqlTimeZone": "Central America Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Costa_Rica",
+        "sqlTimeZone": "Central America Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Galapagos",
+        "sqlTimeZone": "Central America Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Tegucigalpa",
+        "sqlTimeZone": "Central America Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Managua",
+        "sqlTimeZone": "Central America Standard Time"
+    },
+    {
+        "ianaTimezone": "America/El_Salvador",
+        "sqlTimeZone": "Central America Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT+6",
+        "sqlTimeZone": "Central America Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Chicago",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Winnipeg",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Rainy_River",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Rankin_Inlet",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Resolute",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Matamoros",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Indiana/Knox",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Indiana/Tell_City",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Menominee",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/North_Dakota/Beulah",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/North_Dakota/Center",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/North_Dakota/New_Salem",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "CST6CDT",
+        "sqlTimeZone": "Central Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Easter",
+        "sqlTimeZone": "Easter Island Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Mexico_City",
+        "sqlTimeZone": "Central Standard Time (Mexico)"
+    },
+    {
+        "ianaTimezone": "America/Bahia_Banderas",
+        "sqlTimeZone": "Central Standard Time (Mexico)"
+    },
+    {
+        "ianaTimezone": "America/Merida",
+        "sqlTimeZone": "Central Standard Time (Mexico)"
+    },
+    {
+        "ianaTimezone": "America/Monterrey",
+        "sqlTimeZone": "Central Standard Time (Mexico)"
+    },
+    {
+        "ianaTimezone": "America/Regina",
+        "sqlTimeZone": "Canada Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Swift_Current",
+        "sqlTimeZone": "Canada Central Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Bogota",
+        "sqlTimeZone": "SA Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Rio_Branco",
+        "sqlTimeZone": "SA Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Eirunepe",
+        "sqlTimeZone": "SA Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Coral_Harbour",
+        "sqlTimeZone": "SA Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Guayaquil",
+        "sqlTimeZone": "SA Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Jamaica",
+        "sqlTimeZone": "SA Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Cayman",
+        "sqlTimeZone": "SA Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Panama",
+        "sqlTimeZone": "SA Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Lima",
+        "sqlTimeZone": "SA Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT+5",
+        "sqlTimeZone": "SA Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Cancun",
+        "sqlTimeZone": "Eastern Standard Time (Mexico)"
+    },
+    {
+        "ianaTimezone": "America/New_York",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Nassau",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Toronto",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Iqaluit",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Montreal",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Nipigon",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Pangnirtung",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Thunder_Bay",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Detroit",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Indiana/Petersburg",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Indiana/Vincennes",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Indiana/Winamac",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Kentucky/Monticello",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Louisville",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "EST5EDT",
+        "sqlTimeZone": "Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Port-au-Prince",
+        "sqlTimeZone": "Haiti Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Havana",
+        "sqlTimeZone": "Cuba Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Indianapolis",
+        "sqlTimeZone": "US Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Indiana/Marengo",
+        "sqlTimeZone": "US Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Indiana/Vevay",
+        "sqlTimeZone": "US Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Grand_Turk",
+        "sqlTimeZone": "Turks And Caicos Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Asuncion",
+        "sqlTimeZone": "Paraguay Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Halifax",
+        "sqlTimeZone": "Atlantic Standard Time"
+    },
+    {
+        "ianaTimezone": "Atlantic/Bermuda",
+        "sqlTimeZone": "Atlantic Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Glace_Bay",
+        "sqlTimeZone": "Atlantic Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Goose_Bay",
+        "sqlTimeZone": "Atlantic Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Moncton",
+        "sqlTimeZone": "Atlantic Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Thule",
+        "sqlTimeZone": "Atlantic Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Caracas",
+        "sqlTimeZone": "Venezuela Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Cuiaba",
+        "sqlTimeZone": "Central Brazilian Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Campo_Grande",
+        "sqlTimeZone": "Central Brazilian Standard Time"
+    },
+    {
+        "ianaTimezone": "America/La_Paz",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Antigua",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Anguilla",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Aruba",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Barbados",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/St_Barthelemy",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Kralendijk",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Manaus",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Boa_Vista",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Porto_Velho",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Blanc-Sablon",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Curacao",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Dominica",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Santo_Domingo",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Grenada",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Guadeloupe",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Guyana",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/St_Kitts",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/St_Lucia",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Marigot",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Martinique",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Montserrat",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Puerto_Rico",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Lower_Princes",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Port_of_Spain",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/St_Vincent",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Tortola",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/St_Thomas",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT+4",
+        "sqlTimeZone": "SA Western Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Santiago",
+        "sqlTimeZone": "Pacific SA Standard Time"
+    },
+    {
+        "ianaTimezone": "America/St_Johns",
+        "sqlTimeZone": "Newfoundland Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Araguaina",
+        "sqlTimeZone": "Tocantins Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Sao_Paulo",
+        "sqlTimeZone": "E. South America Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Cayenne",
+        "sqlTimeZone": "SA Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "Antarctica/Rothera",
+        "sqlTimeZone": "SA Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "Antarctica/Palmer",
+        "sqlTimeZone": "SA Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Fortaleza",
+        "sqlTimeZone": "SA Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Belem",
+        "sqlTimeZone": "SA Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Maceio",
+        "sqlTimeZone": "SA Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Recife",
+        "sqlTimeZone": "SA Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Santarem",
+        "sqlTimeZone": "SA Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "Atlantic/Stanley",
+        "sqlTimeZone": "SA Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Paramaribo",
+        "sqlTimeZone": "SA Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT+3",
+        "sqlTimeZone": "SA Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Buenos_Aires",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Argentina/La_Rioja",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Argentina/Rio_Gallegos",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Argentina/Salta",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Argentina/San_Juan",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Argentina/San_Luis",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Argentina/Tucuman",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Argentina/Ushuaia",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Catamarca",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Cordoba",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Jujuy",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Mendoza",
+        "sqlTimeZone": "Argentina Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Godthab",
+        "sqlTimeZone": "Greenland Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Montevideo",
+        "sqlTimeZone": "Montevideo Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Punta_Arenas",
+        "sqlTimeZone": "Magallanes Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Miquelon",
+        "sqlTimeZone": "Saint Pierre Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Bahia",
+        "sqlTimeZone": "Bahia Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT+2",
+        "sqlTimeZone": "UTC-02"
+    },
+    {
+        "ianaTimezone": "America/Noronha",
+        "sqlTimeZone": "UTC-02"
+    },
+    {
+        "ianaTimezone": "Atlantic/South_Georgia",
+        "sqlTimeZone": "UTC-02"
+    },
+    {
+        "ianaTimezone": "Atlantic/Azores",
+        "sqlTimeZone": "Azores Standard Time"
+    },
+    {
+        "ianaTimezone": "America/Scoresbysund",
+        "sqlTimeZone": "Azores Standard Time"
+    },
+    {
+        "ianaTimezone": "Atlantic/Cape_Verde",
+        "sqlTimeZone": "Cape Verde Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT+1",
+        "sqlTimeZone": "Cape Verde Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT",
+        "sqlTimeZone": "UTC"
+    },
+    {
+        "ianaTimezone": "America/Danmarkshavn",
+        "sqlTimeZone": "UTC"
+    },
+    {
+        "ianaTimezone": "Etc/UTC",
+        "sqlTimeZone": "UTC"
+    },
+    {
+        "ianaTimezone": "Europe/London",
+        "sqlTimeZone": "GMT Standard Time"
+    },
+    {
+        "ianaTimezone": "Atlantic/Canary",
+        "sqlTimeZone": "GMT Standard Time"
+    },
+    {
+        "ianaTimezone": "Atlantic/Faeroe",
+        "sqlTimeZone": "GMT Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Guernsey",
+        "sqlTimeZone": "GMT Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Dublin",
+        "sqlTimeZone": "GMT Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Isle_of_Man",
+        "sqlTimeZone": "GMT Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Jersey",
+        "sqlTimeZone": "GMT Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Lisbon",
+        "sqlTimeZone": "GMT Standard Time"
+    },
+    {
+        "ianaTimezone": "Atlantic/Madeira",
+        "sqlTimeZone": "GMT Standard Time"
+    },
+    {
+        "ianaTimezone": "Atlantic/Reykjavik",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Ouagadougou",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Abidjan",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Accra",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Banjul",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Conakry",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Bissau",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Monrovia",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Bamako",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Nouakchott",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Atlantic/St_Helena",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Freetown",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Dakar",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Lome",
+        "sqlTimeZone": "Greenwich Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Sao_Tome",
+        "sqlTimeZone": "Sao Tome Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Casablanca",
+        "sqlTimeZone": "Morocco Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/El_Aaiun",
+        "sqlTimeZone": "Morocco Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Berlin",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Andorra",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Vienna",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Zurich",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Busingen",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Gibraltar",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Rome",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Vaduz",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Luxembourg",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Monaco",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Malta",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Amsterdam",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Oslo",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Stockholm",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Arctic/Longyearbyen",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/San_Marino",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Vatican",
+        "sqlTimeZone": "W. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Budapest",
+        "sqlTimeZone": "Central Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Tirane",
+        "sqlTimeZone": "Central Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Prague",
+        "sqlTimeZone": "Central Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Podgorica",
+        "sqlTimeZone": "Central Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Belgrade",
+        "sqlTimeZone": "Central Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Ljubljana",
+        "sqlTimeZone": "Central Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Bratislava",
+        "sqlTimeZone": "Central Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Paris",
+        "sqlTimeZone": "Romance Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Brussels",
+        "sqlTimeZone": "Romance Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Copenhagen",
+        "sqlTimeZone": "Romance Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Madrid",
+        "sqlTimeZone": "Romance Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Ceuta",
+        "sqlTimeZone": "Romance Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Warsaw",
+        "sqlTimeZone": "Central European Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Sarajevo",
+        "sqlTimeZone": "Central European Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Zagreb",
+        "sqlTimeZone": "Central European Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Skopje",
+        "sqlTimeZone": "Central European Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Lagos",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Luanda",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Porto-Novo",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Kinshasa",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Bangui",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Brazzaville",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Douala",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Algiers",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Libreville",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Malabo",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Niamey",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Ndjamena",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Tunis",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-1",
+        "sqlTimeZone": "W. Central Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Amman",
+        "sqlTimeZone": "Jordan Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Bucharest",
+        "sqlTimeZone": "GTB Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Nicosia",
+        "sqlTimeZone": "GTB Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Famagusta",
+        "sqlTimeZone": "GTB Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Athens",
+        "sqlTimeZone": "GTB Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Beirut",
+        "sqlTimeZone": "Middle East Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Cairo",
+        "sqlTimeZone": "Egypt Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Chisinau",
+        "sqlTimeZone": "E. Europe Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Damascus",
+        "sqlTimeZone": "Syria Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Hebron",
+        "sqlTimeZone": "West Bank Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Gaza",
+        "sqlTimeZone": "West Bank Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Johannesburg",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Bujumbura",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Gaborone",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Lubumbashi",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Maseru",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Blantyre",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Maputo",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Kigali",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Mbabane",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Lusaka",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Harare",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-2",
+        "sqlTimeZone": "South Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Kiev",
+        "sqlTimeZone": "FLE Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Mariehamn",
+        "sqlTimeZone": "FLE Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Sofia",
+        "sqlTimeZone": "FLE Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Tallinn",
+        "sqlTimeZone": "FLE Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Helsinki",
+        "sqlTimeZone": "FLE Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Vilnius",
+        "sqlTimeZone": "FLE Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Riga",
+        "sqlTimeZone": "FLE Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Uzhgorod",
+        "sqlTimeZone": "FLE Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Zaporozhye",
+        "sqlTimeZone": "FLE Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Jerusalem",
+        "sqlTimeZone": "Israel Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Kaliningrad",
+        "sqlTimeZone": "Kaliningrad Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Khartoum",
+        "sqlTimeZone": "Sudan Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Tripoli",
+        "sqlTimeZone": "Libya Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Windhoek",
+        "sqlTimeZone": "Namibia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Baghdad",
+        "sqlTimeZone": "Arabic Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Istanbul",
+        "sqlTimeZone": "Turkey Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Riyadh",
+        "sqlTimeZone": "Arab Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Bahrain",
+        "sqlTimeZone": "Arab Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Kuwait",
+        "sqlTimeZone": "Arab Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Qatar",
+        "sqlTimeZone": "Arab Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Aden",
+        "sqlTimeZone": "Arab Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Minsk",
+        "sqlTimeZone": "Belarus Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Moscow",
+        "sqlTimeZone": "Russian Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Kirov",
+        "sqlTimeZone": "Russian Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Simferopol",
+        "sqlTimeZone": "Russian Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Nairobi",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Antarctica/Syowa",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Djibouti",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Asmera",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Addis_Ababa",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Indian/Comoro",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Indian/Antananarivo",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Mogadishu",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Juba",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Dar_es_Salaam",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Africa/Kampala",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Indian/Mayotte",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-3",
+        "sqlTimeZone": "E. Africa Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Tehran",
+        "sqlTimeZone": "Iran Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Dubai",
+        "sqlTimeZone": "Arabian Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Muscat",
+        "sqlTimeZone": "Arabian Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-4",
+        "sqlTimeZone": "Arabian Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Astrakhan",
+        "sqlTimeZone": "Astrakhan Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Ulyanovsk",
+        "sqlTimeZone": "Astrakhan Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Baku",
+        "sqlTimeZone": "Azerbaijan Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Samara",
+        "sqlTimeZone": "Russia Time Zone 3"
+    },
+    {
+        "ianaTimezone": "Indian/Mauritius",
+        "sqlTimeZone": "Mauritius Standard Time"
+    },
+    {
+        "ianaTimezone": "Indian/Reunion",
+        "sqlTimeZone": "Mauritius Standard Time"
+    },
+    {
+        "ianaTimezone": "Indian/Mahe",
+        "sqlTimeZone": "Mauritius Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Saratov",
+        "sqlTimeZone": "Saratov Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Tbilisi",
+        "sqlTimeZone": "Georgian Standard Time"
+    },
+    {
+        "ianaTimezone": "Europe/Volgograd",
+        "sqlTimeZone": "Volgograd Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Yerevan",
+        "sqlTimeZone": "Caucasus Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Kabul",
+        "sqlTimeZone": "Afghanistan Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Tashkent",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Antarctica/Mawson",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Oral",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Aqtau",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Aqtobe",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Atyrau",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Indian/Maldives",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Indian/Kerguelen",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Dushanbe",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Ashgabat",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Samarkand",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-5",
+        "sqlTimeZone": "West Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Yekaterinburg",
+        "sqlTimeZone": "Ekaterinburg Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Karachi",
+        "sqlTimeZone": "Pakistan Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Qyzylorda",
+        "sqlTimeZone": "Qyzylorda Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Calcutta",
+        "sqlTimeZone": "India Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Colombo",
+        "sqlTimeZone": "Sri Lanka Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Katmandu",
+        "sqlTimeZone": "Nepal Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Almaty",
+        "sqlTimeZone": "Central Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Antarctica/Vostok",
+        "sqlTimeZone": "Central Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Urumqi",
+        "sqlTimeZone": "Central Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Indian/Chagos",
+        "sqlTimeZone": "Central Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Bishkek",
+        "sqlTimeZone": "Central Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Qostanay",
+        "sqlTimeZone": "Central Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-6",
+        "sqlTimeZone": "Central Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Dhaka",
+        "sqlTimeZone": "Bangladesh Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Thimphu",
+        "sqlTimeZone": "Bangladesh Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Omsk",
+        "sqlTimeZone": "Omsk Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Rangoon",
+        "sqlTimeZone": "Myanmar Standard Time"
+    },
+    {
+        "ianaTimezone": "Indian/Cocos",
+        "sqlTimeZone": "Myanmar Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Bangkok",
+        "sqlTimeZone": "SE Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Antarctica/Davis",
+        "sqlTimeZone": "SE Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Indian/Christmas",
+        "sqlTimeZone": "SE Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Jakarta",
+        "sqlTimeZone": "SE Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Pontianak",
+        "sqlTimeZone": "SE Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Phnom_Penh",
+        "sqlTimeZone": "SE Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Vientiane",
+        "sqlTimeZone": "SE Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Saigon",
+        "sqlTimeZone": "SE Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-7",
+        "sqlTimeZone": "SE Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Barnaul",
+        "sqlTimeZone": "Altai Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Hovd",
+        "sqlTimeZone": "W. Mongolia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Krasnoyarsk",
+        "sqlTimeZone": "North Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Novokuznetsk",
+        "sqlTimeZone": "North Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Novosibirsk",
+        "sqlTimeZone": "N. Central Asia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Tomsk",
+        "sqlTimeZone": "Tomsk Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Shanghai",
+        "sqlTimeZone": "China Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Hong_Kong",
+        "sqlTimeZone": "China Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Macau",
+        "sqlTimeZone": "China Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Irkutsk",
+        "sqlTimeZone": "North Asia East Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Singapore",
+        "sqlTimeZone": "Singapore Standard Time"
+    },
+    {
+        "ianaTimezone": "Antarctica/Casey",
+        "sqlTimeZone": "Singapore Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Brunei",
+        "sqlTimeZone": "Singapore Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Makassar",
+        "sqlTimeZone": "Singapore Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Kuala_Lumpur",
+        "sqlTimeZone": "Singapore Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Kuching",
+        "sqlTimeZone": "Singapore Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Manila",
+        "sqlTimeZone": "Singapore Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-8",
+        "sqlTimeZone": "Singapore Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Perth",
+        "sqlTimeZone": "W. Australia Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Taipei",
+        "sqlTimeZone": "Taipei Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Ulaanbaatar",
+        "sqlTimeZone": "Ulaanbaatar Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Choibalsan",
+        "sqlTimeZone": "Ulaanbaatar Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Eucla",
+        "sqlTimeZone": "Aus Central W. Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Chita",
+        "sqlTimeZone": "Transbaikal Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Tokyo",
+        "sqlTimeZone": "Tokyo Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Jayapura",
+        "sqlTimeZone": "Tokyo Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Palau",
+        "sqlTimeZone": "Tokyo Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Dili",
+        "sqlTimeZone": "Tokyo Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-9",
+        "sqlTimeZone": "Tokyo Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Pyongyang",
+        "sqlTimeZone": "North Korea Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Seoul",
+        "sqlTimeZone": "Korea Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Yakutsk",
+        "sqlTimeZone": "Yakutsk Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Khandyga",
+        "sqlTimeZone": "Yakutsk Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Adelaide",
+        "sqlTimeZone": "Cen. Australia Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Broken_Hill",
+        "sqlTimeZone": "Cen. Australia Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Darwin",
+        "sqlTimeZone": "AUS Central Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Brisbane",
+        "sqlTimeZone": "E. Australia Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Lindeman",
+        "sqlTimeZone": "E. Australia Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Sydney",
+        "sqlTimeZone": "AUS Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Melbourne",
+        "sqlTimeZone": "AUS Eastern Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Port_Moresby",
+        "sqlTimeZone": "West Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Antarctica/DumontDUrville",
+        "sqlTimeZone": "West Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Truk",
+        "sqlTimeZone": "West Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Guam",
+        "sqlTimeZone": "West Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Saipan",
+        "sqlTimeZone": "West Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-10",
+        "sqlTimeZone": "West Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Hobart",
+        "sqlTimeZone": "Tasmania Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Currie",
+        "sqlTimeZone": "Tasmania Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Vladivostok",
+        "sqlTimeZone": "Vladivostok Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Ust-Nera",
+        "sqlTimeZone": "Vladivostok Standard Time"
+    },
+    {
+        "ianaTimezone": "Australia/Lord_Howe",
+        "sqlTimeZone": "Lord Howe Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Bougainville",
+        "sqlTimeZone": "Bougainville Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Srednekolymsk",
+        "sqlTimeZone": "Russia Time Zone 10"
+    },
+    {
+        "ianaTimezone": "Asia/Magadan",
+        "sqlTimeZone": "Magadan Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Norfolk",
+        "sqlTimeZone": "Norfolk Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Sakhalin",
+        "sqlTimeZone": "Sakhalin Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Guadalcanal",
+        "sqlTimeZone": "Central Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Antarctica/Macquarie",
+        "sqlTimeZone": "Central Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Ponape",
+        "sqlTimeZone": "Central Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Kosrae",
+        "sqlTimeZone": "Central Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Noumea",
+        "sqlTimeZone": "Central Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Efate",
+        "sqlTimeZone": "Central Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-11",
+        "sqlTimeZone": "Central Pacific Standard Time"
+    },
+    {
+        "ianaTimezone": "Asia/Kamchatka",
+        "sqlTimeZone": "Russia Time Zone 11"
+    },
+    {
+        "ianaTimezone": "Asia/Anadyr",
+        "sqlTimeZone": "Russia Time Zone 11"
+    },
+    {
+        "ianaTimezone": "Pacific/Auckland",
+        "sqlTimeZone": "New Zealand Standard Time"
+    },
+    {
+        "ianaTimezone": "Antarctica/McMurdo",
+        "sqlTimeZone": "New Zealand Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-12",
+        "sqlTimeZone": "UTC+12"
+    },
+    {
+        "ianaTimezone": "Pacific/Tarawa",
+        "sqlTimeZone": "UTC+12"
+    },
+    {
+        "ianaTimezone": "Pacific/Majuro",
+        "sqlTimeZone": "UTC+12"
+    },
+    {
+        "ianaTimezone": "Pacific/Kwajalein",
+        "sqlTimeZone": "UTC+12"
+    },
+    {
+        "ianaTimezone": "Pacific/Nauru",
+        "sqlTimeZone": "UTC+12"
+    },
+    {
+        "ianaTimezone": "Pacific/Funafuti",
+        "sqlTimeZone": "UTC+12"
+    },
+    {
+        "ianaTimezone": "Pacific/Wake",
+        "sqlTimeZone": "UTC+12"
+    },
+    {
+        "ianaTimezone": "Pacific/Wallis",
+        "sqlTimeZone": "UTC+12"
+    },
+    {
+        "ianaTimezone": "Pacific/Fiji",
+        "sqlTimeZone": "Fiji Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Chatham",
+        "sqlTimeZone": "Chatham Islands Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-13",
+        "sqlTimeZone": "UTC+13"
+    },
+    {
+        "ianaTimezone": "Pacific/Enderbury",
+        "sqlTimeZone": "UTC+13"
+    },
+    {
+        "ianaTimezone": "Pacific/Fakaofo",
+        "sqlTimeZone": "UTC+13"
+    },
+    {
+        "ianaTimezone": "Pacific/Tongatapu",
+        "sqlTimeZone": "Tonga Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Apia",
+        "sqlTimeZone": "Samoa Standard Time"
+    },
+    {
+        "ianaTimezone": "Pacific/Kiritimati",
+        "sqlTimeZone": "Line Islands Standard Time"
+    },
+    {
+        "ianaTimezone": "Etc/GMT-14",
+        "sqlTimeZone": "Line Islands Standard Time"
+    }
+]

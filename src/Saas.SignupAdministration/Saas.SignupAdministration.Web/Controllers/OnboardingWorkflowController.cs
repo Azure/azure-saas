@@ -5,6 +5,7 @@ namespace Saas.SignupAdministration.Web.Controllers;
 
 [Authorize()]
 [ApiController]
+[ValidateAntiForgeryToken]
 // [AuthorizeForScopes(Scopes = new string[] { "tenant.read", "tenant.global.read", "tenant.write", "tenant.global.write", "tenant.delete", "tenant.global.delete" })]
 public class OnboardingWorkflowController : ControllerBase
 {
@@ -22,7 +23,6 @@ public class OnboardingWorkflowController : ControllerBase
     /// <param name="organization">Organization model</param>
     /// <returns> An appropriate result based on given data</returns>
     [HttpPost("/api/onboarding")]
-    //[ValidateAntiForgeryToken]
     public async Task<IActionResult> HandleBatchRegistration([FromBody] NewOnboardingItem organization)
     {
         if (!ModelState.IsValid) //Return a bad request
@@ -47,7 +47,7 @@ public class OnboardingWorkflowController : ControllerBase
             await DeployTenantAsync();
 
             ///Change to created at action 
-            return Created("api/onboarding", _onboardingWorkflow.OnboardingWorkflowItem);
+            return Created(SR.SignInUrl, _onboardingWorkflow.OnboardingWorkflowItem);
 
         }
         catch 

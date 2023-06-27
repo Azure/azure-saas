@@ -16,7 +16,10 @@
                  ],
     "actionbutton" : { "to" : "/get-started", "value" : "Get started" },
     "signuptext" : { "to": "https://saas-app-asdk-ecdf-a6tx.azurewebsites.net/MicrosoftIdentity/Account/SignIn", "value" : "Sign Up/In" },
-    "brand" : "iBusiness"
+    "brand" : "iBusiness",
+    "chatText": "Chat with us",
+    "signouttext": "Sign out",
+    "signintext": "Sign up/in"
 }
 
 

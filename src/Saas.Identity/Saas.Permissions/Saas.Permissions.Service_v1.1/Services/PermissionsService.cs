@@ -1,5 +1,6 @@
 ﻿using Saas.Identity.Authorization.Model.Data;
 using Saas.Identity.Authorization.Model.Kind;
+using Saas.Identity.Services;
 using Saas.Permissions.Service.Data.Context;
 using Saas.Permissions.Service.Exceptions;
 using Saas.Permissions.Service.Interfaces;
@@ -12,26 +13,30 @@ public class PermissionsService : IPermissionsService
     private readonly SaasPermissionsContext _permissionsContext;
     private readonly ILogger _logger;
     private readonly IGraphAPIService _graphAPIService;
-    
+    private readonly ICustomTenantService _tenantService;
+
     public PermissionsService(
         SaasPermissionsContext permissionsContext,
         ILogger<PermissionsService> logger, 
-        IGraphAPIService graphAPIService)
+        IGraphAPIService graphAPIService,
+        ICustomTenantService tenantService)
     {
         _permissionsContext = permissionsContext;
 
         _logger = logger;
         _graphAPIService = graphAPIService;
+        _tenantService = tenantService;
     }
 
     public async Task<ICollection<SaasPermission>> GetPermissionsAsync(Guid userId)
     {
         _logger.LogDebug("User {userId} tried to get permissions", userId);
-
+        Guid tenantId = await _tenantService.GetActiveTenantAsync(userId);
+        //Now returns permission specific to this user and active tenant only
         return await _permissionsContext.SaasPermissions
             .Include(x => x.UserPermissions)
             .Include(x => x.TenantPermissions)
-            .Where(x => x.UserId == userId)
+            .Where(x => x.UserId == userId && x.TenantId == tenantId)
             .Select(x => x.IncludeAllPermissionSets())
             .ToListAsync();
     }
@@ -85,6 +90,9 @@ public class PermissionsService : IPermissionsService
         });
 
         await _permissionsContext.SaveChangesAsync();
+
+        //Now make this newly added tenant as the default tenant for user
+        await _tenantService.UpdateActiveTenantAsync(userId, tenantId);
 
         return;
     }

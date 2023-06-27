@@ -2,11 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserProfile } from "../../../redux/userSlice";
-import MenuButtonsGroup from "../../../components/dashboard/MenuButtonsGroup";
 import { updateMenuSource } from "../../../data/menu";
-import MobileMenus from "../../../components/dashboard/MobileMenus";
 import Statusbar from "../../../components/dashboard/Statusbar";
 import axios from "axios";
+import MenusGroupComponent from "../../../components/dashboard/Menus/MenusGroupComponent";
 
 const Profile = () => {
   const currentUser = useSelector((state) => state.user?.currentUser?.user);
@@ -47,12 +46,11 @@ const Profile = () => {
   return (
     <main className="w-full relative h-full md:h-full  px-3 md:px-5 py-1.5">
       <section>
-        <MenuButtonsGroup
+        <MenusGroupComponent
           heading="Update Profile"
           menus={updateMenuSource}
           onMenuClick={handleClick}
         />
-        <MobileMenus menus={updateMenuSource} onMenuClick={handleClick} />
 
         <section>
           <article className="md:p-5 flex gap-5 w-full">

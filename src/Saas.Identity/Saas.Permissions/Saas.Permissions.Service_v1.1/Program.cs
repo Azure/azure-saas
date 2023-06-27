@@ -12,6 +12,8 @@ using Saas.Identity.Helper;
 using Saas.Identity.Interface;
 using Polly;
 using Saas.Permissions.Service.Data.Context;
+using Saas.Shared.DataHandler;
+using Saas.Identity.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -89,6 +91,12 @@ builder.Services.AddScoped<IGraphAPIService, GraphAPIService>();
 
 // Adding the permission service used by the API controller
 builder.Services.AddScoped<IPermissionsService, PermissionsService>();
+
+//Add database handler. To directly query and a database using stored procedures or direct queries
+builder.Services.AddSingleton<IDatabaseHandler, DatabaseHandler>();
+
+//Add custom tenant service handler
+builder.Services.AddScoped<ICustomTenantService, CustomTenantService>();
 
 builder.Logging.ClearProviders();
 

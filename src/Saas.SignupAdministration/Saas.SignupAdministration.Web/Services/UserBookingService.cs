@@ -4,14 +4,10 @@ namespace Saas.SignupAdministration.Web.Services;
 
 public class UserBookingService : IUserBookingService
 {
-    private readonly IConfiguration _configuration;
-    public UserBookingService(IConfiguration configuration)
+    private readonly CosmosDbOptions cosmosDb;
+    public UserBookingService(IOptions<CosmosDbOptions> options)
     {
-        _configuration = configuration;
-        EndpointUri = _configuration["cosmosEndpoinUri"];
-        PrimaryKey = _configuration["cosmosPrimaryKey"];
-        DatabaseId = _configuration["IBusinessDatabaseId"];
-        ContainerId = _configuration["IBusinessContainerId"];
+        cosmosDb = options.Value;  
     }
 
 
@@ -23,11 +19,6 @@ public class UserBookingService : IUserBookingService
 
     // The container we will create.
     private static Container container;
-
-    private string EndpointUri;
-    private string PrimaryKey;
-    private string DatabaseId;
-    private string ContainerId;
 
     public async Task<Booking> CreateBookingAsync(Booking booking, string partitionKey)
     {
@@ -51,11 +42,11 @@ public class UserBookingService : IUserBookingService
     {
         if (cosmosClient == null)
         {
-            cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
+            cosmosClient = new CosmosClient(cosmosDb.EndpointURI, cosmosDb.PrimaryKey);
         }
         if (container == null)
         {
-            container = cosmosClient.GetContainer(DatabaseId, ContainerId);
+            container = cosmosClient.GetContainer(cosmosDb.IBusinessDatabaseId, cosmosDb.IBusinessContainerId);
         }
     }
 

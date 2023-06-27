@@ -134,4 +134,6 @@ public static class SR
 
     public const string FormFieldName = "csrf-token";
     public const string  HeaderName = "X-Csrf-Token";
+
+    public const string SignInUrl = "/MicrosoftIdentity/Account/SignIn";
 }
