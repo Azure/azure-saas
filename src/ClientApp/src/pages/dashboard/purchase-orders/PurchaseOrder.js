@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import MenuButtonsGroup from "../../../components/dashboard/MenuButtonsGroup";
 import "./PurchaseOrder.css";
 import "devextreme/dist/css/dx.common.css";
 import "devextreme/dist/css/dx.light.css";
@@ -14,6 +13,7 @@ import request from "../../../helpers/tempRequest";
 import Statusbar from "../../../components/dashboard/Statusbar";
 import { useSelector } from "react-redux";
 import { LoadPanel } from "devextreme-react/load-panel";
+import DesktopMenus from "../../../components/dashboard/Menus/DesktopMenus";
 
 export const PurchaseOrder = ({ orderstate }) => {
   const [currentmessage, setMessage] = useState();
@@ -40,7 +40,7 @@ export const PurchaseOrder = ({ orderstate }) => {
     if (orderstate === 0) {
       async function getData() {
         try {
-          setMessage("Checking for pending orders...")
+          setMessage("Checking for pending orders...");
           const response = await request.get(
             `/PurchaseOrder/getorderitems?userid=${currentUser?.email}`
           );
@@ -55,15 +55,15 @@ export const PurchaseOrder = ({ orderstate }) => {
             setFormUpdateData(response.data.orderInformation[0]);
           }
           data.reload();
-          setMessage()
+          setMessage();
         } catch (e) {
           console.log(e);
-          setMessage("Unable to fetch pending orders.")
+          setMessage("Unable to fetch pending orders.");
         }
       }
       getData();
     } else if (orderstate === 1) {
-      setMessage("Fetching order...")
+      setMessage("Fetching order...");
       const getUpdateData = async () => {
         try {
           const response = await request.get(
@@ -76,10 +76,10 @@ export const PurchaseOrder = ({ orderstate }) => {
           setFormUpdateData(response.data.formInfo);
           setUpdateData({ ...updateData, formData: response.data.formInfo });
           setOrder(response.data.formInfo.orderNumber);
-          setMessage("Fetching order...")
+          setMessage("Fetching order...");
         } catch (e) {
           console.log(e);
-          setMessage("An error occured. Please refresh the page.")
+          setMessage("An error occured. Please refresh the page.");
         }
       };
 
@@ -150,7 +150,7 @@ export const PurchaseOrder = ({ orderstate }) => {
   return (
     <main className="purchase-order-page w-full min-h-full relative h-full px-3 md:px-5 py-1.5">
       <section>
-        <MenuButtonsGroup
+        <DesktopMenus
           heading={
             orderstate === 0 ? "Purchase Order Entry" : "Update Purchase Order"
           }

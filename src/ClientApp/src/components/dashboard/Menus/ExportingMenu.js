@@ -1,7 +1,7 @@
-import { dropDownMenuSource } from "../../data/menu";
-import { handleExporting } from "../../helpers/datagridFunctions";
+import { dropDownMenuSource } from "../../../data/menu";
+import { handleExporting } from "../../../helpers/datagridFunctions";
 
-const DropDownMenu = () => {
+const ExportingMenu = () => {
   return (
     <>
       {dropDownMenuSource.map((link) => (
@@ -41,4 +41,4 @@ const DropDownMenu = () => {
   );
 };
 
-export default DropDownMenu;
+export default ExportingMenu;

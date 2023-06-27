@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import GridItemDetails from "../../../components/dashboard/GridItemDetails";
+import GridItemDetails from "../../../components/dashboard/GridDetailComponents/GridItemDetails";
 import OnboardingService from "../../../axios/onboardingRequest";
 import { useNavigate, useParams } from "react-router-dom";
 import { customActionsSource, updateMenuSource } from "../../../data/menu";

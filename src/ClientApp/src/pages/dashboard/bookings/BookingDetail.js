@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import GridItemDetails from "../../../components/dashboard/GridItemDetails";
+import GridItemDetails from "../../../components/dashboard/GridDetailComponents/GridItemDetails";
 import OnboardingService from "../../../axios/onboardingRequest";
 import { customActionsSource, updateMenuSource } from "../../../data/menu";
 import Portal from "../../../components/dashboard/Portal";
@@ -12,7 +12,7 @@ const BookingDetail = () => {
   const [statusMode, setStatusMode] = useState("");
   const [isOpen, setOpen] = useState(false);
   const navigate = useNavigate();
-
+  // Todo
   useEffect(() => {
     const getSingleBooking = async () => {
       const url = "/test/" + id;
@@ -49,17 +49,15 @@ const BookingDetail = () => {
 
   return (
     <main className="w-full min-h-full relative  px-3 md:px-5 py-1.5">
-      {data && (
-        <GridItemDetails
-          data={data}
-          heading={"Booking details"}
-          title={`Booking Id: ${data.bookingId}`}
-          menus={updateMenuSource}
-          customAction={customActionsSource}
-          company={"ARBS Customer Portal"}
-          onMenuClick={handleClick}
-        />
-      )}
+      <GridItemDetails
+        data={data}
+        heading={"Booking details"}
+        title={`Booking Id: ${data?.bookingId}`}
+        menus={updateMenuSource}
+        customAction={customActionsSource}
+        company={"ARBS Customer Portal"}
+        onMenuClick={handleClick}
+      />
 
       {statusMode === "EditMode" && (
         <Portal isOpen={isOpen} setOpen={setOpen}>

@@ -13,7 +13,6 @@ import Onboarding from "./pages/landing-page/Onboarding";
 import FrontendLayout from "./layout/FrontendLayout";
 import Booking from "./pages/dashboard/bookings/Booking";
 import ProtectedRoute from "./components/dashboard/ProtectedRoute";
-import User from "./pages/dashboard/users/User";
 import ScrollToTop from "./components/frontend/ScrollToTop";
 import { NotFound } from "./pages/landing-page/NotFound";
 import BookingDetail from "./pages/dashboard/bookings/BookingDetail";
@@ -75,14 +74,7 @@ function App() {
                 </ProtectedRoute>
               }
             ></Route>
-            <Route
-              path="users"
-              element={
-                <ProtectedRoute>
-                  <User />
-                </ProtectedRoute>
-              }
-            ></Route>
+
             <Route path="bookings">
               <Route
                 index

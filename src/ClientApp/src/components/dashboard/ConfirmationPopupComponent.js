@@ -1,41 +1,13 @@
-import React, { useState } from "react";
 import { MdOutlineClose, MdOutlineDeleteOutline } from "react-icons/md";
 import { TbBrandBooking } from "react-icons/tb";
 import { ImUndo2 } from "react-icons/im";
 
-import { toast } from "react-toastify";
-import LoadingIndicator from "./LoadingIndicator";
-import webService from "../../axios/webService";
-
 const ConfirmationPopupComponent = ({
-  item,
-  setBookings,
-  bookings,
   handleClose,
   title,
   statusBarText,
+  onDelete,
 }) => {
-  const [loading, setLoading] = useState(false);
-
-  const handleDelete = async () => {
-    setLoading(true);
-    try {
-      const response = await webService.Request.delete(item.data.bookingId);
-      setBookings([
-        ...bookings.filter(
-          (booking) => booking.bookingId !== item.data.bookingId
-        ),
-      ]);
-      setLoading(false);
-      handleClose();
-      toast.success(response.message);
-    } catch (error) {
-      setLoading(false);
-      handleClose();
-      toast.warning("Problem deleting item");
-    }
-  };
-
   return (
     <main className="bg-white w-full md:w-[600px]  mx-auto h-fit">
       <section className="sticky w-full inset-x-0 top-0 z-50">
@@ -58,16 +30,10 @@ const ConfirmationPopupComponent = ({
       <section className="sticky border-t border-gray-200 w-full inset-x-0 bottom-0 ">
         <article className="flex bg-white px-2 pb-1 justify-center items-center gap-4">
           <button
-            onClick={handleDelete}
+            onClick={onDelete}
             className="flex gap-1 border-none  hover:bg-gray-200 py-1 px-4 w-fit bg-white text-menuText items-center font-medium  cursor-pointer text-xs"
           >
-            {loading ? (
-              <LoadingIndicator />
-            ) : (
-              <>
-                <MdOutlineDeleteOutline fontSize={20} /> Delete
-              </>
-            )}
+            <MdOutlineDeleteOutline fontSize={20} /> Delete
           </button>
           <button
             onClick={handleClose}

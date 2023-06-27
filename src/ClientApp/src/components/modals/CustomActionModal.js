@@ -1,13 +1,12 @@
 import classNames from "classnames";
 import { MdOutlineClose } from "react-icons/md";
-import SalesApprovalComponent from "../dashboard/SalesApprovalComponent";
 
 const CustomActionModal = ({ isOpen, title, handleClose, children }) => {
   return (
     <main
       className={classNames({
         "flex flex-col bg-white shadow-2xl": true,
-        "right-0 overflow-auto md:top-[40px] py-1.5 md:z-0 z-50 fixed": true,
+        "right-0 overflow-auto top-0 md:top-[40px] py-1.5 md:z-0 z-50 fixed": true,
         "md:h-[calc(98vh_-_40px)] h-full w-[300px] md:w-[410px]": true,
         "transition-transform .3s ease-in-out md:translate-x-0": true,
         "-translate-x-full": !isOpen,
@@ -25,9 +24,7 @@ const CustomActionModal = ({ isOpen, title, handleClose, children }) => {
           />
         </div>
       </section>
-      <section className="mt-5 h-full overflow-y-auto">
-        <SalesApprovalComponent handleClose={handleClose} />
-      </section>
+      <section className="mt-5 h-full overflow-y-auto">{children}</section>
     </main>
   );
 };

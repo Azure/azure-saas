@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import "devextreme/data/odata/store";
 import DataGrid, {
   Pager,
@@ -22,6 +22,7 @@ import { Link } from "react-router-dom";
 const DataTable = ({
   data,
   startEdit,
+  selectRowItem,
   columns,
   route,
   keyExpr,
@@ -112,7 +113,7 @@ const DataTable = ({
   };
 
   return (
-    <main>
+    <main className="mt-5">
       <DataGrid
         id="dataTableGrid"
         dataSource={data}
@@ -127,11 +128,11 @@ const DataTable = ({
         keyExpr={keyExpr}
         focusedRowEnabled={true}
         onFocusedRowChanging={(e) => handleFocusedRowChanging(e)}
-        // onRowClick={(e) => setRowClickItem(e)}
+        onRowClick={(e) => selectRowItem(e)}
         onRowDblClick={(e) => startEdit(e)}
         allowColumnReordering={true}
         allowColumnResizing={true}
-        columnMinWidth={100}
+        columnMinWidth={70}
         columnAutoWidth={true}
         columnHidingEnabled={true}
         ref={dataGridRef}
@@ -152,19 +153,20 @@ const DataTable = ({
               column?.pk === true
                 ? (data) => {
                     return (
+                    <Link to={`/dashboard/${route}/${data.row.key}/view`}>
                       <div
                         data-row-key={data.key}
+                        onClick={(e) => handleHyperlinkClick(e, data)}
                         data-column-index={data.columnIndex}
+                        className="pk-div"
                       >
-                        <Link to={`/dashboard/${route}/${data.row.key}/view`}>
-                          <span
-                            onClick={(e) => handleHyperlinkClick(e, data)}
-                            className="pk-hyperlink"
-                          >
-                            {data.value}
-                          </span>
-                        </Link>
+                        <span
+                          className="pk-hyperlink"
+                        >
+                          {data.value}
+                        </span>
                       </div>
+                    </Link>
                     );
                   }
                 : (data) => {
@@ -218,4 +220,4 @@ const filterBuilderPopupPosition = {
   offset: { y: 10 },
 };
 
-export default DataTable;
+export default memo(DataTable);

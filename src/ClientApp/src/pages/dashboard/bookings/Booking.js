@@ -9,12 +9,16 @@ import ConfirmationPopupComponent from "../../../components/dashboard/Confirmati
 import OnboardingService from "../../../axios/onboardingRequest";
 import CategoryComponent from "../../../components/dashboard/CategoryComponent";
 import Constant from "../../../utils/constant";
+import FromToDateComponent from "../../../components/dashboard/FromToDateComponent";
+import DataTable from "../../../components/dashboard/DataTable";
+import Statusbar from "../../../components/dashboard/Statusbar";
+import MenusGroupComponent from "../../../components/dashboard/Menus/MenusGroupComponent";
 
 const Booking = () => {
   const [bookings, setBookings] = useState([]);
   const [singleBooking, setSingleBooking] = useState({});
   const [onEditRecordId, setEditRecordId] = useState(null);
-  const [onRowClickItem, setRowClickItem] = useState(null);
+  const [selectedRecordId, setSelectedRecordId] = useState(null);
   // eslint-disable-next-line
   const [date, setDate] = useState("");
   const [statusMode, setStatusMode] = useState("");
@@ -25,8 +29,6 @@ const Booking = () => {
   useEffect(() => {
     try {
       const getData = async () => {
-        // const response vice.Request.getByDate(date.startdate, date.enddate)
-        //   : await webService.Request.get();
         const url = "/test";
         const response = await OnboardingService.get(url);
         setBookings(response);
@@ -35,6 +37,8 @@ const Booking = () => {
     } catch (error) {
       console.log(error);
     }
+
+    return () => {};
   }, [date]);
 
   useEffect(() => {
@@ -48,11 +52,17 @@ const Booking = () => {
     if (onEditRecordId) getSingleRecord();
   }, [onEditRecordId]);
 
-  const startEdit = useCallback(({ data }) => {
-    if (data) {
-      setEditRecordId(data.bookingId);
+  const startEdit = useCallback(({ key }) => {
+    if (key) {
+      setEditRecordId(key);
     } else {
       setEditRecordId(null);
+    }
+  }, []);
+
+  const selectRowItem = useCallback(({ key }) => {
+    if (key) {
+      setSelectedRecordId(key);
     }
   }, []);
 
@@ -72,50 +82,64 @@ const Booking = () => {
     }
   }, []);
 
-  const handleClick = useCallback((menu) => {
-    switch (menu) {
-      case "Find":
-        // fromDate === null && toDate && date === ""
-        //   ? setDate({ startdate: fromDate, enddate: toDate })
-        //   : setDate({ startdate: fromDate, enddate: toDate });
-        break;
-      case "New":
-        setStatusMode("CreateMode");
-        setOpen((isOpen) => !isOpen);
-        break;
-      case "Delete":
-        openConfirmationPopup(onRowClickItem);
-        break;
-      case "Close":
-        console.log("Close was clicked");
-        break;
-      case "Help":
-        console.log("Help was clicked");
-        break;
+  const handleDelete = async () => {
+    console.log("delted");
+  };
 
-      default:
-        break;
-    }
-  }, [onRowClickItem, openConfirmationPopup]);
-  
+  const handleClick = useCallback(
+    (menu) => {
+      switch (menu) {
+        case "Find":
+          // fromDate === null && toDate && date === ""
+          //   ? setDate({ startdate: fromDate, enddate: toDate })
+          //   : setDate({ startdate: fromDate, enddate: toDate });
+          break;
+        case "New":
+          setStatusMode("CreateMode");
+          setOpen((isOpen) => !isOpen);
+          break;
+        case "Delete":
+          openConfirmationPopup(selectedRecordId);
+          break;
+        case "Close":
+          console.log("Close was clicked");
+          break;
+        case "Help":
+          console.log("Help was clicked");
+          break;
+
+        default:
+          break;
+      }
+    },
+    [selectedRecordId, openConfirmationPopup]
+  );
 
   return (
-    <main className="w-full min-h-full relative  px-3 md:px-5 py-1.5">
+    <main className="w-full min-h-full relative px-3 md:px-5 py-1.5">
       <section>
-        <CategoryComponent
-          menus={homeMenuSource}
-          heading={"Booking List"}
-          company={"ARBS Customer Portal"}
-          onMenuClick={handleClick}
-          data={bookings}
-          route={route}
-          keyExpr={"bookingId"}
-          columns={bookingColumns}
-          startEdit={startEdit}
-          setRowClickItem={setRowClickItem}
-          openConfirmationPopup={openConfirmationPopup}
-          filterValues={bookingFilterValues}
-        />
+        <CategoryComponent>
+          <MenusGroupComponent
+            menus={homeMenuSource}
+            heading={"Booking List"}
+            onMenuClick={handleClick}
+          />
+          <FromToDateComponent />
+          <DataTable
+            data={bookings}
+            route={route}
+            keyExpr={"bookingId"}
+            columns={bookingColumns}
+            startEdit={startEdit}
+            selectRowItem={selectRowItem}
+            openConfirmationPopup={openConfirmationPopup}
+            filterValues={bookingFilterValues}
+          />
+          <Statusbar
+            heading={"Booking List"}
+            company={"ARBS Customer Portal"}
+          />
+        </CategoryComponent>
       </section>
 
       {statusMode === "CreateMode" ? (
@@ -149,13 +173,11 @@ const Booking = () => {
         statusMode === "DeleteMode" && (
           <Portal isOpen={isOpen} setOpen={setOpen}>
             <ConfirmationPopupComponent
-              item={onRowClickItem}
-              bookings={bookings}
-              setBookings={setBookings}
               handleClose={handleClose}
               title={"Delete A Booking Item"}
               statusBarText={"Delete Booking Item"}
               statusMode={statusMode}
+              onDelete={handleDelete}
             />
           </Portal>
         )

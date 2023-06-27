@@ -180,9 +180,8 @@ export const dropDownMenuSource = [
       {
         Head: "Set Credentials",
         sublink: [
-          // { name: "Export selected rows to Excel", icon: <SiMicrosoftexcel /> },
           { name: "Export all data to Excel", icon: <SiMicrosoftexcel /> },
-          // { name: "Export selected rows to PDF", icon: <GrDocumentPdf /> },
+
           { name: "Export all data to PDF", icon: <GrDocumentPdf /> },
         ],
       },

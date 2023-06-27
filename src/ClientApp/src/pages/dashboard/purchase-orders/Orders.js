@@ -7,6 +7,10 @@ import CategoryComponent from "../../../components/dashboard/CategoryComponent";
 import { toast } from "react-toastify";
 import OnboardingService from "../../../axios/onboardingRequest";
 import Constant from "../../../utils/constant";
+import FromToDateComponent from "../../../components/dashboard/FromToDateComponent";
+import DataTable from "../../../components/dashboard/DataTable";
+import Statusbar from "../../../components/dashboard/Statusbar";
+import MenusGroupComponent from "../../../components/dashboard/Menus/MenusGroupComponent";
 
 const Orders = () => {
   const [data, setData] = useState([]);
@@ -76,22 +80,30 @@ const Orders = () => {
   };
 
   return (
-    <main className="w-full min-h-full relative  px-3 md:px-5 py-1.5">
+    <main className="w-full min-h-full relative px-3 md:px-5 py-1.5">
       <section>
-        <CategoryComponent
-          menus={homeMenuSource}
-          heading={"Purchase Orders"}
-          company={"ARBS Customer Portal"}
-          onMenuClick={handleClick}
-          data={data}
-          route={route}
-          keyExpr={"orderNumber"}
-          columns={orderColumns}
-          startEdit={startEdit}
-          setRowClickItem={setRowClickItem}
-          openConfirmationPopup={openConfirmationPopup}
-          filterValues={orderFilterValues}
-        />
+        <CategoryComponent>
+          <MenusGroupComponent
+            menus={homeMenuSource}
+            heading={"Purchase Orders"}
+            onMenuClick={handleClick}
+          />
+          <FromToDateComponent />
+          <DataTable
+            data={data}
+            route={route}
+            keyExpr={"orderNumber"}
+            columns={orderColumns}
+            startEdit={(e) => startEdit(e)}
+            setRowClickItem={setRowClickItem}
+            openConfirmationPopup={openConfirmationPopup}
+            filterValues={orderFilterValues}
+          />
+          <Statusbar
+            heading={"Purchase Orders"}
+            company={"ARBS Customer Portal"}
+          />
+        </CategoryComponent>
       </section>
     </main>
   );

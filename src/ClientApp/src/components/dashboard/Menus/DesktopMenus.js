@@ -1,6 +1,6 @@
-import CustomButtonComponent from "../../components/dashboard/CustomButtonComponent";
+import CustomButtonComponent from "./CustomButtonComponent";
 
-const MenuButtonsGroup = ({ heading, menus, onMenuClick }) => {
+const DesktopMenus = ({ heading, menus, onMenuClick }) => {
   return (
     <main className="w-full border-b border-gray-300 md:pr-5 flex">
       <section className="flex w-full items-center">
@@ -24,4 +24,4 @@ const MenuButtonsGroup = ({ heading, menus, onMenuClick }) => {
   );
 };
 
-export default MenuButtonsGroup;
+export default DesktopMenus;
