@@ -63,6 +63,7 @@ builder.Services.Configure<AzureB2CSignupAdminOptions>(
 builder.Services.Configure<EmailOptions>(
     builder.Configuration.GetSection(SR.EmailOptionsProperty));
 
+
 //Sql options
 builder.Services.Configure<SqlOptions>(
             builder.Configuration.GetRequiredSection(SqlOptions.SectionName));
@@ -256,6 +257,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 
 app.MapControllerRoute(name: SR.DefaultName, pattern: SR.MapControllerRoutePattern);
