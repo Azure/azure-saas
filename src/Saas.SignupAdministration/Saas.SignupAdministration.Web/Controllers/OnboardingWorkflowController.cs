@@ -47,7 +47,7 @@ public class OnboardingWorkflowController : ControllerBase
             await DeployTenantAsync();
 
             ///Change to created at action 
-            return Created("api/onboarding", _onboardingWorkflow.OnboardingWorkflowItem);
+            return Created(SR.SignInUrl, _onboardingWorkflow.OnboardingWorkflowItem);
 
         }
         catch 

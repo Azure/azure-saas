@@ -10,6 +10,8 @@ using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Admin.Client;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Saas.Identity.Services;
+using Saas.Shared.DataHandler;
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
@@ -97,6 +99,11 @@ builder.Services.AddScoped<IPersistenceProvider, JsonSessionPersistenceProvider>
 // Add the user details that come back from B2C
 builder.Services.AddScoped<IApplicationUser, ApplicationUser>();
 
+//Add database handler. To directly query and a database using stored procedures or direct queries
+builder.Services.AddSingleton<IDatabaseHandler, DatabaseHandler>();
+
+//Add custom tenant service handler
+builder.Services.AddScoped<ICustomTenantService, CustomTenantService>();
 
 
 //Since most if not all requests will be using react via AJAX
