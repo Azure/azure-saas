@@ -134,7 +134,7 @@ export const InputField = ({ data, setMessage, order, orderstate }) => {
   // Clears the table field
 
   const handleClearData = () => {
-    ConfirmMessage("Hello", function (result) {
+    ConfirmMessage("", function (result) {
       if (result) {
         data.store().clear();
         setMessage("Table successfully cleared. You can add new items.");

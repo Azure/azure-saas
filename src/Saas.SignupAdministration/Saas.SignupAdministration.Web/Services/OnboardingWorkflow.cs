@@ -47,7 +47,6 @@ public class OnboardingWorkflowService
         NewTenantRequest tenantRequest = new()
         {
             Name = OnboardingWorkflowItem.OrganizationName,
-            Route = OnboardingWorkflowItem.TenantRouteName,
             CreatorEmail = _applicationUser.EmailAddress,
             ProductTierId = OnboardingWorkflowItem.ProductId,
             CategoryId = OnboardingWorkflowItem.CategoryId,

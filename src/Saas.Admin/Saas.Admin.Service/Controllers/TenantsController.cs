@@ -1,4 +1,5 @@
-﻿using Saas.Admin.Service.Data.Models.OnBoarding;
+using Microsoft.AspNetCore.Identity;
+using Saas.Admin.Service.Data.Models.OnBoarding;
 using Saas.Identity.Authorization.Attribute;
 using Saas.Identity.Authorization.Model.Claim;
 using Saas.Identity.Authorization.Model.Data;
@@ -25,7 +26,7 @@ public class TenantsController : ControllerBase
 
 
     public TenantsController(
-        ITenantService tenantService, 
+        ITenantService tenantService,
         IPermissionsServiceClient permissionService,
         IHttpContextAccessor httpContextAccessor,
          ILogger<TenantsController> logger,
@@ -128,7 +129,7 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-    [Authorize] 
+    [Authorize]
     public async Task<ActionResult<TenantDTO>> PostTenant(NewTenantRequest tenantRequest)
     {
         try
@@ -143,7 +144,7 @@ public class TenantsController : ControllerBase
             TenantDTO tenant = await _tenantService.AddTenantAsync(tenantRequest, userId);
 
             _logger.LogInformation("Created a new tenant {NewTenantName} with URL {NewTenantRoute}, and ID {NewTenantID}", tenant.Name, tenant.Route, tenant.Id);
-            
+
             return CreatedAtAction(nameof(GetTenant), new { tenantId = tenant.Id }, tenant);
         }
         catch (DbUpdateException ex)
@@ -387,10 +388,10 @@ public class TenantsController : ControllerBase
     public async Task<IActionResult> InviteUserToTenant(Guid tenantId, string userEmail)
     {
         await _permissionsServiceClient.AddUserPermissionsToTenantByEmailAsync(
-            tenantId, 
-            userEmail, 
+            tenantId,
+            userEmail,
             new string[] { TenantPermissionKind.Admin.ToString() });
-        
+
         return NoContent();
     }
 
@@ -455,27 +456,22 @@ public class TenantsController : ControllerBase
     ///  /// <param name="userId"></param>
     private void CompleteOnboardInfo(NewTenantRequest tenantRequest, Guid userId)
     {
-        //Used for hashing passwords and other secrets
-        HashOptions hashes = _configuration.GetRequiredSection(HashOptions.SectionName).Get<HashOptions>() ?? new HashOptions();
-        //Should obtain this salt 
-        string hashSalt = hashes.PasswordHash ?? string.Empty;
+        //Initialize a hashing algorithm to hash sensitive information such as password and answer
+        IPasswordHasher<UserInfo> hasher = new PasswordHasher<UserInfo>();
 
-        if (string.IsNullOrEmpty(hashSalt))
-            throw new ArgumentNullException("password hash salt cannot be null");
-
-        UserInfo.salt = hashSalt;
         UserInfo tenantUser = new UserInfo
         {
             Guid = userId,
             Email = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
-            UserName =  User.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
+            UserName = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
             FullNames = User.FindFirstValue("name") ?? string.Empty,
             LockAfter = 3,
-            Telephone  = User.FindFirstValue("telephone") ?? string.Empty,
-            //Defaults password
-            Password = "0",
-            ConfirmPassword = "0"
+            Telephone = User.FindFirstValue("telephone") ?? string.Empty
         };
+
+        tenantUser.Password = hasher.HashPassword(tenantUser, "0");  //Defaulted to 0
+        tenantUser.ConfirmPassword = hasher.HashPassword(tenantUser, "0");  //Defaulted to 0
+        tenantUser.Answer = hasher.HashPassword(tenantUser, tenantRequest.Answer);
 
         tenantRequest.UserInfo = tenantUser;
         tenantRequest.UserTenant = new UserTenant();

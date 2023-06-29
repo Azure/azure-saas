@@ -5,6 +5,7 @@ namespace Saas.SignupAdministration.Web.Controllers;
 
 [Authorize()]
 [ApiController]
+[ValidateAntiForgeryToken]
 // [AuthorizeForScopes(Scopes = new string[] { "tenant.read", "tenant.global.read", "tenant.write", "tenant.global.write", "tenant.delete", "tenant.global.delete" })]
 public class OnboardingWorkflowController : ControllerBase
 {
@@ -22,21 +23,19 @@ public class OnboardingWorkflowController : ControllerBase
     /// <param name="organization">Organization model</param>
     /// <returns> An appropriate result based on given data</returns>
     [HttpPost("/api/onboarding")]
-    //[ValidateAntiForgeryToken]
     public async Task<IActionResult> HandleBatchRegistration([FromBody] NewOnboardingItem organization)
     {
         if (!ModelState.IsValid) //Return a bad request
             return BadRequest("Cannot process your request");
         try
         {
-            if (await _onboardingWorkflow.GetRouteExistsAsync(organization.TenantRouteName))
-            {
-                return BadRequest("Organization route name used is already taken");
-            }
+            //if (await _onboardingWorkflow.GetRouteExistsAsync(organization.TenantRouteName))
+            //{
+            //    return BadRequest("Organization route name used is already taken");
+            //}
 
             _onboardingWorkflow.OnboardingWorkflowItem.OrganizationName = organization.OrganizationName;
             _onboardingWorkflow.OnboardingWorkflowItem.CategoryId = organization.CategoryId;
-            _onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName = organization.TenantRouteName;
             _onboardingWorkflow.OnboardingWorkflowItem.ProductId = organization.ProductTierId;
             _onboardingWorkflow.OnboardingWorkflowItem.Answer = organization.Answer;
             _onboardingWorkflow.OnboardingWorkflowItem.Question = organization.Question;
@@ -48,15 +47,15 @@ public class OnboardingWorkflowController : ControllerBase
             await DeployTenantAsync();
 
             ///Change to created at action 
-            return Created("api/onboarding", _onboardingWorkflow.OnboardingWorkflowItem);
+            return Created(SR.SignInUrl, _onboardingWorkflow.OnboardingWorkflowItem);
 
         }
-        catch 
+        catch
         {
             return BadRequest("An error occured while trying to process your request. Try again later");
         }
         // Need to check whether the route name exists
-       
+
 
 
         //return new JsonResult(new {message = "success"});
@@ -87,7 +86,7 @@ public class OnboardingWorkflowController : ControllerBase
     {
         await _onboardingWorkflow.OnboardTenant();
 
-       // UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnTenantDeploymentSuccessful);
+        // UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers.OnTenantDeploymentSuccessful);
     }
 
     private void UpdateOnboardingSessionAndTransitionState(OnboardingWorkflowState.Triggers trigger)
@@ -100,9 +99,9 @@ public class OnboardingWorkflowController : ControllerBase
     {
         var action = SR.OrganizationNameAction;
 
-        if (!String.IsNullOrEmpty(_onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName))
-            action = SR.ServicePlansAction;
-        else if (_onboardingWorkflow.OnboardingWorkflowItem.CategoryId > 0)
+        //if (!String.IsNullOrEmpty(_onboardingWorkflow.OnboardingWorkflowItem.TenantRouteName))
+        //    action = SR.ServicePlansAction;
+        if (_onboardingWorkflow.OnboardingWorkflowItem.CategoryId > 0)
             action = SR.TenantRouteNameAction;
 
         return action;
@@ -122,8 +121,6 @@ public class NewOnboardingItem
     //Industry
     public int CategoryId { get; set; }
 
-    public string TenantRouteName { get; set; } = string.Empty;
-
     public int ProductTierId { get; set; }
 
     public string Question { get; set; } = string.Empty;
@@ -136,5 +133,5 @@ public class NewOnboardingItem
 
     public string Country { get; set; } = string.Empty;
 
-    public int NoofEmployees { get; set; } 
+    public int NoofEmployees { get; set; }
 }

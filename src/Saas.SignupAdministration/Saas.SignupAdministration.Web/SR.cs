@@ -77,7 +77,6 @@ public static class SR
     public const string OnboardingWorkflowStateProperty = "state";
     public const string OnboardingWorkflowEmailAddressProperty = "emailAddress";
     public const string OnboardingWorkflowOrganizationNameProperty = "organizationName";
-    public const string OnboardingWorkflowTenantRouteNameProperty = "tenantRouteName";
     public const string OnboardingWorkflowStateCurrentStateProperty = "currentState";
     public const string OnboardingWorkflowIsActiveProperty = "isActive";
     public const string OnboardingWorkflowIsCancelledProperty = "isCancelled";
@@ -134,5 +133,7 @@ public static class SR
     public const string CookieName = "ss_v";
 
     public const string FormFieldName = "csrf-token";
-    public const string  HeaderName = "X-Csrf-Token";
+    public const string HeaderName = "X-Csrf-Token";
+
+    public const string SignInUrl = "/MicrosoftIdentity/Account/SignIn";
 }

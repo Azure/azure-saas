@@ -52,6 +52,47 @@
 
 }
 
+.contact-section {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    width: auto;
+    padding: 20px;
+    height: 37px;
+    z-index: 3;
+    background-color: var(--blue);
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    transition: all 0.3s;
+}
+
+.contact-section:hover {
+    /* box-shadow: 0px 3px 5px -5px var(--black);
+    transform: translateY(-1px); */
+    background-color: var(--bluehover);
+    cursor: pointer;
+}
+
+.contact-section-icon {
+    color: var(--cream);
+    width: 25px;
+    height: 25px;
+}
+
+.contact-section-text {
+    color: var(--cream);
+    font-size: 1rem;
+    font-weight: 550;
+}
+
+.contact-section:active, .contact-section:focus {
+    text-decoration-line: underline;
+    text-decoration-color: var(--cream);
+}
+
 .nav-mobile-content {
     display: flex;
     flex-direction: column;
@@ -70,7 +111,7 @@
     height: max-content;
     width: max-content;
     align-content: center;
-    transition: all 0.5s;
+    transition: all 0.3s;
     cursor: pointer;
     
      
@@ -88,7 +129,7 @@
     justify-content: center;
     width: 100px;
     align-items: center;
-    transition: all 0.5s;
+    transition: all 0.3s;
     cursor: pointer;
 
 }
@@ -99,6 +140,9 @@
     border: solid 1px var(--blue); */
 }
 
+.nav-signin-button:active {
+    background-color: var(--blue);
+}
 
 
 button .nav-button{
@@ -107,7 +151,7 @@ button .nav-button{
 }
 
 .nav-button:hover {
-    color: var(--maroon);
+    color: var(--buttonblue);
     
 }
 
@@ -158,7 +202,17 @@ button .nav-button{
     display: none;
 }
 
+.contact-section {
+    width: 60px;
+    height: 60px;
+    bottom: 35px;
+    right: 35px;
+    
+}
 
+.contact-section-text {
+    display: none;
+}
 
 .nav-signin-button {
     background-color: var(--buttonblue);

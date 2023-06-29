@@ -21,15 +21,14 @@ public class TenantDTO
         CreatedTime = DateTime.Now;//Guard.Argument(tenant.CreatedDate, nameof(tenant.CreatedDate)).NotNull();
 
         Name = Guard.Argument(tenant.Company, nameof(tenant.Company)).NotEmpty();
-        Route = Guard.Argument(tenant.Route, nameof(tenant.Route)).NotEmpty();
         CreatorEmail = Guard.Argument(tenant.CreatedUser, nameof(tenant.CreatedUser)).NotEmpty();
         ProductTierId = tenant.ProductTierId;
         CategoryId = tenant.Industry;
         IsDbReady = tenant.InitReady;
-        DatabaseName = tenant.DatabaseName??string.Empty;
+        DatabaseName = tenant.DatabaseName ?? string.Empty;
 
-        Version = tenant.ConcurrencyToken is not null 
-            ? Convert.ToBase64String(tenant.ConcurrencyToken) 
+        Version = tenant.ConcurrencyToken is not null
+            ? Convert.ToBase64String(tenant.ConcurrencyToken)
             : null;
     }
 
@@ -39,7 +38,6 @@ public class TenantDTO
         {
             Guid = Id,
             Company = Name,
-            Route = Route,
             CreatedUser = CreatorEmail,
             ProductTierId = ProductTierId,
             Industry = CategoryId,
@@ -53,7 +51,6 @@ public class TenantDTO
     public void CopyTo(Tenant target)
     {
         target.Company = Name;
-        target.Route = Route;
         target.CreatedUser = CreatorEmail;
         target.Industry = CategoryId;
         target.ProductTierId = ProductTierId;

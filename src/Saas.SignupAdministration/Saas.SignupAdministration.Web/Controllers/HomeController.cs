@@ -12,18 +12,18 @@ namespace Saas.SignupAdministration.Web.Controllers;
 public class HomeController : Controller
 {
 
-    //User information and token acquistation added to facilitate REST API 
     private readonly IApplicationUser _applicationUser;
     private readonly IAntiforgery _antiforgery;
     private readonly IConfiguration _configuration;
     private readonly string baseUrl;
 
-    public HomeController( IApplicationUser applicationUser,  IAntiforgery antiforgery, IConfiguration configuration)
+    public HomeController(IApplicationUser applicationUser, IAntiforgery antiforgery, IConfiguration configuration)
     {
         _applicationUser = applicationUser;
         _antiforgery = antiforgery;
         _configuration = configuration;
-        baseUrl = _configuration.GetSection("AppSettings:developmentUrl").Value;
+        baseUrl = _configuration.GetSection("AppSettings:developmentUrl").Value ??
+            throw new ApplicationException("Base url cannot be null");
     }
 
     [HttpGet]
@@ -69,15 +69,15 @@ public class HomeController : Controller
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ValidateAntiForgeryToken]
     public IActionResult GetUser()
     {
         if (User.Identity?.IsAuthenticated ?? false)
         {
-            string? xsrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
             bool isRegistered = User?.Claims?.HasSaasTenantPermissionAdmin() ?? false;
 
             ApplicationUserDTO user = new ApplicationUserDTO
-            { 
+            {
                 Email = _applicationUser.EmailAddress,
                 Telephone = _applicationUser.Telephone,
                 Country = _applicationUser.Country,
@@ -87,7 +87,7 @@ public class HomeController : Controller
 
             };
 
-            return new JsonResult(new { user,isRegistered });
+            return new JsonResult(new { user, isRegistered });
 
         }
         else
@@ -103,21 +103,27 @@ public class HomeController : Controller
     public IActionResult GetCsrfToken()
     {
         string? csrf_token = _antiforgery.GetTokens(HttpContext).RequestToken;
-        string cookie = _antiforgery.GetTokens(HttpContext).CookieToken
-            ?? throw new BadHttpRequestException("Anti-forgery cookie cannot be null");
 
-        HttpContext.Response.Cookies.Append(
-            SR.CookieName, cookie,
-            new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                Path = "/", // Set the desired cookie path
-                SameSite = SameSiteMode.Lax
-            }
-            );
+        //Generate cooki only when not present
+        if (!HttpContext.Request.Cookies.ContainsKey(SR.CookieName))
+        {
+            string cookie = _antiforgery.GetTokens(HttpContext).CookieToken
+           ?? throw new BadHttpRequestException("Anti-forgery cookie cannot be null");
 
-        return new JsonResult(new {token = csrf_token});
+            HttpContext.Response.Cookies.Append(
+                SR.CookieName, cookie,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    Path = "/", // Set the desired cookie path
+                    SameSite = SameSiteMode.Lax
+                }
+                );
+
+        }
+
+        return new JsonResult(new { token = csrf_token });
 
     }
 

@@ -12,9 +12,18 @@
   --black: rgb(0, 0, 0);
   --cream: #f9fcfe;
   --bgColor: #006FC9;
+  --dashboardGridBlue: #5C95C5;
+  --dashboardSecondaryBlue: #489AEE;
 
 }
 
+body{
+  font-family: "Open Sans", sans-serif;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
+}
 .notfound-header {
   font-size: 5rem;
   margin: 0;
@@ -40,6 +49,19 @@
   width: fit-content;
   background-color: white;
   color: #0176d3;
+}
+
+#devBlueButton{
+  border-radius: 2%;
+  height: 28px;
+  border: none;
+  padding: 0px 16px;
+  width: fit-content;
+  background-color: #0176d3;
+  color: #fff;
+}
+#devBlueButton:hover{
+  background-color: #1B6EC2;
 }
 
 #onBoardingButton {
@@ -99,7 +121,7 @@
 }
 
 /* DataGrid Styling */
-#bookingGrid{
+#dataTableGrid{
   height: 75vh;
   font-size: 0.7rem !important;
 }
@@ -112,9 +134,9 @@
 }
 
 .dx-datagrid-headers {
-    background-color: #489AEE !important;
-    color:#fff !important;
-    font-weight: 500 !important;
+
+    color: #282828 !important;
+    font-weight: 600 !important;
 }
 
 .dx-overlay-content .dx-popup-normal {
@@ -122,27 +144,49 @@
   width: 20vw !important;
 }
 
+.pk-div {
+  cursor: pointer;
+  color: var(--dashboardSecondaryBlue);
+}
 /* Context Menu */
 
 .dx-context-menu {
   background-color: #f2f2f2;
 }
 
+.pk-hyperlink:hover {
+  text-decoration-line: underline;
+}
+
+.grid-context-btn {
+  /* color: var(--dashboardSecondaryBlue); */
+  font-size: .8rem;
+  font-weight: 500;
+}
+
+.grid-context-btn:hover {
+  color: var(--dashboardSecondaryBlue);
+}
+
 .dx-menu-item-text {
   font-size: 12px;
-  color: #0176d3;
+  color: var(--dashboardGridBlue);
   font-weight: 500;
+}
+
+.dx-menu-item-popout {
+  color: var(--dashboardGridBlue)
 }
 
 .dx-context-menu-item-content {
   padding: 8px;
 }
 .dx-menu-item-content > .dx-icon{
-  color: #0176d3;
+  color: var(--dashboardGridBlue);
   font-weight: 500;
 }
 
-.dx-menu-item-content:hover .dx-menu-item-text {
+.dx-menu-item-content:hover {
   background-color: #f3f3f3;
 }
 
@@ -153,28 +197,15 @@
     padding: 10px!important;
 }
 
-.form-heading{
+.linear-bg{
   background: rgb(0,111,201);
 background: linear-gradient(90deg, rgba(0,111,201,1) 0%, rgba(59,150,221,1) 84%, rgba(72,154,238,1) 100%);
 }
 
- /* .dx-texteditor-input-container .dx-texteditor-input {
-  display: flex;
-  align-items: center;
-  background-color: red;
-  padding: 0;
-  margin: 0;
-} 
-
-
-
- .dx-texteditor-input-container {
-  display: flex;
-  align-items: center;
-    border: none;
-    border: 1px solid #489AEE;
-  }
-   */
+ .radial-bg{
+  background: rgb(72,154,238);
+background: radial-gradient(circle, rgba(72,154,238,1) 0%, rgba(255,255,255,1) 100%);
+ }
  
   @media screen and (min-width:1500px){
     #orderGrid{

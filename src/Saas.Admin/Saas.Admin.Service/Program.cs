@@ -14,6 +14,7 @@ using Saas.Shared.Options;
 using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Identity.Interface;
+using Saas.Shared.DataHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -85,6 +86,9 @@ builder.Services.AddHttpContextAccessor();
 
 // Add authentication for incoming requests
 builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, AzureB2CAdminApiOptions.SectionName);
+
+//Add database handler. To directly query and a database using stored procedures or direct queries
+builder.Services.AddSingleton<IDatabaseHandler, DatabaseHandler>();
 
 // Register authorization handlers for authorization
 builder.Services.AddSingleton<IAuthorizationHandler, SaasTenantPermissionAuthorizationHandler>();

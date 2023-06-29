@@ -20,9 +20,7 @@ const DashboardNavbar = ({ onMenuButtonClick, onMenuClick }) => {
             className=" opacity-50 cursor-pointer"
             fontSize={20}
           />
-          <h1 className="font-semibold text-base cursor-pointer">
-            ARBS Customer Portal
-          </h1>
+          <h1 className="font-bold text-base cursor-pointer">iBusiness</h1>
         </article>
 
         <article className="hidden md:flex gap-4  ">

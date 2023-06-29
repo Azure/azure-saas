@@ -33,6 +33,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StoredProcedures", "StoredP
 		StoredProcedures\spUpdateVerifiedUsers.sql = StoredProcedures\spUpdateVerifiedUsers.sql
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientApp", "ClientApp", "{E952ADFC-CB9F-4C13-9862-E2C8E5C4088E}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "clientapp", "ClientApp\clientapp.esproj", "{C47C6770-0A74-40D3-B6CA-BE76F6D95F54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

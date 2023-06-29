@@ -46,7 +46,7 @@ namespace Saas.Admin.Service.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 13, 11, 52, 9, 138, DateTimeKind.Utc).AddTicks(4126));
+                        .HasDefaultValue(new DateTime(2023, 6, 19, 13, 14, 12, 33, DateTimeKind.Utc).AddTicks(1186));
 
                     b.Property<string>("CreatedUser")
                         .IsRequired()
@@ -80,9 +80,11 @@ namespace Saas.Admin.Service.Migrations
                     b.Property<int>("ProductTierId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Route")
+                    b.Property<string>("SqlServerRegion")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("default");
 
                     b.Property<string>("TimeZone")
                         .IsRequired()
@@ -95,9 +97,6 @@ namespace Saas.Admin.Service.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Guid");
-
-                    b.HasIndex("Route")
-                        .IsUnique();
 
                     b.ToTable("Organization");
                 });
@@ -127,7 +126,7 @@ namespace Saas.Admin.Service.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 13, 11, 52, 9, 139, DateTimeKind.Utc).AddTicks(607));
+                        .HasDefaultValue(new DateTime(2023, 6, 19, 13, 14, 12, 34, DateTimeKind.Utc).AddTicks(9740));
 
                     b.Property<DateTime>("DOB")
                         .HasColumnType("datetime2");
@@ -195,7 +194,7 @@ namespace Saas.Admin.Service.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 13, 11, 52, 9, 138, DateTimeKind.Utc).AddTicks(7719));
+                        .HasDefaultValue(new DateTime(2023, 6, 19, 13, 14, 12, 34, DateTimeKind.Utc).AddTicks(3709));
 
                     b.Property<string>("CreatedUser")
                         .IsRequired()
@@ -215,7 +214,7 @@ namespace Saas.Admin.Service.Migrations
                     b.Property<DateTime>("ExpiryDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 9, 11, 11, 52, 9, 138, DateTimeKind.Utc).AddTicks(6357));
+                        .HasDefaultValue(new DateTime(2023, 9, 17, 13, 14, 12, 33, DateTimeKind.Utc).AddTicks(9194));
 
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()

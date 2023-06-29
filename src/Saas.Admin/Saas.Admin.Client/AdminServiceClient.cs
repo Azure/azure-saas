@@ -1549,11 +1549,6 @@ namespace Saas.Admin.Client
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
         public string Name { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("route")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
-        public string Route { get; set; }
-
         [System.Text.Json.Serialization.JsonPropertyName("creatorEmail")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]

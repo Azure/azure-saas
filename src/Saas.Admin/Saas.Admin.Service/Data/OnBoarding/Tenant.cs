@@ -16,9 +16,6 @@ public class Tenant
     [Required]
     public Guid Guid { get; set; }
 
-    //A unique identifier
-    [Required]
-    public string Route { get; set; } = string.Empty;
 
     /// <summary>
     /// Represents company name
@@ -43,13 +40,15 @@ public class Tenant
     [Required]
     public bool InitReady { get; set; } = false;
 
-    public string? DatabaseName { get; set; } 
+    public string? DatabaseName { get; set; }
     public bool ExternalDB { get; set; }
 
     public string TimeZone { get; set; } = "E. Africa Standard Time";
 
+    public string? SqlServerRegion { get; set; }
+
     //User creator email
-    [Required] 
+    [Required]
     public string CreatedUser { get; set; } = string.Empty;
 
     public DateTime? CreatedDate { get; set; }

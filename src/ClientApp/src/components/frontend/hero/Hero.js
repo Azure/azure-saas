@@ -12,7 +12,7 @@ export const Hero = () => {
         <h1 className="landing-header">{data.title}</h1>
         <p className="lander-page-subtitle">{data.subtitle}</p>
         <button className="heroGetStarted">
-          <Link to={process.env.REACT_APP_SIGNUPIN_URL}>Get Started</Link>
+          <Link to={process.env.REACT_APP_SIGNUPIN_URL}>{data.landingBtn}</Link>
         </button>
       </div>
       <div className="hero-image-div">

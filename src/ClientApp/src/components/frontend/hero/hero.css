@@ -36,9 +36,13 @@
   justify-content: center;
   width: 120px;
   align-items: center;
-  transition: all 0.1s;
+  transition: all 0.3s;
   cursor: pointer;
 
+}
+
+.heroGetStarted:active {
+  background-color: var(--blue);
 }
 
 .heroGetStarted:hover {

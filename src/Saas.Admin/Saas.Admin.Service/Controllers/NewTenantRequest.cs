@@ -31,7 +31,6 @@ public class NewTenantRequest
         Tenant tenant = new Tenant()
         {
             Company = Name,
-            Route = Route,
             CreatedUser = CreatorEmail,
             UpdatedUser = CreatorEmail,
             ConcurrencyToken = null,
@@ -48,21 +47,21 @@ public class NewTenantRequest
 
     internal UserInfo UserInfo
     {
-        get { return userInfo??throw new ArgumentNullException("User info cannot be null"); }
-        set { 
+        get { return userInfo ?? throw new ArgumentNullException("User info cannot be null"); }
+        set
+        {
 
             //Update the remaining user info
             value.Question = Question;
-            value.Answer = Answer;
             userInfo = value;
-        } 
+        }
     }
 
-    internal UserTenant UserTenant 
-    { 
-        
-        get { return userTenant?? throw new ArgumentNullException("User to tenant info cannot be null"); } 
-        set 
+    internal UserTenant UserTenant
+    {
+
+        get { return userTenant ?? throw new ArgumentNullException("User to tenant info cannot be null"); }
+        set
         {
             value.RegSource = "AB2C";
             value.CreatedDate = DateTime.UtcNow;
@@ -71,6 +70,6 @@ public class NewTenantRequest
             value.UserId = UserInfo.Guid;
 
             userTenant = value;
-        } 
+        }
     }
 }

@@ -7,6 +7,7 @@ import {
   faBars,
   faTimes,
   faAngleRight,
+  faComments,
 } from "@fortawesome/free-solid-svg-icons";
 import data from "../../../data/navbar";
 import { Link } from "react-router-dom";
@@ -84,12 +85,12 @@ export const Navbar = () => {
                 </article>
               </article>
               <button onClick={handleLogOut} className="nav-signin-button">
-                Sign Out
+                {data.signouttext}
               </button>
             </>
           ) : (
             <a href={process.env.REACT_APP_SIGNUPIN_URL}>
-              <button className="nav-signin-button">Sign Up/In</button>
+              <button className="nav-signin-button">{data.signintext}</button>
             </a>
           )}
 
@@ -99,6 +100,10 @@ export const Navbar = () => {
             onClick={handleToggle}
           />
         </div>
+      </div>
+      <div className="contact-section">
+        <p className="contact-section-text">{data.chatText}</p>
+        <FontAwesomeIcon icon={faComments} className="contact-section-icon" />
       </div>
     </>
   );
