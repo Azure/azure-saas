@@ -1,0 +1,227 @@
+
+.testimonial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    gap: 1rem;
+    justify-content: space-evenly;
+    width: auto;
+    height: auto;
+   padding: 2rem 0;
+    background-color: var(--bgColor);
+    color: var(--cream);
+  
+}
+
+
+.testimony-prev, .testimony-next {
+    color: var(--cream);
+    border-style: none;
+    position: absolute;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+    opacity: 0.8;
+}
+
+.testimony-prev:hover, .testimony-next:hover {
+    transform: scale(1.8);
+    opacity: 1;
+}
+
+.testimony-prev {
+    left: 20vw;
+}
+
+.testimony-next {
+    right: 20vw;
+}
+
+.testimonial-lgheader {
+    color: var(--cream);
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+ 
+}
+
+.testimonial-content {
+    text-align: center;
+    word-spacing: .1rem;
+    color: var(--cream);
+    width: 80%;
+    font-size: 1.1rem;
+  
+}
+
+.testimony-btn:hover {
+    transform: scale(1.7);
+}
+
+
+.testimony-items {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1rem;
+
+
+   
+}
+
+.test-main {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    width: auto;
+    gap: 1rem;
+}
+
+
+
+.hero-text.test-text {
+    font-size: .5rem;
+}
+
+
+
+.t-info {
+    width: 100%;
+}
+
+.t-text {
+    font-size: 1rem;
+}
+
+.testimony-item {
+    display: flex;
+    width: 50vw;
+    height: max-content;
+    flex-wrap: nowrap;
+    overflow: visible;
+    transition: all 0.5S;
+}
+
+.testimony-items {
+    overflow: hidden;
+    display: flex;
+}
+
+.testimony-items-container {
+    width: 90vw;
+    display: flex;
+    flex-wrap: nowrap;
+    background-color: var(--cream);
+    height: auto;
+    padding: .5rem;
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    align-items: center;
+    border-style: solid;
+    justify-content: center;
+    border-width: 0.3px;
+    border-radius: 10px;
+    border-color: var(--blue);
+    font-size: .9rem;
+    text-align: start;
+    color: var(--darkblue);
+    box-shadow: 1.5px 1.5px 1.5px var(--blue);
+    background-color: rgba(237, 237, 237, 0.364);
+
+}
+
+.testimony-item i {
+    color: var(--blue);
+}
+
+.t-item-description {
+    color: var(--cream);
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.t-item-name, .t-item-role {
+    color: var(--cream);
+    font-size: .9rem;
+    opacity: 0.9;
+}
+
+
+.t-item {
+    width: 50vw;
+    flex-shrink: 0;
+    height: max-content;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+     
+}
+
+.t-profile {
+    width: 7rem;
+    height: 7rem;
+    border-radius: 100%;
+    padding: 1rem;
+    margin-left: .5rem;
+}
+
+@media screen and (max-width:1200px) {
+    .testimonial {
+        flex-direction: column;
+        width: auto;
+        height: 70vh;
+        margin-left: 1rem;
+        margin-right: 1rem;
+
+    }
+
+    .t-item-description {
+        font-size: .6rem;
+        font-weight: 700;
+    }
+    
+    .t-item-name {
+        font-size: .8rem;
+        font-weight: 700;
+    }
+    
+    .t-item-role {
+        font-size: .8rem;
+        font-weight: 700;
+    }
+    
+
+    .test-main {
+        width: auto;
+    }
+
+    .testimony-item {
+        width: 70vw;
+        height: 100%;
+    }
+
+    .t-item {
+        width: 100%;
+    }
+
+    .t-profile {
+        margin-left: 0rem;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 100%;
+        padding: .5rem;
+    }
+
+    .testimony-prev {
+        left: 5vw;
+    }
+    
+    .testimony-next {
+        right: 5vw;
+    }
+    
+    
+}

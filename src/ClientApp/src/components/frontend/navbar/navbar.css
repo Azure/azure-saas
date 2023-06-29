@@ -1,0 +1,296 @@
+/* Navbar Styling */
+.navbar {
+    padding-left: 3rem;
+    padding-right: 3rem;
+    background-color: var(--cream);
+    z-index: 2;
+    height: 50px;   
+    position: sticky;
+    top: 0;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+}
+
+.brand-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+
+}
+
+.brand-nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.brandname {
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 1.7rem;
+    text-decoration-line: none;
+}
+
+.brand-logo:hover {
+    cursor: pointer;
+}
+
+.brand-logo {
+    text-decoration-line: none;
+}
+
+
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+
+}
+
+.nav-mobile-content {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    gap: .8rem;
+
+
+}
+
+.nav-button {
+    border-style: none;
+    color: var(--grey);
+    font-weight: 600;
+    font-size: 1rem;
+    height: max-content;
+    width: max-content;
+    align-content: center;
+    transition: all 0.5s;
+    cursor: pointer;
+    
+     
+}
+
+.nav-signin-button {
+    background-color: var(--blue);
+    border-style: none;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    width: 100px;
+    align-items: center;
+    transition: all 0.5s;
+    cursor: pointer;
+
+}
+
+.nav-signin-button:hover {
+    background-color: var(--bluehover);
+    /* color: var(--blue);
+    border: solid 1px var(--blue); */
+}
+
+
+
+button .nav-button{
+    width: 10rem; 
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    color: var(--maroon);
+    
+}
+
+.nav-styled-button {
+    color: var(--maroon);
+    border-color: var(--maroon);
+    background-color: var(--cream);
+    font-size: 1rem;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 25rem;
+    height: 7vh;
+    width: 50px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.nav-styled-button:hover {
+    background-color: var(--maroon);
+    color: var(--cream);
+    font-weight: 500;
+}
+
+.nav-btn-div {
+    width: 5.8vw;
+    text-align: center;
+    
+}
+
+.nav-mobile {
+    display: none;
+}
+
+#burger {
+    display: none;
+    color: var(--blue);
+}
+
+
+/* Mobile styling */
+
+@media screen and (max-width: 576px){
+.brand-logo {
+    transform: scale(0.95);
+}
+
+.brand-left, .nav-button, .brand-nav-links {
+    display: none;
+}
+
+
+
+.nav-signin-button {
+    background-color: var(--buttonblue);
+    border-style: none;
+    color: white;
+    font-weight: 500;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    width: 100px;
+    align-items: center;
+    transition: all 0.5s;
+    cursor: pointer;
+
+}
+
+/* .brand-links {
+    margin-right: 1rem;
+} */
+
+
+.nav-mobile {
+    height: 100%;
+    width: 100%;
+    right: 100vw;
+    position: absolute;
+    background-color: var(--cream);
+    margin-top: 65px;
+    display: block;
+    z-index: 1;
+    transition: all 0.1s;
+
+}
+
+
+
+.nav-mobile-content {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    gap: .8rem;
+
+
+}
+
+.nav-mobile-route {
+    width: 100%;
+    border-style: none;
+}
+
+.nav-mobile-link {
+    height: 2.5rem;
+    background-color: var(--cream);
+    color: var(--grey);
+    width: 100%;
+    font-weight: 600;
+    font-size: 1.5rem;
+    border-style: none;
+    text-align: start;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    transition: all 0.2s;
+}
+
+.nav-mobile-link:hover {
+    color: var(--blue);
+    transform: scale(1.001);
+    cursor: pointer;
+    
+}
+
+.nav-mobile-icon {
+    float: right;
+}
+
+
+
+.nav-button {
+    display: none;
+}
+
+
+#br-link {
+    display: block;
+    width: max-content;
+    text-decoration-line: none;
+}
+
+
+
+.navbar {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    justify-items: center;
+    height: 60px;
+    width: auto;
+    z-index: 2;
+    
+}
+
+.brand {
+    flex: 0 0;
+}
+
+#burger {
+    display: block;
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--blue);
+}
+
+}
+
+
+@media screen and (max-width:1000px){
+    .nav-button {
+        display: none;
+    }
+
+    .nav-styled-button {
+        width: 6rem;
+        margin-left: -10px;
+        margin-right: 1rem;
+        height: 2.5rem; 
+        font-size: .9rem;
+        
+    }
+    
+
+}
+/* End */

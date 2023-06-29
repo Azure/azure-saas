@@ -1,20 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<TrustFrameworkPolicy 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-  xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
-  PolicySchemaVersion="0.3.0.0" 
-  TenantId="{Settings:Tenant}" 
-  PolicyId="B2C_1A_TrustFrameworkLocalization" 
-  PublicPolicyUri="http://{Settings:Tenant}/B2C_1A_TrustFrameworkLocalization">
-
+﻿<TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="{Settings:Tenant}" PolicyId="B2C_1A_TrustFrameworkLocalization" PublicPolicyUri="http://{Settings:Tenant}/B2C_1A_TrustFrameworkLocalization" TenantObjectId="78efba5c-2036-4f8d-a59d-e2531da9a187">
   <BasePolicy>
     <TenantId>{Settings:Tenant}</TenantId>
     <PolicyId>B2C_1A_TrustFrameworkBase</PolicyId>
   </BasePolicy>
-
   <BuildingBlocks>
-
     <ContentDefinitions>
       <ContentDefinition Id="api.signuporsignin">
         <LocalizedResourcesReferences MergeBehavior="Prepend">
@@ -22,42 +11,36 @@
           <!-- Add more languages here -->
         </LocalizedResourcesReferences>
       </ContentDefinition>
-
       <ContentDefinition Id="api.localaccountsignup">
         <LocalizedResourcesReferences MergeBehavior="Prepend">
           <LocalizedResourcesReference Language="en" LocalizedResourcesReferenceId="api.localaccountsignup.en" />
           <!-- Add more languages here -->
         </LocalizedResourcesReferences>
       </ContentDefinition>
-
       <ContentDefinition Id="api.selfasserted">
         <LocalizedResourcesReferences MergeBehavior="Prepend">
           <LocalizedResourcesReference Language="en" LocalizedResourcesReferenceId="api.selfasserted.en" />
           <!-- Add more languages here -->
         </LocalizedResourcesReferences>
       </ContentDefinition>
-
       <ContentDefinition Id="api.localaccountpasswordreset">
         <LocalizedResourcesReferences MergeBehavior="Prepend">
           <LocalizedResourcesReference Language="en" LocalizedResourcesReferenceId="api.localaccountpasswordreset.en" />
           <!-- Add more languages here -->
         </LocalizedResourcesReferences>
       </ContentDefinition>
-
       <ContentDefinition Id="api.idpselections">
         <LocalizedResourcesReferences MergeBehavior="Prepend">
           <LocalizedResourcesReference Language="en" LocalizedResourcesReferenceId="api.idpselections.en" />
           <!-- Add more languages here -->
         </LocalizedResourcesReferences>
       </ContentDefinition>
-
       <ContentDefinition Id="api.localaccountsignin">
         <LocalizedResourcesReferences MergeBehavior="Prepend">
           <LocalizedResourcesReference Language="en" LocalizedResourcesReferenceId="api.localaccountsignin.en" />
           <!-- Add more languages here -->
         </LocalizedResourcesReferences>
       </ContentDefinition>
-
       <ContentDefinition Id="api.selfasserted.profileupdate">
         <LocalizedResourcesReferences MergeBehavior="Prepend">
           <LocalizedResourcesReference Language="en" LocalizedResourcesReferenceId="api.selfasserted.profileupdate.en" />
@@ -65,12 +48,10 @@
         </LocalizedResourcesReferences>
       </ContentDefinition>
     </ContentDefinitions>
-
     <Localization Enabled="true">
       <SupportedLanguages DefaultLanguage="en" MergeBehavior="Append">
         <SupportedLanguage>en</SupportedLanguage>
       </SupportedLanguages>
-
       <LocalizedResources Id="api.signuporsignin.en">
         <LocalizedStrings>
           <LocalizedString ElementType="ClaimType" ElementId="signInName" StringId="DisplayName">Email Address</LocalizedString>
@@ -101,7 +82,6 @@
           <LocalizedString ElementType="ErrorMessage" StringId="AADRequestsThrottled">There are too many requests at this moment. Please wait for some time and try again.</LocalizedString>
         </LocalizedStrings>
       </LocalizedResources>
-
       <!--Local account sign-up page English-->
       <LocalizedResources Id="api.localaccountsignup.en">
         <LocalizedStrings>
@@ -114,8 +94,8 @@
           <LocalizedString ElementType="ClaimType" ElementId="reenterPassword" StringId="DisplayName">Confirm New Password</LocalizedString>
           <LocalizedString ElementType="ClaimType" ElementId="reenterPassword" StringId="UserHelpText">Confirm new password</LocalizedString>
           <LocalizedString ElementType="ClaimType" ElementId="reenterPassword" StringId="PatternHelpText">8-16 characters, containing 3 out of 4 of the following: Lowercase characters, uppercase characters, digits (0-9), and one or more of the following symbols: @ # $ % ^ &amp; * - _ + = [ ] { } | \ : ' , ? / ` ~ " ( ) ; .</LocalizedString>
-          <LocalizedString ElementType="ClaimType" ElementId="displayName" StringId="DisplayName">Display Name</LocalizedString>
-          <LocalizedString ElementType="ClaimType" ElementId="displayName" StringId="UserHelpText">Your display name.</LocalizedString>
+          <LocalizedString ElementType="ClaimType" ElementId="displayName" StringId="DisplayName">Full name</LocalizedString>
+          <LocalizedString ElementType="ClaimType" ElementId="displayName" StringId="UserHelpText">Your full names.</LocalizedString>
           <LocalizedString ElementType="ClaimType" ElementId="surname" StringId="DisplayName">Surname</LocalizedString>
           <LocalizedString ElementType="ClaimType" ElementId="surname" StringId="UserHelpText">Your surname (also known as family name or last name).</LocalizedString>
           <LocalizedString ElementType="ClaimType" ElementId="givenName" StringId="DisplayName">Given Name</LocalizedString>
@@ -151,14 +131,12 @@
           <LocalizedString ElementType="ErrorMessage" StringId="UserMessageIfValidationError">Error in validation by: {0}</LocalizedString>
         </LocalizedStrings>
       </LocalizedResources>
-
       <!-- Self-asserted page English-->
       <LocalizedResources Id="api.selfasserted.en">
         <LocalizedStrings>
           <LocalizedString ElementType="ErrorMessage" StringId="UserMessageIfClaimsPrincipalAlreadyExists">You are already registered, please press the back button and sign in instead.</LocalizedString>
         </LocalizedStrings>
       </LocalizedResources>
-
       <!-- Password reset page English-->
       <LocalizedResources Id="api.localaccountpasswordreset.en">
         <LocalizedStrings>
@@ -200,7 +178,6 @@
           <LocalizedString ElementType="ErrorMessage" StringId="UserMessageIfValidationError">Error in validation by: {0}</LocalizedString>
         </LocalizedStrings>
       </LocalizedResources>
-
       <!-- Edit profile sign-in page English-->
       <LocalizedResources Id="api.idpselections.en">
         <LocalizedStrings>
@@ -209,7 +186,6 @@
           <LocalizedString ElementType="ClaimsProvider" StringId="FacebookExchange">Facebook</LocalizedString>
         </LocalizedStrings>
       </LocalizedResources>
-
       <!-- Edit profile sign-in with local account English-->
       <LocalizedResources Id="api.localaccountsignin.en">
         <LocalizedStrings>
@@ -228,12 +204,11 @@
           <LocalizedString ElementType="ErrorMessage" StringId="AADRequestsThrottled">There are too many requests at this moment. Please wait for some time and try again.</LocalizedString>
         </LocalizedStrings>
       </LocalizedResources>
-
       <!-- Edit profile page English-->
       <LocalizedResources Id="api.selfasserted.profileupdate.en">
         <LocalizedStrings>
-          <LocalizedString ElementType="ClaimType" ElementId="displayName" StringId="DisplayName">Display Name</LocalizedString>
-          <LocalizedString ElementType="ClaimType" ElementId="displayName" StringId="UserHelpText">Your display name.</LocalizedString>
+          <LocalizedString ElementType="ClaimType" ElementId="displayName" StringId="DisplayName">Full name</LocalizedString>
+          <LocalizedString ElementType="ClaimType" ElementId="displayName" StringId="UserHelpText">Your full names.</LocalizedString>
           <LocalizedString ElementType="ClaimType" ElementId="surname" StringId="DisplayName">Surname</LocalizedString>
           <LocalizedString ElementType="ClaimType" ElementId="surname" StringId="UserHelpText">Your surname (also known as family name or last name).</LocalizedString>
           <LocalizedString ElementType="ClaimType" ElementId="givenName" StringId="DisplayName">Given Name</LocalizedString>
@@ -245,5 +220,4 @@
       <!-- Add more languages here -->
     </Localization>
   </BuildingBlocks>
-
 </TrustFrameworkPolicy>

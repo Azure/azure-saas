@@ -8,4 +8,10 @@ public record SqlOptions
     public string? TenantSQLConnectionString { get; init; }
     public string? PermissionsSQLConnectionString { get; init; }
 
+    //test sql connection string
+    public string? IbizzSaasConnectionString { get; init; }
+
+    //test sql connection string
+    public string? ClientContection { get; init; }
+
 }

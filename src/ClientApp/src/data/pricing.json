@@ -1,0 +1,113 @@
+{
+    "header" : "Subscription Pricing",
+    "content" : "Startups, ISVs and Enterprises can provide multiple Service Tiers",
+    "products" : 
+        [
+            {
+                "key" : "1",
+                "title" : "Free",
+                "price" : "0",
+                "currency":"Ksh",
+                "period" : "month",
+                "button" : "Sign Up For Free",
+                "link" : "https://saas-app-asdk-ecdf-a6tx.azurewebsites.net/MicrosoftIdentity/Account/SignIn",
+                "items":[
+                    {
+                        "id": "1",
+                        "check": true,
+                        "name": "Single Badge"
+                    },
+                    {
+                        "id": "2",
+                        "check": true,
+                        "name": "5GB Storage"
+                    },
+                    {
+                        "id": "3",
+                        "check": false,
+                        "name": "Monthly Status Reports"
+                    }
+                ]
+            },
+            {
+                "key" : "2",
+                "title" : "Basic",
+                "price" : "3,000",
+                "currency":"Ksh",
+                "period" : "month",
+                "button" : "Sign Up",
+                "link" : "https://saas-app-asdk-ecdf-a6tx.azurewebsites.net/MicrosoftIdentity/Account/SignIn",
+                "items":[
+                    {
+                        "id": "1",
+                         "check": true,
+                        "name": "Five custom badges"
+                    },
+                    {
+                        "id": "2",
+                         "check": true,
+                        "name": "20GB Storage"
+                    },
+                    {
+                        "id": "3",
+                        "check": false,
+                        "name": "Monthly Status Reports"
+                    }
+                ]
+            },
+            {
+                "key" : "3",
+                "title" : "Standard",
+                "price" : "10,000",
+                "currency":"Ksh",
+                "period" : "month",
+                "button" : "Sign Up",
+                "link" : "https://saas-app-asdk-ecdf-a6tx.azurewebsites.net/MicrosoftIdentity/Account/SignIn",
+                "items":[
+                    {
+                        "id": "1",
+                         "check": true,
+                        "name": "50 badges"
+                    },
+                    {
+                        "id": "2",
+                         "check": true,
+                        "name": "100GB Storage"
+                    },
+                    {
+                        "id": "3",
+                        "check": false,
+                        "name": "Monthly Status Reports"
+                    }
+                ]
+            },
+            {
+                "key" : "4",
+                "title" : "Premium",
+                "price" : "15,000",
+                "currency":"Ksh",
+                "period" : "month",
+                "button" : "Sign Up",
+                "link" : "https://saas-app-asdk-ecdf-a6tx.azurewebsites.net/MicrosoftIdentity/Account/SignIn",
+                "items":[
+                    {
+                        "id": "1",
+                         "check": true,
+                        "name": "Unlimited Badges"
+                    },
+                    {
+                        "id": "2",
+                         "check": true,
+                        "name": "1TB Storage"
+                    },
+                    {
+                        "id": "3",
+                         "check": true,
+                        "name": "Monthly Status Reports"
+                    }
+                ]
+            }
+            
+            
+            ]
+}

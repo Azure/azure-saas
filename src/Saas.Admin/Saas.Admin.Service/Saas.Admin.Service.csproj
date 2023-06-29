@@ -11,6 +11,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Interfaces\**" />
+	  <Content Remove="Interfaces\**" />
+	  <EmbeddedResource Remove="Interfaces\**" />
+	  <None Remove="Interfaces\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2" />
 		<PackageReference Include="Azure.Identity" Version="1.8.2" />
 		<PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.4.0" />
@@ -37,7 +44,13 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Saas.Identity\Saas.Permissions\Saas.Permissions.Client\Saas.Permissions.Client.csproj" />
+	  <ProjectReference Include="..\..\Saas.Identity\Saas.Permissions\Saas.Permissions.Service_v1.1\Saas.Permissions.Service.csproj" />
 	  <ProjectReference Include="..\..\Saas.Lib\Saas.Identity\Saas.Identity.csproj" />
 	  <ProjectReference Include="..\..\Saas.Lib\Saas.Shared\Saas.Shared.csproj" />
+	  <ProjectReference Include="..\..\Saas.SignupAdministration\Saas.SignupAdministration.Web\Saas.SignupAdministration.Web.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	  <Folder Include="Properties\ServiceDependencies\" />
 	</ItemGroup>
 </Project>

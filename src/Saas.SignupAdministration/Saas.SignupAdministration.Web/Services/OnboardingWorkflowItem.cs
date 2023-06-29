@@ -8,6 +8,7 @@ public class OnboardingWorkflowItem
     [JsonProperty(PropertyName = SR.OnboardingWorkflowIdProperty)]
     public Guid Id { get; set; }
 
+    [JsonIgnore]
     [JsonProperty(PropertyName = SR.OnboardingWorkflowNameProperty)]
     public string OnboardingWorkflowName { get; set; } = string.Empty;
 
@@ -34,6 +35,26 @@ public class OnboardingWorkflowItem
 
     [JsonProperty(PropertyName = SR.OnboardingWorkflowTenantRouteNameProperty)]
     public string TenantRouteName { get; set; } = string.Empty;
+
+
+    /// <summary>
+    /// Start of custom defined fields
+    /// </summary>
+    public string Question { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public string Answer { get; set; } = string.Empty;
+
+    public string TimeZone { get; set; } = string.Empty;
+
+    public string Profession { get; set; } = string.Empty;
+
+    public string Country { get; set; } = string.Empty;
+
+    public int NoofEmployees { get; set; }
+    /// <summary>
+    /// End of custom defined fields
+    /// </summary>
 
     [JsonProperty(PropertyName = SR.OnboardingWorkflowIsActiveProperty)]
     public bool IsActive { get; set; }
