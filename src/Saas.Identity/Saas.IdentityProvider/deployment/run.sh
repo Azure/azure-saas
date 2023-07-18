@@ -18,14 +18,8 @@ docker run \
     --interactive \
     --tty \
     --rm \
-    --volume "${repo_base}/src/Saas.Identity/Saas.IdentityProvider/deployment":/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment:ro \
-    --volume "${repo_base}/src/Saas.Identity/Saas.IdentityProvider/deployment/config":/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/config \
-    --volume "${repo_base}/src/Saas.Identity/Saas.IdentityProvider/deployment/log":/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/log \
-    --volume "${repo_base}/src/Saas.Identity/Saas.IdentityProvider/policies":/asdk/src/Saas.Identity/Saas.IdentityProvider/policies \
-    --volume "${repo_base}/src/Saas.Lib/Deployment.Script.Modules":/asdk/src/Saas.Lib/Deployment.Script.Modules:ro \
-    --volume "${repo_base}/src/Saas.Lib/Saas.Bicep.Module":/asdk/src/Saas.Lib/Saas.Bicep.Module:ro \
-    --volume "${repo_base}/.git/":/asdk/.git:ro \
-    --volume "${HOME}/.azure/":/asdk/.azure:ro \
+    --volume "${repo_base}/":/asdk/ \
+    --volume "${HOME}/.azure/":/asdk/.azure \
     --volume "${HOME}/asdk/.cache/":/asdk/.cache \
     --env "ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE=/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment" \
     --env "GIT_REPO_ORIGIN=${git_repo_origin}" \
