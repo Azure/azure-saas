@@ -12,11 +12,14 @@ The Azure SaaS Development Kit (ASDK) provide a cloud native starting point buil
 2. Follow the [Quick Start](https://azure.github.io/azure-saas/quick-start/) to see ASDK in motion.
 3. Start building and learning, guided by the code and documentation provided.
 
+If you run into any challenges or have questions, please use Discussions and/or open an issue on this repo. 
+Oh, and don't forget to give the repo a star ⭐ if you like what you see. Thank you.
+
 ## Overview
 
 The [Azure SaaS Development Kit (ASDK)](https://azure.microsoft.com/en-us/resources/development-kit/saas/) is a solid starting point for building [cloud-native](https://learn.microsoft.com/en-us/dotnet/architecture/cloud-native/definition) Software as a Service (SaaS) solutions, offering a reference architecture based on best practices and design patterns as outlined in the Azure Architecture Center: [Architecting multitenant solutions on Azure - Azure Architecture Center | Microsoft Learn](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/overview)
 
-The ASDK have been created specifically for developers and architects building platforms and solutions for startups, ISVs, and enterprises. It can be used as a starting point if you are a Start-Up, as well as a reference architecture if you are migrating or refactoring an existing solution.
+The ASDK has been created specifically for developers and architects building platforms and solutions for start-ups, ISVs, and enterprises. It can be used as a starting point if you are a start-up, as well as a reference architecture if you are migrating or refactoring an existing solution.
 
 The main focus of the ASDK is on the creation of a solid [Control Plane](https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/control-planes) for your SaaS solution. A Control Plane is crucial for a SaaS architecture because it manages and orchestrates the infrastructure, services, and resources, enabling seamless scaling, monitoring, and automation of the underlying components, which ultimately helps to ensure optimal performance and reliability of the SaaS application. The ASDK provides essential capabilities in the areas of:
 

@@ -3,7 +3,7 @@
 export ASDK_CACHE_AZ_CLI_SESSIONS=true
 
 # work-around for issue w/ az cli bicep v. 2.46: https://github.com/Azure/azure-cli/issues/25710
-az config set bicep.use_binary_from_path=false
+# az config set bicep.use_binary_from_path=false
 
 # if not running in a container
 if ! [ -f /.dockerenv ]; then

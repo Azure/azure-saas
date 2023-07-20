@@ -28,25 +28,39 @@ function check-prerequisites() {
 
     echo "Supported operating system: ${what_os}" |
         log-output \
-            --level success
+            --level success \
+            --header "Checking OS"
+
+    if [[ "${GIT_ORG_PROJECT_NAME}" == "Azure/azure-saas" ]]; then
+        echo "To run this script you need to fork it to your own repository first." |
+            log-output \
+                --level error \
+                --header "Critical error" ||
+            exit 1
+    else
+        echo "Forked repository true: ${GIT_ORG_PROJECT_NAME}" |
+            log-output \
+                --level success \
+                --header "Checking Repo forked"
+    fi
 
     # check if bash version is supported
     is-valid-bash "5.0.0" |
         log-output \
-            --level info \
+            --level success \
             --header "Checking bash version" ||
-        echo "The version of bash is not supported." |
+        echo "The version of bash is not supported. Try updating the latest version." |
         log-output \
             --level error \
             --header "Critical error" ||
         exit 1
 
     # check if az cli version is supported
-    is-valid-az-cli "2.42.0" |
+    is-valid-az-cli "2.46.0" |
         log-output \
-            --level info \
+            --level success \
             --header "Checking az cli version" ||
-        echo "The version of az cli is not supported." |
+        echo "The version of az cli is not supported. Try updating to the latest version." |
         log-output \
             --level error \
             --header "Critical error" ||
@@ -54,9 +68,9 @@ function check-prerequisites() {
 
     is-valid-jq "1.5" |
         log-output \
-            --level info \
+            --level success \
             --header "Checking jq version" ||
-        echo "The version of jq is not supported." |
+        echo "The version of jq is not supported. Try updating to the latest version." |
         log-output \
             --level error \
             --header "Critical error" ||

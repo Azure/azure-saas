@@ -6,10 +6,14 @@ source "./constants.sh"
 echo "Setting up the deployment environment."
 echo "Settings execute permissions on necessary scripts files."
 
+echo "${SHARED_MODULE_DIR}"
+
 (
     sudo chmod +x ./*.sh
     sudo chmod +x ./script/*.sh >/dev/null 2>&1
     sudo chmod +x ./script/*.py
+    sudo chmod +x "${SHARED_MODULE_DIR}"/*.sh
+    sudo chmod +x "${SHARED_MODULE_DIR}"/*.py
 ) ||
     {
         echo "Failed to set execute permissions on the necessary scripts."

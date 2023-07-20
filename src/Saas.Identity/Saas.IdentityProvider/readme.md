@@ -42,14 +42,14 @@ No matter the operating system you're using, you will need these tools to be ins
 
 - [**Docker Desktop**](https://docs.docker.com/get-docker/). 
   - If you have Docker already, make sure to get the latest updates before you begin. If you have Docker installed but haven't used it for a while. Reinstalling will often solve potential issues.
-  - Tip: On Windows 10/11, if you experience the error: *"The command 'docker' could not be found in this WSL 2 distro. We recommend to activate the WSL integration in Docker Desktop settings."*, then try to restart Docker Desktop or if that doesn't help, try and reinstall it. 
-- [Azure Command Line Interface (**az cli**)](https://learn.microsoft.com/en-us/cli/azure/what-is-azure-cli) from the terminal: [How to install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
-  - Tip: Must be installed from inside WSL on Windows 10/11).
+  - *Tip*: On Windows 10/11, if you experience the error: *"The command 'docker' could not be found in this WSL 2 distro. We recommend to activate the WSL integration in Docker Desktop settings."*, then try to restart Docker Desktop or if that doesn't help, try and reinstall it. 
+- [Azure Command Line Interface (**az cli**)](https://learn.microsoft.com/en-us/cli/azure/what-is-azure-cli) for the terminal: [How to install the Azure CLI]([Install the Azure CLI on Linux | Microsoft Learn](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt)).
+  - *Tip 1*: Must be installed from inside WSL on Windows 10/11).
+  - *Tip 2*: If you run into issues, try and uninstall AZ CLI using [this guide]([Install the Azure CLI on Linux | Microsoft Learn](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt)). 
 
-- [GitHub’s official command line tool (**gh**)](https://cli.github.com/). For more on installation see [here](https://github.com/cli/cli#installation).
-  - Tip: Must be installed from inside WSL on Windows 10/11).
-
-
+- [GitHub’s official command line tool (**gh**)](https://cli.github.com/) version 2.29 or later. For more on installation see [here](https://github.com/cli/cli#installation).
+  - *Tip 1*: Must be installed from inside WSL on Windows 10/11).
+  - *Tip 2*: Uninstall all previous versions of gh cli before installing the latest using [this guide](https://github.com/cli/cli/blob/trunk/docs/install_linux.md). 
 
 ### Begin
 
@@ -59,7 +59,7 @@ To begin, please open your GNU Linux terminal to the directory where you've [clo
 .../src/Saas.Identity/Saas.IdentityProvider/deployment
 ````
 
-![image-20230110094801956](.assets/readme/image-20230110094801956.png)
+![image-20230110094801956](.assets/readme/image-20230110094801956-1683889385775-1.png)
 
 > *Tip #1*: If you are on a Windows 10/11 PC and need to access your cloned Git repository one of your local drives, from the WSL Terminal, you can find the drives in the *`mnt`* directory - e.g., like this `cd /mnt/d/<path on d-drive>`.
 >
@@ -86,7 +86,7 @@ chmod +x setup.sh # only needed the first time to set execute permissions on set
 ./setup.sh
 ```
 
-![image-20230221115203497](.assets/readme/image-20230221115203497.png)
+![image-20230221115203497](.assets/readme/image-20230221115203497-1683889385776-2.png)
 
 This will take a few minutes to complete and you will only need to do it once. The container will be named `asdk-script-deployment`. 
 
@@ -102,7 +102,7 @@ When the container build have completed, run the script with the following comma
 ./run.sh
 ```
 
-![image-20230221115249541](.assets/readme/image-20230221115249541.png)
+![image-20230221115249541](.assets/readme/image-20230221115249541-1683889385776-3.png)
 
 This will instantiate the container and mount the current root directory as a number of volumes (i.e., directories) that will become accessible from within the container. 
 
@@ -124,7 +124,7 @@ The `initConfig` section of `config.json`must be filled out manually (see more d
     "userPrincipalId": "123e4567-e89b-12d3-a456-426652340000",
     "subscriptionId": "123e4567-e89b-12d3-a456-426652340000",
     "tenantId": "123e4567-e89b-12d3-a456-426652340000",
-    "location": "enter the geo location, for instance 'westeurope'",
+    "location": "enter a valid Azure location name, for instance 'westeurope'",
     "naming": {
       "solutionPrefix": "asdk",  // 'asdk' is the default prefix used
       "solutionName": "test" // leave as 'test' or change to some other name
@@ -137,6 +137,8 @@ The `initConfig` section of `config.json`must be filled out manually (see more d
     }
   },... // leave the remaining part of the configuration manifest unchanged for now.
 ```
+
+*Important*: `location` must be a valid location qualifier. To get a list of valid qualifiers run `az account list-locations --output table` and use the values in the 2nd column
 
 ### User Principal Id
 
@@ -231,7 +233,7 @@ The deployment script has run to it's completion and the Identity Framework have
 
 The Identity Framework is gathered in an Azure Resource group. In the Azure Portal it will look something like this: 
 
-![image-20230221121152035](.assets/readme/image-20230221121152035.png)
+![image-20230221121152035](.assets/readme/image-20230221121152035-1683889385777-4.png)
 
 ### Adding the Other Modules
 
