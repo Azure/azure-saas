@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     uuid-runtime \
     zip \
     dos2unix \
+    python3-ruamel.yaml \
     && curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
 # Install latest GitHub cli (gh)
