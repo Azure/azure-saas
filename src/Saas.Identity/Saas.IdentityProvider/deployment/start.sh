@@ -74,12 +74,6 @@ sudo echo "You are logged in with sudo." |
     echo-color \
         --level success
 
-# if not running in a container
-if ! [ -f /.dockerenv ]; then
-    # make sure that the init script is executable
-    chmod +x "$SCRIPT_DIR/init.sh"
-fi
-
 # initialize deployment environment
 "${SCRIPT_DIR}/init.sh" ||
     if [[ $? -eq 2 ]]; then exit 0; fi

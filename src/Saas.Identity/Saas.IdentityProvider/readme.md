@@ -82,7 +82,6 @@ az login --scope "https://graph.microsoft.com/.default"
 To run the script you must first setup of the deployment environment and build the container. To do this, run the following commands:
 
 ```bash
-chmod +x setup.sh # only needed the first time to set execute permissions on setup.sh
 ./setup.sh
 ```
 

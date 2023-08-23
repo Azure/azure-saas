@@ -84,15 +84,6 @@ function check-prerequisites() {
     fi
 }
 
-function initialize-shell-scripts() {
-    # if not running in a container
-    if ! [ -f /.dockerenv ]; then
-        # ensure the needed scripts are executable
-        sudo chmod +x ${SCRIPT_DIR}/*.sh
-        sudo chmod +x ${SHARED_MODULE_DIR}/*.py
-    fi
-}
-
 function initialize-configuration-manifest-file() {
 
     if [[ ! -s "${CONFIG_FILE}" || ! -f "${CONFIG_FILE}" ]]; then
@@ -146,9 +137,6 @@ function initialize-configuration-manifest-file() {
 
 # check if prerequisites for running the deployment script are met
 check-prerequisites
-
-# initialize shell scripts ensuring that permissions are set correctly
-initialize-shell-scripts
 
 # initialize configuration manifest file
 initialize-configuration-manifest-file
