@@ -6,7 +6,7 @@ This deployment script provisions and configures the Azure services defining the
 
 Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this GitHub repository to you own GitHub account to make it your own.
 
-> Tip: Sign up to GitHub for free: [join](github.com/join).
+> Tip: Sign up to GitHub for free: [join](https://github.com/join).
 
 ### Purpose
 
