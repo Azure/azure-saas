@@ -59,7 +59,7 @@ To begin, please open your GNU Linux terminal to the directory where you've [clo
 cd src/Saas.Identity/Saas.IdentityProvider/deployment
 ````
 
-![image-20230110094801956](.assets/readme/image-20230110094801956-1683889385775-1.png)
+![Screenshot of a Linux console window](.assets/readme/image-20230110094801956-1683889385775-1.png)
 
 > *Tip #1*: If you are on a Windows 10/11 PC and need to access your cloned Git repository one of your local drives, from the WSL Terminal, you can find the drives in the *`mnt`* directory - e.g., like this `cd /mnt/d/<path on d-drive>`.
 >
@@ -85,7 +85,7 @@ To run the script you must first setup of the deployment environment and build t
 ./setup.sh
 ```
 
-![image-20230221115203497](.assets/readme/image-20230221115203497-1683889385776-2.png)
+![Screenshot of a Linux console window after initial setup.sh execution](.assets/readme/image-20230221115203497-1683889385776-2.png)
 
 This will take a few minutes to complete and you will only need to do it once. The container will be named `asdk-script-deployment`. 
 
@@ -101,7 +101,7 @@ When the container build have completed, run the script with the following comma
 ./run.sh
 ```
 
-![image-20230221115249541](.assets/readme/image-20230221115249541-1683889385776-3.png)
+![Screenshot of a Linux console window after initial run.sh execution](.assets/readme/image-20230221115249541-1683889385776-3.png)
 
 This will instantiate the container and mount the current root directory as a number of volumes (i.e., directories) that will become accessible from within the container. 
 
@@ -232,7 +232,7 @@ The deployment script has run to it's completion and the Identity Framework have
 
 The Identity Framework is gathered in an Azure Resource group. In the Azure Portal it will look something like this: 
 
-![image-20230221121152035](.assets/readme/image-20230221121152035-1683889385777-4.png)
+![Screenshot showing the resource group contents](.assets/readme/image-20230221121152035-1683889385777-4.png)
 
 ### Adding the Other Modules
 
