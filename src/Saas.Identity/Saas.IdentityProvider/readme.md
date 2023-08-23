@@ -56,7 +56,7 @@ No matter the operating system you're using, you will need these tools to be ins
 To begin, please open your GNU Linux terminal to the directory where you've [cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the [forked](https://docs.github.com/en/get-started/quickstart/fork-a-repo) version of ASDK. Should be something like:
 
 ````bash
-.../src/Saas.Identity/Saas.IdentityProvider/deployment
+cd src/Saas.Identity/Saas.IdentityProvider/deployment
 ````
 
 ![image-20230110094801956](.assets/readme/image-20230110094801956-1683889385775-1.png)
@@ -156,12 +156,12 @@ You may have multiple Azure subscriptions and thus manually choosing which subsc
 Alternatively, get to list of your subscriptions of the tenant that you are logged into by running this az cli command:
 
 ```bash
- az account subscription list --query "[].{DisplayName:displayName, Id:id}" --output table
+az account subscription list --query "[].{DisplayName:displayName, Id:id}" --output table
 ```
 
 ###  Tenant Id
 
-Get the `tenantId`by running the following command:
+Get the `tenantId` by running the following command:
 
 ```bash
 az account show --query tenantId
