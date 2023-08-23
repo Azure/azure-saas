@@ -73,7 +73,6 @@ function check-settings() {
 
     (
         is-guid ".initConfig.subscriptionId" 1>/dev/null &&
-            is-guid ".initConfig.tenantId" 1>/dev/null &&
             value-exist ".initConfig.naming.solutionName" 1>/dev/null &&
             value-exist ".initConfig.naming.solutionPrefix" 1>/dev/null &&
             is-valid-b2c-location ".initConfig.azureb2c.location" 1>/dev/null &&

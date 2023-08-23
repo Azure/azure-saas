@@ -192,7 +192,7 @@ Other values in `initConfig`:
 
 ### Running the script 
 
-After you've added the values outlined above, to `config.json`, you're ready to run the script again. 
+After you've added the values outlined above, to `config.json`, you're ready to run the `run.sh` script again. 
 
 While running the script the second time, you will be asked to log in once, and maybe twice. 
 
