@@ -6,7 +6,7 @@ This deployment script provisions and configures the Azure services defining the
 
 Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this GitHub repository to you own GitHub account to make it your own.
 
-> Tip: Sign up to GitHub for free: [join](github.com/join).
+> Tip: Sign up to GitHub for free: [join](https://github.com/join).
 
 ### Purpose
 
@@ -56,10 +56,10 @@ No matter the operating system you're using, you will need these tools to be ins
 To begin, please open your GNU Linux terminal to the directory where you've [cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the [forked](https://docs.github.com/en/get-started/quickstart/fork-a-repo) version of ASDK. Should be something like:
 
 ````bash
-.../src/Saas.Identity/Saas.IdentityProvider/deployment
+cd src/Saas.Identity/Saas.IdentityProvider/deployment
 ````
 
-![image-20230110094801956](.assets/readme/image-20230110094801956-1683889385775-1.png)
+![Screenshot of a Linux console window](.assets/readme/image-20230110094801956-1683889385775-1.png)
 
 > *Tip #1*: If you are on a Windows 10/11 PC and need to access your cloned Git repository one of your local drives, from the WSL Terminal, you can find the drives in the *`mnt`* directory - e.g., like this `cd /mnt/d/<path on d-drive>`.
 >
@@ -82,11 +82,10 @@ az login --scope "https://graph.microsoft.com/.default"
 To run the script you must first setup of the deployment environment and build the container. To do this, run the following commands:
 
 ```bash
-chmod +x setup.sh # only needed the first time to set execute permissions on setup.sh
 ./setup.sh
 ```
 
-![image-20230221115203497](.assets/readme/image-20230221115203497-1683889385776-2.png)
+![Screenshot of a Linux console window after initial setup.sh execution](.assets/readme/image-20230221115203497-1683889385776-2.png)
 
 This will take a few minutes to complete and you will only need to do it once. The container will be named `asdk-script-deployment`. 
 
@@ -102,7 +101,7 @@ When the container build have completed, run the script with the following comma
 ./run.sh
 ```
 
-![image-20230221115249541](.assets/readme/image-20230221115249541-1683889385776-3.png)
+![Screenshot of a Linux console window after initial run.sh execution](.assets/readme/image-20230221115249541-1683889385776-3.png)
 
 This will instantiate the container and mount the current root directory as a number of volumes (i.e., directories) that will become accessible from within the container. 
 
@@ -157,12 +156,12 @@ You may have multiple Azure subscriptions and thus manually choosing which subsc
 Alternatively, get to list of your subscriptions of the tenant that you are logged into by running this az cli command:
 
 ```bash
- az account subscription list --query "[].{DisplayName:displayName, Id:id}" --output table
+az account subscription list --query "[].{DisplayName:displayName, Id:id}" --output table
 ```
 
 ###  Tenant Id
 
-Get the `tenantId`by running the following command:
+Get the `tenantId` by running the following command:
 
 ```bash
 az account show --query tenantId
@@ -193,7 +192,7 @@ Other values in `initConfig`:
 
 ### Running the script 
 
-After you've added the values outlined above, to `config.json`, you're ready to run the script again. 
+After you've added the values outlined above, to `config.json`, you're ready to run the `run.sh` script again. 
 
 While running the script the second time, you will be asked to log in once, and maybe twice. 
 
@@ -233,7 +232,7 @@ The deployment script has run to it's completion and the Identity Framework have
 
 The Identity Framework is gathered in an Azure Resource group. In the Azure Portal it will look something like this: 
 
-![image-20230221121152035](.assets/readme/image-20230221121152035-1683889385777-4.png)
+![Screenshot showing the resource group contents](.assets/readme/image-20230221121152035-1683889385777-4.png)
 
 ### Adding the Other Modules
 

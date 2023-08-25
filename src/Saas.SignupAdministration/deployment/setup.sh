@@ -4,19 +4,6 @@
 source "./constants.sh"
 
 echo "Setting up the deployment environment."
-echo "Settings execute permissions on necessary scripts files."
-
-(
-    sudo chmod +x ./*.sh
-    sudo chmod +x ./script/*.sh >/dev/null 2>&1
-    sudo chmod +x ./script/*.py
-    sudo chmod +x "${SHARED_MODULE_DIR}"/*.sh
-    sudo chmod +x "${SHARED_MODULE_DIR}"/*.py
-) ||
-    {
-        echo "Failed to set execute permissions on the necessary scripts."
-        exit 1
-    }
 
 repo_base="$(git rev-parse --show-toplevel)" ||
     {
@@ -27,11 +14,6 @@ repo_base="$(git rev-parse --show-toplevel)" ||
 docker_file_folder="${repo_base}/src/Saas.Lib/Deployment.Container"
 
 # redirect to build.sh in the Deployment.Container folder
-sudo chmod +x "${docker_file_folder}/build.sh" ||
-    {
-        echo "Failed to set execute permissions on the 'build.sh'  script."
-        exit 1
-    }
 
 echo "Building the deployment container."
 ./build.sh ||

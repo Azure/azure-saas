@@ -30,7 +30,6 @@ Provisioning is an easy two step process:
 
 2. Run these commands:
    ```bash
-   sudo chmod +x setup.sh
    ./setup.sh
    ./run.sh
    ```
@@ -174,7 +173,6 @@ Here are the steps to set things up for deploying the SaaS Permissions Service A
 2. From the directory, run these commands and bash shell scripts:
 
 ```bash
-sudo chmod +c ./setup.sh
 ./setup.sh
 ./run.sh
 ```
@@ -239,7 +237,6 @@ Here are the steps for getting up and running with Act for doing local deploymen
 2. Set up but running the command:
 
    ```bash
-   chmod +x ./setup.sh
    ./setup.sh
    ```
 

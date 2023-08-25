@@ -34,7 +34,6 @@ Provisioning is easy:
 2. Run these commands:
 
    ```bash
-   sudo chmod +x setup.sh
    ./setup.sh
    ./run.sh
    ```

@@ -15,12 +15,9 @@ done
 source "../constants.sh"
 
 echo "Setting up the SaaS Signup Administration Web App Act deployment environment."
-echo "Settings execute permissions on necessary scripts files."
 
 sudo mkdir -p "${ACT_SECRETS_DIR}"
 
-sudo chmod +x ${ACT_DIR}/*.sh
-sudo chmod +x ${SCRIPT_DIR}/*.sh >/dev/null 2>&1
 sudo touch ${ACT_SECRETS_FILE}
 sudo chown "${USER}" ${ACT_SECRETS_FILE}
 sudo touch ${ACT_SECRETS_FILE_RG}
