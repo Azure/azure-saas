@@ -63,16 +63,6 @@ Now you're ready to move on.
 
 Guidelines for getting up and running with SaaS Signup Administration in your local development, are identical to the guidelines found the *[Requirements](./../Saas.Identity/Saas.Permissions/readme.md#Requirements)* and the *[Configuration, settings and secrets when running locally](./../Saas.Identity/Saas.Permissions/readme.md#running-the-saas-permissions-service-api-locally)* section in the [SaaS Permissions Service readme](./../Saas.Identity/Saas.Permissions/readme.md). 
 
-## Running the SaaS Application Web App Locally
-
---- TODO BEGIN --- 
-
-*Needs more investigation.*
-
-*Add some guidelines about how to do this. Probably by leveraging [ngrok](https://ngrok.com/)...* 
-
----TODO END ---
-
 ## How to Deploy the SaaS Administration Service API to Azure
 
 The guidelines are identity to *[How to Deploy SaaS Permissions Service API to Azure](./../Saas.Identity/Saas.Permissions/readme.md#how--to-deploy-saas-permissions-service-api-to-azure)*.
