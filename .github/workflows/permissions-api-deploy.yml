@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 env:
-  AZURE_WEBAPP_NAME: 'api-permission-asdk-test-5yb3' # set this to your application's name
+  AZURE_WEBAPP_NAME: 'api-permission-asdk-test-83sx' # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: 7.x.x
   PROJECT_DIR: ./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1
@@ -55,11 +55,12 @@ jobs:
 
       # Deploy to Azure Web apps
       - name: Run Azure webapp deploy action using publish profile credentials
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
           package: ${{ env.OUTPUT_PATH }}/{{ env.AZURE_WEBAPP_NAME }}
-          # slot-name: 'PermissionsApi-Staging'
+          clean: true
+          restart: true          # slot-name: 'PermissionsApi-Staging'
 
       # Azure logout
       - name: logout

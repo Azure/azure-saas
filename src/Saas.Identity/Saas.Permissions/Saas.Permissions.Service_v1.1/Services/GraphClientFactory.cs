@@ -2,6 +2,7 @@
 using Microsoft.Graph;
 using Saas.Shared.Options;
 using Saas.Permissions.Service.Interfaces;
+using Microsoft.Kiota.Abstractions.Authentication;
 
 namespace Saas.Permissions.Service.Services;
 
@@ -21,10 +22,6 @@ public class GraphApiClientFactory : IGraphApiClientFactory
         _httpClient = httpClient;
     }
 
-    public GraphServiceClient Create() => 
-            new(_httpClient, _msGraphOptions.BaseUrl)
-            {
-                AuthenticationProvider = _authenticationProvider
-            };
-    
+    public GraphServiceClient Create() =>
+                new(_httpClient, _authenticationProvider, _msGraphOptions.BaseUrl);
 }

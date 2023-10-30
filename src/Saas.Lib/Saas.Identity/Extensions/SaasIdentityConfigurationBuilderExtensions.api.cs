@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Graph;
+using Microsoft.Kiota.Abstractions.Authentication;
 using Saas.Identity.Crypto;
 using Saas.Identity.Interface;
 using Saas.Identity.Provider;

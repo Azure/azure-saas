@@ -10,7 +10,7 @@ permissions:
 
 env:
   APP_NAME: admin-api
-  AZURE_WEBAPP_NAME: admin-api-asdk-test-aiuq          # set this to your application's name
+  AZURE_WEBAPP_NAME: admin-api-asdk-test-83sx          # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: 7.x.x
   PROJECT_DIR: ./src/Saas.Admin/Saas.Admin.Service
@@ -60,10 +60,12 @@ jobs:
 
       # Deploy to Azure Web apps
       - name: Run Azure webapp deploy action using publish profile credentials
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
           package: ${{ env.OUTPUT_PATH }}
+          clean: true
+          restart: true
 
       ######################
       # *** Debug only *** #

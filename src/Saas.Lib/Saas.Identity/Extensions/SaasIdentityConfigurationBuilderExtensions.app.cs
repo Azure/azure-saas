@@ -24,7 +24,7 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
                 configuration.Bind(configSectionName, options);
             });     
 
-        return new SaasWebAppClientCredentialBuilder(services, authenticationBuilder, scopes);
+        return new SaasWebAppClientCredentialBuilder(authenticationBuilder, scopes);
     }
 
     public static SaasWebAppClientCredentialBuilder AddSaasWebAppAuthentication(
@@ -40,21 +40,18 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
         var authenticationBuilder = services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApp(configureMicrosoftIdentityOptions);
 
-        return new SaasWebAppClientCredentialBuilder(services, authenticationBuilder, scopes);
+        return new SaasWebAppClientCredentialBuilder(authenticationBuilder, scopes);
     }
 
     public class SaasWebAppClientCredentialBuilder
     {
-        private readonly IServiceCollection _services;
         private readonly MicrosoftIdentityWebAppAuthenticationBuilder _authenticationBuilder;
         private readonly IEnumerable<string> _scopes;
 
         public SaasWebAppClientCredentialBuilder(
-            IServiceCollection services, 
             MicrosoftIdentityWebAppAuthenticationBuilder authenticationBuilder,
             IEnumerable<string> scopes)
         {
-            _services = services;
             _authenticationBuilder= authenticationBuilder;
             _scopes= scopes;
         }
