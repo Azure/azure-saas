@@ -60,10 +60,12 @@ jobs:
 
       # Deploy to Azure Web apps
       - name: Run Azure webapp deploy action using publish profile credentials
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
           package: ${{ env.OUTPUT_PATH }}
+          clean: true
+          restart: true
 
       ######################
       # *** Debug only *** #
