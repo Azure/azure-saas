@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 using Saas.Permissions.Service.Exceptions;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models;
@@ -57,22 +58,24 @@ public class GraphAPIService : IGraphAPIService
         try
         {
             var graphUsers = await _graphServiceClient.Users
-        .Request()
-        .Filter($"identities/any(id: id/issuer eq '{_permissionOptions.Domain}' and id/issuerAssignedId eq '{userEmail}')")
-        .Select("id, identitied, displayName")
-        .GetAsync();
+                .GetAsync(requestionConfiguration =>
+                {
+                    requestionConfiguration.QueryParameters.Filter = $"identities/any(id: id/issuer eq '{_permissionOptions.Domain}' and id/issuerAssignedId eq '{userEmail}')";
+                    requestionConfiguration.QueryParameters.Select = new string[] { "id, identities, displayName" };
+                });
 
-            if (graphUsers.Count > 1)
+            if (graphUsers?.Value?.Count > 1)
             {
                 throw new UserNotFoundException($"More than one user with the email {userEmail} exists in the Identity provider");
             }
-            if (graphUsers.Count == 0)
+
+            if (graphUsers?.Value?.Count == 0 || graphUsers?.Value is null)
             {
                 throw new UserNotFoundException($"The user with the email {userEmail} was not found in the Identity Provider");
             }
 
             // Ok to just return first, because at this point we've verified we have exactly 1 user in the graphUsers object.
-            return ToUserObjects(graphUsers).First();
+            return ToUserObjects(graphUsers.Value).First();
         }
         catch (Exception ex)
         {
@@ -84,29 +87,34 @@ public class GraphAPIService : IGraphAPIService
     // Enriches the user object with data from Microsoft Graph. 
     public async Task<IEnumerable<Models.User>> GetUsersByIds(ICollection<Guid> userIds)
     {
-        // Build graph query: "id in ('id1', 'id2')"
-        // https://docs.microsoft.com/en-us/graph/aad-advanced-queries?tabs=csharp
-        StringBuilder filter = new();
-        filter.Append("id in (");
-        filter.Append(string.Join(",", userIds.Select(id => $"'{id}'")));
-        filter.Append(')');
-
+        
         List<Models.User> userList = new();
 
         try
         {
             var graphUsers = await _graphServiceClient.Users
-                .Request()
-                .Filter(filter.ToString())
-                .GetAsync();
+                .GetAsync(requestConfiguration =>
+                {
+                    requestConfiguration.QueryParameters.Filter = MakeUserFilter();
+                });
 
-            userList.AddRange(ToUserObjects(graphUsers));
-
-            while (graphUsers.NextPageRequest is not null)
+            if (graphUsers?.Value is null)
             {
-                graphUsers = await graphUsers.NextPageRequest.GetAsync();
-                userList.AddRange(ToUserObjects(graphUsers));
-            };
+                return userList;
+            }
+
+            PageIterator<Microsoft.Graph.Models.User, UserCollectionResponse> pageIterator 
+                = PageIterator<Microsoft.Graph.Models.User, UserCollectionResponse>
+                    .CreatePageIterator(
+                        _graphServiceClient,
+                        graphUsers,  
+                        (msg) => 
+                        {
+                            userList.Add(ToUserObject(msg));
+                            return true;           
+                        });
+
+            await pageIterator.IterateAsync();
 
             return userList;
         }
@@ -115,17 +123,31 @@ public class GraphAPIService : IGraphAPIService
             _logError(_logger, ex);
             throw;
         }
+
+        string MakeUserFilter ()
+        {
+            // Build graph query: "id in ('id1', 'id2')"
+            // https://docs.microsoft.com/en-us/graph/aad-advanced-queries?tabs=csharp
+            StringBuilder filter = new();
+            filter.Append("id in (");
+            filter.Append(string.Join(",", userIds.Select(id => $"'{id}'")));
+            filter.Append(')');
+
+            return filter.ToString();
+        }
     }
 
     private async Task<ServicePrincipal?> GetServicePrincipalAsync(string clientId)
     {
         try
         {
-            var servicePrincipal = await _graphServiceClient.ServicePrincipals.Request()
-                .Filter($"appId eq '{clientId}'")
-                .GetAsync();
+            var servicePrincipal = await _graphServiceClient.ServicePrincipals
+                .GetAsync(requestConfiguration =>
+                {
+                    requestConfiguration.QueryParameters.Filter = $"appId eq '{clientId}'";
+                });
 
-            return servicePrincipal.SingleOrDefault();
+            return servicePrincipal?.Value?.SingleOrDefault();
         }
         catch (Exception ex)
         {
@@ -139,17 +161,38 @@ public class GraphAPIService : IGraphAPIService
         try
         {
             var userAppRoleAssignments = await _graphServiceClient.Users[userId].AppRoleAssignments
-        .Request()
-        .Filter($"resourceId eq {servicePrincipal.Id}")
-        .GetAsync();
+                .GetAsync(requestConfiguration =>
+                {
+                    requestConfiguration.Equals($"resourceId eq {servicePrincipal.Id}");
+                }) ?? throw new ArgumentException($"App role not found for \"{servicePrincipal.AppId}\".");
 
-            var appRoleIds = userAppRoleAssignments.Select(a => a.AppRoleId);
+            var appRoleIds = userAppRoleAssignments?.Value?
+                .Where(appRole => appRole is not null)
+                .Where(appRole => appRole.AppRoleId is not null)
+                .Select(appRole => appRole.AppRoleId);
 
-            var appRoles = servicePrincipal.AppRoles
-                .Where(a => appRoleIds.Contains(a.Id))
-                .Select(a => a.Value);
+            if (appRoleIds is null || !appRoleIds.Any())
+            {
+                throw new ArgumentException($"App role not found for \"{servicePrincipal.AppId}\".");
+            }
 
-            return appRoles.ToArray();
+            var appRoles = servicePrincipal.AppRoles?
+                .Where(appRole => appRole?.Id is not null)
+                .Where(appRole => appRoleIds.Contains(appRole.Id));
+
+            if (appRoles is null || !appRoles.Any())
+            {
+                throw new ArgumentException($"App role not found for \"{servicePrincipal.AppId}\".");
+            }   
+
+            var roleClaimsArray = appRoles
+                .Select(appRole => appRole.Value ?? string.Empty)
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToArray();
+
+            return roleClaimsArray is not null && roleClaimsArray.Any()
+                ? roleClaimsArray
+                : throw new ArgumentException($"App role not found for \"{servicePrincipal.AppId}\".");
         }
         catch (Exception ex)
         {
@@ -158,12 +201,19 @@ public class GraphAPIService : IGraphAPIService
         }
     }
 
-    private static IEnumerable<Models.User> ToUserObjects(IGraphServiceUsersCollectionPage graphUsers) => 
+    private static IEnumerable<Models.User> ToUserObjects(IEnumerable<Microsoft.Graph.Models.User> graphUsers) => 
         graphUsers.Select(graphUser => new Models.User()
         {
             UserId = graphUser.Id,
             DisplayName = graphUser.DisplayName
         });
+
+    private static Models.User ToUserObject(Microsoft.Graph.Models.User graphUser) =>
+        new()
+        {
+            UserId = graphUser.Id,
+            DisplayName = graphUser.DisplayName
+        };
 
 }
 

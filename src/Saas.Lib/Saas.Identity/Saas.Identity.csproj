@@ -9,7 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Security.KeyVault.Keys" Version="4.5.0" />
-    <PackageReference Include="Microsoft.Graph" Version="4.54.0" />
+	<PackageReference Include="Microsoft.Identity.Web" Version="2.15.3" />
+    <PackageReference Include="Microsoft.Graph" Version="5.32.0" />
   </ItemGroup>
 
   <ItemGroup>
