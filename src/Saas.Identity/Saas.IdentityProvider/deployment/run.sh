@@ -25,11 +25,13 @@ docker run \
     --volume "${repo_base}/src/Saas.Lib/Deployment.Script.Modules":/asdk/src/Saas.Lib/Deployment.Script.Modules:ro \
     --volume "${repo_base}/src/Saas.Lib/Saas.Bicep.Module":/asdk/src/Saas.Lib/Saas.Bicep.Module:ro \
     --volume "${repo_base}/.git/":/asdk/.git:ro \
-    --volume "${HOME}/.azure/":/asdk/.azure:ro \
+    --volume "${HOME}/.azure/msal_token_cache.json":/root/.azure/msal_token_cache.json:ro \
+    --volume "${HOME}/.azure/azureProfile.json":/root/.azure/azureProfile.json:ro \
     --volume "${HOME}/asdk/.cache/":/asdk/.cache \
     --env "ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE=/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment" \
     --env "GIT_REPO_ORIGIN=${git_repo_origin}" \
     --env "GIT_ORG_PROJECT_NAME=${git_org_project_name}" \
     --env "GITHUB_AUTH_TOKEN=${gh_auth_token}" \
-    asdk-script-deployment:latest \
-    bash /asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/start.sh
+    --platform linux/amd64 \
+    asdk-script-deployment:latest
+# bash /asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/start.sh

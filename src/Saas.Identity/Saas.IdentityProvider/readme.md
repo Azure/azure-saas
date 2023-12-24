@@ -20,7 +20,7 @@ For more details please read the [FAQ](./faq.md):
 
 Running the deployment script requires utilizing a container and Docker. 
 
-### Prerequisites 
+### Prerequisites
 
 The following platforms are supported:
 
@@ -84,6 +84,8 @@ To run the script you must first setup of the deployment environment and build t
 ```bash
 ./setup.sh
 ```
+
+> *Tip#1: On MacOS, you may need to run `chmod +x setup.sh` first, to make the script executable.*
 
 ![Screenshot of a Linux console window after initial setup.sh execution](.assets/readme/image-20230221115203497-1683889385776-2.png)
 

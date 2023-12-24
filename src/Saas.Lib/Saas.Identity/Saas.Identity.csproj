@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Configurations>Debug;Release;Multi Debug</Configurations>
@@ -9,8 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Security.KeyVault.Keys" Version="4.5.0" />
-	<PackageReference Include="Microsoft.Identity.Web" Version="2.15.3" />
-    <PackageReference Include="Microsoft.Graph" Version="5.32.0" />
+	<PackageReference Include="Microsoft.Identity.Web" Version="2.16.0" />
+    <PackageReference Include="Microsoft.Graph" Version="5.37.0" />
   </ItemGroup>
 
   <ItemGroup>

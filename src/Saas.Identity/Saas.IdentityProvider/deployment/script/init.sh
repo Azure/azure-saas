@@ -20,7 +20,7 @@ function check-prerequisites() {
             --header "Checking prerequisites"
 
     what_os="$(get-os)" ||
-        echo "Unsupported OS: ${what_os}. This script support linux and macos." |
+        echo "Unsupported OS: ${what_os}. This script support linux (WSL 2.0 on Windows) and MacOS." |
         log-output \
             --level error \
             --header "Critical Error" ||
