@@ -33,5 +33,5 @@ docker run \
     --env "GIT_ORG_PROJECT_NAME=${git_org_project_name}" \
     --env "GITHUB_AUTH_TOKEN=${gh_auth_token}" \
     --platform linux/amd64 \
-    asdk-script-deployment:latest
-# bash /asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/start.sh
+    asdk-script-deployment:latest \
+bash # /asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/start.sh
