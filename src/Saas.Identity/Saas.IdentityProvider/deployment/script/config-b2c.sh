@@ -46,7 +46,7 @@ for app in "${app_reg_array[@]}"; do
 
     if [[ "${has_secret}" == true || "${has_secret}" == "true" ]]; then
         app_name=$(jq --raw-output '.name' <<<"${app}")
-        secret_path=$(jq --raw-output '.secretPath' <<<"${app}")
+        secret_path=$(jq --raw-output '.secretPath' <<< "${app}")
 
         if [[ -s "${secret_path}" ]]; then
 

@@ -17,6 +17,7 @@ container_deployment_dir="/asdk/src/Saas.Identity/Saas.Permissions/deployment"
 
 # running the './act/script/patch-app-name.sh' script using our ASDK deployment script container - i.e., not the act container
 docker run \
+    --platform linux/amd64 \
     --interactive \
     --tty \
     --rm \
