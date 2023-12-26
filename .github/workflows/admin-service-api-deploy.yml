@@ -9,9 +9,9 @@ permissions:
   contents: read
 
 env:
-  AZURE_WEBAPP_NAME: 'admin-api-asdk-test-83sx'       # set this to your application's name
+  AZURE_WEBAPP_NAME: 'admin-api-asdk-test-v23y'       # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: 7.x.x
+  DOTNET_VERSION: 8.x.x
   PROJECT_DIR: ./src/Saas.Admin/Saas.Admin.Service
   PROJECT_PATH: ./src/Saas.Admin/Saas.Admin.Service/Saas.Admin.Service.csproj
   OUTPUT_PATH: ./publish/admin-api

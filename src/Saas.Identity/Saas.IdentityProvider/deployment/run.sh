@@ -15,6 +15,7 @@ fi
 # using volumes '--volume' to mount only the needed directories to the container.
 # using ':ro' to make scrip directories etc. read-only. Only config and log directories are writable.
 docker run \
+    --platform linux/amd64 \
     --interactive \
     --tty \
     --rm \
@@ -25,13 +26,11 @@ docker run \
     --volume "${repo_base}/src/Saas.Lib/Deployment.Script.Modules":/asdk/src/Saas.Lib/Deployment.Script.Modules:ro \
     --volume "${repo_base}/src/Saas.Lib/Saas.Bicep.Module":/asdk/src/Saas.Lib/Saas.Bicep.Module:ro \
     --volume "${repo_base}/.git/":/asdk/.git:ro \
-    --volume "${HOME}/.azure/msal_token_cache.json":/root/.azure/msal_token_cache.json:ro \
-    --volume "${HOME}/.azure/azureProfile.json":/root/.azure/azureProfile.json:ro \
+    --volume "${HOME}/.azure/":/asdk/.azure:ro \
     --volume "${HOME}/asdk/.cache/":/asdk/.cache \
     --env "ASDK_DEPLOYMENT_SCRIPT_PROJECT_BASE=/asdk/src/Saas.Identity/Saas.IdentityProvider/deployment" \
     --env "GIT_REPO_ORIGIN=${git_repo_origin}" \
     --env "GIT_ORG_PROJECT_NAME=${git_org_project_name}" \
     --env "GITHUB_AUTH_TOKEN=${gh_auth_token}" \
-    --platform linux/amd64 \
     asdk-script-deployment:latest \
-bash # /asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/start.sh
+    bash /asdk/src/Saas.Identity/Saas.IdentityProvider/deployment/start.sh

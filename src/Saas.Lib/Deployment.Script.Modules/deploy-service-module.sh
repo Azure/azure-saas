@@ -17,7 +17,7 @@ function deploy-service() {
         --name "${deployment_name}" \
         --template-file "${template_file}" \
         --parameters "${parameters_file}" \
-        || echo "Failed to deploy to ${APP_NAME}. This sometimes happens for no apperent reason. Please try again." \
+        || echo "Failed to deploy to ${APP_NAME}. This sometimes happens, please try again." \
             | log-output \
                 --level error \
                 --header "Critical Error" \
@@ -28,6 +28,14 @@ function get-identity-foundation-deployment-outputs() {
     local resource_group="$1"
     local deployment_name="$2"
     local output_file="$3"
+    local subscriptionId="$4"
+
+    az account set --subscription "${subscriptionId}" \
+        || echo "Failed to set subscription to ${subscriptionId}" \
+            | log-output \
+                --level error \
+                --header "Critical Error" \
+                || exit 1
 
     deployment_output_parameters="$( az deployment group show \
         --name "${deployment_name}" \

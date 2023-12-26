@@ -11,6 +11,7 @@ container_deployment_dir="/asdk/src/Saas.SignupAdministration/deployment"
 # using volumes '--volume' to mount only the needed directories to the container.
 # using ':ro' to make scrip directories etc. read-only. Only config and log directories are writable.
 docker run \
+    --platform linux/amd64 \
     --interactive \
     --tty \
     --rm \

@@ -28,5 +28,9 @@ RUN pip3 install PyYaml
     
 WORKDIR /asdk
 
+# Workaround for the dotnet 7 execution with rosetta2 emulation
+# https://github.com/Azure/bicep/issues/10245#issuecomment-1816816017
+ENV DOTNET_EnableWriteXorExecute=0
+
 # trust repository in container
 RUN git config --global --add safe.directory /asdk
