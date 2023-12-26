@@ -38,7 +38,7 @@ public class PermissionsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError("Unable to get Tenant Users.", ex);
+            _logger.LogError("Unable to get Tenant Users: {ex}", ex);
             throw;
         }
 
@@ -67,7 +67,7 @@ public class PermissionsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError("Unhandled exception", ex);
+            _logger.LogError("Unhandled exception: {ex}", ex);
             throw;
         }
     }

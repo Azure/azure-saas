@@ -63,7 +63,7 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
         if (_memoryCache.TryGetValue<string>(cacheItemName, out var clientAssertion)
             && clientAssertion is not null)
         {
-            _logger.LogInformation($"Cache item found.", cacheItemName);
+            _logger.LogInformation("Cache item found: {cacheItemName}", cacheItemName);
             return clientAssertion;
         }
 

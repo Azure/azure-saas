@@ -13,8 +13,4 @@ public class ItemAlreadyExistsException : Exception
     public ItemAlreadyExistsException(string? message, Exception? innerException) : base(message, innerException)
     {
     }
-
-    protected ItemAlreadyExistsException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-    }
 }
