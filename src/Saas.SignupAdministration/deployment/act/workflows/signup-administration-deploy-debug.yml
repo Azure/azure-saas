@@ -10,9 +10,9 @@ permissions:
 
 env:
   APP_NAME: signupadmin-app
-  AZURE_WEBAPP_NAME: signupadmin-app-asdk-test-83sx       # set this to your application's name
+  AZURE_WEBAPP_NAME: signupadmin-app-asdk-test-v23y       # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: 7.x.x
+  DOTNET_VERSION: 8.x.x
   PROJECT_DIR: ./src/Saas.SignupAdministration/Saas.SignupAdministration.Web
   PROJECT_PATH: ${{ env.PROJECT_DIR }}/Saas.SignupAdministration.Web.csproj
   PUBLISH_PATH: ./publish

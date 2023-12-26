@@ -15,15 +15,17 @@ prepare-parameters-file "${BICEP_PARAMETERS_TEMPLATE_FILE}" "${BICEP_CONFIG_ENTR
 
 resource_group="$(get-value ".deployment.resourceGroup.name")"
 identity_foundation_deployment_name="$(get-value ".deployment.identityFoundation.name")"
+subscriptionId="$(get-value ".initConfig.subscriptionId")"
 
-echo "Downloading Identity Foundation outputs from Resource Group '${resource_group}' deployment named '${identity_foundation_deployment_name}'..." |
+echo "Deploying Config Entries: Downloading Identity Foundation outputs from Resource Group '${resource_group}' deployment named '${identity_foundation_deployment_name}'..." |
     log-output \
         --level info
 
 get-identity-foundation-deployment-outputs \
     "${resource_group}" \
     "${identity_foundation_deployment_name}" \
-    "${BICEP_IDENTITY_FOUNDATION_OUTPUT_FILE}"
+    "${BICEP_IDENTITY_FOUNDATION_OUTPUT_FILE}" \
+    "${subscriptionId}"
 
 echo "Provisioning the ${APP_NAME} Configuration Entries." |
     log-output \

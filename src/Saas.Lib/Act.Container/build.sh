@@ -26,3 +26,4 @@ else
     docker build --no-cache --file "${ACT_CONTAINER_DIR}/Dockerfile" --tag "${tag_name}" .
 fi
 
+gh extension install https://github.com/nektos/gh-act
