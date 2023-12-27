@@ -8,14 +8,11 @@ using Saas.Identity.Authorization.Requirement;
 using System.Security.Claims;
 
 namespace Saas.Identity.Authorization.Handler;
-public sealed class SaasUserPermissionAuthorizationHandler : SaasPermissionAuthorizationHandlerBase<SaasUserPermissionRequirement, UserPermissionKind>
+public sealed class SaasUserPermissionAuthorizationHandler(
+    IHttpContextAccessor httpContextAccessor,
+    IOptions<SaasAuthorizationOptions> saasAuthorizationOptions) 
+        : SaasPermissionAuthorizationHandlerBase<SaasUserPermissionRequirement, UserPermissionKind>(httpContextAccessor, saasAuthorizationOptions)
 {
-    public SaasUserPermissionAuthorizationHandler(
-        IHttpContextAccessor httpContextAccessor,
-        IOptions<SaasAuthorizationOptions> saasAuthorizationOptions) : base(httpContextAccessor, saasAuthorizationOptions)
-    {
-    }
-
     protected override bool IsValidPermission(
         SaasPermissionClaim<UserPermissionKind> permission, 
         AuthorizationHandlerContext context, 

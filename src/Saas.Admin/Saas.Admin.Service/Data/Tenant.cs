@@ -9,6 +9,7 @@ public class Tenant
     public int CategoryId { get; set; }
     public string CreatorEmail { get; set; } = string.Empty;
     public DateTime? CreatedTime { get; set; }
+
     [Timestamp]
     public byte[]? ConcurrencyToken { get; set; }
 }

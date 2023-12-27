@@ -6,14 +6,9 @@ using Microsoft.Identity.Web;
 namespace Saas.Identity.Helper;
 
 // For more details please see: https://github.com/AzureAD/microsoft-identity-web/issues/13#issuecomment-878528492
-public class RejectSessionCookieWhenAccountNotInCacheEvents : CookieAuthenticationEvents
+public class RejectSessionCookieWhenAccountNotInCacheEvents(IEnumerable<string> scopes) : CookieAuthenticationEvents
 {
-    private readonly IEnumerable<string> _scopes;
-
-    public RejectSessionCookieWhenAccountNotInCacheEvents(IEnumerable<string> scopes)
-    {
-        _scopes = scopes;
-    }
+    private readonly IEnumerable<string> _scopes = scopes;
 
     public async override Task ValidatePrincipal(CookieValidatePrincipalContext context)
     {

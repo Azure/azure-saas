@@ -5,14 +5,9 @@ namespace Saas.Admin.Service.Utilities;
 
 // This is to use key name prefixes to only load in the secrets that pertain to this microservice
 // https://docs.microsoft.com/en-us/aspnet/core/security/key-vault-configuration?view=aspnetcore-6.0#use-a-key-name-prefix
-public class CustomPrefixKeyVaultSecretManager : KeyVaultSecretManager
+public class CustomPrefixKeyVaultSecretManager(string prefix) : KeyVaultSecretManager
 {
-    private readonly string _prefix;
-
-    public CustomPrefixKeyVaultSecretManager(string prefix)
-    {
-        _prefix = $"{prefix}-";
-    }
+    private readonly string _prefix = $"{prefix}-";
 
     public override bool Load(SecretProperties properties)
     {

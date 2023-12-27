@@ -13,8 +13,4 @@ public class ItemNotFoundExcepton : Exception
     public ItemNotFoundExcepton(string? message, Exception? innerException) : base(message, innerException)
     {
     }
-
-    protected ItemNotFoundExcepton(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-    }
 }

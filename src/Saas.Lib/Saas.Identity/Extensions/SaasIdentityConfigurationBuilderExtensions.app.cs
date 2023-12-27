@@ -43,18 +43,12 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
         return new SaasWebAppClientCredentialBuilder(authenticationBuilder, scopes);
     }
 
-    public class SaasWebAppClientCredentialBuilder
+    public class SaasWebAppClientCredentialBuilder(
+        MicrosoftIdentityWebAppAuthenticationBuilder authenticationBuilder,
+        IEnumerable<string> scopes)
     {
-        private readonly MicrosoftIdentityWebAppAuthenticationBuilder _authenticationBuilder;
-        private readonly IEnumerable<string> _scopes;
-
-        public SaasWebAppClientCredentialBuilder(
-            MicrosoftIdentityWebAppAuthenticationBuilder authenticationBuilder,
-            IEnumerable<string> scopes)
-        {
-            _authenticationBuilder= authenticationBuilder;
-            _scopes= scopes;
-        }
+        private readonly MicrosoftIdentityWebAppAuthenticationBuilder _authenticationBuilder = authenticationBuilder;
+        private readonly IEnumerable<string> _scopes = scopes;
 
         public MicrosoftIdentityAppCallsWebApiAuthenticationBuilder SaaSAppCallDownstreamApi(IEnumerable<string>? scopes = default)
         {

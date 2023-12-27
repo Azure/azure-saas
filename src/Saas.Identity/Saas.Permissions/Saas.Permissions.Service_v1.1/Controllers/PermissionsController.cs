@@ -6,19 +6,14 @@ namespace Saas.Permissions.Service.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PermissionsController : ControllerBase
+public class PermissionsController(
+    IPermissionsService permissionsService, 
+    IGraphAPIService graphAPIService, ILogger<PermissionsController> logger) : ControllerBase
 {
-    private readonly ILogger _logger;
+    private readonly ILogger _logger = logger;
 
-    private readonly IPermissionsService _permissionsService;
-    private readonly IGraphAPIService _graphAPIService;
-    
-    public PermissionsController(IPermissionsService permissionsService, IGraphAPIService graphAPIService, ILogger<PermissionsController> logger)
-    {
-        _permissionsService = permissionsService;
-        _graphAPIService = graphAPIService;
-        _logger = logger;
-    }
+    private readonly IPermissionsService _permissionsService = permissionsService;
+    private readonly IGraphAPIService _graphAPIService = graphAPIService;
 
     [HttpGet]
     [Produces("application/json")]
@@ -38,7 +33,7 @@ public class PermissionsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError("Unable to get Tenant Users.", ex);
+            _logger.LogError("Unable to get Tenant Users: {ex}", ex);
             throw;
         }
 
@@ -67,7 +62,7 @@ public class PermissionsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError("Unhandled exception", ex);
+            _logger.LogError("Unhandled exception: {ex}", ex);
             throw;
         }
     }
@@ -229,7 +224,5 @@ public class PermissionsController : ControllerBase
             throw;
         }
     }
-
-
 }
 

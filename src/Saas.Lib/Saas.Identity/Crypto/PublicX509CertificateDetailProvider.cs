@@ -9,9 +9,11 @@ using Saas.Identity.Model;
 using Saas.Identity.Crypto.Util;
 
 namespace Saas.Identity.Crypto;
-public class PublicX509CertificateDetailProvider : IPublicX509CertificateDetailProvider
+public class PublicX509CertificateDetailProvider(
+    IMemoryCache memoryCache,
+    ILogger<PublicX509CertificateDetailProvider> logger) : IPublicX509CertificateDetailProvider
 {
-    private readonly ILogger _logger;
+    private readonly ILogger _logger = logger;
 
     // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/loggermessage?view=aspnetcore-7.0
     private static readonly Action<ILogger, Exception> _logError = LoggerMessage.Define(
@@ -19,15 +21,7 @@ public class PublicX509CertificateDetailProvider : IPublicX509CertificateDetailP
             new EventId(1, nameof(PublicX509CertificateDetailProvider)),
             "Client Assertion Signing Provider");
 
-    private readonly IMemoryCache _memoryCache;
-
-    public PublicX509CertificateDetailProvider(
-        IMemoryCache memoryCache,
-        ILogger<PublicX509CertificateDetailProvider> logger)
-    {
-        _memoryCache = memoryCache;
-        _logger = logger;
-    }
+    private readonly IMemoryCache _memoryCache = memoryCache;
 
     public async Task<IPublicX509CertificateDetail> GetX509Detail(IKeyVaultInfo keyInfo, TokenCredential credential)
     {

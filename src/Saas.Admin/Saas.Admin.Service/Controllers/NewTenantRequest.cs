@@ -12,7 +12,7 @@ public class NewTenantRequest
 
     internal Tenant ToTenant()
     {
-        Tenant tenant = new Tenant()
+        Tenant tenant = new()
         {
             Name = Name,
             Route = Route,

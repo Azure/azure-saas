@@ -7,6 +7,7 @@ public interface ITenantService
     Task<IEnumerable<TenantDTO>> GetAllTenantsAsync();
 
     Task<TenantDTO> GetTenantAsync(Guid tenantId);
+
     Task<IEnumerable<TenantDTO>> GetTenantsByIdAsync(IEnumerable<Guid> ids);
 
     Task<TenantDTO> AddTenantAsync(NewTenantRequest newTenantRequest, Guid adminId);
@@ -16,6 +17,8 @@ public interface ITenantService
     Task DeleteTenantAsync(Guid tenantId);
 
     Task<TenantInfoDTO> GetTenantInfoByRouteAsync(string route);
+
     Task<bool> TenantExistsAsync(Guid tenantId);
+
     Task<bool> CheckPathExists(string path);
 }

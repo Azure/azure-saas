@@ -4,16 +4,12 @@ using Saas.Shared.Options;
 
 namespace Saas.Permissions.Service.Middleware;
 
-public class ApiKeyMiddleware {
-    
-    private readonly RequestDelegate _next;
+public class ApiKeyMiddleware(IOptions<PermissionsApiOptions> permissionOptions, RequestDelegate next)
+{    
+    private readonly RequestDelegate _next = next;
     private const string API_KEY = "x-api-key";
-    private readonly PermissionsApiOptions _permissionOptions; 
-    
-    public ApiKeyMiddleware(IOptions<PermissionsApiOptions> permissionOptions, RequestDelegate next) {
-        _next = next;
-        _permissionOptions = permissionOptions.Value;
-    }
+    private readonly PermissionsApiOptions _permissionOptions = permissionOptions.Value;
+
     public async Task InvokeAsync(HttpContext context) {
 
         if (!context.Request.Headers.TryGetValue(API_KEY, out var extractedApiKey)) {

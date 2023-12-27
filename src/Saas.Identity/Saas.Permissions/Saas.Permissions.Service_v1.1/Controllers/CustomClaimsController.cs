@@ -5,16 +5,10 @@ namespace Saas.Permissions.Service.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CustomClaimsController : ControllerBase
+public class CustomClaimsController(IPermissionsService permissionsService, ILogger<CustomClaimsController> logger) : ControllerBase
 {
-    private readonly IPermissionsService _permissionsService;
-    private readonly ILogger _logger;
-
-    public CustomClaimsController(IPermissionsService permissionsService, ILogger<CustomClaimsController> logger)
-    {
-        _permissionsService = permissionsService;
-        _logger = logger;
-    }
+    private readonly IPermissionsService _permissionsService = permissionsService;
+    private readonly ILogger _logger = logger;
 
     // This is the endpoint that is called by Azure AD B2C to get alle the custom claims defined for a specific user.
     [HttpPost("permissions")]
@@ -74,7 +68,7 @@ public class CustomClaimsController : ControllerBase
 
         RolesClaimResponse response = new()
         {
-            Roles = Array.Empty<string>()
+            Roles = []
         };
 
         await Task.CompletedTask;

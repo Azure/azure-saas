@@ -6,14 +6,9 @@ using Saas.Identity.Authorization.Requirement;
 using System.Reflection;
 
 namespace Saas.Identity.Authorization.Provider;
-public class SaasPermissionAuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
+public class SaasPermissionAuthorizationPolicyProvider(
+    IOptions<AuthorizationOptions> options) : DefaultAuthorizationPolicyProvider(options)
 {
-    public SaasPermissionAuthorizationPolicyProvider(
-        IOptions<AuthorizationOptions> options) : base(options)
-    {
-
-    }
-
     public override async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
     {
         AuthorizationPolicy? policy = await base.GetPolicyAsync(policyName);
