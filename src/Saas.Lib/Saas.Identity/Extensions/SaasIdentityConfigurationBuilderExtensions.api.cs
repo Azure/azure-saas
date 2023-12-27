@@ -45,16 +45,11 @@ public static partial class SaasIdentityConfigurationBuilderExtensions
     }
 }
 
-public class SaasApiClientCredentialBuilder<TProvider, TOptions>
+public class SaasApiClientCredentialBuilder<TProvider, TOptions>(IServiceCollection services)
     where TProvider : ISaasApi
     where TOptions : AzureAdB2CBase
 {
-    private readonly IServiceCollection _services;
-
-    public SaasApiClientCredentialBuilder(IServiceCollection services)
-    {
-        _services = services;
-    }
+    private readonly IServiceCollection _services = services;
 
     public IServiceCollection AddMicrosoftGraphAuthenticationProvider()
     {

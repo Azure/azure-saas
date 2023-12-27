@@ -24,7 +24,7 @@ public class TenantInfoDTO
 
     public Tenant ToTenant()
     {
-        Tenant tenant = new Tenant()
+        Tenant tenant = new()
         {
             Id = Id,
             Name = Name,

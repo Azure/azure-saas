@@ -7,5 +7,4 @@ public record AdminApiOptions
 
     public string? ApplicationIdUri { get; init; }
     public string[]? Scopes { get; init; }
-
 }

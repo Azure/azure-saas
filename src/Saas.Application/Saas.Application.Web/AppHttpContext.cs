@@ -15,7 +15,7 @@ public static class AppHttpContext
         }
         set
         {
-            if (services != null)
+            if (services is not null)
             {
                 throw new Exception("Can't set once a value has already been set.");
             }
@@ -31,7 +31,7 @@ public static class AppHttpContext
     {
         get
         {
-            if(services != null)
+            if(services is not null)
             {
                 IHttpContextAccessor? httpContextAccessor = services.GetService(typeof(IHttpContextAccessor)) as IHttpContextAccessor;
 

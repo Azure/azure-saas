@@ -14,9 +14,12 @@ using Saas.Identity.Model;
 using Saas.Identity.Crypto.Util;
 
 namespace Saas.Identity.Crypto;
-public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
+public class ClientAssertionSigningProvider(
+    IMemoryCache menoryCache,
+    ILogger<ClientAssertionSigningProvider> logger,
+    IPublicX509CertificateDetailProvider publicX509CertificateDetailProvider) : IClientAssertionSigningProvider
 {
-    private readonly ILogger _logger;
+    private readonly ILogger _logger = logger;
 
     // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/loggermessage?view=aspnetcore-7.0
     private static readonly Action<ILogger, Exception> _logError = LoggerMessage.Define(
@@ -24,19 +27,8 @@ public class ClientAssertionSigningProvider : IClientAssertionSigningProvider
             new EventId(1, nameof(ClientAssertionSigningProvider)),
             "Client Assertion Signing Provider");
 
-    private readonly IMemoryCache _memoryCache;
-    private readonly IPublicX509CertificateDetailProvider _publicX509CertificateDetailProvider;
-
-    public ClientAssertionSigningProvider(
-        IMemoryCache menoryCache,
-        ILogger<ClientAssertionSigningProvider> logger,
-        IPublicX509CertificateDetailProvider publicX509CertificateDetailProvider)
-    {
-        _logger = logger;
-        _memoryCache = menoryCache;
-
-        _publicX509CertificateDetailProvider = publicX509CertificateDetailProvider;
-    }
+    private readonly IMemoryCache _memoryCache = menoryCache;
+    private readonly IPublicX509CertificateDetailProvider _publicX509CertificateDetailProvider = publicX509CertificateDetailProvider;
 
     public async Task<string> GetClientAssertion(string keyVaultUrl,
         string certKeyName,

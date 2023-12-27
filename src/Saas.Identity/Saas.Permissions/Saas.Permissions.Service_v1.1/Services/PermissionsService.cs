@@ -7,22 +7,14 @@ using Saas.Permissions.Service.Models;
 
 namespace Saas.Permissions.Service.Services;
 
-public class PermissionsService : IPermissionsService
+public class PermissionsService(
+    SaasPermissionsContext permissionsContext,
+    ILogger<PermissionsService> logger,
+    IGraphAPIService graphAPIService) : IPermissionsService
 {
-    private readonly SaasPermissionsContext _permissionsContext;
-    private readonly ILogger _logger;
-    private readonly IGraphAPIService _graphAPIService;
-    
-    public PermissionsService(
-        SaasPermissionsContext permissionsContext,
-        ILogger<PermissionsService> logger, 
-        IGraphAPIService graphAPIService)
-    {
-        _permissionsContext = permissionsContext;
-
-        _logger = logger;
-        _graphAPIService = graphAPIService;
-    }
+    private readonly SaasPermissionsContext _permissionsContext = permissionsContext;
+    private readonly ILogger _logger = logger;
+    private readonly IGraphAPIService _graphAPIService = graphAPIService;
 
     public async Task<ICollection<SaasPermission>> GetPermissionsAsync(Guid userId)
     {

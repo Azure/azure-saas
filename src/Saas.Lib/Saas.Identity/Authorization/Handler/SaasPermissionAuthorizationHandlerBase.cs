@@ -9,21 +9,15 @@ using System.Collections;
 using System.Security.Claims;
 
 namespace Saas.Identity.Authorization.Handler;
-public abstract class SaasPermissionAuthorizationHandlerBase<TSaasRequirement, TSaasPermissionKind> : AuthorizationHandler<TSaasRequirement>
+public abstract class SaasPermissionAuthorizationHandlerBase<TSaasRequirement, TSaasPermissionKind>(
+    IHttpContextAccessor httpContextAccessor,
+    IOptions<SaasAuthorizationOptions> saasAuthorizationOptions) : AuthorizationHandler<TSaasRequirement>
     where TSaasRequirement : ISaasRequirement
     where TSaasPermissionKind : struct, Enum
 {
-    protected readonly IHttpContextAccessor _httpContextAccessor;
-    protected readonly Guid _globalEntity;
-
-    public SaasPermissionAuthorizationHandlerBase(
-        IHttpContextAccessor httpContextAccessor,
-        IOptions<SaasAuthorizationOptions> saasAuthorizationOptions)
-    {
-        _httpContextAccessor = httpContextAccessor;
-        _globalEntity = saasAuthorizationOptions?.Value.Global
+    protected readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    protected readonly Guid _globalEntity = saasAuthorizationOptions?.Value.Global
             ?? throw new InvalidOperationException($"Global entity guid in '{nameof(saasAuthorizationOptions)}' cannot be null and must be defined.");
-    }
 
     protected virtual HashSet<int> GetGrantedPermissionValues(AuthorizationHandlerContext context, TSaasRequirement requirement)
     {

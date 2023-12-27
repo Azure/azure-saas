@@ -33,7 +33,7 @@ public class TenantDTO
 
     public Tenant ToTenant()
     {
-        Tenant tenant = new Tenant()
+        Tenant tenant = new()
         {
             Id = Id,
             Name = Name,
@@ -68,16 +68,9 @@ public class TenantDTO
     public string? Version { get; set; }
 }
 
-public class TenantDTOPage
+public class TenantDTOPage(IEnumerable<TenantDTO> tenants, int totalCount, int startIndex)
 {
-    public TenantDTOPage(IEnumerable<TenantDTO> tenants, int totalCount, int startIndex)
-    {
-        Tenants = tenants;
-        TotalCount = totalCount;
-        StartIndex = startIndex;
-    }
-
-    public IEnumerable<TenantDTO> Tenants { get; }
-    public int TotalCount { get; }
-    public int StartIndex { get; }
+    public IEnumerable<TenantDTO> Tenants { get; } = tenants;
+    public int TotalCount { get; } = totalCount;
+    public int StartIndex { get; } = startIndex;
 }

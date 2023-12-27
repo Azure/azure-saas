@@ -9,9 +9,12 @@ using Saas.Shared.Options;
 
 namespace Saas.Permissions.Service.Services;
 
-public class GraphAPIService : IGraphAPIService
+public class GraphAPIService(
+    IOptions<AzureB2CPermissionsApiOptions> permissionApiOptions,
+    IGraphApiClientFactory graphClientFactory,
+    ILogger<GraphAPIService> logger) : IGraphAPIService
 {
-    private readonly ILogger _logger;
+    private readonly ILogger _logger = logger;
 
     // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/loggermessage?view=aspnetcore-7.0
     private static readonly Action<ILogger, Exception> _logError = LoggerMessage.Define(
@@ -19,18 +22,9 @@ public class GraphAPIService : IGraphAPIService
             new EventId(1, nameof(GraphAPIService)),
             "Client Assertion Signing Provider");
 
-    private readonly GraphServiceClient _graphServiceClient;
-    private readonly AzureB2CPermissionsApiOptions _permissionOptions;
+    private readonly GraphServiceClient _graphServiceClient = graphClientFactory.Create();
+    private readonly AzureB2CPermissionsApiOptions _permissionOptions = permissionApiOptions.Value;
 
-    public GraphAPIService(
-        IOptions<AzureB2CPermissionsApiOptions> permissionApiOptions,
-        IGraphApiClientFactory graphClientFactory,
-        ILogger<GraphAPIService> logger)
-    {
-        _logger= logger;
-        _graphServiceClient = graphClientFactory.Create();
-        _permissionOptions = permissionApiOptions.Value;
-    }
     public async Task<string[]> GetAppRolesAsync(ClaimsRequest request)
     {
         try

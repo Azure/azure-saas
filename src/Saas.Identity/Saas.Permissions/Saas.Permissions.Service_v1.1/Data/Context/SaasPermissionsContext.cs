@@ -3,13 +3,8 @@ using Saas.Permissions.Service.Data.Configuration;
 
 namespace Saas.Permissions.Service.Data.Context;
 
-public class SaasPermissionsContext : DbContext
+public class SaasPermissionsContext(DbContextOptions<SaasPermissionsContext> options) : DbContext(options)
 {
-    public SaasPermissionsContext(DbContextOptions<SaasPermissionsContext> options) : base(options)
-    {
-
-    }
-
     public DbSet<SaasPermission> SaasPermissions { get; set; }
     public DbSet<TenantPermission> TenantPermissions { get; set; }
     public DbSet<UserPermission> UserPermissions { get; set; }

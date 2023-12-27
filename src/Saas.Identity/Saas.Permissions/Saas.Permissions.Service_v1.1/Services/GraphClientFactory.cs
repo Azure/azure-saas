@@ -6,21 +6,14 @@ using Microsoft.Kiota.Abstractions.Authentication;
 
 namespace Saas.Permissions.Service.Services;
 
-public class GraphApiClientFactory : IGraphApiClientFactory
+public class GraphApiClientFactory(
+    IOptions<MSGraphOptions> msGraphOptions,
+    IAuthenticationProvider authenticationProvider,
+    HttpClient httpClient) : IGraphApiClientFactory
 {
-    private readonly IAuthenticationProvider _authenticationProvider;
-    private readonly MSGraphOptions _msGraphOptions;
-    private readonly HttpClient _httpClient;
-
-    public GraphApiClientFactory(
-        IOptions<MSGraphOptions> msGraphOptions,
-        IAuthenticationProvider authenticationProvider,
-        HttpClient httpClient)
-    {
-        _msGraphOptions = msGraphOptions.Value;
-        _authenticationProvider = authenticationProvider;
-        _httpClient = httpClient;
-    }
+    private readonly IAuthenticationProvider _authenticationProvider = authenticationProvider;
+    private readonly MSGraphOptions _msGraphOptions = msGraphOptions.Value;
+    private readonly HttpClient _httpClient = httpClient;
 
     public GraphServiceClient Create() =>
                 new(_httpClient, _authenticationProvider, _msGraphOptions.BaseUrl);

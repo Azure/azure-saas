@@ -4,18 +4,11 @@ using Saas.Permissions.Client;
 
 namespace Saas.Admin.Service.Services;
 
-public class TenantService : ITenantService
+public class TenantService(TenantsContext tenantContext, IPermissionsServiceClient permissionService, ILogger<TenantService> logger) : ITenantService
 {
-    private readonly TenantsContext _context;
-    private readonly IPermissionsServiceClient _permissionService;
-    private readonly ILogger _logger;
-
-    public TenantService(TenantsContext tenantContext, IPermissionsServiceClient permissionService, ILogger<TenantService> logger)
-    {
-        _context = tenantContext;
-        _permissionService = permissionService;
-        _logger = logger;
-    }
+    private readonly TenantsContext _context = tenantContext;
+    private readonly IPermissionsServiceClient _permissionService = permissionService;
+    private readonly ILogger _logger = logger;
 
     public async Task<IEnumerable<TenantDTO>> GetAllTenantsAsync()
     {

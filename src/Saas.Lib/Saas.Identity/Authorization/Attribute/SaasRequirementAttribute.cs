@@ -2,12 +2,7 @@
 namespace Saas.Identity.Authorization.Attribute;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class SaasRequirementAttribute : System.Attribute
+public class SaasRequirementAttribute(string name) : System.Attribute
 {
-    public string PermissionEntityName { get; }
-
-    public SaasRequirementAttribute(string name)
-    {
-        PermissionEntityName = name;
-    }
+    public string PermissionEntityName { get; } = name;
 }
