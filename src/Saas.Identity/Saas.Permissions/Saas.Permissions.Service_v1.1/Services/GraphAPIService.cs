@@ -16,7 +16,7 @@ public class GraphAPIService(
 {
     private readonly ILogger _logger = logger;
 
-    // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/loggermessage?view=aspnetcore-7.0
+    // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/loggermessage?view=aspnetcore-8.0
     private static readonly Action<ILogger, Exception> _logError = LoggerMessage.Define(
             LogLevel.Error,
             new EventId(1, nameof(GraphAPIService)),

@@ -43,10 +43,10 @@ The SaaS Permissions Service API can be run locally during development, testing 
 To run the API locally, you must have the following installed on your developer machine:
 
 - [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) (recommended) or [Visual Studio Code](https://code.visualstudio.com/download).
-- [.NET 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
-- [ASP.NET Core 7.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-7.0)
+- [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [ASP.NET Core 8.0](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-8.0)
 
-> *Tip*: .NET 7.0 and ASP.NET Core 7.0 can also be installed as part of the latest version Microsoft Visual Studio 2022.
+> *Tip*: .NET 8.0 and ASP.NET Core 8.0 can also be installed as part of the latest version Microsoft Visual Studio 2022.
 
 ###  Configuration, settings and secrets when running locally
 
@@ -69,7 +69,7 @@ az account show # use this to see if you're already logged into your Azure tanen
 az login
 ```
 
-Code have been added to the [ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-7.0) project leveraging the local Azure CLI environment. You'll find this code in in `Program.cs`:
+Code have been added to the [ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-8.0) project leveraging the local Azure CLI environment. You'll find this code in in `Program.cs`:
 
 ```csharp
 if (builder.Environment.IsDevelopment())
@@ -89,7 +89,7 @@ if (builder.Environment.IsDevelopment())
 
 To manage access to Azure App Configuration, securely, we need one more thing. 
 
-From your local development environment, you can leverage the Dotnet [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows), to securely store a `connection string` allowing the local app to access the provisioned Azure App Configuration instance. 
+From your local development environment, you can leverage the Dotnet [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-8.0&tabs=windows), to securely store a `connection string` allowing the local app to access the provisioned Azure App Configuration instance. 
 
 This is a two step process:
 
