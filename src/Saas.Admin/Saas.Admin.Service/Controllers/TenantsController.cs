@@ -324,6 +324,46 @@ public class TenantsController : ControllerBase
     }
 
     /// <summary>
+    /// Get user associated with a tenant
+    /// </summary>
+    /// <param name="tenantId"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// <para>Right now only returns the user ID, should consider returning a user object with 
+    /// user info + permissions for the tenant</para>
+    /// </remarks>
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+    [Route("{tenantId}/User/{userId}")]
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(permissionValue: TenantPermissionKind.Read, "tenantId")]
+    public async Task<ActionResult<UserDTO>> GetTenantUser(Guid tenantId, Guid userId)
+    {
+        try
+        {
+            _logger.LogDebug("Retrieving user {UserID} for tenant {TenantID} by {User}", userId, tenantId, User?.Identity?.Name);
+
+            User user = await _permissionsServiceClient.GetTenantUserAsync(tenantId, userId);
+
+            UserDTO returnValue = new UserDTO(user.UserId, user.DisplayName);
+            return Ok(returnValue);
+        }
+        catch (ItemNotFoundExcepton)
+        {
+            _logger.LogDebug("Was not able to find user {UserID} in tenant {TeantntID}", userId, tenantId);
+            return NotFound();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Problem retrieving user {UserID} for {TenantID}", userId, tenantId);
+            throw;
+        }
+    }
+
+    /// <summary>
     /// Get all permissions a user has in a tenant
     /// </summary>
     /// <param name="tenantId"></param>
