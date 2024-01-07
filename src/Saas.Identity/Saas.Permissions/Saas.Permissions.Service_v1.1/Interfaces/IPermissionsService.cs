@@ -6,6 +6,7 @@ public interface IPermissionsService
 {
     Task<ICollection<SaasPermission>> GetPermissionsAsync(Guid userId);
     Task<ICollection<Guid>> GetTenantUsersAsync(Guid tenantId);
+    Task<Guid> GetTenantUserAsync(Guid tenantId, Guid userId);
     Task<ICollection<string>> GetUserPermissionClaimsForTenantAsync(Guid tenantId, Guid userId);
     Task AddNewTenantAsync(Guid tenantId, Guid userId);
     Task AddUserPermissionsToTenantAsync(Guid tenantId, Guid userId, string[] permissions);
