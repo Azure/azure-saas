@@ -70,6 +70,58 @@ public class PermissionsController(
     [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Route("GetTenantUser")]
+    public async Task<ActionResult<User>> GetTenantUser(Guid tenantId, Guid userId)
+    {
+        // Get user ID from database
+        Guid? permissionUserId = null;
+
+        try
+        {
+            permissionUserId = await _permissionsService.GetTenantUserAsync(tenantId, userId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Unable to get Tenant User: {ex}", ex);
+            throw;
+        }
+
+        if (permissionUserId is null || permissionUserId.Value == Guid.Empty)
+        {
+            return NotFound();
+        }
+
+        //
+        // Next, we fetch the user object with more data from the Microsoft Graph API
+        //
+        // We chose to not force the UserID to be GUID incase you would like to use something else for ID.
+        // Since we're using AAD B2C as our default Identity provider and need to get data from the Graph API, we must first make sure our ID is a guid before sending them to graph.
+        // If you are not using our identity framework, you will need to replace the following try/catch block with an implementation to fetch your user information from your user store.
+        try
+        {
+            var enrichedUser = await _graphAPIService
+                .GetUserById(permissionUserId.Value);
+
+            return Ok(enrichedUser);
+        } 
+        catch (FormatException ex)
+        {
+            return BadRequest($"Tenant ID {tenantId} has a user assinged that has an invalid ID. Error: {ex.Message}");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Unhandled exception: {ex}", ex);
+            throw;
+        }
+    }
+
+    [HttpGet]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Route("GetUserPermissionsForTenant")]

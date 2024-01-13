@@ -27,15 +27,15 @@
         {
             <tr>
                 <td>
-                    @Html.ActionLink(item.DisplayName, "Details", new { area = "Admin", controller="users", id=item.UserId })
+                    @Html.ActionLink(item.DisplayName, "Details", new { area = "Admin", controller="users", tenantid=@ViewData["tenantid"], id=item.UserId })
                 </td>
                  <td>
                     @item.Permissions
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new {area = "Admin" } ) |
-                    @Html.ActionLink("Details", "Details", new { area = "Admin" }) |
-                    @Html.ActionLink("Delete", "Delete", new { area = "Admin" })
+                    @Html.ActionLink("Edit", "Edit", new { area = "Admin", tenantid=@ViewData["tenantid"], id=item.UserId } ) |
+                    @Html.ActionLink("Details", "Details", new { area = "Admin", tenantid=@ViewData["tenantid"], id=item.UserId }) |
+                    @Html.ActionLink("Delete", "Delete", new { area = "Admin", tenantid=@ViewData["tenantid"], id=item.UserId })
                 </td>
             </tr>
         }

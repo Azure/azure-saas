@@ -79,6 +79,38 @@ public class GraphAPIService(
     }
 
     // Enriches the user object with data from Microsoft Graph. 
+    public async Task<Models.User> GetUserById(Guid userId)
+    {
+        try
+        {
+            var graphUsers = await _graphServiceClient.Users
+                .GetAsync(requestionConfiguration =>
+                {
+                    requestionConfiguration.QueryParameters.Filter = $"id eq '{userId}'";
+                    requestionConfiguration.QueryParameters.Select = new string[] { "id, identities, displayName" };
+                });
+
+            if (graphUsers?.Value?.Count > 1)
+            {
+                throw new UserNotFoundException($"More than one user with the id {userId} exists in the Identity provider");
+            }
+
+            if (graphUsers?.Value?.Count == 0 || graphUsers?.Value is null)
+            {
+                throw new UserNotFoundException($"The user with the id {userId} was not found in the Identity Provider");
+            }
+
+            // Ok to just return first, because at this point we've verified we have exactly 1 user in the graphUsers object.
+            return ToUserObjects(graphUsers.Value).First();
+        }
+        catch (Exception ex)
+        {
+            _logError(_logger, ex);
+            throw;
+        }
+    }
+
+    // Enriches the user object with data from Microsoft Graph. 
     public async Task<IEnumerable<Models.User>> GetUsersByIds(ICollection<Guid> userIds)
     {
         

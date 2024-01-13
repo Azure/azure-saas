@@ -32,11 +32,21 @@ public class PermissionsService(
     {
         _logger.LogDebug("Users are requested from {tenantId}", tenantId);
 
-
         return await _permissionsContext.SaasPermissions
             .Where(x => x.TenantId == tenantId)
             .Select(x => x.UserId)
             .ToListAsync();
+    }
+
+    public async Task<Guid> GetTenantUserAsync(Guid tenantId, Guid userId)
+    {
+        _logger.LogDebug("User {userId} is requested from {tenantId}", userId, tenantId);
+
+        return await _permissionsContext.SaasPermissions
+            .Where(x => x.TenantId == tenantId &&
+                        x.UserId == userId)
+            .Select(x => x.UserId)
+            .SingleOrDefaultAsync();
     }
 
     public async Task<ICollection<string>> GetUserPermissionClaimsForTenantAsync(Guid tenantId, Guid userId)
