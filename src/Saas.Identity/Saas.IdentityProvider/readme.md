@@ -133,7 +133,7 @@ The `initConfig` section of `config.json`must be filled out manually (see more d
     "azureb2c": {
       "location": "Europe", // enter a valid Azure B2C region here. This is not the same as 'location' above.
       "countryCode": "DK", // enter a valid country code.
-      "skuName": "PremiumP1", // can be Standard, PremiumP1 or PremiumP2.
+      "skuName": "PremiumP1", // can be PremiumP1 or PremiumP2.
       "tier": "A0" // leave this as 'A0'
     }
   },... // leave the remaining part of the configuration manifest unchanged for now.
