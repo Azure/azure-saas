@@ -96,7 +96,7 @@ This is a two step process:
 1. The Azure App Configuration `connection string` can either be found in the Azure Portal by navigating to your Azure App Configuration instance, that was deployed as part of the Identity Foundation. Or, it can be obtained using this az cli command: 
 
 ```bash
-az appconfig credential list --name "<name of your azure app configuration> --query [0].connectionString"
+az appconfig credential list --name "<name of your azure app configuration>" "--query [0].connectionString"
 ```
 
 In the Azure Portal you can find the connection string here:
