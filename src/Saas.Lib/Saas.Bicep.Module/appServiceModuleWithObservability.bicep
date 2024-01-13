@@ -68,8 +68,8 @@ resource signupAdministrationWeb 'Microsoft.Web/sites@2022-03-01' = {
       http20Enabled: true
       keyVaultReferenceIdentity: userAssignedIdentity.id // Must specify this when using User Assigned Managed Identity. Read here: https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references?tabs=azure-cli#access-vaults-with-a-user-assigned-identity
       detailedErrorLoggingEnabled: true
-      netFrameworkVersion: 'v7.0'      
-      // linuxFxVersion: 'DOTNETCORE|7.0'
+      netFrameworkVersion: 'v8.0'      
+      // linuxFxVersion: 'DOTNETCORE|8.0'
     }
   }
   identity: {
