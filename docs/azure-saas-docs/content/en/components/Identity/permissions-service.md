@@ -43,7 +43,7 @@ The Permissions Service is secured using API Key Authentication. The API Key is 
 
 ### Microsoft Graph API
 
-The [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/overview) is an API that provides a unified experience for accessing data on users within an Azure AD or Azure AD B2C tenant. Since we are using Azure AD B2C as our default Identity Provider, we must also use the Graph API when it becomes necessary to fetch data on our users. If you'd like to replace the identity provider with something else, you must also replace the Graph API calls within the permissions service to gather user data. These areas are clearly labeled with comments inline with the code.
+The [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/overview) is an API that provides a unified experience for accessing data on users within a Microsoft Entra or Azure AD B2C tenant. Since we are using Azure AD B2C as our default Identity Provider, we must also use the Graph API when it becomes necessary to fetch data on our users. If you'd like to replace the identity provider with something else, you must also replace the Graph API calls within the permissions service to gather user data. These areas are clearly labeled with comments inline with the code.
 
 ### Swagger
 
