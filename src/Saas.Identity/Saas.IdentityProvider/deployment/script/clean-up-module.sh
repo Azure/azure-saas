@@ -20,7 +20,7 @@ function clean-up-after-service-principal() {
     service_principal_credentials_file_path="$( get-user-value "${service_principal_username}" "credentialsPath" )"
     sudo rm -f "${service_principal_credentials_file_path}"
 
-    # deleting service principal credentials in Azure AD too
+    # deleting service principal credentials in Azure AD B2C too
     app_id="$( get-value ".deployment.azureb2c.servicePrincipal.appId" )"
     b2c_config_usr_name="$( get-value ".deployment.azureb2c.username" )"
     echo "Deleting service principal credentials using user '${b2c_config_usr_name}'" \
@@ -36,7 +36,7 @@ function clean-up-after-service-principal() {
     # resetting user context to the user that was used to login to the tenant
     reset-user-context
 
-    echo "Service principal credentials have been removed locally and in Azure AD." \
+    echo "Service principal credentials have been removed locally and in Azure AD B2C" \
         | log-output \
             --level success
 }

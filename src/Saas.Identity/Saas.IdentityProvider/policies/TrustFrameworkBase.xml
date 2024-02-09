@@ -20,7 +20,7 @@
               and/or sent in the token in Section III. -->
 
       <!-- NOTE: The claims schema contains restrictions on certain claims such as passwords and usernames. 
-           The trust framework policy treats Azure AD as any other claims provider and all its restrictions 
+           The trust framework policy treats Microsoft Entra as any other claims provider and all its restrictions 
            are modelled in the policy. A policy could be modified to add more restrictions, or use another 
            claims provider for credential storage which will have its own restrictions. -->
 
@@ -44,7 +44,7 @@
           <Protocol Name="OpenIdConnect" PartnerClaimType="tid" />
           <Protocol Name="SAML2" PartnerClaimType="http://schemas.microsoft.com/identity/claims/tenantid" />
         </DefaultPartnerClaimTypes>
-        <UserHelpText>Tenant identifier (ID) of the user object in Azure AD.</UserHelpText>
+        <UserHelpText>Tenant identifier (ID) of the user object in Microsoft Entra.</UserHelpText>
       </ClaimType>
 
       <ClaimType Id="objectId">
@@ -55,7 +55,7 @@
           <Protocol Name="OpenIdConnect" PartnerClaimType="oid" />
           <Protocol Name="SAML2" PartnerClaimType="http://schemas.microsoft.com/identity/claims/objectidentifier" />
         </DefaultPartnerClaimTypes>
-        <UserHelpText>Object identifier (ID) of the user object in Azure AD.</UserHelpText>
+        <UserHelpText>Object identifier (ID) of the user object in Microsoft Entra.</UserHelpText>
       </ClaimType>
 
       <!-- Claims needed for local accounts. -->
@@ -125,7 +125,7 @@
       <ClaimType Id="passwordPolicies">
         <DisplayName>Password Policies</DisplayName>
         <DataType>string</DataType>
-        <UserHelpText>Password policies used by Azure AD to determine password strength, expiry etc.</UserHelpText>
+        <UserHelpText>Password policies used by Microsoft Entra to determine password strength, expiry etc.</UserHelpText>
       </ClaimType>
 
       <ClaimType Id="client_id">

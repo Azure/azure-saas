@@ -101,8 +101,8 @@ public static class SR
     public const string CatalogCustomerSelectQuery = "SELECT * FROM dbo.Customer Where TenantId = " + CatalogTenantIdParameter;
     public const string CatalogTenantSelectQuery = "SELECT Id  FROM Tenant WHERE ApiKey = " + CatalogApiKeyParameter;
 
-    // Azure AD Properties
-    public const string AzureAdAuthorityFormat = "https://login.microsoftonline.com/{0}/v2.0";
+    // Azure AD B2C Properties
+    public const string AzureAdB2CAuthorityFormat = "https://login.microsoftonline.com/{0}/v2.0";
 
     // Startup Properties
     public const string IdentityDbConnectionProperty = "IdentityDbConnection";

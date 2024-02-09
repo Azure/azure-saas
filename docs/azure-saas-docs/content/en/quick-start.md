@@ -44,7 +44,7 @@ The Sign-up Administration Web Application provides a UI for adding new SaaS ten
 
 To provision the SaaS Sign-up Administration Web Application please follow the [readme](https://github.com/Azure/azure-saas/tree/main/src/Saas.SignupAdministration).
 
-> (*) Note that the term *tenant* is overloaded. A SaaS Tenant is not that same as an Azure AD tenant. The SaaS tenant references each instance of your multi-tenanted application.
+> (*) Note that the term *tenant* is overloaded. A SaaS Tenant is not that same as an Azure AD B2C or Microsoft Entra tenant. The SaaS tenant references each instance of your multi-tenanted application.
 
 ## Provisoning the Saas Application
 

@@ -13,8 +13,8 @@ param azureB2CDomain string
 @description('Azure B2C Tenant Id.')
 param azureB2cTenantId string
 
-@description('Azure AD Instance')
-param azureAdInstance string
+@description('Azure AD B2C Instance')
+param azureAdB2CInstanceURL string
 
 @description('The Azure B2C Signed Out Call Back Path.')
 param signedOutCallBackPath string
@@ -91,7 +91,7 @@ var appConfigStore = {
     }
     {
       key: '${signupAdminKeyName}:${azureB2CKeyName}:Instance'
-      value: azureAdInstance
+      value: azureAdB2CInstanceURL
       isSecret: false
       contentType: 'text/plain'
     }

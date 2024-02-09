@@ -18,5 +18,5 @@ initialize-az-cli "$HOME/.azure"
 # remove locally cached secret
 sudo rm "${ACT_SECRETS_FILE}" 2> /dev/null
 
-# delete secret based credential in Azure AD app registration.
+# delete secret based credential in Azure AD B2C app registration.
 delete-secret-based-credentials

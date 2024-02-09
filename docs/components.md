@@ -43,7 +43,7 @@
 ### Identity
 - ASP.NET Core Identity
 - Azure AD B2C
-- Azure AD
+- Microsoft Entra 
 
 ### Storage
 - Web Deployment Packages for all solutions components

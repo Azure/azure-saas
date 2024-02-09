@@ -23,7 +23,7 @@ Lucerne Publishing has recently purchased Contoso BadgeMeUp. They're currently u
 ### Onboarding
 
 1. Phil in Lucerne Publishing accounting browsed the plans available at Signup.BadgeMeUp.Contoso.com and selected the plan he thought would best fit the company's needs.
-2. Sandy navigates to BadgeMeUp.Contoso.com/lucernepublishing and signs in using her Azure AD credentials.
+2. Sandy navigates to BadgeMeUp.Contoso.com/lucernepublishing and signs in using her Microsoft Entra credentials.
 3. After Sandy creates an account, Phil can then go to Signup.BadgeMeUp.Contoso.com/admin to see his previously created tenant and grant Sandy elevation permissions if he wishes. 
 
 ```mermaid
