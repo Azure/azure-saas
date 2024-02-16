@@ -191,6 +191,15 @@ function backup-to-azure-blob-storage() {
             --level info \
             --header "Backup to Azure Blob Storage"
 
+    if [[ "${storage_account_name}" == "null" ]] ||
+        [[ "${container_name}" == "null" ]]; then
+        echo "Azure Blob Storage or container is not created (null)" |
+            log-output \
+                --level error \
+                --header "Critial error"
+            exit 1
+    fi
+
     zip_file_name="${directory}/log-${ASDK_DEPLOYMENT_SCRIPT_RUN_TIME}.zip"
 
     zip -r -j "${zip_file_name}" "${directory}" >/dev/null ||
