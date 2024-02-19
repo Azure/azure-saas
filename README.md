@@ -6,6 +6,18 @@
 
 The Azure SaaS Development Kit (ASDK) provide a cloud native starting point build with security, resilience and reliability in mind. Accelerate your SaaS journey with the Azure SaaS Development Kit.
 
+### Deployment Pattern
+
+1. The SDK provision with "empty" resources, like static app, db, identity, etc.
+2. Most of the apps, for the first time, need to run deployment scripts.
+```
+./setup.sh
+./run.sh
+// then either github actions or act (debbuging) deployment
+```
+3. this script will change ".github/workflows" scripts deployment variable (one time). Make sure to commit/push these changes.
+4. (using GitHub Action) go to `Actions` > `run Workflow`
+
 ### Get started 1-2-3
 
 1. Git fork this repo, making it your own.
