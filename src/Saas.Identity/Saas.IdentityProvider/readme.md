@@ -131,8 +131,8 @@ The `initConfig` section of `config.json`must be filled out manually (see more d
       "solutionName": "test" // leave as 'test' or change to some other name
     },
     "azureb2c": {
-      "location": "Europe", // enter a valid Azure B2C region here. This is not the same as 'location' above.
-      "countryCode": "DK", // enter a valid country code.
+      "location": "United States", // enter a valid Azure B2C region here. This is not the same as 'location' above.
+      "countryCode": "US", // enter a valid country code.
       "skuName": "PremiumP1", // can be PremiumP1 or PremiumP2.
       "tier": "A0" // leave this as 'A0'
     }
@@ -189,7 +189,7 @@ Other values in `initConfig`:
 | `solutionName`         | test      | The suggestion is to leave it as default or limit it to four letters. |
 | `azureb2c/location`    | N/A       | Note that this is not the same as the location above, but is rather the names of the Azure AD B2C regions available. Unfortunately, there's currently no command available for getting the list. |
 | `azureb2c/countryCode` | N/A       | An available ISO country code                                |
-| `azureb2c/skuName`     | PremiumP1 | Available options are `Standard`, `Premium1` and `Premium2`  |
+| `azureb2c/skuName`     | PremiumP1 | Available options are `PremiumP1` and `PremiumP2`  |
 | `azureb2c/tier`        | A0        | No known alternatives at the moment, please leave it as-is.  |
 
 ### Running the script 
