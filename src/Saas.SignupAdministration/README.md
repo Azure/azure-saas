@@ -45,6 +45,15 @@ Now you're ready to move on.
 
 Guidelines for getting up and running with SaaS Signup Administration in your local development, are identical to the guidelines found the *[Requirements](./../Saas.Identity/Saas.Permissions/readme.md#Requirements)* and the *[Configuration, settings and secrets when running locally](./../Saas.Identity/Saas.Permissions/readme.md#running-the-saas-permissions-service-api-locally)* section in the [SaaS Permissions Service readme](./../Saas.Identity/Saas.Permissions/readme.md). 
 
+- Go to the api folder, and add the AppConfig user-secret
+```
+$ cd .\Saas.SignupAdministration.Web\
+$ dotnet user-secrets set ConnectionStrings:AppConfig "Endpoint=https://appconfig..."
+```
+- Go to the portal and add the callback URL `https://localhost:44310/signin-oidc`
+![image](https://github.com/appwebcaddy/azure-saas/assets/134953582/f3ceb477-b661-4445-bf53-15645a7bf6e0)
+
+
 ## Running the SaaS Sign-up Administration Web App Locally
 
 --- TODO BEGIN --- 
