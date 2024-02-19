@@ -179,7 +179,7 @@ Here are the steps to set things up for deploying the SaaS Permissions Service A
 
 This will update the `AZURE_WEBAPP_NAME` environment variable in the GitHub Action YAML file, specifying the name of the SaaS Permissions Service API, as seen here in the file `./.github/workflows/permissions-api-deploy.yaml`:
 
-![image-20230126230446548](assets/readme/image-20230126230446548.png)
+![image-20230126230446548](.assets/readme/image-20230126230446548.png)
 
 > *Info*: the SaaS Permissions Service API name is fetched from the `config.json` file that was created when running the Identity Foundation deployment script.
 
