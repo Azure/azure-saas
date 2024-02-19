@@ -15,6 +15,8 @@ The Azure SaaS Development Kit (ASDK) provide a cloud native starting point buil
 ./run.sh
 // then either github actions or act (debbuging) deployment
 ```
+![image](https://github.com/appwebcaddy/azure-saas/assets/134953582/5f5bec95-a731-4e59-a7df-158df9c8bd9c)
+
 3. this script will change ".github/workflows" scripts deployment variable (one time). Make sure to commit/push these changes.
 4. (using GitHub Action) go to `Actions` > `run Workflow`
 
