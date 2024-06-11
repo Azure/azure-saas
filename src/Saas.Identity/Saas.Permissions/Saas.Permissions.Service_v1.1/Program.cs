@@ -12,6 +12,7 @@ using Saas.Identity.Helper;
 using Saas.Identity.Interface;
 using Polly;
 using Saas.Permissions.Service.Data.Context;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
@@ -158,7 +159,7 @@ void InitializeDevEnvironment()
     // This login on will also now provide valid access tokens to the local development environment.
     // For more details and the option to chain and combine multiple credential options with `ChainedTokenCredential`
     // please see: https://learn.microsoft.com/en-us/dotnet/api/overview/azure/identity-readme?view=azure-dotnet#define-a-custom-authentication-flow-with-chainedtokencredential
-
+    
     AzureCliCredential credential = new();
 
     builder.Configuration.AddAzureAppConfiguration(options =>

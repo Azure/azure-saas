@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 env:
-  AZURE_WEBAPP_NAME: 'api-permission-asdk-test-v23y' # set this to your application's name
+  AZURE_WEBAPP_NAME: 'api-permission-vki-azure-saas-nn51' # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: 8.x.x
   PROJECT_DIR: ./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1
