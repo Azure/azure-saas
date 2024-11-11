@@ -65,7 +65,7 @@ cd src/Saas.Identity/Saas.IdentityProvider/deployment
 >
 > *Tip #2*: You can open the deployment project in Visual Code by typing `code .` in the terminal (Mac or Windows with WSL) from the directory.
 >
-> *Tip #3*: It's advisable to not clone git repositories to folders that er managed with OneDrive, Dropbox or similar type file synchronization services.
+> *Tip #3*: It's advisable to not clone git repositories to folders that are managed with OneDrive, Dropbox or similar type file synchronization services.
 
 ### Logging into az cli
 
