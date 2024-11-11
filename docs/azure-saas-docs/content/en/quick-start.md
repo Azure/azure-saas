@@ -12,7 +12,7 @@ On this page, you will find instructions for how to run the dev kit in your loca
 
 ## Before You begin
 
-Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the Azure SaaS Dev Kit GitHub repository to to your own GitHub account to make it your own.
+Before you begin, you should [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the Azure SaaS Dev Kit GitHub repository to your own GitHub account to make it your own.
 
 The Azure SaaS Dev Kit provides an excellent starting point for launching your SaaS solution. To truly reap the benefits, it is essential to customize the dev kit to suit your particular requirements. By tailoring the dev kit, you achieve the solution that aligns with your specific objectives.
 
