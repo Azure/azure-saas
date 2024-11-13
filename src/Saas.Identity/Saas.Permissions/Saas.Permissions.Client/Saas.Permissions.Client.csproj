@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Configurations>Debug;Release;Multi Debug</Configurations>
+    <UserSecretsId>a79b9666-456e-44f6-add1-cb632ebdeff7</UserSecretsId>
   </PropertyGroup>
 
 </Project>
