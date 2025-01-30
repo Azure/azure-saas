@@ -293,7 +293,7 @@ function service-principal-login() {
     az login \
         --service-principal \
         --username "${app_id}" \
-        --password "${credentials_path}" \
+        --certificate "${credentials_path}" \
         --tenant "${b2c_tenant_id}" \
         --allow-no-subscriptions > /dev/null \
     || echo "Failed to login with service principal." \
