@@ -222,4 +222,17 @@
     </UserJourney>
 
   </UserJourneys>
+
+<BuildingBlocks>
+  <ContentDefinitions>
+    <ContentDefinition Id="api.signuporsignin">
+      <LoadUri>https://github.com/ekzarov/azure-b2c/blob/master/login.html</LoadUri>
+      <RecoveryUri>~/common/default_page_error.html</RecoveryUri>
+      <DataUri>urn:com:microsoft:aad:b2c:elements:contract:unifiedssp:2.1.5</DataUri>
+      <Metadata>
+        <Item Key="DisplayName">Signin and Signup</Item>
+      </Metadata>
+    </ContentDefinition>
+  </ContentDefinitions>
+</BuildingBlocks>
 </TrustFrameworkPolicy>
