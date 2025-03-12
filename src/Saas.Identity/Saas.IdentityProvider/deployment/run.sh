@@ -2,7 +2,7 @@
 
 repo_base="$(git rev-parse --show-toplevel)"
 git_repo_origin="$(git config --get remote.origin.url)"
-git_org_project_name="$(git config --get remote.origin.url | sed 's/.*\/\([^ ]*\/[^.]*\).*/\1/')"
+git_org_project_name="$(git config --get remote.origin.url | sed 's/.*\/\([^ ]*\/[^.]*\).*/\1/' | sed 's/.*:\(.*\)\.git/\1/')"
 gh_auth_token="$(gh auth token)"
 
 if [[ -z "${gh_auth_token}" ]]; then
