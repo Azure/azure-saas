@@ -1,6 +1,6 @@
 # Deploying the Identity Foundation Services
 
-This deployment script provisions and configures the Azure services defining the SaaS Identify Foundation, which is back-bone of the Azure SaaS Dev Kit. 
+This deployment script provisions and configures the Azure services defining the SaaS Identify Foundation, the back-bone of the Azure SaaS Dev Kit. 
 
 ## Before You begin
 
